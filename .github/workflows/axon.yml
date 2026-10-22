@@ -1,0 +1,336 @@
+# =====================================================================================
+#  AXON: unpack, check, build.   ONE workflow file. Put it in the repository as
+#  .github/workflows/axon.yml  (add it by hand once; GitHub does not let a workflow
+#  install or change workflow files by itself).
+#
+#  WHAT YOU DO EVERY TIME: drop ONE zip (a source export or a package) into the top
+#  level of the repository, or into a folder named uploads. Then wait.
+#  A zip uploaded BEFORE this file existed is also unpacked: just add or change this file,
+#  or press Run workflow with the box empty. A zip named keep-something.zip is never touched.
+#  WHAT IT DOES: finds the new zip, checks it is safe, unpacks it (skipping workflow
+#  files, secrets and junk), checks the file guard, commits the result, removes the zip,
+#  builds the web app, runs the type check and the tests, and builds the Android debug APK.
+#  The APK is under  Actions > the run > Artifacts > axon-debug-apk.
+#
+#  SWITCHES (edit these two lines on GitHub if you want to change the behaviour)
+#   BUILD_ON_EVERY_PUSH  'true'  = build after every push to main (zip or not; for example from AI Studio)
+#                        'false' = work only when a zip was dropped, when this file changes, or on Run workflow
+#   STRICT_CHECKS        'false' = a failing type check or test is REPORTED but the APK is still built
+#                        'true'  = a failing type check or test stops the run before the APK
+# =====================================================================================
+name: "AXON: unpack, check, build"
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      zip_file:
+        description: 'Optional: path of ONE zip already in the repository (for example uploads/project.zip). Leave empty to unpack every waiting zip (top level or uploads) and build.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: axon-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BUILD_ON_EVERY_PUSH: 'true'
+  STRICT_CHECKS: 'false'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  axon:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Get the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 1. Look for zips to unpack
+        id: find
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          ZIP_INPUT: ${{ inputs.zip_file }}
+        run: |
+          set -euo pipefail
+          : > /tmp/zips.txt
+          RUN=false
+          # Zips lying in the top level or in uploads/ that nobody unpacked yet.
+          # Zips named keep-*.zip and zips listed in tools/files.lock are never touched.
+          waiting() {
+          python3 - <<'PYW'
+          import json, os
+          locked = set()
+          try:
+              locked = set(json.load(open('tools/files.lock')).get('files', {}).keys())
+          except Exception:
+              pass
+          for d in ('.', 'uploads'):
+              if os.path.isdir(d):
+                  for n in sorted(os.listdir(d)):
+                      p = n if d == '.' else d + '/' + n
+                      if n.lower().endswith('.zip') and not n.lower().startswith('keep-') and os.path.isfile(p) and p not in locked:
+                          print(p)
+          PYW
+          }
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            RUN=true
+            if [ -n "$ZIP_INPUT" ]; then
+              if [ -f "$ZIP_INPUT" ]; then printf '%s\n' "$ZIP_INPUT" > /tmp/zips.txt
+              else echo "::error::The file '$ZIP_INPUT' is not in the repository."; exit 1; fi
+            else
+              waiting > /tmp/zips.txt
+            fi
+          else
+            if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              git -c core.quotepath=false diff --name-only --diff-filter=AM "$BEFORE" "$GITHUB_SHA" > /tmp/changed.txt
+            else
+              git -c core.quotepath=false show --name-only --diff-filter=AM --format= "$GITHUB_SHA" > /tmp/changed.txt
+            fi
+            grep -iE '^(uploads/)?[^/]+\.zip$' /tmp/changed.txt | grep -viE '(^|/)keep-' > /tmp/zips.txt || true
+            # This workflow file was just added or changed: also pick up zips that were uploaded earlier.
+            if grep -qx '.github/workflows/axon.yml' /tmp/changed.txt; then
+              RUN=true
+              echo "The workflow file itself was added or changed: looking for zips uploaded earlier too."
+              waiting >> /tmp/zips.txt
+            fi
+            if [ "$BUILD_ON_EVERY_PUSH" = "true" ]; then RUN=true; fi
+          fi
+          sed -i '/^$/d' /tmp/zips.txt
+          sort -u -o /tmp/zips.txt /tmp/zips.txt
+          if [ -s /tmp/zips.txt ]; then RUN=true; fi
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+          if [ -s /tmp/zips.txt ]; then
+            echo "Zip(s) to unpack:"; cat /tmp/zips.txt
+            echo "has_zips=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_zips=false" >> "$GITHUB_OUTPUT"
+            if [ "$RUN" = "true" ]; then echo "No zip to unpack: checking and building what is already here."
+            else echo "Nothing to do in this push. (Set BUILD_ON_EVERY_PUSH to 'true' to build every push.)"; fi
+          fi
+          {
+            echo "## AXON run"
+            if [ -s /tmp/zips.txt ]; then echo "Zip(s) to unpack: $(tr '\n' ' ' < /tmp/zips.txt)"; else echo "Zip(s) to unpack: none"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 2. Unpack the zip safely
+        if: steps.find.outputs.has_zips == 'true'
+        run: |
+          set -euo pipefail
+          cat > /tmp/unpack.py <<'PYEND'
+          import os, stat, sys, zipfile
+          from pathlib import PurePosixPath
+
+          zip_path = sys.argv[1]
+          SKIP_PREFIX = ('.git/', '.github/workflows/', 'node_modules/', 'public/_axon-source/', '__MACOSX/',
+                         'android/app/build/', 'android/build/', 'android/.gradle/', 'dist/')
+          SKIP_NAMES = {'.DS_Store', 'bun.lock', 'bun.lockb', 'Thumbs.db'}
+          PROTECTED = {'tools/guard.mjs', 'tools/files.lock'}
+          MAX_FILES, MAX_BYTES = 25000, 1024 * 1024 * 1024
+
+          def refuse(msg):
+              print('UNPACK REFUSED: ' + msg)
+              sys.exit(1)
+
+          try:
+              z = zipfile.ZipFile(zip_path)
+          except Exception as e:
+              refuse('this is not a readable zip file (' + str(e)[:80] + ')')
+          infos = [i for i in z.infolist() if not i.is_dir()]
+          if not infos:
+              refuse('the zip is empty')
+          if len(infos) > MAX_FILES or sum(i.file_size for i in infos) > MAX_BYTES:
+              refuse('the zip is larger than the safe limit (25,000 files or 1 GiB)')
+
+          entries = []
+          for i in infos:
+              name = i.filename.replace('\\', '/')
+              parts = PurePosixPath(name).parts
+              if name.startswith('/') or '..' in parts or not name.strip() or (len(name) > 1 and name[1] == ':'):
+                  refuse('unsafe path in the zip: ' + i.filename)
+              if stat.S_ISLNK(i.external_attr >> 16):
+                  refuse('the zip contains a symbolic link: ' + i.filename)
+              entries.append((i, name))
+          names = [n for _, n in entries]
+          if len(set(names)) != len(names):
+              refuse('the zip contains the same path twice')
+
+          # A single wrapper folder that holds package.json (a GitHub or Windows download) is removed.
+          tops = {n.split('/')[0] for n in names if '/' in n}
+          prefix = ''
+          if len(tops) == 1 and all('/' in n for n in names):
+              top = next(iter(tops))
+              if (top + '/package.json') in names:
+                  prefix = top + '/'
+
+          new = changed = same = 0
+          skipped = []
+          for i, name in entries:
+              rel = name[len(prefix):]
+              base = rel.rsplit('/', 1)[-1]
+              if rel.startswith(SKIP_PREFIX) or base in SKIP_NAMES or (base.startswith('.env') and base != '.env.example'):
+                  skipped.append(rel)
+                  continue
+              data = z.read(i)
+              if rel in PROTECTED and os.path.isfile(rel) and open(rel, 'rb').read() != data:
+                  skipped.append(rel + ' (protected: differs, kept the repository copy)')
+                  continue
+              if os.path.isfile(rel):
+                  if open(rel, 'rb').read() == data:
+                      same += 1
+                      continue
+                  changed += 1
+              else:
+                  new += 1
+              d = os.path.dirname(rel)
+              if d:
+                  os.makedirs(d, exist_ok=True)
+              with open(rel, 'wb') as f:
+                  f.write(data)
+              if (i.external_attr >> 16) & 0o111:
+                  os.chmod(rel, 0o755)
+
+          print('UNPACK OK: %s' % zip_path)
+          print('  wrapper folder removed: %s' % (prefix or 'none'))
+          print('  new files: %d, changed files: %d, identical (left alone): %d, skipped: %d' % (new, changed, same, len(skipped)))
+          for s in skipped[:12]:
+              print('  skipped: ' + s)
+          if len(skipped) > 12:
+              print('  ... and %d more skipped' % (len(skipped) - 12))
+          PYEND
+          while IFS= read -r Z; do
+            echo "------------------------------------------------------------"
+            python3 /tmp/unpack.py "$Z" | tee -a /tmp/unpack-log.txt
+            rm -f -- "$Z"
+          done < /tmp/zips.txt
+          { echo; echo '```'; cat /tmp/unpack-log.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 3. Check the file guard
+        if: steps.find.outputs.run == 'true'
+        run: |
+          if [ ! -f tools/guard.mjs ]; then echo "No guard in this repository: nothing to check."; exit 0; fi
+          for attempt in 1 2 3; do
+            RC=0; OUT=$(node tools/guard.mjs --strict 2>&1) || RC=$?
+            echo "$OUT" | tail -n 12
+            if [ "$RC" -eq 0 ]; then echo "GUARD PASSED"; exit 0; fi
+            BAD=$(echo "$OUT" | grep -E '^[[:space:]]+[a-z]' | grep -v 'missing: \.github/workflows/' || true)
+            if [ -n "$BAD" ]; then
+              echo "GUARD FAILED on real problems (not only old workflow entries). Nothing was committed."
+              exit 1
+            fi
+            echo "$OUT" | grep -E 'missing: \.github/workflows/' | sed 's/.*missing: //' | while read -r P; do
+              echo "The guard still lists $P, but workflow files live in one place now: removing that entry from the lock."
+              node tools/guard.mjs --forget "$P"
+            done
+          done
+          echo "GUARD still failing after 3 attempts."; exit 1
+
+      - name: 4. Save the unpacked result (commit and push)
+        if: steps.find.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "axon-bot"
+          git config user.email "axon-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing changed, nothing to commit."
+          else
+            git commit -q -m "AXON: unpack and update (automatic)"
+            git push origin "HEAD:${GITHUB_REF_NAME}" || { git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"; }
+            echo "Committed and pushed."
+            echo "Saved to the repository: $(git rev-parse --short HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Set up Node
+        if: steps.find.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 5. Install the app's packages
+        if: steps.find.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          node --version; npm --version; free -m | sed -n 2p
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+          else npm install --no-audit --no-fund; fi
+
+      - name: 6. Build the web app
+        if: steps.find.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          npm run build
+          echo "Web build: OK" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 7. Type check and tests
+        if: steps.find.outputs.run == 'true'
+        run: |
+          set +e
+          FAIL=0
+          npm run lint > /tmp/lint.log 2>&1; L=$?
+          if node -e "process.exit(require('./package.json').scripts['test:all']?0:1)"; then T='npm run test:all'; else T='npm run test:kernel'; fi
+          $T > /tmp/tests.log 2>&1; K=$?
+          { echo
+            if [ $L -eq 0 ]; then echo "Type check: OK"; else echo "Type check: FAILED (last lines below)"; echo '```'; tail -n 25 /tmp/lint.log; echo '```'; fi
+            if [ $K -eq 0 ]; then echo "Tests: OK ($(grep -ciE '^PASS' /tmp/tests.log) test files passed)"; else echo "Tests: FAILED (last lines below)"; echo '```'; grep -E 'FAIL|FAILED|Error' /tmp/tests.log | head -n 12; echo '```'; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          tail -n 4 /tmp/lint.log; tail -n 4 /tmp/tests.log
+          if [ $L -ne 0 ] || [ $K -ne 0 ]; then
+            if [ "$STRICT_CHECKS" = "true" ]; then echo "::error::Type check or tests failed and STRICT_CHECKS is true."; exit 1
+            else echo "::warning::Type check or tests failed. The APK is still built (STRICT_CHECKS is false). See the run summary."; fi
+          fi
+
+      - name: Set up Java 21
+        if: steps.find.outputs.run == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: 8. Signing key (optional)
+        if: steps.find.outputs.run == 'true'
+        env:
+          KEYSTORE_B64: ${{ secrets.AXON_DEBUG_KEYSTORE_B64 }}
+        run: |
+          set -euo pipefail
+          if [ -n "$KEYSTORE_B64" ]; then
+            mkdir -p "$HOME/.android"
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$HOME/.android/debug.keystore"
+            echo "Signing key: your saved key (the app updates over the installed one)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::No AXON_DEBUG_KEYSTORE_B64 secret: the APK gets a new random key each build, so Android will ask you to uninstall the old Axon before installing."
+            echo "Signing key: NOT SET (fresh key each build; uninstall the old Axon first)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: 9. Build the Android debug APK
+        if: steps.find.outputs.run == 'true'
+        env:
+          GRADLE_OPTS: -Dorg.gradle.daemon=false
+        run: |
+          set -euo pipefail
+          [ -d android ] || npx cap add android
+          [ -f scripts/apply-android-overlay.sh ] || { echo "::error::scripts/apply-android-overlay.sh is missing."; exit 1; }
+          bash scripts/apply-android-overlay.sh
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          test -f "$APK"
+          echo "APK built: $(du -h "$APK" | cut -f1). Download it from Artifacts: axon-debug-apk." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 10. Keep the APK
+        if: steps.find.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: axon-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
