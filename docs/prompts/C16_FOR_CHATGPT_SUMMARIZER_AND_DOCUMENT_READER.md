@@ -1,0 +1,71 @@
+# C16: Summarizer and Document Reader engines
+
+WHO THIS IS FOR: ChatGPT (a NEW chat; it writes code and runs it in its own sandbox). It writes engines and tests only; it never designs screens.
+WHAT THIS DOES: Builds two pure engines with tests: an EXTRACTIVE summarizer (it copies the most important sentences, it never rewrites) and a document reader model (turns a text, Markdown, HTML, CSV, TSV or JSON file into readable blocks with an outline, statistics and search).
+WHAT YOU DO: Attach: this file, AXON_ROADMAP_V16_8.md (the newest roadmap) and BASE.zip (GitHub: Code, Download ZIP of the repository, taken AFTER the previous engine merges). This job needs no other new job. Paste the one line.
+WHAT TO BRING BACK: ONE zip named C16-reader-engines.zip (new files only; report at docs/reports/C16_REPORT.md). Give it to Claude (or the next Director account) to inspect before anything goes into the repository.
+PASTE THIS ONE LINE INTO CHATGPT (then attach the files above): Do the job in the attached file C16_FOR_CHATGPT_SUMMARIZER_AND_DOCUMENT_READER.md, exactly, using the attached roadmap and the attached BASE zip. Follow the standing rules in it, run and type-check everything yourself, and return one zip.
+IF CHATGPT REPLIES WITH ONLY A REVIEW AND A LAW CHECK AND BUILDS NOTHING, paste this in the SAME chat (do not start a new one, do not send it a third time): "Continue now, in this same chat. Do not report again. Write the first file, run its test, then the next, in the priority order. Your next message must contain the zip. If you cannot finish everything, deliver the finished items complete and tested and list the rest."
+
+---
+
+## STANDARD PROMPT PREAMBLE (unchanged)
+
+Before you do anything: read the AXON roadmap (all of it, not a part), then read Part 00 again. AXON is a foundation-first project and its foundation is being reopened. Do not choose a direction until you have looked at the whole project from above. Answer in one short paragraph: (1) what the finished AXON contains (Part 5E), (2) where this job sits in it, (3) what could break later because of this job. Then do ONLY the job below. Never delete, rename or shorten a file unless this prompt names it. The dictionary is core to AXON: never remove it or leave it out. If anything in this prompt conflicts with the roadmap, stop and say so. If the same problem fails twice, stop and report; do not try a third fix. Before you build, write the LAW CHECK (FL11): list every law that applies (FL1 to FL13 and Rules 1 to 13, by number) and say how the job complies; repeat it in your report; if any law conflicts with the job, stop and say so. Never add a fixed phrase list to the brain (FL13).
+
+---
+
+## JOB C16: SUMMARIZER AND DOCUMENT READER ENGINES
+
+FILES THAT MUST EXIST IN THE BASE (stop and say which is missing): src/tools/engines/text/markdown.ts (markdownToText), src/tools/engines/text/htmlText.ts (htmlToMarkdown, htmlToText), src/tools/engines/data/csv.ts (parseCsv, CSV_LIMITS), src/tools/engines/data/jsonView.ts (stats, JSON_VIEW_LIMITS), src/tools/engines/files/inspect.ts (inspectBytes), src/tools/engines/text/index.ts, tests/markdown.test.ts, tsconfig.json. READ their exported APIs first and reuse them; do not copy their logic.
+
+PRIORITY ORDER (deliver both; if you truly cannot, deliver the first complete):
+
+1. SUMMARIZER. `src/tools/engines/text/summarize.ts`, test `tests/summarize.test.ts`. EXTRACTIVE ONLY: the output sentences are copied from the input exactly. It is deterministic. Algorithm (implement exactly this so the test can derive expected values independently):
+ a. SENTENCES: split after `.`, `!`, `?` or an ellipsis when followed by whitespace and then a capital letter, digit, quote or bracket (or the end); always split at a blank line; each bullet or numbered list line is its own sentence. Do NOT split after a common abbreviation (Mr, Mrs, Ms, Dr, Prof, Sr, Jr, St, vs, etc, e.g, i.e, Inc, Ltd, Co, No, Fig, approx) or a single capital letter, inside decimals (3.14), versions, URLs or e-mail addresses. Trim, drop empty ones.
+ b. WORDS: runs of letters or digits (Unicode) with inner apostrophes or hyphens, NFKC-normalised and lower-cased. CONTENT words are words of length 3 or more that are not in a frozen STOP list (a closed list of English function words: articles, pronouns, prepositions, conjunctions, auxiliaries, question words; about 100 words; it is grammar structure, not vocabulary).
+ c. tf(w) = count of w among all content words; maxTf = the largest tf.
+ d. score(s) = (sum over the DISTINCT content words w in s of tf(w) / maxTf) divided by sqrt(1 + the number of content-word tokens in s). A sentence with no content words scores 0 and is never chosen. Multiply by 1.15 for the first sentence of a paragraph and by 1.25 for the first sentence of the document (use the larger, not both).
+ e. SELECTION (greedy): N = options.sentences (clamped to 1..min(20, total)); at each step pick the not-yet-chosen sentence with the largest adjusted score = score * (1 - maxJaccard), where maxJaccard is the largest Jaccard similarity between its content-word set and the set of any already chosen sentence (0 when none chosen); ties go to the earlier sentence; stop at N or when the best adjusted score is 0. Return the chosen sentences in ORIGINAL order.
+ f. OUTPUT: `{ ok: true, sentences: {index, text, score}[], keywords: string[] (top options.keywords, default 8, by tf then alphabetical), stats: {sentencesIn, sentencesOut, wordsIn, wordsOut, keptPercent}, warnings: string[], label: 'Extractive: sentences are copied from your text, never rewritten.' }`. Warnings (plain words): 'The text is very short, so all of it is shown.' when fewer than 3 sentences (return them all); 'This text does not look like English, so the result may be poor.' when the text has at least 50 word tokens and fewer than 8 percent are STOP words.
+ g. LIMITS (exported `SUMMARIZE_LIMITS`): 300,000 characters, 5,000 sentences, 20 chosen. Typed errors for empty, too long, bad options. Never loops without a bound.
+ h. Export `SUMMARIZER_DESCRIPTOR` with toolId 'summarizer'.
+ TESTS: write an independent Python implementation of steps a to f from the text above and compare its output with the engine on at least 30 varied texts (news-like, lists, abbreviations, decimals, URLs, quotes, no punctuation, one long sentence, emoji, right-to-left text, all stop words, 300,000 characters) with a fixed seed; also test every limit and every error.
+
+2. DOCUMENT READER. `src/tools/engines/files/documentRead.ts`, test `tests/documentRead.test.ts`. Input `{ name: string; bytes: Uint8Array }`.
+ a. DECODE: UTF-8 BOM, UTF-16 with BOM, strict UTF-8; if strict UTF-8 fails, decode as windows-1252 and set encoding 'windows-1252 (guessed)'. A file with NUL bytes (and no UTF-16 BOM) is 'binary-file': refuse with a plain message and, when `inspectBytes` recognises a type (pdf, docx and so on), name it: PDF and Office formats get error 'unsupported-format' and the message 'AXON cannot read this kind of file yet.'
+ b. FORMAT by extension (txt, text, log, md, markdown, html, htm, csv, tsv, json), else by content; mismatches are a warning, not a guess.
+ c. BLOCKS: `{ kind: 'heading' | 'paragraph' | 'list-item' | 'quote' | 'code' | 'table-row'; level?: number; text: string }`. Markdown: headings, lists, quotes, fenced code, paragraphs (inline marks removed with markdownToText). HTML: first `htmlToMarkdown` (never executes anything), then the Markdown path. Plain text: paragraphs split at blank lines. CSV and TSV: `parseCsv`; blocks are table rows (cells joined with a tab) plus a header flag. JSON: pretty-printed (2 spaces) lines as code blocks, with `stats` from jsonView; invalid JSON is shown as plain text with a warning.
+ d. MODEL: `{ ok: true, name, format, encoding, blocks, outline: {blockIndex, level, text}[], stats: {words, characters, lines, paragraphs, readingMinutes (200 words a minute, rounded up, minimum 1)}, truncated: boolean, warnings: string[] }`.
+ e. `findInDocument(model, query, {caseSensitive, wholeWord, max})` returns hits `{blockIndex, start, end}` in order (max 500); `paginate(model, charsPerPage)` returns page ranges `{page, fromBlock, toBlock}` so a screen never renders 20,000 blocks at once; every block belongs to exactly one page.
+ f. LIMITS (exported `DOC_LIMITS`): 5 MiB file, 20,000 blocks (set `truncated`), query 200 characters. Hostile inputs (a script tag, nesting 10,000 deep, 5 MB of `<`, unclosed CSV quotes, lone surrogates, empty file) return typed errors or safe models, never a hang.
+ g. Export `DOCUMENT_READER_DESCRIPTOR` with toolId 'document-reader'.
+ TESTS: fixtures built in the test; expected counts derived independently (Python); every format, every error, every warning, and the pagination covering property.
+
+LANE: NEW src/tools/engines/text/summarize.ts, src/tools/engines/files/documentRead.ts, tests/summarize.test.ts, tests/documentRead.test.ts, docs/reports/C16_REPORT.md. Nothing else.
+DONE MEANS: both engines and tests delivered, strict `tsc` passes, all tests pass with real counts, report written.
+
+
+## STANDING RULES (apply to every step of the job)
+
+START RULE: after the one short paragraph and the LAW CHECK, START BUILDING IN THE SAME REPLY. Do not ask permission, do not stop to restate a plan, do not end your turn with a status report. Your next deliverable after the LAW CHECK is working files and, at the end, the zip. A reply that contains only a review and a Law Check is a FAILED delivery (this has happened before). Work in small verified steps: write ONE file, run its test, fix it, then the next file.
+
+QUALITY LAW (owner, ABSOLUTE): the result must be perfect on its FIRST delivery. Do not hand back anything that merely looks finished.
+1. RUN everything yourself in your sandbox before you hand anything over: unpack the repository zip you were given, install what it needs (package.json, tsconfig.json, tsx and the tests under tests/ are there), run every new test with `npx tsx tests/NAME.test.ts`, run the existing tests the job could affect (at least every command in the `test:kernel` script of package.json that does not depend on this job being merged), and run the type check with the project's own options (`npx tsc --noEmit -p tsconfig.json`; this is the project's `lint` script). A returned file that fails the type check is a failed delivery.
+2. If your sandbox cannot run something (no internet to install, no tsx, no tsc), say exactly which step was NOT RUN and why, and do the strictest manual check you can. Never write "should work" or "tested" for something you did not run. Evidence labels: MEASURED (you ran it and saw the result), NOT RUN, HYPOTHESIS.
+3. NO stubs, NO placeholders, NO "TODO", NO empty functions, NO hard-coded or fake results, NO simplified version that only works for the happy path, NO file that compiles but does nothing. Every error path returns a typed, honest error. Never claim an ability the code does not have.
+4. Derive every expected number in a test by an INDEPENDENT calculation (Python with Decimal, hashlib, zlib and so on), never from memory. Break each new behaviour on purpose (empty input, huge input, odd characters, emoji, right-to-left text, zero, negative, wrong types) and keep those cases as tests. Seeded random tests use a fixed seed so they repeat.
+5. If you cannot finish everything in one run, work in the PRIORITY ORDER given, deliver the finished items complete and tested, and list the unfinished ones plainly. NEVER deliver a half-built item. A smaller perfect delivery beats a larger broken one. Redoing work is worse than anything.
+6. The weakest phone we support is an Infinix Note 10 (low memory). Cap input sizes with an honest typed error, never loop without a bound, never allocate without a bound.
+
+ENGINE CONTRACT (every engine file in this job):
+- PURE TypeScript. No React, no JSX, no DOM, no `window`, no `localStorage`, no network. Anything that needs time, randomness or storage is INJECTED as a parameter so tests control it. (The only exception is a job that names a .tsx file in its LANE.)
+- Exported limit constants (for example `LOAN_LIMITS`) and exported types. Functions never throw for bad input: they return a typed result such as `{ ok: true, ... } | { ok: false, error: 'code', message: 'plain words' }`.
+- Each tool-facing engine file also exports ONE descriptor object named `<TOOL>_DESCRIPTOR` = `{ toolId, displayName, purpose, examples: string[], inputs: { name: string; kind: 'text' | 'choice' | 'file' | 'yes-no'; choices?: string[]; prompt?: string }[] }` with 2 or 3 honest examples (documentation and tests only; the brain never matches on them: FL13). The `toolId` MUST be the exact catalog id from `src/tools/toolCatalog.ts`: loan-calculator, split-bill, pattern-tester, device-profile, json-viewer, file-inspector, qr-maker, zip-tool, code-formatter, file-compare (a new entry added later), and 'converter' for the format hubs and image planning. Do NOT register anything in the capability registry and do NOT edit the tool menu: a later job does both.
+- No new dependency (jszip is already installed; only a job that names it may use it). No regular-expression literal inside `src/brain/mind`. Never add words or phrases to the brain.
+
+LANE AND FILES: create or change ONLY the files named in the LANE section. Never edit package.json, tools/files.lock, tools/guard.mjs, .github, public/dictionary, src/App.tsx, src/tools/toolCatalog.ts or anything under src/components (unless the LANE names it). Never delete, rename or shorten an existing file. Do NOT edit package.json: REPORT the exact new lines to add to the `test:kernel` script (each as `tsx tests/NAME.test.ts`).
+
+RETURN: ONE zip of NEW and CHANGED files only, paths relative to the repository root, no top folder needed, no nested zips, containing the report file named in the job. Create it with your code tool and give the download link. The report must contain: your LAW CHECK; every file created or changed; the exact commands you ran with the real pass or fail results and check counts; anything NOT RUN; anything unfinished; the package.json test lines to add.
+
+CHECK THE BASE FIRST: the job names files that must exist in the repository zip you were given. If any is missing, STOP and say which.

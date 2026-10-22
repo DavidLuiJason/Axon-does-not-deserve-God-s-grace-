@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { PATTERN_TEST_LIMITS, runWithTimeout, testPattern } from '../src/tools/engines/code/patternTest.ts';
+let checks = 0;
+function check<T>(actual: T, expected: T, label: string) { assert.deepEqual(actual, expected, label); checks++; }
+let r = testPattern({ pattern: '(?<word>\\w+)-(\\d+)', flags: 'g', text: 'abc-12 xyz-34', replacement: '$<word>!' });
+assert.equal(r.ok, true); if (r.ok) { check(r.matches.map(m => [m.index, m.text, m.groups, m.namedGroups.word]), [[0,'abc-12',['abc','12'],'abc'],[7,'xyz-34',['xyz','34'],'xyz']], 'numbered and named groups'); check(r.replacedText, 'abc! xyz!', 'replacement'); } checks++;
+r = testPattern({ pattern: '', flags: 'gu', text: '😀a' }); assert.equal(r.ok, true); if (r.ok) check(r.matches.map(m=>m.index), [0,2,3], 'zero-width unicode advancement'); checks++;
+check(testPattern({ pattern: '(', text: 'x' }).ok, false, 'invalid pattern');
+check(testPattern({ pattern: 'x', flags: 'gg', text: 'x' }).ok, false, 'duplicate flags');
+check(testPattern({ pattern: 'x', flags: 'z', text: 'x' }).ok, false, 'unknown flag');
+check(testPattern({ pattern: 'x', text: '' }).ok, true, 'empty text valid');
+check(testPattern({ pattern: 'x', text: 'x'.repeat(PATTERN_TEST_LIMITS.textLength + 1) }).ok, false, 'huge text refused');
+check(testPattern({ pattern: 'x'.repeat(PATTERN_TEST_LIMITS.patternLength + 1), text: '' }).ok, false, 'huge pattern refused');
+check(testPattern({ pattern: '.', flags: 'g', text: 'a'.repeat(PATTERN_TEST_LIMITS.matches + 1) }).ok, false, 'match count capped');
+check(testPattern({ pattern: '(.)', flags: 'g', text: 'עברית🙂' }).ok, true, 'RTL and emoji accepted');
+check(testPattern(null as never).ok, false, 'wrong type rejected');
+const timeout = await runWithTimeout(() => 7, 10, async task => task()); check(timeout, { ok: true, value: 7 }, 'runner result');
+check(await runWithTimeout(() => 7, 10, async () => { throw new Error('timeout'); }), { ok: false, error: 'timeout' }, 'fake timeout');
+check(await runWithTimeout(() => 7, 10, async () => { throw new Error('offline'); }), { ok: false, error: 'runner-failed' }, 'runner failure');
+check(await runWithTimeout(() => 7, 0, async task => task()), { ok: false, error: 'runner-failed' }, 'invalid timeout');
+console.log(`patternTest: ${checks} checks passed`);

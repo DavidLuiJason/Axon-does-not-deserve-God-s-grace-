@@ -1,0 +1,56 @@
+# C09: Register every engine honestly in the capability registry
+
+WHO THIS IS FOR: ChatGPT (a NEW chat; it writes code and runs it in its own sandbox). It writes engines and tests only; it never designs screens.
+WHAT THIS DOES: Declares every finished engine in the capability registry with honest chat actions, and adds a truth test so the menu, the registry and the engines can never disagree.
+WHAT YOU DO: Only after the wave 1 jobs it depends on were inspected and merged. Attach: this file, AXON_ROADMAP_V16_3.md and a FRESH BASE.zip (GitHub: Code, Download ZIP after the merge). Paste the one line. Depends on wave 1 (C01 to C06) being merged; it adapts to whichever engines exist.
+WHAT TO BRING BACK: ONE zip named C09-registry.zip (new and changed files only; report at docs/reports/C09_REPORT.md). Give it to Claude (or the next Director account) to inspect before anything goes into the repository.
+PASTE THIS ONE LINE INTO CHATGPT (then attach the files above): Do the job in the attached file C09_FOR_CHATGPT_ENGINE_REGISTRY_AND_TRUTH.md, exactly, using the attached roadmap and the attached BASE zip. Follow the standing rules in it, run and type-check everything yourself, and return one zip.
+IF CHATGPT REPLIES WITH ONLY A REVIEW AND A LAW CHECK AND BUILDS NOTHING, paste this in the SAME chat (do not start a new one, do not send it a third time): "Continue now, in this same chat. Do not report again. Write the first file, run its test, then the next, in the priority order. Your next message must contain the zip. If you cannot finish everything, deliver the finished items complete and tested and list the rest." 
+
+---
+
+## STANDARD PROMPT PREAMBLE (unchanged)
+
+Before you do anything: read the AXON roadmap (all of it, not a part), then read Part 00 again. AXON is a foundation-first project and its foundation is being reopened. Do not choose a direction until you have looked at the whole project from above. Answer in one short paragraph: (1) what the finished AXON contains (Part 5E), (2) where this job sits in it, (3) what could break later because of this job. Then do ONLY the job below. Never delete, rename or shorten a file unless this prompt names it. The dictionary is core to AXON: never remove it or leave it out. If anything in this prompt conflicts with the roadmap, stop and say so. If the same problem fails twice, stop and report; do not try a third fix. Before you build, write the LAW CHECK (FL11): list every law that applies (FL1 to FL13 and Rules 1 to 13, by number) and say how the job complies; repeat it in your report; if any law conflicts with the job, stop and say so. Never add a fixed phrase list to the brain (FL13).
+
+---
+
+## JOB C09: ENGINE REGISTRY AND TRUTH TEST
+
+FILES THAT MUST EXIST IN THE BASE (stop if missing): src/capabilities/registry.ts, src/capabilities/types.ts, src/capabilities/registerAxonTools.ts, src/capabilities/index.ts (or the file that calls the register functions: find it), src/tools/toolCatalog.ts, tests/capabilityTruth.test.ts, tests/tools.test.ts.
+
+CONTEXT: finished engines live under `src/tools/engines/` (text, numbers, time, create from earlier rounds; finance, code, device, data, files, images and more from wave 1). Wave 1 engine files each export one `<TOOL>_DESCRIPTOR` object (see ENGINE CONTRACT). The 16 older engines have no descriptor. Chat cannot run any of these tools until the brain's Resolution stage exists, so every chat action is declared with status 'not-built' and the note: "Opens from the Tools menu once its screen exists; chat control arrives with the brain." (Never 'available'.)
+
+THE JOB (priority order):
+1. `src/tools/engines/legacyDescriptors.ts`: descriptors for the 16 older tools (find-replace, case-converter, text-cleaner, sort-lines, text-compare, calculator, number-to-words, percentage-helper, timer, stopwatch, date-calculator, tally-counter, password-generator, random-picker, encoder-decoder, hash-tool): read each engine's exported API and limits first; purpose, 2 or 3 honest examples (documentation only), and the inputs a chat request would need (name, kind, choices).
+2. `src/capabilities/registerEngineTools.ts`: imports every descriptor that exists in the base (list them explicitly, one import each, no dynamic loading; skip those whose files do not exist yet and list them in the report) and registers one capability per tool family with one chat action per tool, status 'not-built' with the note above. Add its one call where the other register functions are called. Do not change existing registrations (Text Tools for Text Counter stays exactly as it is).
+3. `src/tools/toolCatalog.ts`: add ONE new entry `file-compare` ("File Compare", description "Compare any two files and see how many differences there are and where.", group files-convert, status coming-soon). Change nothing else in the catalog (other jobs and screens flip statuses later).
+4. TRUTH TEST `tests/engineTruth.test.ts`: (a) every descriptor's toolId exists in the catalog (or is 'converter') ; (b) every catalog tool that has a descriptor has exactly one registered chat action; (c) no chat action is 'available' unless a test proves chat can run it (today only Text Counter); (d) every descriptor has at least 2 examples and a non-empty purpose; (e) a catalog tool marked 'available' always has a registry entry. Update `tests/tools.test.ts` and `tests/capabilityTruth.test.ts` only for the one new catalog entry (count 61 to 62 until later jobs retire three entries) and say so.
+
+LANE: NEW src/tools/engines/legacyDescriptors.ts, src/capabilities/registerEngineTools.ts, tests/engineTruth.test.ts, docs/reports/C09_REPORT.md. CHANGED (minimal edits): src/capabilities/index.ts (or the file that calls the register functions), src/tools/toolCatalog.ts (the one new entry only), tests/tools.test.ts, tests/capabilityTruth.test.ts. Nothing else.
+
+DONE MEANS: the truth test passes with every existing descriptor; existing truth tests pass; the type check and the whole `test:kernel` pass; the report lists which descriptors were registered and which engine files were not yet in the base.
+
+## STANDING RULES (apply to every step of the job)
+
+START RULE: after the one short paragraph and the LAW CHECK, START BUILDING IN THE SAME REPLY. Do not ask permission, do not stop to restate a plan, do not end your turn with a status report. Your next deliverable after the LAW CHECK is working files and, at the end, the zip. A reply that contains only a review and a Law Check is a FAILED delivery (this has happened before). Work in small verified steps: write ONE file, run its test, fix it, then the next file.
+
+QUALITY LAW (owner, ABSOLUTE): the result must be perfect on its FIRST delivery. Do not hand back anything that merely looks finished.
+1. RUN everything yourself in your sandbox before you hand anything over: unpack the repository zip you were given, install what it needs (package.json, tsconfig.json, tsx and the tests under tests/ are there), run every new test with `npx tsx tests/NAME.test.ts`, run the existing tests the job could affect (at least every command in the `test:kernel` script of package.json that does not depend on this job being merged), and run the type check with the project's own options (`npx tsc --noEmit -p tsconfig.json`; this is the project's `lint` script). A returned file that fails the type check is a failed delivery.
+2. If your sandbox cannot run something (no internet to install, no tsx, no tsc), say exactly which step was NOT RUN and why, and do the strictest manual check you can. Never write "should work" or "tested" for something you did not run. Evidence labels: MEASURED (you ran it and saw the result), NOT RUN, HYPOTHESIS.
+3. NO stubs, NO placeholders, NO "TODO", NO empty functions, NO hard-coded or fake results, NO simplified version that only works for the happy path, NO file that compiles but does nothing. Every error path returns a typed, honest error. Never claim an ability the code does not have.
+4. Derive every expected number in a test by an INDEPENDENT calculation (Python with Decimal, hashlib, zlib and so on), never from memory. Break each new behaviour on purpose (empty input, huge input, odd characters, emoji, right-to-left text, zero, negative, wrong types) and keep those cases as tests. Seeded random tests use a fixed seed so they repeat.
+5. If you cannot finish everything in one run, work in the PRIORITY ORDER given, deliver the finished items complete and tested, and list the unfinished ones plainly. NEVER deliver a half-built item. A smaller perfect delivery beats a larger broken one. Redoing work is worse than anything.
+6. The weakest phone we support is an Infinix Note 10 (low memory). Cap input sizes with an honest typed error, never loop without a bound, never allocate without a bound.
+
+ENGINE CONTRACT (every engine file in this job):
+- PURE TypeScript. No React, no JSX, no DOM, no `window`, no `localStorage`, no network. Anything that needs time, randomness or storage is INJECTED as a parameter so tests control it. (The only exception is a job that names a .tsx file in its LANE.)
+- Exported limit constants (for example `LOAN_LIMITS`) and exported types. Functions never throw for bad input: they return a typed result such as `{ ok: true, ... } | { ok: false, error: 'code', message: 'plain words' }`.
+- Each tool-facing engine file also exports ONE descriptor object named `<TOOL>_DESCRIPTOR` = `{ toolId, displayName, purpose, examples: string[], inputs: { name: string; kind: 'text' | 'choice' | 'file' | 'yes-no'; choices?: string[]; prompt?: string }[] }` with 2 or 3 honest examples (documentation and tests only; the brain never matches on them: FL13). The `toolId` MUST be the exact catalog id from `src/tools/toolCatalog.ts`: loan-calculator, split-bill, pattern-tester, device-profile, json-viewer, file-inspector, qr-maker, zip-tool, code-formatter, file-compare (a new entry added later), and 'converter' for the format hubs and image planning. Do NOT register anything in the capability registry and do NOT edit the tool menu: a later job does both.
+- No new dependency (jszip is already installed; only a job that names it may use it). No regular-expression literal inside `src/brain/mind`. Never add words or phrases to the brain.
+
+LANE AND FILES: create or change ONLY the files named in the LANE section. Never edit package.json, tools/files.lock, tools/guard.mjs, .github, public/dictionary, src/App.tsx, src/tools/toolCatalog.ts or anything under src/components (unless the LANE names it). Never delete, rename or shorten an existing file. Do NOT edit package.json: REPORT the exact new lines to add to the `test:kernel` script (each as `tsx tests/NAME.test.ts`).
+
+RETURN: ONE zip of NEW and CHANGED files only, paths relative to the repository root, no top folder needed, no nested zips, containing the report file named in the job. Create it with your code tool and give the download link. The report must contain: your LAW CHECK; every file created or changed; the exact commands you ran with the real pass or fail results and check counts; anything NOT RUN; anything unfinished; the package.json test lines to add.
+
+CHECK THE BASE FIRST: the job names files that must exist in the repository zip you were given. If any is missing, STOP and say which.

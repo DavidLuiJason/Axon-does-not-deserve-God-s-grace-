@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';
+import { readDocument } from '../src/tools/engines/files/documentRead';
+const file=(name:string,text:string)=>({name,bytes:new TextEncoder().encode(text)});const html='<h1>Title</h1><p>First readable block.</p><p>Second block.</p><blockquote>Quoted words.</blockquote>';const md='# Title\n\nFirst readable block.\n\nSecond block.\n\n> Quoted words.';const txt='Title\n\nFirst readable block.\n\nSecond block.\n\nQuoted words.';
+const a=readDocument(file('a.txt',txt)),b=readDocument(file('a.md',md)),c=readDocument(file('a.html',html));assert.equal(a.ok,true);assert.equal(b.ok,true);assert.equal(c.ok,true);if(a.ok&&b.ok&&c.ok){assert.equal(a.stats.words,b.stats.words);assert.equal(b.stats.words,c.stats.words);assert.equal(c.stats.characters,Array.from(c.blocks.map(x=>x.text).join('\n')).length);assert.equal(c.stats.lines,c.blocks.reduce((n,x)=>n+x.text.split(/\r\n?|\n/).length,0));assert.equal(c.stats.paragraphs,c.blocks.filter(x=>['paragraph','list-item','quote'].includes(x.kind)).length);}
+for(const name of ['table.tsv','server.log','README']){const r=readDocument(file(name,'name\tvalue\nAda\t1'));assert.equal(r.ok,true);if(r.ok)assert.ok(!r.warnings.some(w=>w.includes('extension does not match')));}
+const mismatch=readDocument(file('image.bin','ordinary readable text'));assert.equal(mismatch.ok,true);if(mismatch.ok)assert.ok(mismatch.warnings.some(w=>w.includes('extension does not match')));
+console.log('document reader polish tests passed: readable-block stats and extension warnings');

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AXON video probe (measurement only)</title>
+<style>
+:root{color-scheme:light dark;--bg:#fff;--fg:#111;--mut:#666;--ln:#ccc;--ac:#0a6}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#eee;--mut:#999;--ln:#333;--ac:#4c9}}
+body{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+h1{font-size:1.2rem;margin:0 0 8px}p{color:var(--mut);margin:6px 0}
+button{font:inherit;padding:12px 16px;min-height:48px;border:1px solid var(--ln);border-radius:10px;background:transparent;color:var(--fg);margin:6px 6px 6px 0}
+button.go{border-color:var(--ac);color:var(--ac)}input[type=file]{font:inherit;margin:8px 0;max-width:100%}
+pre{white-space:pre-wrap;word-break:break-word;border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:.85rem;line-height:1.45}
+#st{color:var(--ac)}
+</style></head><body>
+<h1>AXON video probe</h1>
+<p>Measurement only. It reads one video you choose, on this phone, and reports what this browser engine can do. Nothing is uploaded; nothing leaves the phone. It may play 4 seconds of the video's sound. Open it in the same kind of WebView or browser AXON uses; results from another browser can differ.</p>
+<input id="f" type="file" accept="video/*">
+<div><button class="go" id="run">Run probe</button><button id="cp">Copy report</button></div>
+<p id="st">Choose a video, then Run probe.</p>
+<pre id="out"></pre>
+<script>
+(function(){
+'use strict';
+var out=document.getElementById('out'),st=document.getElementById('st'),R={};
+function say(s){st.textContent=s}
+function now(){return performance.now()}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function withTimeout(p,ms,label){return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout: '+label))},ms)})])}
+function stats(a){if(!a.length)return null;var s=a.slice().sort(function(x,y){return x-y});return {n:a.length,minMs:Math.round(s[0]),medianMs:Math.round(s[Math.floor(s.length/2)]),maxMs:Math.round(s[s.length-1])}}
+function show(){out.textContent=JSON.stringify(R,null,1)}
+function env(){
+  var n=navigator;
+  return {userAgent:n.userAgent,deviceMemoryGB:n.deviceMemory||null,cores:n.hardwareConcurrency||null,
+    screen:screen.width+'x'+screen.height,dpr:window.devicePixelRatio,
+    online:n.onLine,
+    apis:{MediaRecorder:typeof MediaRecorder!=='undefined',OffscreenCanvas:typeof OffscreenCanvas!=='undefined',
+      VideoDecoder:typeof VideoDecoder!=='undefined',AudioDecoder:typeof AudioDecoder!=='undefined',
+      requestVideoFrameCallback:('requestVideoFrameCallback' in HTMLVideoElement.prototype),
+      captureStream:('captureStream' in HTMLVideoElement.prototype),createImageBitmap:typeof createImageBitmap!=='undefined',
+      AudioContext:typeof (window.AudioContext||window.webkitAudioContext)!=='undefined'}};
+}
+function canPlay(){
+  var v=document.createElement('video'),a=document.createElement('audio'),t={};
+  ['video/mp4; codecs="avc1.42E01E"','video/mp4; codecs="hvc1.1.6.L93.B0"','video/mp4; codecs="av01.0.05M.08"','video/webm; codecs="vp8"','video/webm; codecs="vp9"','video/x-matroska','video/3gpp'].forEach(function(m){t[m]=v.canPlayType(m)||'no'});
+  ['audio/mp4; codecs="mp4a.40.2"','audio/mpeg','audio/ogg; codecs="opus"','audio/ogg; codecs="vorbis"','audio/flac','audio/wav','audio/webm; codecs="opus"'].forEach(function(m){t[m]=a.canPlayType(m)||'no'});
+  return t;
+}
+function recTypes(){
+  var o={};if(typeof MediaRecorder==='undefined')return o;
+  ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/mp4;codecs=mp4a.40.2','audio/ogg;codecs=opus','video/webm','video/mp4'].forEach(function(m){try{o[m]=MediaRecorder.isTypeSupported(m)}catch(e){o[m]='error'}});
+  return o;
+}
+async function codecs(){
+  var o={};
+  if(typeof VideoDecoder!=='undefined'){
+    var vc=['avc1.42E01E','avc1.640028','hvc1.1.6.L93.B0','vp09.00.10.08','av01.0.04M.08'];
+    for(var i=0;i<vc.length;i++){try{var r=await VideoDecoder.isConfigSupported({codec:vc[i]});o['video:'+vc[i]]=!!r.supported}catch(e){o['video:'+vc[i]]='error'}}
+  }
+  if(typeof AudioDecoder!=='undefined'){
+    var ac=[['mp4a.40.2',44100,2],['opus',48000,2],['mp3',44100,2],['flac',44100,2]];
+    for(var j=0;j<ac.length;j++){try{var r2=await AudioDecoder.isConfigSupported({codec:ac[j][0],sampleRate:ac[j][1],numberOfChannels:ac[j][2]});o['audio:'+ac[j][0]]=!!r2.supported}catch(e){o['audio:'+ac[j][0]]='error'}}
+  }
+  return o;
+}
+function canvasMax(){
+  var res={},sizes=[2048,4096,8192,16384];
+  sizes.forEach(function(s){
+    try{var c=document.createElement('canvas');c.width=s;c.height=s;var x=c.getContext('2d');
+      if(!x){res[s]='no context';return}
+      x.fillStyle='#f00';x.fillRect(s-1,s-1,1,1);var d=x.getImageData(s-1,s-1,1,1).data;res[s]=d[0]===255?'ok':'allocated but reads wrong';
+      c.width=1;c.height=1;
+    }catch(e){res[s]='error: '+e.message}
+  });
+  return res;
+}
+function loadVideo(file){
+  return new Promise(function(resolve,reject){
+    var v=document.createElement('video');v.preload='auto';v.playsInline=true;v.muted=true;
+    var url=URL.createObjectURL(file),t0=now();
+    v.onloadedmetadata=function(){resolve({v:v,url:url,metaMs:Math.round(now()-t0)})};
+    v.onerror=function(){reject(new Error('This engine could not open the video (code '+(v.error&&v.error.code)+').'))};
+    v.src=url;
+  });
+}
+function seekTo(v,t){return new Promise(function(res,rej){var done=false;function ok(){if(done)return;done=true;v.removeEventListener('seeked',ok);res()}v.addEventListener('seeked',ok);try{v.currentTime=t}catch(e){rej(e)}})}
+async function seekTest(v){
+  var d=v.duration,out={seekMs:[],drawMs:[],jpgMs:[],pngMs:[],jpgBytes:[],pngBytes:[],errors:[]};
+  if(!isFinite(d)||d<=0){out.errors.push('unknown duration');return out}
+  var w=v.videoWidth,h=v.videoHeight,c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');
+  for(var i=0;i<10;i++){
+    var t=Math.min(d-0.05,Math.max(0,(i+0.5)*d/10));
+    try{
+      var a=now();await withTimeout(seekTo(v,t),8000,'seek '+i);var b=now();
+      x.drawImage(v,0,0,w,h);var c2=now();
+      var jb=await new Promise(function(r){c.toBlob(r,'image/jpeg',0.9)});var d2=now();
+      var pb=await new Promise(function(r){c.toBlob(r,'image/png')});var e2=now();
+      out.seekMs.push(b-a);out.drawMs.push(c2-b);out.jpgMs.push(d2-c2);out.pngMs.push(e2-d2);
+      out.jpgBytes.push(jb?jb.size:0);out.pngBytes.push(pb?pb.size:0);
+    }catch(e){out.errors.push(String(e.message||e))}
+  }
+  return {frameSize:w+'x'+h,seek:stats(out.seekMs),draw:stats(out.drawMs),toJpeg:stats(out.jpgMs),toPng:stats(out.pngMs),
+    jpgBytes:stats(out.jpgBytes.map(function(n){return n/1024})),pngBytes:stats(out.pngBytes.map(function(n){return n/1024})),
+    bytesNoteKB:'jpgBytes and pngBytes are in KB',errors:out.errors};
+}
+async function fpsTest(v){
+  if(!('requestVideoFrameCallback' in HTMLVideoElement.prototype))return {note:'requestVideoFrameCallback not available: frame rate cannot be measured this way'};
+  try{
+    v.muted=true;await seekTo(v,0);var times=[];
+    await withTimeout(new Promise(function(res){
+      function cb(now_,md){times.push(md.mediaTime);if(times.length>=40)res();else v.requestVideoFrameCallback(cb)}
+      v.requestVideoFrameCallback(cb);v.play().catch(function(){res()});
+    }),6000,'fps');
+    v.pause();
+    if(times.length<3)return {note:'too few frames seen'};
+    var diffs=[];for(var i=1;i<times.length;i++){var d=times[i]-times[i-1];if(d>0)diffs.push(d)}
+    diffs.sort(function(a,b){return a-b});var med=diffs[Math.floor(diffs.length/2)];
+    return {framesSeen:times.length,estimatedFps:Math.round(1000/med)/1000,note:'estimated from presented frames; a phone may skip frames when it cannot keep up'};
+  }catch(e){return {error:String(e.message||e)}}
+}
+async function audioCapture(v){
+  if(!('captureStream' in v)||typeof MediaRecorder==='undefined')return {note:'captureStream or MediaRecorder not available'};
+  try{
+    v.muted=false;await seekTo(v,0);
+    var stream=v.captureStream();var at=stream.getAudioTracks();
+    if(!at.length){v.play().catch(function(){});await sleep(300);at=v.captureStream().getAudioTracks();stream=v.captureStream()}
+    if(!at.length){v.pause();return {note:'no audio track exposed (the video may have no sound, or this engine hides it)'}}
+    var as=new MediaStream(at),mime='';
+    ['audio/webm;codecs=opus','audio/mp4','audio/webm'].some(function(m){if(MediaRecorder.isTypeSupported(m)){mime=m;return true}return false});
+    var rec=mime?new MediaRecorder(as,{mimeType:mime}):new MediaRecorder(as),chunks=[],t0=now();
+    rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+    var stopped=new Promise(function(r){rec.onstop=r});
+    rec.start();await v.play();await sleep(4000);v.pause();rec.stop();await withTimeout(stopped,4000,'recorder stop');
+    var wall=now()-t0,size=chunks.reduce(function(a,c){return a+c.size},0);
+    return {mimeType:rec.mimeType,bytesRecorded:size,wallMs:Math.round(wall),mediaMs:4000,
+      note:'audio capture through playback runs in REAL TIME (wall time about equals media time), so a 1-hour video would take about 1 hour this way'};
+  }catch(e){return {error:String(e.message||e)}}
+}
+async function run(){
+  var file=document.getElementById('f').files[0];
+  R={tool:'AXON video probe v1',when:new Date().toISOString()};
+  R.env=env();show();
+  say('Checking what this engine says it supports...');
+  R.canPlayType=canPlay();R.mediaRecorderTypes=recTypes();R.webCodecs=await codecs();R.canvasMaxSide=canvasMax();show();
+  if(!file){say('Support check done. Choose a video and run again for the timing tests.');return}
+  R.file={name:file.name,sizeMB:Math.round(file.size/1048576*100)/100,type:file.type};
+  var L;
+  try{say('Opening the video...');L=await withTimeout(loadVideo(file),15000,'open video')}catch(e){R.openError=String(e.message||e);show();say('Could not open the video.');return}
+  var v=L.v;
+  R.video={durationSec:Math.round(v.duration*1000)/1000,width:v.videoWidth,height:v.videoHeight,metadataMs:L.metaMs,
+    audioTracksReported:(v.audioTracks&&v.audioTracks.length!==undefined)?v.audioTracks.length:'not exposed'};show();
+  say('Timing 10 frame grabs...');R.frameGrab=await seekTest(v);show();
+  say('Estimating the frame rate...');R.fps=await fpsTest(v);show();
+  say('Capturing 4 seconds of audio (you may hear it)...');R.audioCapture=await audioCapture(v);show();
+  URL.revokeObjectURL(L.url);
+  say('Done. Tap Copy report and paste it to Claude.');
+}
+document.getElementById('run').onclick=function(){run().catch(function(e){R.fatal=String(e&&e.message||e);show();say('Stopped: '+R.fatal)})};
+document.getElementById('cp').onclick=function(){var t=out.textContent;if(!t){say('Nothing to copy yet.');return}
+  (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){say('Copied.')},function(){var r=document.createRange();r.selectNodeContents(out);var s=getSelection();s.removeAllRanges();s.addRange(r);say('Select and copy the report text by hand.')})};
+})();
+</script></body></html>
