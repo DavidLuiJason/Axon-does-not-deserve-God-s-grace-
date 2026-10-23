@@ -1,6 +1,6 @@
 # AXON BRAIN PLAN (Director, 2026-10-20; read with roadmap section 7)
 
-Status: B1 Intake and Reading and B2 Analysis are built. Everything below starts ONLY after every tool is finished and one cloud build of the whole project passes (owner order, 2026-10-20). Each job is written only after the job below it is accepted (Rule 3: never from the sky down); the first, B03A, is already written.
+Status (2026-10-23): B1 Intake and Reading, B2 Analysis and B03P (meaning ids through the knowledge slot) are built and merged. OWNER DECISION 2026-10-23: brain jobs (B03A onward) MAY RUN IN PARALLEL WITH THE TOOLS; this replaces the earlier rule that brain work waits for every tool (they touch no file an AI Studio job touches). Each job is written only after the job below it is accepted (Rule 3: never from the sky down); the first, B03A, is already written and is re-sent on a fresh zip that contains B03P.
 
 ## Why this order
 A message must be read before it is understood, understood before it is matched to an ability, matched before it is planned, planned before it runs, checked before it is answered. Each stage can be tested alone with a written corpus of right AND wrong messages. The golden transcript (79 messages) is replayed after every job: only the stage names in the trace may change, never a reply, until a job is meant to change replies (B04C onward).
@@ -9,7 +9,8 @@ A message must be read before it is understood, understood before it is matched 
 | Job | What | Builder | Needs | Proof |
 |---|---|---|---|---|
 | BM1 | Measure the understanding time of B1 to B2 on the owner's Infinix Note 10 (a tiny timing readout in Background Proof, AI Studio) and the dictionary block reads per message | AI Studio, then owner | tools done | numbers on the board; the budget is under half a second for the whole understanding |
-| B03A | Clauses, material attachment, speech act (ask, command, greet, thanks, chat, unknown), polarity. WRITTEN | ChatGPT | BM1 | 46-message corpus, confusion table, golden unchanged, no phrase lists, mutation tests |
+| B03P | (Meaning ids prerequisite) lets each word's meaning ids (synset ids) pass through the knowledge slot into the brain's word records; four source files and one test; chat replies unchanged, no extra dictionary lookups. DONE 2026-10-23 (ChatGPT delivered, Director fixed one wrong test expectation: mice versus its own lookup) | ChatGPT | tools not needed | 111 checks; mutation check (old file back, test fails); existing tests identical before and after; strict type check clean |
+| B03A | Clauses, material attachment, speech act (ask, command, greet, thanks, chat, unknown), polarity. WRITTEN; to be re-sent | ChatGPT | B03P (BM1 can run any time; it needs the phone) | 46-message corpus, confusion table, golden unchanged, no phrase lists, mutation tests |
 | B03B | teach and correct acts; typed slots: number, quantity with unit, date or time, text span, material, file, choice, reference to an earlier turn | ChatGPT | B03A accepted | new corpus (Director writes it first), slot extraction tests derived independently |
 | B04A | Action schemas: every capability declares what it MEANS (concepts, typed slots, accepted speech acts). One schema per tool family, derived from the registry and the 40 engine descriptors. Examples stay documentation only | ChatGPT | B03B | schema validity test; every open tool has a schema; no fixed phrases |
 | B04B | Resolution: match a clause's Frame to schemas by concept distance (synonym 1.0, then hypernym and hyponym decay), act match and slot completeness; confidence with reason; ask-with-choices output | ChatGPT | B04A | corpus of positive AND negative requests per tool, confusion table, near-miss cases, ASK_AT and RUN_AT behaviour |
@@ -46,3 +47,7 @@ These wrap the stages above. Each is written only when the job below it is accep
 | M8 | Growth path and growth log, Style profiles (consent), Tool Knowledge Packs, scripture packs | ChatGPT | M7 | each turn of the path leaves measurable improvement or is rolled back |
 | M9 | AXON Code harness (loop, read, search, patch, test runner, sandbox, approvals, standing file, Coder slot), Security lane, Challenge Lab | ChatGPT, AI Studio | M8 | tasks solved against owner-written tests; scope file respected |
 Order with the stages: B3, then M0, M1 early, B04A, B04B, B04C, M2, M3, M4, B05, B06A, B06B, M5, B07, M6, M7, B08, M8, M9.
+
+
+## ADDENDUM 2026-10-23 (owner reading questions, to build into Meaning and Dialogue, B03A to B05)
+For every message AXON first asks: who is this message for, what is it meant to do, and what does it refer to (an earlier turn, a file, something on screen)? The owner's reason: most misunderstanding between users and AI tools comes from not asking this. Director proposal for the owner to confirm: B03A keeps an `addressee` and a `reference` field open (empty for now) so B03B and B05 can fill them; no phrase lists (FL13).
