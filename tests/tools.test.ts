@@ -57,10 +57,10 @@ async function main() {
   assert(mediaTools.every((t) => t.subgroup !== undefined && MEDIA_SUBGROUPS.some((m) => m.id === t.subgroup)), 'every Media tool belongs to one of the three choices');
   assert(CATALOG_TOOLS.filter((t) => t.groupId !== 'media').every((t) => t.subgroup === undefined), 'no tool outside Media has a Media choice');
   assert(toolsInSubgroup('image').map((t) => t.id).join(',') === 'collage-maker,picture-to-table', 'Image holds Collage Maker, Picture to Table or Code (the Image Converter lives inside the Converter since A10)');
-  assert(toolsInSubgroup('video').map((t) => t.id).join(',') === 'video-converter,video-maker,video-downloader', 'Video holds Video Converter, Video Maker, Video Downloader');
+  assert(toolsInSubgroup('video').map((t) => t.id).join(',') === 'video-frames,video-converter,video-maker,video-downloader', 'Video holds Video Frames, Video Converter, Video Maker, Video Downloader (Video Frames opened with A14)');
   assert(toolsInSubgroup('audio').map((t) => t.id).join(',') === 'audio-converter,text-to-speech,voice-library,voice-cloner,speech-to-text', 'Audio holds the five sound tools');
   assert(MEDIA_SUBGROUPS.reduce((n, m) => n + toolsInSubgroup(m.id).length, 0) === mediaTools.length, 'the three choices together hold every Media tool exactly once');
-  assert(CATALOG_TOOLS.length === 59, 'the menu holds 59 entries (62 before A10 retired data-converter, text-format-converter and image-converter; update on purpose when a tool is added or removed)');
+  assert(CATALOG_TOOLS.length === 60, 'the menu holds 60 entries (62 before A10 retired data-converter, text-format-converter and image-converter; 59 before A14 added Video Frames; update on purpose when a tool is added or removed)');
 
   assert(CATALOG_TOOLS.filter(t=>t.id==='converter').length===1,'exactly one Converter');
   assert(CATALOG_TOOLS.find(t=>t.id==='converter')?.status==='available' && CATALOG_TOOLS.find(t=>t.id==='converter')?.opens==='converter','Converter is open and leads to its screen');
@@ -87,7 +87,7 @@ async function main() {
   assert(group('link-analyzer') === 'web-data', 'Link Analyzer is in Web and Data');
   assert(group('background-proof') === 'device-system', 'Background Proof is in Device and System');
   assert(group('ai-assistant') === 'device-system', 'AI Assistant is in Device and System');
-  assert(CATALOG_TOOLS.length === 59, 'still 59 entries after converter consolidation');
+  assert(CATALOG_TOOLS.length === 60, 'still 60 entries after converter consolidation (59 plus Video Frames)');
   assert(CATALOG_TOOLS.filter((t) => t.status === 'coming-soon').length === CATALOG_TOOLS.filter((t) => t.status !== 'available').length && CATALOG_TOOLS.every((t) => t.status === 'available' || t.status === 'coming-soon'), 'every tool that is not available is honestly marked coming soon (count derived, not remembered)');
   assert(
     CATALOG_TOOLS.every((t) => t.name.trim() !== '' && t.description.trim() !== '' && t.description.length <= 100),
@@ -100,14 +100,14 @@ async function main() {
   assert(group('file-converter') === 'files-convert' && group('voice-cloner') === 'media' && group('text-to-speech') === 'media', 'the file converter and the voice tools are in their groups');
   assert(
     CATALOG_TOOLS.filter((t) => t.status === 'available').map((t) => t.id).sort().join(',') ===
-      'background-proof,batch-convert,calculator,case-converter,code-formatter,converter,date-calculator,device-profile,dictionary,document-reader,encoder-decoder,file-compare,file-converter,file-inspector,find-replace,hash-tool,interface-capture,json-viewer,loan-calculator,my-dictionary,number-to-words,password-generator,pattern-tester,percentage-helper,qr-maker,random-picker,sort-lines,split-bill,stopwatch,summarizer,tally-counter,text-cleaner,text-compare,text-counter,timer,zip-tool',
+      'background-proof,batch-convert,calculator,case-converter,code-formatter,converter,date-calculator,device-profile,dictionary,document-reader,encoder-decoder,file-compare,file-converter,file-inspector,find-replace,hash-tool,interface-capture,json-viewer,loan-calculator,my-dictionary,number-to-words,password-generator,pattern-tester,percentage-helper,qr-maker,random-picker,sort-lines,split-bill,stopwatch,summarizer,tally-counter,text-cleaner,text-compare,text-counter,timer,video-frames,zip-tool',
     'only tools that really work are marked available (pinned list: update it, on purpose, whenever a tool opens or closes)'
   );
 
   console.log('-- coming soon');
   const all = buildGroupViews('');
   const soon = (name: string) => all.find((v) => v.group.name === name)?.hasAvailable === false;
-  assert(soon('Media'), 'Media is flagged coming soon while none of its tools is built');
+  assert(!soon('Media'), 'Media is lit because Video Frames is built (Media was all coming soon before A14)');
   assert(['Numbers', 'Time', 'Create and Encode', 'Files and Converters', 'Text and Writing'].every((n) => all.find((v) => v.group.name === n)?.hasAvailable === true), 'groups whose tools are built are lit');
   assert(all.find((v) => v.group.name === 'Language')?.hasAvailable === true, 'Language is lit because the Dictionary is available');
   assert(!soon('AXON Code') && !soon('Finance'), 'AXON Code and Finance are lit because tools in them are built');
@@ -136,7 +136,7 @@ async function main() {
   const litNames = TOOL_GROUPS.filter((g) => CATALOG_TOOLS.some((t) => t.groupId === g.id && t.status === 'available')).map((g) => g.name);
   const darkNames = TOOL_GROUPS.filter((g) => !litNames.includes(g.name)).map((g) => g.name);
   assert(home.rows.map((r) => r.group.name).sort().join('|') === [...litNames].sort().join('|'), 'the home shows exactly the groups that have a real tool (derived from the catalog)');
-  assert(home.rows.length < TOOL_GROUPS.length && home.rows.length >= 3, 'the home stays calm: not every group is a row, and the real tools are not lost');
+  assert(home.rows.length <= TOOL_GROUPS.length && home.rows.length >= 3, 'the home shows only groups with a real tool, and the real tools are not lost (every group has one since Video Frames opened, so all eleven may show)');
   assert(home.comingGroups.join('|') === darkNames.join('|'), 'the other groups are named once, in the decided order (derived from the catalog)');
   assert(home.rows.length + home.comingGroups.length === TOOL_GROUPS.length, 'every group is either a row or named in the quiet line');
   const web = home.rows.find((r) => r.group.id === 'web-data');
