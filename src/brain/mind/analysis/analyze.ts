@@ -123,6 +123,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           if (token) {
             token.lemma = found.word;
             token.knowledge = 'known';
+            if (found.synsetIds?.length) token.synsetIds = [...found.synsetIds];
             const pos = posOf(found);
             if (pos.length) token.partsOfSpeech = pos;
           }
@@ -140,7 +141,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
         const original = direct[i];
         if (!item || !token || !original || original.status === 'error') continue;
         const candidates = lemmaCandidates(item.surface);
-        let primary: { base: string; via: 'irregular' | 'rule'; rule: string; pos: string } | undefined;
+        let primary: { base: string; via: 'irregular' | 'rule'; rule: string; pos: string; synsetIds?: string[] } | undefined;
         const alternatives: string[] = [];
         for (const candidate of candidates) {
           const candidateResult = await lookup(candidate.base);
@@ -150,7 +151,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           const isHeadword = candidateResult.word.toLowerCase() === candidate.base.toLowerCase();
           const hasCandidatePos = candidateResult.senses.some((sense) => sense.partOfSpeech.toLowerCase().startsWith(candidate.pos));
           if (!(isHeadword && hasCandidatePos) && !(original.status === 'found' && isHeadword && candidate.pos === 'v')) continue;
-          if (original.status === 'not-found' && !primary) primary = { base: candidateResult.word, via: candidate.via, rule: candidate.rule, pos: candidate.pos };
+          if (original.status === 'not-found' && !primary) primary = { base: candidateResult.word, via: candidate.via, rule: candidate.rule, pos: candidate.pos, ...(candidateResult.synsetIds?.length ? { synsetIds: [...candidateResult.synsetIds] } : {}) };
           else if (original.status === 'found' && isHeadword && candidateResult.word.toLowerCase() !== original.word.toLowerCase() && !alternatives.some((value) => value.toLowerCase() === candidateResult.word.toLowerCase())) alternatives.push(candidateResult.word);
           if (primary && original.status === 'not-found') break;
         }
@@ -159,12 +160,13 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           token.knowledge = 'known';
           token.morphology = { via: primary.via, rule: primary.rule };
           token.partsOfSpeech = [primary.pos];
+          if (primary.synsetIds?.length) token.synsetIds = [...primary.synsetIds];
         } else if (alternatives.length) token.alternativeLemmas = alternatives;
       }
 
       // Pass 3: phrases only after every surface word and its morphology have
       // had priority. Only attempt windows beginning with a known word.
-      const phraseAt = new Map<number, { endToken: number; surface: string; lemma: string; pos?: string[] }>();
+      const phraseAt = new Map<number, { endToken: number; surface: string; lemma: string; pos?: string[]; synsetIds?: string[] }>();
       for (let i = 0; i < lexemes.length; i += 1) {
         if (tokens[i]?.knowledge !== 'known') continue;
         const max = Math.min(maxPhraseWords, lexemes.length - i);
@@ -183,7 +185,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           if (found.status === 'error') return { ok: false, error: 'knowledge-error' };
           if (resultFound(found)) {
             const pos = posOf(found);
-            phraseAt.set(i, { endToken: i + count - 1, surface: words.join(' '), lemma: found.word, ...(pos.length ? { pos } : {}) });
+            phraseAt.set(i, { endToken: i + count - 1, surface: words.join(' '), lemma: found.word, ...(pos.length ? { pos } : {}), ...(found.synsetIds?.length ? { synsetIds: [...found.synsetIds] } : {}) });
             break;
           }
         }
@@ -193,6 +195,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
         if (!token) continue;
         token.lemma = phrase.lemma;
         token.knowledge = 'known';
+        if (phrase.synsetIds?.length) token.synsetIds = [...phrase.synsetIds];
         token.entry = { surface: phrase.surface, start: lexemes[i]?.start ?? token.start, end: lexemes[phrase.endToken]?.end ?? token.end };
         if (phrase.pos) token.partsOfSpeech = phrase.pos;
       }

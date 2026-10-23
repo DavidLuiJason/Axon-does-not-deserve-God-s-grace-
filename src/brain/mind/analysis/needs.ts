@@ -1,4 +1,4 @@
-/** Analysis requirements that the current KnowledgeSlot does not expose. */
+/** Analysis requirements; synset identifiers now pass through KnowledgeSlot, while the other extensions remain future-facing. */
 export interface AnalysisKnowledgeExtensions {
   /** Dictionary synset identifiers aligned to each sense, when available. */
   synsetIds?: string[];

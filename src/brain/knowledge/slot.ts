@@ -9,6 +9,7 @@
 export interface KnowledgeSense {
   partOfSpeech: string;
   meaning: string;
+  synset?: string;
   example?: string;
   synonyms?: string[];
   examples?: string[];
@@ -33,6 +34,7 @@ export type KnowledgeLookupResult =
       status: 'found';
       word: string;
       senses: KnowledgeSense[];
+      synsetIds?: string[];
       pronunciations?: string[];
       source: string;
       version: string;
@@ -55,7 +57,7 @@ export type KnowledgeLookupResult =
 export interface KnowledgeBackend {
   status(): KnowledgeSlotStatus;
   lookup(word: string): Promise<
-    | { status: 'found'; word: string; senses: KnowledgeSense[]; pronunciations?: string[] }
+    | { status: 'found'; word: string; senses: KnowledgeSense[]; synsetIds?: string[]; pronunciations?: string[] }
     | { status: 'not-found'; word: string }
   >;
   credits(): KnowledgeCredits;
@@ -94,6 +96,7 @@ export function createKnowledgeSlot(backend: KnowledgeBackend): KnowledgeSlot {
           status: 'found',
           word: result.word,
           senses: result.senses,
+          ...(result.synsetIds ? { synsetIds: result.synsetIds } : {}),
           ...(result.pronunciations ? { pronunciations: result.pronunciations } : {}),
           source: source.source,
           version: source.version,
