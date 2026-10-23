@@ -30,4 +30,4 @@ Evidence labels: MEASURED, OWNER-REPORTED, DEVICE, NOT RUN, HYPOTHESIS. Nothing 
 - Add every candidate to `docs/CLEANUP_CANDIDATES.md` (add only).
 
 ## E. Brain notes from the owner
-- For every message AXON first asks who it is for, what it is meant to do and what it refers to (see `docs/BRAIN_PLAN.md`, addendum 2026-10-23).
+- READING QUESTIONS (owner correction, 2026-10-23): for every message AXON silently asks ITSELF who it is for, what it is meant to do and what it refers to. These are internal checks in its own reading, NOT questions put to the user; it asks the user only when it cannot settle them itself (see `docs/BRAIN_PLAN.md`, addendum 2026-10-23).

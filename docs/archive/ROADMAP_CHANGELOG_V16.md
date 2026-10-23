@@ -9,3 +9,4 @@ v16.7 (2026-10-20): state re-measured from the 2026-10-20 zip (31 of 62 tools op
 v16.3 to v16.6 (2026-10-18 and 19): ChatGPT writes engines only, AI Studio screens; jobs C01 to C15 and A01 to A08; engines accepted with Director fixes; File Compare; brain design extended (7.3 to 7.12); board and handbook split out.
 
 v16.0 to v16.2 (2026-10-16 and 17): rewritten under 40,000 characters; one-look rule; MD-file law. v15.1: FL11 to FL13, Phase B.
+v16.9 (2026-10-23): A14 and M0A merged; 85 of 85 test files pass (TF2 to TF5); ONE workflow file `axon.yml`; AXON serves the owner, the laws are the owner's alone, the owner sees every message sent to outside tools; outside-tool honesty OPEN.
