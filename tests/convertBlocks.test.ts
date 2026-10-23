@@ -15,7 +15,7 @@ for(let n=0;n<20;n++){
 }
 const bad=convert({kind:'data-formats',from:'json',to:'csv',input:'[1,2,3]'});assert.equal(bad.ok,false);assert.equal(bad.ok?true:bad.error,'json-table-shape');assertions+=2;
 const badJson=convert({kind:'data-formats',from:'json',to:'yaml',input:'{bad'});assert.equal(badJson.ok,false);assertions++;
-const notes=convert({kind:'data-formats',from:'json',to:'csv',input:'{"a":[1,2],"nested":{"x":1}}'});assert.equal(notes.ok,true);assert.ok(notes.ok&&notes.changes.some(s=>s.includes('arrays inside cells')));assertions+=2;
+const notes=convert({kind:'data-formats',from:'json',to:'csv',input:'{"a":[1,2],"nested":{"x":1}}'});assert.equal(notes.ok,true);assert.ok(notes.ok&&(notes.changes??[]).some(s=>s.includes('arrays inside cells')));assertions+=2;
 const csvText=convert({kind:'data-formats',from:'csv',to:'json',input:'a,b\n001,hello'});assert.equal(csvText.ok,true);assert.ok(csvText.ok&&csvText.value.includes('"001"'));assertions+=2;
 const csvTypes=convert({kind:'data-formats',from:'csv',to:'json',input:'a,b\n1,true',options:{detectTypes:true}});assert.equal(csvTypes.ok,true);assert.ok(csvTypes.ok&&csvTypes.value.includes('true'));assertions+=2;
 for(const from of ['txt','md','html'])for(const to of ['txt','md','html']){const r=convert({kind:'text-formats',from,to,input:'Hello **world**\n<script>x</script>'});assert.equal(r.ok,true,`${from}->${to}`);assertions++;}

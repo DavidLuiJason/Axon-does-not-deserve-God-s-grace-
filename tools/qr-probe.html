@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AXON QR probe</title>
+<style>body{font:15px system-ui;background:#111214;color:#ececec;margin:0;padding:16px}button{font:inherit;padding:12px 16px;margin:6px 6px 6px 0;border-radius:10px;border:1px solid #333;background:#1a1b1e;color:#ececec}pre{white-space:pre-wrap;background:#18191c;padding:12px;border-radius:10px}video{width:100%;max-height:40vh;background:#000}</style></head>
+<body>
+<h2>AXON QR probe</h2>
+<p>Measures what THIS browser can do for a QR scanner. Open it in the phone's browser, tap Run, allow the camera if asked, then tap Copy report and paste it to Claude.</p>
+<button id="run">Run probe</button><button id="copy">Copy report</button>
+<video id="v" playsinline muted></video><canvas id="c" hidden></canvas>
+<pre id="out">Not run yet.</pre>
+<script>
+const out=document.getElementById('out'),rep=[];
+const say=(k,v)=>{rep.push(k+': '+v);out.textContent=rep.join('\n');};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(rep.join('\n'));alert('Copied');}catch(e){alert('Copy failed; select the text by hand');}};
+document.getElementById('run').onclick=async()=>{
+  rep.length=0;
+  say('page','AXON QR probe v1');
+  say('userAgent',navigator.userAgent);
+  say('secureContext',String(window.isSecureContext));
+  say('hardwareConcurrency',String(navigator.hardwareConcurrency));
+  say('deviceMemoryGB',String(navigator.deviceMemory));
+  say('BarcodeDetector present',String('BarcodeDetector' in window));
+  let det=null;
+  if('BarcodeDetector' in window){
+    try{const f=await BarcodeDetector.getSupportedFormats();say('BarcodeDetector formats',f.join(','));
+      if(f.includes('qr_code'))det=new BarcodeDetector({formats:['qr_code']});}catch(e){say('BarcodeDetector error',String(e));}
+  }
+  say('getUserMedia present',String(!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)));
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){say('result','no camera API; stop');return;}
+  try{
+    const t0=performance.now();
+    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+    const v=document.getElementById('v');v.srcObject=s;await v.play();
+    say('camera start ms',String(Math.round(performance.now()-t0)));
+    const st=s.getVideoTracks()[0].getSettings();
+    say('camera settings',st.width+'x'+st.height+' @'+st.frameRate+' facing='+st.facingMode);
+    const c=document.getElementById('c'),x=c.getContext('2d',{willReadFrequently:true});
+    c.width=v.videoWidth;c.height=v.videoHeight;
+    let frames=0,grabMs=0;const T=performance.now();
+    while(performance.now()-T<3000){const a=performance.now();x.drawImage(v,0,0);const d=x.getImageData(0,0,c.width,c.height);grabMs+=performance.now()-a;frames++;await sleep(0);}
+    say('frame grabs in 3 s',String(frames));
+    say('avg grab+getImageData ms',(grabMs/frames).toFixed(1));
+    if(det){const a=performance.now();let n=0;try{const r=await det.detect(v);n=r.length;}catch(e){say('detect error',String(e));}
+      say('BarcodeDetector one call ms',(performance.now()-a).toFixed(1)+' (found '+n+')');}
+    s.getTracks().forEach(t=>t.stop());
+    say('result','camera works in this browser');
+  }catch(e){say('camera error',e.name+': '+e.message);}
+  say('NOTE','This measures the phone browser. The app web view can differ; the app needs its own camera permission (a native step).');
+};
+</script></body></html>

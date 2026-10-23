@@ -4,7 +4,7 @@ const enc = (s: string) => new TextEncoder().encode(s);
 const f = (name: string, content: string, size = enc(content).length) => ({ name, head: enc(content), size });
 const files = [f('same.json','{"a":1}'), f('SAME.json','{"b":2}'), f('out.yaml','a: 1'), f('bad.pdf','%PDF-1.7')];
 const p = planBatch(files, 'yaml'); assert.equal(p.ok, true); assert.equal(BATCH_CONVERT_DESCRIPTOR.toolId, 'batch-convert');
-if (!p.ok) throw new Error(p.message);
+if (!p.ok) throw new Error((p as { message?: string }).message ?? 'planBatch failed');
 assert.equal(p.items.length, 4); assert.equal(p.items.filter(x => x.status === 'ready').length, 2); assert.equal(p.items.filter(x => x.status === 'skipped').length, 2);
 assert.equal(new Set(p.items.map(x => x.outputName.toLocaleLowerCase('en-US'))).size, p.items.length);
 assert.ok(!files.some(x => x.name.toLocaleLowerCase('en-US') === p.items[0].outputName.toLocaleLowerCase('en-US')));

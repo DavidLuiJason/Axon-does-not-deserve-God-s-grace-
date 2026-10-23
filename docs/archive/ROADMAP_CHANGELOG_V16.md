@@ -10,3 +10,5 @@ v16.3 to v16.6 (2026-10-18 and 19): ChatGPT writes engines only, AI Studio scree
 
 v16.0 to v16.2 (2026-10-16 and 17): rewritten under 40,000 characters; one-look rule; MD-file law. v15.1: FL11 to FL13, Phase B.
 v16.9 (2026-10-23): A14 and M0A merged; 85 of 85 test files pass (TF2 to TF5); ONE workflow file `axon.yml`; AXON serves the owner, the laws are the owner's alone, the owner sees every message sent to outside tools; outside-tool honesty OPEN.
+v17.1 (2026-10-23): owner correction: the reading questions are internal (AXON asks itself, not the user); B03A prompt brought up to date.
+v17.0 (2026-10-23): B03P accepted and merged; B03A to be re-sent on a fresh zip; brain jobs may run in parallel with the tools; new owner rules (section 1); `docs/OPEN_ITEMS.md` created.
