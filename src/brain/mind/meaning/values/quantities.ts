@@ -39,10 +39,16 @@ function indexUnits(units: Unit[]): Map<string, Unit[]> {
   }
   return index;
 }
+let initialsFor: UnitTable | null = null;
+let initialsSet = new Set<string>();
+function symbolInitials(units: UnitTable): Set<string> {
+  if (initialsFor !== units) { initialsFor = units; initialsSet = new Set(Object.values(units).flatMap(group => group.map(u => u.symbol[0]).filter((c): c is string => !!c))); }
+  return initialsSet;
+}
 function findAt(text: string, pos: number, limit: number, units: UnitTable, attached: boolean): Match | null {
   let best: Match | null = null;
   const first = text[pos];
-  if (!first || (!isLetter(first) && !Object.values(units).some(group => group.some(u => u.symbol[0] === first)))) return null;
+  if (!first || (!isLetter(first) && !symbolInitials(units).has(first))) return null;
   const table = cachedUnits === units ? (indexedUnits.get(first.toLowerCase()) ?? []) : (indexUnits(all(units)).get(first.toLowerCase()) ?? []);
   for (const u of table) {
     for (const symbol of [false,true]) {
@@ -90,7 +96,7 @@ export function readQuantities(ctx: ScanContext, found: ExtractedValue[]): Extra
     let p=n.end;while(p<limit&&isSpace(ctx.text[p]!))p++;
     const attached=p===n.end;
     if(ctx.text[p]==='%') {out.push({kind:'percent',text:ctx.text.slice(n.start,p+1),start:n.start,end:p+1,confidence:.9,reason:'number followed by percent sign',computed:true,value:n.value,parts:[n]});continue;}
-    const tail=ctx.text.slice(p,limit).toLowerCase();
+    const tail=ctx.text.slice(p,Math.min(limit,p+16)).toLowerCase();
     let percentEnd=0;
     if(PERCENT_WORDS.has(tail.split(' ')[0]!)) {
       if(tail.startsWith('percent')&&!isLetter(tail[7]??''))percentEnd=p+7;

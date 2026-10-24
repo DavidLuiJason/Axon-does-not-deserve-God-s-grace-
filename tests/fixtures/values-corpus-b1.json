@@ -1,0 +1,1146 @@
+[
+ {
+  "id": "V01",
+  "text": "count the words in \"the quick brown fox\"",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V02",
+  "text": "convert 5 miles to kilometres",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "5 miles",
+    "value": 5,
+    "unit": "mile"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V03",
+  "text": "change 100 fahrenheit to celsius",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "100 fahrenheit",
+    "value": 100,
+    "unit": "Fahrenheit"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V04",
+  "text": "what is 15 percent of 240",
+  "expect": [
+   {
+    "kind": "percent",
+    "text": "15 percent",
+    "value": 15
+   },
+   {
+    "kind": "number",
+    "text": "240",
+    "value": 240
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V05",
+  "text": "calculate 12 times 8 plus 3",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "12",
+    "value": 12
+   },
+   {
+    "kind": "number",
+    "text": "8",
+    "value": 8
+   },
+   {
+    "kind": "number",
+    "text": "3",
+    "value": 3
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V06",
+  "text": "turn this number into words 4521",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "4521",
+    "value": 4521
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V07",
+  "text": "write 1994 in roman numerals",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "1994",
+    "value": 1994,
+    "alt": "quantity"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V08",
+  "text": "how many days between 1 March 2027 and 15 June 2027",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "1 March 2027",
+    "date": "2027-03-01"
+   },
+   {
+    "kind": "date",
+    "text": "15 June 2027",
+    "date": "2027-06-15"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V09",
+  "text": "what day of the week is 25 December 2027",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "25 December 2027",
+    "date": "2027-12-25"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V10",
+  "text": "what is XIV in normal numbers",
+  "expect": [
+   {
+    "kind": "roman",
+    "text": "XIV",
+    "value": 14
+   }
+  ],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V11",
+  "text": "set a timer for ten minutes",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "ten minutes",
+    "ms": 600000,
+    "value": 10,
+    "unit": "minute"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V12",
+  "text": "set timer ten minutes pls",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "ten minutes",
+    "ms": 600000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V13",
+  "text": "plese set a timmer for 10 minits",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "10",
+    "value": 10
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V14",
+  "text": "set a time for tennis minutes",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V15",
+  "text": "convert five mile too kilometer",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "five mile",
+    "value": 5,
+    "unit": "mile"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V16",
+  "text": "how many mile is 5 kilometres",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "5 kilometres",
+    "value": 5,
+    "unit": "kilometre"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V17",
+  "text": "convert 10 feet to metres, then 10 yards to metres",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "10 feet",
+    "value": 10,
+    "unit": "foot"
+   },
+   {
+    "kind": "quantity",
+    "text": "10 yards",
+    "value": 10,
+    "unit": "yard"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V18",
+  "text": "convert 5 miles and 3 feet",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "5 miles",
+    "value": 5,
+    "unit": "mile"
+   },
+   {
+    "kind": "quantity",
+    "text": "3 feet",
+    "value": 3,
+    "unit": "foot"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V19",
+  "text": "remind me in half an hour",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "half an hour",
+    "ms": 1800000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V20",
+  "text": "wait an hour and a half",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "an hour and a half",
+    "ms": 5400000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V21",
+  "text": "run it for 2 hours 15 minutes",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "2 hours 15 minutes",
+    "ms": 8100000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V22",
+  "text": "set 1h30m",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "1h30m",
+    "ms": 5400000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V23",
+  "text": "timer for 1.5 hours",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "1.5 hours",
+    "ms": 5400000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V24",
+  "text": "stopwatch for 90 seconds",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "90 seconds",
+    "ms": 90000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V25",
+  "text": "remind me in a week",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "a week",
+    "ms": 604800000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V26",
+  "text": "add twenty five and 3",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "twenty five",
+    "value": 25
+   },
+   {
+    "kind": "number",
+    "text": "3",
+    "value": 3
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V27",
+  "text": "buy twenty-five apples",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "twenty-five",
+    "value": 25
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V28",
+  "text": "I need one hundred and twenty copies",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "one hundred and twenty",
+    "value": 120
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V29",
+  "text": "add two thousand five hundred",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "two thousand five hundred",
+    "value": 2500
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V30",
+  "text": "is three million big",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "three million",
+    "value": 3000000
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V31",
+  "text": "send 1,000 words",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "1,000",
+    "value": 1000
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V32",
+  "text": "multiply by 3.5",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "3.5",
+    "value": 3.5
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V33",
+  "text": "what is -5 plus 2",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "-5",
+    "value": -5
+   },
+   {
+    "kind": "number",
+    "text": "2",
+    "value": 2
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V34",
+  "text": "what is 5-3",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "5",
+    "value": 5
+   },
+   {
+    "kind": "number",
+    "text": "3",
+    "value": 3
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V35",
+  "text": "show the 2nd one",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "2nd",
+    "value": 2,
+    "form": "ordinal"
+   },
+   {
+    "kind": "number",
+    "text": "one",
+    "value": 1,
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V36",
+  "text": "what about the second one",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "second",
+    "value": 2,
+    "form": "ordinal"
+   },
+   {
+    "kind": "number",
+    "text": "one",
+    "value": 1,
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V37",
+  "text": "on the 21st",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "21st",
+    "value": 21,
+    "form": "ordinal"
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V38",
+  "text": "the 1th item",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "1th",
+    "error": "bad-ordinal"
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V39",
+  "text": "wait a second",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "a second",
+    "ms": 1000,
+    "weak": true,
+    "alt": "number"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V40",
+  "text": "which one",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "one",
+    "value": 1,
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V41",
+  "text": "the last one was better",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "one",
+    "value": 1,
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V42",
+  "text": "add 15% to 240",
+  "expect": [
+   {
+    "kind": "percent",
+    "text": "15%",
+    "value": 15
+   },
+   {
+    "kind": "number",
+    "text": "240",
+    "value": 240
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V43",
+  "text": "remind me tomorrow",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "tomorrow",
+    "date": "2026-10-25"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V44",
+  "text": "what did I do yesterday",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "yesterday",
+    "date": "2026-10-23"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V45",
+  "text": "is it ready today",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "today",
+    "date": "2026-10-24"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V46",
+  "text": "if it rains tomorrow, cancel the trip",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "tomorrow",
+    "date": "2026-10-25"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V47",
+  "text": "set an alarm for 8 tomorrow",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "8",
+    "value": 8
+   },
+   {
+    "kind": "date",
+    "text": "tomorrow",
+    "date": "2026-10-25"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V48",
+  "text": "set an alarm tomorrow at 8",
+  "expect": [
+   {
+    "kind": "datetime",
+    "text": "tomorrow at 8",
+    "date": "2026-10-25",
+    "time": [
+     "08:00",
+     "20:00"
+    ]
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V49",
+  "text": "wake me at 7:30am",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "7:30am",
+    "time": "07:30"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V50",
+  "text": "meet at 20:15",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "20:15",
+    "time": "20:15"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V51",
+  "text": "call at 8pm",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "8pm",
+    "time": "20:00"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V52",
+  "text": "start at 12am",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "12am",
+    "time": "00:00"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V53",
+  "text": "lunch at 12pm",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "12pm",
+    "time": "12:00"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V54",
+  "text": "ring me at noon",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "noon",
+    "time": "12:00"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V55",
+  "text": "alarm for half past eight",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "half past eight",
+    "time": [
+     "08:30",
+     "20:30"
+    ]
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V56",
+  "text": "alarm for quarter to nine",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "quarter to nine",
+    "time": [
+     "08:45",
+     "20:45"
+    ]
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V57",
+  "text": "alarm for quarter past 3",
+  "expect": [
+   {
+    "kind": "time",
+    "text": "quarter past 3",
+    "time": [
+     "03:15",
+     "15:15"
+    ]
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V58",
+  "text": "see you on Friday",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "Friday",
+    "date": "2026-10-30"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V59",
+  "text": "remind me on 1/3/2027",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "1/3/2027",
+    "alternatives": [
+     "2027-03-01",
+     "2027-01-03"
+    ],
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V60",
+  "text": "remind me on 13/3/2027",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "13/3/2027",
+    "date": "2027-03-13"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V61",
+  "text": "the date is 2027-03-01",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "2027-03-01",
+    "date": "2027-03-01"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V62",
+  "text": "what day is March 1, 2027",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "March 1, 2027",
+    "date": "2027-03-01"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V63",
+  "text": "is 31 February 2027 a Sunday",
+  "expect": [
+   {
+    "kind": "date",
+    "text": "31 February 2027",
+    "error": "invalid-date"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V64",
+  "text": "may I convert this",
+  "expect": [],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V65",
+  "text": "open the timer in march",
+  "expect": [],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V66",
+  "text": "remind me in 2 hours",
+  "expect": [
+   {
+    "kind": "duration",
+    "text": "2 hours",
+    "ms": 7200000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V67",
+  "text": "MIX THE COLOURS",
+  "expect": [
+   {
+    "kind": "roman",
+    "text": "MIX",
+    "value": 1009,
+    "weak": true
+   }
+  ],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V68",
+  "text": "what is mix",
+  "expect": [],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V69",
+  "text": "write XL as a number",
+  "expect": [
+   {
+    "kind": "roman",
+    "text": "XL",
+    "value": 40
+   }
+  ],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V70",
+  "text": "what is IIII",
+  "expect": [],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V71",
+  "text": "what is IC",
+  "expect": [],
+  "kind": "core",
+  "job": "d"
+ },
+ {
+  "id": "V72",
+  "text": "my number is 08031234567",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "08031234567",
+    "value": 8031234567,
+    "weak": true,
+    "alt": "identifier"
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V73",
+  "text": "99999999999999999999",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "99999999999999999999",
+    "error": "too-large"
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V74",
+  "text": "",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V75",
+  "text": "???",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V76",
+  "text": "😀",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V77",
+  "text": "مرحبا",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V78",
+  "text": "x = 5",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "5",
+    "value": 5
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V79",
+  "text": "12345",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "12345",
+    "value": 12345
+   }
+  ],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V80",
+  "text": "count the words in \"ten minutes\"",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ },
+ {
+  "id": "V81",
+  "text": "the sign says \"open the timer in 5 minutes\" and I want 3 miles in km",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "3 miles",
+    "value": 3,
+    "unit": "mile"
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V82",
+  "text": "I won the game for ten dollars",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "ten",
+    "value": 10
+   }
+  ],
+  "kind": "stretch",
+  "job": "a"
+ },
+ {
+  "id": "V83",
+  "text": "heya, convert 5 miles to kilometres, then set a timer for 10 minutes",
+  "expect": [
+   {
+    "kind": "quantity",
+    "text": "5 miles",
+    "value": 5,
+    "unit": "mile"
+   },
+   {
+    "kind": "duration",
+    "text": "10 minutes",
+    "ms": 600000
+   }
+  ],
+  "kind": "core",
+  "job": "b"
+ },
+ {
+  "id": "V84",
+  "text": "set an alarm for 8 tomorrow if I am not awake",
+  "expect": [
+   {
+    "kind": "number",
+    "text": "8",
+    "value": 8
+   },
+   {
+    "kind": "date",
+    "text": "tomorrow",
+    "date": "2026-10-25"
+   }
+  ],
+  "kind": "core",
+  "job": "c"
+ },
+ {
+  "id": "V85",
+  "text": "what is the difference between affect and effect",
+  "expect": [],
+  "kind": "core",
+  "job": "a"
+ }
+]
