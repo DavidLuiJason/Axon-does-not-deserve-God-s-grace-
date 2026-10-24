@@ -4,7 +4,7 @@
 
 WHO THIS IS FOR: ChatGPT or Grok (either one, in a NEW chat; both can run code and return a zip). It writes pure code and tests only; it never designs screens. (Vibe and DeepSeek are not used for this job.)
 WHAT THIS DOES: Fills ONE file, `values/quantities.ts`, so that a number followed by a unit becomes a quantity (`5 miles`), a percent (`15%`) or a duration (`2 hours 15 minutes`, `half an hour`), through the unit engine that already exists. Nothing is wired into the chat.
-WHAT YOU DO: START ONLY AFTER step a was accepted. Attach: this file, AXON_ROADMAP_V17_5.md, and `B03B1-MINIBASE-b.zip` (the Director builds it from step a's accepted numbers). Do not attach anything else.
+WHAT YOU DO: START ONLY AFTER step a was accepted. Attach: this file, AXON_ROADMAP_V17_6.md, and `B03B1-MINIBASE-b.zip` (the Director builds it from step a's accepted numbers). Do not attach anything else.
 WHAT TO BRING BACK: ONE zip named `B03B1b-units.zip` containing `src/brain/mind/meaning/values/quantities.ts`, your test file and `docs/reports/B03B1b_REPORT.md`. Give it to Claude (the Director) to inspect.
 PASTE THIS ONE LINE (then attach the files above): Do the job in the attached file B03B1b_FOR_CHATGPT_OR_GROK_UNITS.md, exactly, using the attached roadmap and the attached mini-base zip. Run everything yourself with `node run.mjs` as the file says, and return one zip.
 IF THE BUILDER REPLIES WITH ONLY A REVIEW AND A LAW CHECK AND BUILDS NOTHING, paste this in the SAME chat (once only): "Continue now, in this same chat. Do not report again. Write the first file, run its test, then the next. Your next message must contain the zip. If you cannot finish everything, deliver the finished files complete and tested and list the rest."
