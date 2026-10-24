@@ -1,0 +1,572 @@
+[
+ {
+  "id": "P01",
+  "text": "count the words in \"red green blue\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P02",
+  "text": "convert 5 miles to kilometres",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P03",
+  "text": "please sort these lines \"pear\napple\nfig\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P04",
+  "text": "open the calculator",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P05",
+  "text": "show me my dictionary",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P06",
+  "text": "set a timer for ten minutes",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P07",
+  "text": "what does serendipity mean?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P08",
+  "text": "how many words are in \"one two three\"?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P09",
+  "text": "is the dictionary ready?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P10",
+  "text": "where is my timer",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "no question mark: structure only"
+ },
+ {
+  "id": "P11",
+  "text": "why did that fail?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P12",
+  "text": "can you convert units",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "polite request: act is ask and the alternatives list MUST contain a command reading"
+ },
+ {
+  "id": "P13",
+  "text": "hello",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P14",
+  "text": "good morning",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P15",
+  "text": "hey there",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P16",
+  "text": "thanks",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P17",
+  "text": "thank you very much",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P18",
+  "text": "it is raining today",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P19",
+  "text": "I like short answers",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "P20",
+  "text": "that was helpful",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "M01",
+  "text": "count the words in \"a b c\" and then convert 5 miles to kilometres",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "M02",
+  "text": "open the timer, then show me the dictionary",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "M03",
+  "text": "hello, what does serendipity mean?",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "M04",
+  "text": "thanks. now sort these lines \"b\na\"",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "M05",
+  "text": "what is a kilometre and how many are in a mile?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "N01",
+  "text": "salt and pepper",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "a phrase with no verb: one clause, unknown"
+ },
+ {
+  "id": "N02",
+  "text": "convert 5 miles and 3 feet to kilometres",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "and joins two quantities, NOT two instructions"
+ },
+ {
+  "id": "N03",
+  "text": "sort the red and blue lines",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "N04",
+  "text": "count the words and letters in \"ab cd\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "and joins two objects"
+ },
+ {
+  "id": "N05",
+  "text": "rock and roll is a kind of music",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "N06",
+  "text": "what is the difference between a lake and a pond?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "N07",
+  "text": "I want tea and coffee",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "N08",
+  "text": "tom and jerry are cartoon characters",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X01",
+  "text": "`rm -rf /`",
+  "clauses": [],
+  "kind": "core",
+  "note": "only material: no language clause, nothing is interpreted"
+ },
+ {
+  "id": "X02",
+  "text": "he said \"count the words in this\" yesterday",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core",
+  "note": "quoted words are material and are never obeyed"
+ },
+ {
+  "id": "X03",
+  "text": "```\nopen the calculator\n```",
+  "clauses": [],
+  "kind": "core",
+  "note": "a code block is untouchable material"
+ },
+ {
+  "id": "X04",
+  "text": "the word \"convert\" has two syllables",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X05",
+  "text": "qzx plm vbn",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X06",
+  "text": "   ",
+  "clauses": [],
+  "kind": "core",
+  "note": "empty: no clauses"
+ },
+ {
+  "id": "X07",
+  "text": "?",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X08",
+  "text": "12345",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X09",
+  "text": "do not delete anything",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X10",
+  "text": "don't convert it",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "X11",
+  "text": "I do not like that",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ],
+  "kind": "core"
+ },
+ {
+  "id": "S01",
+  "text": "cuont the wrods in \"a b\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "stretch",
+  "note": "typo tolerance: reported, not required"
+ },
+ {
+  "id": "S02",
+  "text": "could you maybe tell me what a mile is",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "kind": "stretch",
+  "note": "indirect question: reported, not required"
+ }
+]

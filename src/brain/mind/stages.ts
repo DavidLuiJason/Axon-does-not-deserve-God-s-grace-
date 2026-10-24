@@ -10,7 +10,9 @@ import { classifySymbolRoles } from '../symbols/symbolRoles';
 import type { MindContext, MindStage, Segment, StageId, StageState } from './types';
 import { createLegacyExecutor } from './legacy';
 import { dictionarySlot } from '../knowledge/dictionarySlot';
+import type { KnowledgeSlot } from '../knowledge/slot';
 import { createAnalyzer } from './analysis/analyze';
+import { buildMeaning } from './meaning';
 
 function withEntry(context: MindContext, stage: StageId, state: StageState, note: string, patch: Partial<MindContext> = {}): MindContext {
   return { ...context, ...patch, entries: [...context.entries, { stage, state, note }] };
@@ -54,7 +56,7 @@ function makeSegments(text: string): { segments: Segment[]; note: string } {
   }
 }
 
-export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string): MindStage[] {
+export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot): MindStage[] {
   function intake(context: MindContext): MindContext {
     const utterance = { id: nextId(), text: context.utterance.text, place: context.utterance.place, at: now() };
     return withEntry(context, 'intake', 'ran', 'request captured', { utterance });
@@ -64,7 +66,7 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
     return withEntry(context, 'reading', 'ran', read.note, { analysis: { segments: read.segments, tokens: [] } });
   }
   async function analysis(context: MindContext): Promise<MindContext> {
-    const analyze = createAnalyzer(dictionarySlot, { maxLookups: 64, maxPhraseWords: 5 });
+    const analyze = createAnalyzer(slot, { maxLookups: 64, maxPhraseWords: 5 });
     const segments = context.analysis?.segments ?? [{ kind: 'language' as const, text: context.utterance.text, start: 0, end: context.utterance.text.length }];
     const result = await analyze(segments);
     if (!result.ok) return withEntry(context, 'analysis', 'ran', `analysis unavailable: ${result.error}`, { analysis: { segments, tokens: [] } });
@@ -72,7 +74,21 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
     return withEntry(context, 'analysis', 'ran', note, { analysis: { segments, tokens: result.tokens, metrics: result.metrics } });
   }
   function meaning(context: MindContext): MindContext {
-    return withEntry(context, 'meaning', 'not-built', 'not built: speech acts arrive in B3', { frame: { act: 'unknown', confidence: 0 } });
+    const unreadable = { act: 'unknown' as const, confidence: 0 };
+    if (!context.analysis || !context.analysis.metrics) return withEntry(context, 'meaning', 'not-built', 'meaning not read: the analysis did not complete', { frame: unreadable });
+    try {
+      const outcome = buildMeaning(context.analysis, context.utterance.text);
+      if (!outcome.ok) return withEntry(context, 'meaning', 'not-built', `meaning not read: ${outcome.error}`, { frame: unreadable });
+      const clauses = outcome.meaning.clauses;
+      const note = clauses.length === 0
+        ? (outcome.meaning.onlyMaterial ? '0 clauses: only quoted or code material, nothing is interpreted' : '0 clauses: no words')
+        : `${clauses.length} clause${clauses.length === 1 ? '' : 's'}: ${clauses.map((frame) => frame.polarity === 'negative' ? `${frame.act} (negative)` : frame.act).join(', ')}`;
+      const first = clauses[0];
+      return withEntry(context, 'meaning', 'ran', note, { meaning: outcome.meaning, frame: first ? { act: first.act, confidence: first.confidence } : unreadable });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return withEntry(context, 'meaning', 'not-built', `meaning failed: ${message}`, { frame: unreadable });
+    }
   }
   function resolution(context: MindContext): MindContext {
     return withEntry(context, 'resolution', 'not-built', 'not built: concept resolution arrives in B4');

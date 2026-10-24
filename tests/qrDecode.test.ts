@@ -27,7 +27,7 @@ const mirrored=decodeQr(base[0].map((_,x)=>base.map(r=>r[x])));check(mirrored.ok
 check(!decodeQr([]).ok,'empty matrix rejected');check(decodeQr(Array.from({length:22},()=>Array(22).fill(false))).ok===false,'bad size rejected');
 const elapsed=performance.now()-start;
 console.log(`C21A qr decoder: PASS ${checks} checks; independent vectors=${fixture.vectors.length}; seeded round-trip attempts=600; garbage matrices=2000; elapsed=${elapsed.toFixed(2)} ms; version-40 single-decode timing measured by fixture run below.`);
-const v40=fixture.vectors.find(v=>v.version===40&&v.level==='H')!;const t0=performance.now();const v40result=decodeQr(matrix(v40));const ms=performance.now()-t0;check(v40result.ok&&v40result.text===v40.payload,'version 40 decode');console.log(`MEASURED version 40/H decode: ${ms.toFixed(3)} ms; result=${v40result.ok?'PASS':v40result.error}`);
+const v40=fixture.vectors.find(v=>v.version===40&&v.level==='H')!;const t0=performance.now();const v40result=decodeQr(matrix(v40));const ms=performance.now()-t0;check(v40result.ok&&v40result.text===v40.payload,'version 40 decode');console.log(`MEASURED version 40/H decode: ${ms.toFixed(3)} ms; result=${v40result.ok?'PASS':'FAIL'}`);
 
 // Damage safety (Director addition): random module flips must never produce WRONG text.
 {

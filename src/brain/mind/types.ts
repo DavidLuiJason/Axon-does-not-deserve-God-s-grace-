@@ -27,9 +27,15 @@ export interface Analysis {
   tokens: Token[];
   metrics?: { lookupCalls: number; cacheHits: number; budget: number; budgetExhausted: boolean; budgetUnits?: number };
 }
-export type SpeechAct = 'unknown';
+/** B03A: what a clause is. Teach and correct arrive in part B. */
+export type SpeechAct = 'ask' | 'command' | 'greet' | 'thanks' | 'chat' | 'unknown';
 export interface Frame { act: SpeechAct; confidence: number }
+/** B03A: one instruction-sized piece of a message. `tokenRange` is [from, to) over `Analysis.tokens`; `materialIds` index `Analysis.segments`. */
+export interface Clause { span: { start: number; end: number }; tokenRange: { from: number; to: number }; materialIds: number[] }
+export interface ActReading { act: SpeechAct; confidence: number; reason: string }
+export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[] }
+export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
-export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; reply?: BrainReply; entries: TraceEntry[] }
+export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; reply?: BrainReply; entries: TraceEntry[] }
 export interface MindStage { id: StageId; run(context: MindContext): Promise<MindContext> }

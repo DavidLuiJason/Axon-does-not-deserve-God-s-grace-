@@ -6,4 +6,4 @@
  */
 export { createMind, type Mind } from './pipeline';
 export { LEGACY_REGISTER, createLegacyExecutor, type LegacyEntry } from './legacy';
-export type { StageId, StageState, Utterance, Segment, Token, Analysis, SpeechAct, Frame, TraceEntry, MindTrace, MindContext, MindStage } from './types';
+export type { StageId, StageState, Utterance, Segment, Token, Analysis, SpeechAct, Frame, Clause, ActReading, ClauseFrame, Meaning, TraceEntry, MindTrace, MindContext, MindStage } from './types';

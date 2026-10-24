@@ -35,6 +35,8 @@ export type KnowledgeLookupResult =
       word: string;
       senses: KnowledgeSense[];
       synsetIds?: string[];
+      /** Every part of speech the word has in the source (all senses, not only the displayed ones). B03A. */
+      partsOfSpeech?: string[];
       pronunciations?: string[];
       source: string;
       version: string;
@@ -57,7 +59,7 @@ export type KnowledgeLookupResult =
 export interface KnowledgeBackend {
   status(): KnowledgeSlotStatus;
   lookup(word: string): Promise<
-    | { status: 'found'; word: string; senses: KnowledgeSense[]; synsetIds?: string[]; pronunciations?: string[] }
+    | { status: 'found'; word: string; senses: KnowledgeSense[]; synsetIds?: string[]; partsOfSpeech?: string[]; pronunciations?: string[] }
     | { status: 'not-found'; word: string }
   >;
   credits(): KnowledgeCredits;
@@ -97,6 +99,7 @@ export function createKnowledgeSlot(backend: KnowledgeBackend): KnowledgeSlot {
           word: result.word,
           senses: result.senses,
           ...(result.synsetIds ? { synsetIds: result.synsetIds } : {}),
+          ...(result.partsOfSpeech ? { partsOfSpeech: result.partsOfSpeech } : {}),
           ...(result.pronunciations ? { pronunciations: result.pronunciations } : {}),
           source: source.source,
           version: source.version,

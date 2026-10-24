@@ -68,11 +68,13 @@ export function createDictionarySlot(openDictionary?: OpenDictionary): Knowledge
         const pos = first?.entries[0]?.pos ?? 'unknown';
         senses.push({ partOfSpeech: pos, meaning: 'No definition is recorded for this entry.' });
       }
+      const partsOfSpeech = [...new Set(result.matches.flatMap((match) => match.entries.map((entry) => entry.pos)).filter(Boolean))];
       const pronunciations = [...new Set(result.matches.flatMap((match) =>
         match.entries.flatMap((entry) => (entry.pronunciations ?? []).map((item) => item.text)),
       ))];
       return { status: 'found', word: result.matches[0]?.word ?? query, senses,
         ...(synsetIds.length ? { synsetIds } : {}),
+        ...(partsOfSpeech.length ? { partsOfSpeech } : {}),
         ...(pronunciations.length ? { pronunciations } : {}),
       };
     },

@@ -106,7 +106,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
       }
     };
 
-    const posOf = (found: Extract<KnowledgeLookupResult, { status: 'found' }>): string[] => [...new Set(found.senses.map((sense) => sense.partOfSpeech).filter((value): value is string => Boolean(value)))];
+    const posOf = (found: Extract<KnowledgeLookupResult, { status: 'found' }>): string[] => found.partsOfSpeech?.length ? [...found.partsOfSpeech] : [...new Set(found.senses.map((sense) => sense.partOfSpeech).filter((value): value is string => Boolean(value)))];
 
     try {
       // Pass 1: every surface word gets its direct dictionary lookup before any

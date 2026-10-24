@@ -60,7 +60,8 @@ async function main(): Promise<void> {
 
   const trace = (await brain.askWithTrace({ text: 'trace states', place: 'chat' })).trace.entries;
   for (const id of ['resolution', 'dialogue', 'planning', 'verification']) assert(trace.find((entry) => entry.stage === id)?.state === 'not-built', `${id} is not built in B1`);
-  assert(trace.find((entry) => entry.stage === 'meaning')?.state === 'not-built', 'meaning is not built in B1');
+  // B03A: without a dictionary in this test the analysis cannot complete, so the Meaning stage honestly reports that it did not read.
+  assert(trace.find((entry) => entry.stage === 'meaning')?.state === 'not-built', 'meaning is not read when the analysis did not complete');
   assert(trace.find((entry) => entry.stage === 'execution')?.state === 'ran', 'execution runs the legacy executor');
 
   const codeExecutor = createLegacyExecutor([provider('code', async () => answer('ok', 'code'))], provider('fallback', async () => answer('fallback', 'fallback')));
@@ -75,7 +76,7 @@ async function main(): Promise<void> {
   assert(quotedContext.analysis?.segments.some((segment) => segment.kind === 'material' && segment.text === '\"leave these words alone\"') === true, 'quoted payload is represented by a material segment');
   codeContext = await stages[2].run(codeContext);
   codeContext = await stages[3].run(codeContext);
-  assert(codeContext.frame?.act === 'unknown' && codeContext.frame.confidence === 0, 'B1 meaning frame stays unknown with zero confidence');
+  assert(codeContext.frame?.act === 'unknown' && codeContext.frame.confidence === 0, 'a message whose analysis did not complete keeps an unknown frame with zero confidence');
 
   const realIds = getAxonBrain().sources().connected.map((item) => item.id);
   assert(realIds.every((id) => LEGACY_REGISTER.some((entry) => entry.providerId === id)), 'every real provider and fallback has a legacy register entry');

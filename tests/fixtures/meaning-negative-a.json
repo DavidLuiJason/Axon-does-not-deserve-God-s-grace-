@@ -1,0 +1,698 @@
+[
+ {
+  "id": "G01",
+  "text": "\"open the calculator\"",
+  "clauses": [],
+  "note": "quoted words alone are material, never obeyed"
+ },
+ {
+  "id": "G02",
+  "text": "say \"hello there\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G03",
+  "text": "Open The Calculator",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "mixed case"
+ },
+ {
+  "id": "G04",
+  "text": "   count   the   words  ",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "extra spaces"
+ },
+ {
+  "id": "G05",
+  "text": "COUNT THE WORDS IN \"a b\"",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ],
+  "note": "capitals"
+ },
+ {
+  "id": "G06",
+  "text": "what is 2+2?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G07",
+  "text": "hello 🙂",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "emoji is not a word"
+ },
+ {
+  "id": "G08",
+  "text": "thanks 🙂 sort these lines \"b\\na\"",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G09",
+  "text": "سلام",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "right-to-left text: not English, so not understood"
+ },
+ {
+  "id": "G10",
+  "text": "he is a good boy and she is a good girl",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G11",
+  "text": "I like tea but I do not like coffee",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ]
+ },
+ {
+  "id": "G12",
+  "text": "sort the files then count them",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G13",
+  "text": "the sort order is wrong",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "starts with a verb-looking noun phrase"
+ },
+ {
+  "id": "G14",
+  "text": "salt is white",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "noun that is also a verb, then an auxiliary"
+ },
+ {
+  "id": "G15",
+  "text": "red and green and blue",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G16",
+  "text": "mix the red and the blue paint",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G17",
+  "text": "count 3 apples and 4 pears",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G18",
+  "text": "buy milk, eggs, bread",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "a list with commas is one instruction"
+ },
+ {
+  "id": "G19",
+  "text": "convert 5 miles to kilometres, then convert 10 feet to metres",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G20",
+  "text": "hello. hello. hello.",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G21",
+  "text": "Thanks!",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G22",
+  "text": "thanks a lot",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G23",
+  "text": "hello world",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G24",
+  "text": "good evening everyone",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G25",
+  "text": "what's the time",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "contraction"
+ },
+ {
+  "id": "G26",
+  "text": "it's raining",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G27",
+  "text": "I'm ready",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G28",
+  "text": "isn't it ready?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ]
+ },
+ {
+  "id": "G29",
+  "text": "won't you help me",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ]
+ },
+ {
+  "id": "G30",
+  "text": "don't you like tea",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ],
+  "note": "do-support with a subject is a question, not an imperative"
+ },
+ {
+  "id": "G31",
+  "text": "never delete anything",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ]
+ },
+ {
+  "id": "G32",
+  "text": "please do not send it",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "negative"
+   }
+  ]
+ },
+ {
+  "id": "G33",
+  "text": "do you like tea",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G34",
+  "text": "does the dictionary have this word",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G35",
+  "text": "have a look at the timer",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G36",
+  "text": "be quiet",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G37",
+  "text": "is it ready",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G38",
+  "text": "you can convert units",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G39",
+  "text": "you can convert units?",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "a statement closed by a question mark is a question"
+ },
+ {
+  "id": "G40",
+  "text": "the word \"convert\" is a verb",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G41",
+  "text": "```js\nlet x = 1\n```",
+  "clauses": [],
+  "note": "code block"
+ },
+ {
+  "id": "G42",
+  "text": "run `ls -la` now",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G43",
+  "text": "x = 5",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G44",
+  "text": "....",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G45",
+  "text": "COUNT THE WORDS. THANKS",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G46",
+  "text": "I think that the timer is broken because it never stops and I want you to fix it",
+  "clauses": [
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "negative"
+   },
+   {
+    "act": "chat",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G47",
+  "text": "Hello, can you open the timer and show me my dictionary?",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G48",
+  "text": "What is the capital of France? Sort these lines \"b\\na\".",
+  "clauses": [
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 1,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G49",
+  "text": "a",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G50",
+  "text": "1 + 1",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G51",
+  "text": "thanks hello",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G52",
+  "text": "hey",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "owner-listed conversation word"
+ },
+ {
+  "id": "G53",
+  "text": "cheers",
+  "clauses": [
+   {
+    "act": "thanks",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "owner-listed conversation word"
+ },
+ {
+  "id": "G54",
+  "text": "yo what does serendipity mean",
+  "clauses": [
+   {
+    "act": "greet",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "ask",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ]
+ },
+ {
+  "id": "G55",
+  "text": "salt",
+  "clauses": [
+   {
+    "act": "unknown",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "one word that is both noun and verb: not guessed"
+ },
+ {
+  "id": "G56",
+  "text": "count and sort the words",
+  "clauses": [
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   },
+   {
+    "act": "command",
+    "material": 0,
+    "polarity": "positive"
+   }
+  ],
+  "note": "two verbs share one object"
+ }
+]
