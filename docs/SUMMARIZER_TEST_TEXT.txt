@@ -1,0 +1,15 @@
+JOB R7: RECEIPT SPLIT ENGINE
+
+This job is called R7 and it builds a receipt split engine for AXON. The receipt split engine takes a list of items and a list of people and says how much each person owes. Each item on the receipt has a price and a list of the people who shared that item. A receipt has items, each item has people, and each person has a share. People often split a receipt after a meal, and the receipt split should be simple for people.
+
+You may create exactly three files: receiptSplit.ts, receiptSplit.test.ts and R7_REPORT.md. Never touch any other file. Never edit package.json, and report the test line you would add instead. Keep the engine pure, with no screens and no network.
+
+All money is kept in integer cents and never in floating point numbers. Divide each item among the people who shared that item, so the receipt split is fair to every person on the receipt. When an item cannot be divided evenly, the leftover cents go to the first people in the list, one cent each. If an item has no people, return the typed error no-people. The items on a receipt can be food, drinks or shared extras.
+
+Tax is applied to the sum of the items. The tip is applied to the sum of the items before tax, never on the tax. Round half up whenever a calculation produces a fraction of a cent. The receipt total is the sum of the items plus the tip plus the tax. Each person gets a total, and the total of all people must equal the receipt total.
+
+The receipt split must accept at most 200 items and 50 people, and above that it returns the typed error too-large. A person can share many items, and an item can have many people. The engine should be fast, even when the receipt has many items and many people.
+
+Write at least 20 test cases, and compute every expected answer independently in Python with Decimal. Write at least five mutation tests that break the engine on purpose and must fail the suite. Run every test yourself before you hand the work over. If the same problem fails twice, stop and report it, and do not try a third fix.
+
+Name the functions clearly so the receipt split is easy to read. Return clear results for every person on the receipt. The report should say what was built and what was tested. Return one zip named R7-receipt-split.zip. Do not paste code in the chat. If this prompt conflicts with the roadmap, stop and say so. Think carefully about people, items and the receipt before you start.
