@@ -17,3 +17,5 @@ Roadmap section 5.8 gives the roster. This file holds the ratings and the LOG of
 - 2026-10-24 Grok: got the 38,000-character prompt; its sandbox could not install tsx, so it ran nothing; its zip failed 16 of 84 core items and the no-regex guard. Fix: the no-install runner.
 - 2026-10-24 ChatGPT, B03B1b: delivered partial (one core item and the speed limit failing); B03B1b2 fixed one; the Director fixed the rest under the SMALL FIXES rule (roadmap 5.2).
 - Earlier (roadmap v17.4): the Summarizer was measured unsafe for prompts.
+| 2026-10-25 | ChatGPT | B03B3c TONE: ONE file (about 8,000 characters) against a fixed contract and a 50-check runner, mini-base of 6 files | delivered on the first reply, all proofs pass (builder-reported); Director accepted | two Claude accounts that tried to measure, build, test and package it themselves hit their usage limit: the Director never builds a builder's job |
+
