@@ -10,6 +10,7 @@ import { readClause } from './acts';
 import { classifyGap, splitClauses, type UnitRange } from './clauses';
 import { buildLex, materialRanges, type Lex, type MaterialRange } from './lexical';
 import { readLanguage } from './languageCheck';
+import { readTeaching } from './teach/readTeaching';
 import { buildStructure } from './structure/glue';
 import type { MeaningStructure } from './structure/glueTypes';
 
@@ -137,5 +138,7 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
   }
   // B03B3a: does the message read as English (a reading only; nothing answers with it yet).
   const language = readLanguage(analysis);
-  return { ok: true, meaning: { clauses: frames, onlyMaterial, ...(structure ? { structure } : {}), language } };
+  // B03B3b: teach and correct acts ("x means y", "no, I meant z"): a reading only; nothing learns or saves from it yet.
+  const teaching = readTeaching(units, structure, materials, text);
+  return { ok: true, meaning: { clauses: frames, onlyMaterial, ...(structure ? { structure } : {}), language, teaching } };
 }

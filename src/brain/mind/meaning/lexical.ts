@@ -11,6 +11,7 @@ import { conversationActOf } from '../../knowledge/conversationWords';
 import type { Analysis } from '../types';
 import { anchorOfIds, type AnchorAct } from './concepts';
 import { hasSpeechSense } from './structure/speechSenses';
+import { hasIntendSense, hasTeachSense } from './teach/teachSenses';
 import { isFirstPerson } from './structure/glueWords';
 import {
   isAuxiliary, isCoordinator, isDeterminer, isModal, isNegation, isNegativeClitic, isObjectPronoun, isPoliteness,
@@ -50,6 +51,9 @@ export interface Lex {
   speech: boolean;
   /** B03B2c: first person (the speaker): closed set in structure/glueWords.ts. */
   speaker: boolean;
+  /** B03B3b: one of its senses is "has the meaning of" (teach) / "intend to express" (correct), from the dictionary's synset ids. */
+  meaning: boolean;
+  intend: boolean;
   /** Any closed-class grammar word. */
   grammar: boolean;
   anchor: { act: AnchorAct; full: boolean; source: 'dictionary' | 'conversation-word' } | null;
@@ -129,6 +133,8 @@ export function buildLex(analysis: Analysis, text: string): Lex[] {
       sequencer: isSequencer(norm),
       speech: hasSpeechSense(token.synsetIds),
       speaker: isFirstPerson(word),
+      meaning: hasTeachSense(token.synsetIds),
+      intend: hasIntendSense(token.synsetIds),
       grammar: false,
       anchor,
       materialAfter: false,
