@@ -1,0 +1,151 @@
+/** DIRECTOR'S PRIVATE REFERENCE for B03B3d (never given to a builder). */
+import type { Consent, EditInput, ListOptions, Mention, Note, NoteKind, NoteResult, NoteState, NotesApi, NotesStore, ParseResult, ProposeInput, Topic, TopicView } from './notesTypes';
+import { CONSENT_KIND_LABELS, NOTE_KIND_LABELS, NOTE_STATE_LABELS } from './notesTypes';
+
+const KINDS = NOTE_KIND_LABELS.split(' ');
+const STATES = NOTE_STATE_LABELS.split(' ');
+const CONSENTS = CONSENT_KIND_LABELS.split(' ');
+const isObj = (v: unknown): v is Record<string, any> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const isWs = (c: string) => c.trim() === '';
+const lowerUnit = (c: string) => { const l = c.toLowerCase(); return l.length === 1 ? l : c; };
+const isWordChar = (c: string) => (c >= '0' && c <= '9') || c.toLowerCase() !== c.toUpperCase();
+function collapse(s: string): string { let out = ''; let pending = false; for (const c of s) { if (isWs(c)) { pending = out.length > 0; continue; } if (pending) { out += ' '; pending = false; } out += c; } return out; }
+export function topicKey(name: string): string { if (typeof name !== 'string') return ''; const c = collapse(name); let o = ''; for (let i = 0; i < c.length; i++) o += lowerUnit(c[i]!); return o; }
+export function emptyStore(): NotesStore { return { version: 1, nextId: 1, topics: [], notes: [] }; }
+const okStore = (s: unknown): s is NotesStore => isObj(s) && s.version === 1 && Number.isInteger(s.nextId) && s.nextId >= 1 && Array.isArray(s.topics) && Array.isArray(s.notes);
+const okConsent = (c: unknown): c is Consent => isObj(c) && typeof c.kind === 'string' && CONSENTS.includes(c.kind) && isNum(c.at);
+const idNum = (id: string) => Number(id.slice(1));
+const byCreated = (a: Note, b: Note) => (a.created - b.created) || (idNum(a.id) - idNum(b.id));
+const sameNote = (a: { topicKey: string; kind: string; text: string; term: string | null }, n: Note, tk: string) => a.topicKey === tk && a.kind === n.kind && a.text === topicKey(n.text) && a.term === (n.term === null ? null : topicKey(n.term));
+const fail = (reason: any): NoteResult => ({ ok: false, reason });
+const same = (store: NotesStore, note: Note): NoteResult => ({ ok: true, store, note, changed: false });
+
+export function proposeNote(store: NotesStore, input: ProposeInput, now: number): NoteResult {
+  if (!okStore(store) || !isNum(now) || !isObj(input) || typeof input.topic !== 'string' || typeof input.text !== 'string' || typeof input.kind !== 'string' || !KINDS.includes(input.kind) || typeof input.standalone !== 'boolean' || !isObj(input.source) || typeof input.source.text !== 'string' || !(input.source.chat === null || typeof input.source.chat === 'string')) return fail('bad-input');
+  if (!input.standalone) return fail('not-standalone');
+  const tk = topicKey(input.topic); if (tk === '') return fail('empty-topic');
+  const text = input.text.trim(); if (text === '') return fail('empty-text');
+  let term: string | null = null;
+  if (input.kind === 'meaning') { term = typeof input.term === 'string' ? input.term.trim() : ''; if (term === '') return fail('missing-term'); }
+  const probe = { topicKey: tk, kind: input.kind, text: topicKey(text), term: term === null ? null : topicKey(term) };
+  let topics = store.topics; let nextId = store.nextId;
+  let topic = topics.find((t) => t.key === tk);
+  if (topic) for (const n of store.notes) { if (n.topic === topic.id && sameNote(probe, n, tk)) return same(store, n); }
+  if (!topic) { topic = { id: `t${nextId}`, name: collapse(input.topic), key: tk, created: now }; nextId += 1; topics = [...topics, topic]; }
+  const note: Note = { id: `n${nextId}`, topic: topic.id, kind: input.kind as NoteKind, text, term, state: 'proposed', source: { text: input.source.text, chat: input.source.chat }, created: now, changed: now, consent: null, history: [] };
+  return { ok: true, store: { version: 1, nextId: nextId + 1, topics, notes: [...store.notes, note] }, note, changed: true };
+}
+function swap(store: NotesStore, note: Note, topics: readonly Topic[] = store.topics, nextId = store.nextId): NotesStore { return { version: 1, nextId, topics, notes: store.notes.map((n) => (n.id === note.id ? note : n)) }; }
+export function keepNote(store: NotesStore, id: string, consent: Consent, now: number): NoteResult {
+  if (!okStore(store) || typeof id !== 'string' || !isNum(now)) return fail('bad-input');
+  if (!okConsent(consent)) return fail('no-consent');
+  const n = store.notes.find((x) => x.id === id); if (!n) return fail('not-found');
+  if (n.state === 'removed') return fail('wrong-state'); if (n.state === 'kept') return same(store, n);
+  const k: Note = { ...n, state: 'kept', consent: { kind: consent.kind, at: consent.at }, changed: now };
+  return { ok: true, store: swap(store, k), note: k, changed: true };
+}
+export function discardProposal(store: NotesStore, id: string): NoteResult {
+  if (!okStore(store) || typeof id !== 'string') return fail('bad-input');
+  const n = store.notes.find((x) => x.id === id); if (!n) return fail('not-found'); if (n.state !== 'proposed') return fail('wrong-state');
+  const notes = store.notes.filter((x) => x.id !== id);
+  const topics = notes.some((x) => x.topic === n.topic) ? store.topics : store.topics.filter((t) => t.id !== n.topic);
+  return { ok: true, store: { version: 1, nextId: store.nextId, topics, notes }, note: n, changed: true };
+}
+export function removeNote(store: NotesStore, id: string, now: number): NoteResult {
+  if (!okStore(store) || typeof id !== 'string' || !isNum(now)) return fail('bad-input');
+  const n = store.notes.find((x) => x.id === id); if (!n) return fail('not-found');
+  if (n.state === 'proposed') return fail('wrong-state'); if (n.state === 'removed') return same(store, n);
+  const r: Note = { ...n, state: 'removed', changed: now }; return { ok: true, store: swap(store, r), note: r, changed: true };
+}
+export function restoreNote(store: NotesStore, id: string, now: number): NoteResult {
+  if (!okStore(store) || typeof id !== 'string' || !isNum(now)) return fail('bad-input');
+  const n = store.notes.find((x) => x.id === id); if (!n) return fail('not-found');
+  if (n.state === 'proposed') return fail('wrong-state'); if (n.state === 'kept') return same(store, n);
+  const r: Note = { ...n, state: 'kept', changed: now }; return { ok: true, store: swap(store, r), note: r, changed: true };
+}
+export function correctNote(store: NotesStore, id: string, edit: EditInput, consent: Consent, now: number): NoteResult {
+  if (!okStore(store) || typeof id !== 'string' || !isObj(edit) || !isNum(now)) return fail('bad-input');
+  if ((edit.text !== undefined && typeof edit.text !== 'string') || (edit.topic !== undefined && typeof edit.topic !== 'string') || (edit.term !== undefined && edit.term !== null && typeof edit.term !== 'string')) return fail('bad-input');
+  if (!okConsent(consent)) return fail('no-consent');
+  const n = store.notes.find((x) => x.id === id); if (!n) return fail('not-found'); if (n.state !== 'kept') return fail('wrong-state');
+  let text = n.text; if (edit.text !== undefined) { text = edit.text.trim(); if (text === '') return fail('empty-text'); }
+  let term = n.term; if (n.kind === 'meaning' && edit.term !== undefined) { term = edit.term === null ? '' : edit.term.trim(); if (term === '') return fail('missing-term'); }
+  let tk = store.topics.find((t) => t.id === n.topic)!.key; let target = store.topics.find((t) => t.id === n.topic)!;
+  let dest: Topic | undefined = target;
+  if (edit.topic !== undefined) { tk = topicKey(edit.topic); if (tk === '') return fail('empty-topic'); dest = store.topics.find((t) => t.key === tk); }
+  const sameTopic = dest !== undefined && dest.id === n.topic;
+  if (text === n.text && term === n.term && sameTopic) return same(store, n);
+  const probe = { topicKey: tk, kind: n.kind, text: topicKey(text), term: term === null ? null : topicKey(term) };
+  for (const o of store.notes) { if (o.id === n.id) continue; const t = store.topics.find((x) => x.id === o.topic)!; if (sameNote(probe, o, t.key)) return fail('duplicate'); }
+  let topics = store.topics; let nextId = store.nextId;
+  if (!dest) { dest = { id: `t${nextId}`, name: collapse(edit.topic as string), key: tk, created: now }; nextId += 1; topics = [...topics, dest]; }
+  const upd: Note = { ...n, text, term, topic: dest.id, changed: now, consent: { kind: consent.kind, at: consent.at }, history: [...n.history, { text: n.text, term: n.term, topic: n.topic, changed: n.changed }] };
+  let out = swap(store, upd, topics, nextId);
+  if (upd.topic !== n.topic && !out.notes.some((x) => x.topic === n.topic)) out = { ...out, topics: out.topics.filter((t) => t.id !== n.topic) };
+  return { ok: true, store: out, note: upd, changed: true };
+}
+export function listNotes(store: NotesStore, options?: ListOptions): TopicView[] {
+  if (!okStore(store)) return [];
+  let states: readonly string[] = ['kept'];
+  if (options !== undefined) { if (!isObj(options)) return []; if (options.states !== undefined) { if (!Array.isArray(options.states) || options.states.some((s) => !STATES.includes(s as string))) return []; states = options.states; } }
+  const out: TopicView[] = [];
+  for (const t of store.topics) { const notes = store.notes.filter((n) => n.topic === t.id && states.includes(n.state)).sort(byCreated); if (notes.length) out.push({ topic: t, notes }); }
+  return out.sort((a, b) => (a.topic.key < b.topic.key ? -1 : a.topic.key > b.topic.key ? 1 : idNum(a.topic.id) - idNum(b.topic.id)));
+}
+export function findInMessage(store: NotesStore, text: string): Mention[] {
+  if (!okStore(store) || typeof text !== 'string') return [];
+  let norm = ''; const map: number[] = []; let pending = -1; let started = false;
+  for (let i = 0; i < text.length; i++) { const c = text[i]!; if (isWs(c)) { if (pending < 0) pending = i; continue; } if (started && pending >= 0) { norm += ' '; map.push(pending); } pending = -1; started = true; norm += lowerUnit(c); map.push(i); }
+  const kept = store.notes.filter((n) => n.state === 'kept');
+  const cand = new Map<string, { topic: Topic | null; notes: Note[] }>();
+  for (const t of store.topics) { const ns = kept.filter((n) => n.topic === t.id); if (ns.length && t.key !== '') cand.set(t.key, { topic: t, notes: [...ns] }); }
+  for (const n of kept) { if (n.kind !== 'meaning' || n.term === null) continue; const k = topicKey(n.term); if (k === '') continue; const e = cand.get(k); if (e) { if (!e.notes.some((x) => x.id === n.id)) e.notes.push(n); } else cand.set(k, { topic: null, notes: [n] }); }
+  const keys = [...cand.keys()].sort((a, b) => (b.length - a.length) || (a < b ? -1 : a > b ? 1 : 0));
+  const taken = new Array<boolean>(norm.length).fill(false); const found: Mention[] = [];
+  for (const k of keys) {
+    let from = 0;
+    for (;;) {
+      const at = norm.indexOf(k, from); if (at < 0) break; const end = at + k.length; from = at + 1;
+      if ((at > 0 && isWordChar(norm[at - 1]!)) || (end < norm.length && isWordChar(norm[end]!))) continue;
+      let clash = false; for (let i = at; i < end; i++) if (taken[i]) { clash = true; break; }
+      if (clash) continue; for (let i = at; i < end; i++) taken[i] = true; from = end;
+      const e = cand.get(k)!; const notes = [...e.notes].sort(byCreated); const s = map[at]!; const f = map[end - 1]! + 1;
+      found.push({ start: s, end: f, text: text.slice(s, f), topic: e.topic ? e.topic.id : notes[0]!.topic, via: e.topic ? 'topic' : 'term', notes: notes.map((n) => n.id) });
+    }
+  }
+  return found.sort((a, b) => a.start - b.start);
+}
+export function dictionaryCandidate(store: NotesStore, id: string): { term: string; meaning: string } | null {
+  if (!okStore(store) || typeof id !== 'string') return null; const n = store.notes.find((x) => x.id === id);
+  return n && n.state === 'kept' && n.kind === 'meaning' && n.term !== null ? { term: n.term, meaning: n.text } : null;
+}
+export function serializeStore(store: NotesStore): string {
+  if (!okStore(store)) return '';
+  return JSON.stringify({ version: 1, nextId: store.nextId, topics: store.topics.map((t) => ({ id: t.id, name: t.name, key: t.key, created: t.created })), notes: store.notes.map((n) => ({ id: n.id, topic: n.topic, kind: n.kind, text: n.text, term: n.term, state: n.state, source: { text: n.source.text, chat: n.source.chat }, created: n.created, changed: n.changed, consent: n.consent === null ? null : { kind: n.consent.kind, at: n.consent.at }, history: n.history.map((h) => ({ text: h.text, term: h.term, topic: h.topic, changed: h.changed })) })) });
+}
+export function parseStore(text: string): ParseResult {
+  if (typeof text !== 'string') return { ok: false, reason: 'bad-text' };
+  let raw: any; try { raw = JSON.parse(text); } catch { return { ok: false, reason: 'bad-text' }; }
+  const bad = { ok: false, reason: 'bad-store' } as const;
+  if (!isObj(raw) || raw.version !== 1 || !Number.isInteger(raw.nextId) || raw.nextId < 1 || !Array.isArray(raw.topics) || !Array.isArray(raw.notes)) return bad;
+  const ids = new Set<string>(); let maxId = 0; const keys = new Set<string>(); const topics: Topic[] = []; const notes: Note[] = [];
+  const idOk = (id: unknown, p: string): id is string => { if (typeof id !== 'string' || id[0] !== p) return false; const num = Number(id.slice(1)); if (!Number.isInteger(num) || num < 1 || String(num) !== id.slice(1) || ids.has(id)) return false; ids.add(id); maxId = Math.max(maxId, num); return true; };
+  for (const t of raw.topics) { if (!isObj(t) || !idOk(t.id, 't') || typeof t.name !== 'string' || t.name === '' || collapse(t.name) !== t.name || t.key !== topicKey(t.name) || keys.has(t.key) || !isNum(t.created)) return bad; keys.add(t.key); topics.push({ id: t.id, name: t.name, key: t.key, created: t.created }); }
+  const seen = new Set<string>(); const used = new Set<string>();
+  for (const n of raw.notes) {
+    if (!isObj(n) || !idOk(n.id, 'n') || typeof n.topic !== 'string') return bad;
+    const tp = topics.find((t) => t.id === n.topic); if (!tp) return bad;
+    if (typeof n.kind !== 'string' || !KINDS.includes(n.kind) || typeof n.state !== 'string' || !STATES.includes(n.state)) return bad;
+    if (typeof n.text !== 'string' || n.text === '' || n.text !== n.text.trim()) return bad;
+    if (n.kind === 'meaning') { if (typeof n.term !== 'string' || n.term === '' || n.term !== n.term.trim()) return bad; } else if (n.term !== null) return bad;
+    if (!isObj(n.source) || typeof n.source.text !== 'string' || !(n.source.chat === null || typeof n.source.chat === 'string') || !isNum(n.created) || !isNum(n.changed)) return bad;
+    if (n.consent !== null && !okConsent(n.consent)) return bad; if ((n.state === 'proposed') !== (n.consent === null)) return bad;
+    if (!Array.isArray(n.history)) return bad; for (const h of n.history) if (!isObj(h) || typeof h.text !== 'string' || !(h.term === null || typeof h.term === 'string') || typeof h.topic !== 'string' || !isNum(h.changed)) return bad;
+    const sig = `${tp.key}\u0000${n.kind}\u0000${topicKey(n.text)}\u0000${n.term === null ? '' : `T${topicKey(n.term)}`}`; if (seen.has(sig)) return bad; seen.add(sig); used.add(tp.id);
+    notes.push({ id: n.id, topic: n.topic, kind: n.kind as NoteKind, text: n.text, term: n.term, state: n.state as NoteState, source: { text: n.source.text, chat: n.source.chat }, created: n.created, changed: n.changed, consent: n.consent === null ? null : { kind: n.consent.kind, at: n.consent.at }, history: n.history.map((h: any) => ({ text: h.text, term: h.term, topic: h.topic, changed: h.changed })) });
+  }
+  if (raw.nextId <= maxId) return bad; for (const t of topics) if (!used.has(t.id)) return bad;
+  return { ok: true, store: { version: 1, nextId: raw.nextId, topics, notes } };
+}
+export const _api: NotesApi = { emptyStore, topicKey, proposeNote, keepNote, discardProposal, removeNote, restoreNote, correctNote, listNotes, findInMessage, dictionaryCandidate, serializeStore, parseStore };
