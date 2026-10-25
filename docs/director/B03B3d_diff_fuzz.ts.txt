@@ -1,0 +1,60 @@
+import * as R from './ref/notes';
+import * as T from './ret/notes';
+let seed = 12345; const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+const pick = <A,>(a: readonly A[]): A => a[Math.floor(rnd() * a.length)]!;
+const names = ['Felix','felix','  Felix  ','FELIX\t','Liquid app','liquid   app','C++','c++','İstanbul','ß','straße','𝔄bc','a\u00a0b','a\u2003b','x','','   ','Ünï','Σ','ΑΣ','Dž','\u0130','tom','Tom'];
+const texts = ['a happy accident','  trim me ','x','','   ','Felix means app','liquid','LIQUID','İ','ß ss'];
+const kinds = ['meaning','fact','preference','correction','bogus',1,null] as any[];
+const terms = ['serendipity',' lunch run ','','  ',null,undefined,5,'Felix','liquid','C++'] as any[];
+const consents = [{kind:'yes',at:1},{kind:'said-remember',at:2},{kind:'standing-permission',at:3},{kind:'nope',at:1},{kind:'yes',at:NaN},null,undefined,'yes',{kind:'yes',at:Infinity}] as any[];
+const nows = [1,2,3,10,100,NaN,Infinity,-5,'x' as any,0];
+const ids = (s: any) => { const a = [...(s?.notes??[]).map((n:any)=>n.id), 'n999','t1','', 5 as any, null as any]; return pick(a); };
+const sources = [{text:'src',chat:null},{text:'s',chat:'c1'},{text:1,chat:null},{text:'s',chat:5},null,{text:'s'}] as any[];
+const msgs = ['I love Felix and liquid apps','Felix','xfelixx','Liquid   app, felix.','serendipity! lunch run','İstanbul ß straße','C++ rocks','a\u00a0b a b','', 'felixfelix felix', 'ΑΣ Σ'];
+const edits = [{text:'new text'},{topic:'Other'},{topic:'felix'},{term:'newterm'},{term:null},{text:'  '},{topic:'  '},{},{text:5},{topic:7},{term:3},{text:'a happy accident'},{topic:'Moved',text:'t2',term:'k'},'str',null,{text:'x',term:'  '}] as any[];
+let diffs = 0, checks = 0; const sample: string[] = [];
+const J = (v: any) => JSON.stringify(v, (_k, x) => (typeof x === 'number' && !Number.isFinite(x)) ? String(x) : x);
+const cmp = (label: string, a: any, b: any, ctx: string) => { checks++; const x = J(a), y = J(b); if (x !== y) { diffs++; if (sample.length < 12) sample.push(label + ' | ' + ctx + '\n  ref: ' + x.slice(0,400) + '\n  ret: ' + y.slice(0,400)); } };
+const deepFreeze = (o: any): any => { if (o && typeof o === 'object' && !Object.isFrozen(o)) { Object.freeze(o); for (const k of Object.keys(o)) deepFreeze(o[k]); } return o; };
+for (let run = 0; run < 400; run++) {
+  let sr: any = R.emptyStore(), st: any = T.emptyStore();
+  cmp('empty', sr, st, 'init');
+  for (let step = 0; step < 60; step++) {
+    const op = Math.floor(rnd() * 12); const now = rnd() < 0.9 ? Math.floor(rnd() * 50) : pick(nows);
+    const a = deepFreeze(JSON.parse(J(sr))), b = deepFreeze(JSON.parse(J(st)));
+    let ra: any, rb: any; const ctx = `run${run} step${step} op${op}`;
+    try {
+      if (op <= 2) { const inp = { topic: rnd()<0.97?pick(names):7, text: pick(texts), kind: pick(kinds), term: pick(terms), standalone: rnd()<0.9, source: pick(sources) } as any; ra = R.proposeNote(sr, JSON.parse(J(inp)), now); rb = T.proposeNote(st, JSON.parse(J(inp)), now); }
+      else if (op === 3) { const id = ids(sr), c = pick(consents); ra = R.keepNote(sr, id, c, now); rb = T.keepNote(st, id, c, now); }
+      else if (op === 4) { const id = ids(sr); ra = R.discardProposal(sr, id); rb = T.discardProposal(st, id); }
+      else if (op === 5) { const id = ids(sr); ra = R.removeNote(sr, id, now); rb = T.removeNote(st, id, now); }
+      else if (op === 6) { const id = ids(sr); ra = R.restoreNote(sr, id, now); rb = T.restoreNote(st, id, now); }
+      else if (op <= 8) { const id = ids(sr), e = pick(edits), c = pick(consents); ra = R.correctNote(sr, id, e, c, now); rb = T.correctNote(st, id, e, c, now); }
+      else if (op === 9) { const o = pick([undefined, {}, {states:['kept']}, {states:['proposed','removed']}, {states:['kept','proposed','removed']}, {states:['x']}, {states:'kept'}, 5, null] as any[]); cmp('list', R.listNotes(sr, o), T.listNotes(st, o), ctx); continue; }
+      else if (op === 10) { const m = pick(msgs); cmp('find', R.findInMessage(sr, m), T.findInMessage(st, m), ctx + ' ' + m); const id = ids(sr); cmp('dict', R.dictionaryCandidate(sr, id), T.dictionaryCandidate(st, id), ctx); continue; }
+      else { cmp('serialize', R.serializeStore(sr), T.serializeStore(st), ctx); const txt = R.serializeStore(sr); cmp('parse', R.parseStore(txt), T.parseStore(txt), ctx); continue; }
+    } catch (e: any) { diffs++; sample.push('THROW ' + ctx + ' ' + e.message); continue; }
+    cmp('op', ra, rb, ctx);
+    if (ra && ra.ok && rb && rb.ok) { sr = ra.store; st = rb.store; }
+  }
+}
+// parse fuzz: mutate valid serialized stores
+let s0: any = R.emptyStore(); for (let i = 0; i < 6; i++) { const r: any = R.proposeNote(s0, {topic: pick(['A','B','c d']), text: 'T'+i, kind: pick(['meaning','fact']) as any, term: 'term'+i, standalone: true, source: {text:'s', chat: null}}, i); s0 = r.store; const k: any = R.keepNote(s0, r.note.id, {kind:'yes', at: i}, i); s0 = k.store; }
+const base = JSON.parse(R.serializeStore(s0));
+const mut: ((o:any)=>void)[] = [
+ o=>{o.version=2},o=>{o.nextId=1},o=>{o.nextId=1.5},o=>{o.nextId=0},o=>{delete o.topics},o=>{o.topics[0].key='zzz'},o=>{o.topics[0].name=' A'},o=>{o.topics[0].name='A  B'},o=>{o.topics[1].key=o.topics[0].key},
+ o=>{o.topics[1].id=o.topics[0].id},o=>{o.topics[0].id='t01'},o=>{o.topics[0].id='x1'},o=>{o.notes[0].id='n0'},o=>{o.notes[0].topic='t999'},o=>{o.notes[0].kind='zz'},o=>{o.notes[0].state='zz'},
+ o=>{o.notes[0].text=''},o=>{o.notes[0].text=' x'},o=>{o.notes[0].term=null},o=>{o.notes[0].term=' x'},o=>{o.notes[0].consent=null},o=>{o.notes[0].state='proposed'},o=>{o.notes[0].consent={kind:'q',at:1}},o=>{o.notes[0].consent={kind:'yes',at:'1'}},
+ o=>{o.notes[0].history=5},o=>{o.notes[0].history=[{text:1}]},o=>{o.notes[0].history=[{text:'a',term:null,topic:'t1',changed:1}]},o=>{o.notes[0].history=[{text:'a',term:null,topic:'t1',changed:NaN}]},o=>{o.notes[1].text=o.notes[0].text; o.notes[1].topic=o.notes[0].topic; o.notes[1].kind=o.notes[0].kind; o.notes[1].term=o.notes[0].term},
+ o=>{o.notes.pop()},o=>{o.notes[0].source=null},o=>{o.notes[0].source={text:1,chat:null}},o=>{o.notes[0].source={text:'a',chat:3}},o=>{o.notes[0].created='x'},o=>{o.extra=1},o=>{o.notes[0].extra=1},o=>{o.notes[0].id=o.topics[0].id},o=>{o.nextId=3},
+];
+for (const m of mut) { const o = JSON.parse(JSON.stringify(base)); m(o); const txt = JSON.stringify(o); cmp('parseMut', R.parseStore(txt), T.parseStore(txt), m.toString()); }
+for (const txt of ['', 'null', '[]', '{}', '"x"', '{"version":1}', 'not json', '{"version":1,"nextId":1,"topics":[],"notes":[]}']) cmp('parseJunk', R.parseStore(txt), T.parseStore(txt), txt);
+for (const junk of [5, null, undefined, [], 'x'] as any[]) { cmp('parseNS', R.parseStore(junk), T.parseStore(junk), String(junk)); cmp('serJunk', R.serializeStore(junk), T.serializeStore(junk), String(junk)); cmp('listJunk', R.listNotes(junk), T.listNotes(junk), String(junk)); cmp('findJunk', R.findInMessage(junk, 'x'), T.findInMessage(junk, 'x'), String(junk)); }
+// topicKey exhaustive over all UTF-16 units + pairs
+for (let c = 0; c < 65536; c++) { const s = String.fromCharCode(c); cmp('topicKey', R.topicKey(s), T.topicKey(s), 'U+' + c.toString(16)); cmp('topicKey2', R.topicKey('a' + s + ' ' + s + 'b'), T.topicKey('a' + s + ' ' + s + 'b'), 'U+' + c.toString(16)); }
+for (const j of [5, null, undefined, {}, []] as any[]) cmp('topicKeyJunk', R.topicKey(j), T.topicKey(j), String(j));
+console.log(JSON.stringify({ checks, diffs })); for (const s of sample) console.log(s);
+// speed
+const big = (m: any) => { let s: any = m.emptyStore(); const t0 = Date.now(); for (let i = 0; i < 1500; i++) { const r = m.proposeNote(s, { topic: 'topic' + (i % 300), text: 'note ' + i, kind: 'meaning', term: 'term' + i, standalone: true, source: { text: 's', chat: null } }, i); s = r.store; m.keepNote(s, r.note.id, {kind:'yes', at:i}, i); s = m.keepNote(s, r.note.id, {kind:'yes', at:i}, i).store; } const t1 = Date.now(); const msg = ('term7 and topic3 and filler words ').repeat(2200); const f = m.findInMessage(s, msg).length; const t2 = Date.now(); const ser = m.serializeStore(s); const p = m.parseStore(ser); return { propose_ms: t1 - t0, find_ms: t2 - t1, mentions: f, parsed: p.ok, roundtrip: ser === m.serializeStore(p.store) }; };
+console.log('REF', JSON.stringify(big(R))); console.log('RET', JSON.stringify(big(T)));
