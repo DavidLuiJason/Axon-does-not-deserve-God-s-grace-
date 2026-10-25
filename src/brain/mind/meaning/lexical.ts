@@ -10,6 +10,8 @@
 import { conversationActOf } from '../../knowledge/conversationWords';
 import type { Analysis } from '../types';
 import { anchorOfIds, type AnchorAct } from './concepts';
+import { hasSpeechSense } from './structure/speechSenses';
+import { isFirstPerson } from './structure/glueWords';
 import {
   isAuxiliary, isCoordinator, isDeterminer, isModal, isNegation, isNegativeClitic, isObjectPronoun, isPoliteness,
   isPossessive, isPreposition, isQuestionWord, isSequencer, isSubjectPronoun, normalizeWord, splitClitic,
@@ -44,6 +46,10 @@ export interface Lex {
   coordinator: boolean;
   polite: boolean;
   sequencer: boolean;
+  /** B03B2c: one of the word's senses is telling, asking or instructing someone (from the dictionary's synset ids). */
+  speech: boolean;
+  /** B03B2c: first person (the speaker): closed set in structure/glueWords.ts. */
+  speaker: boolean;
   /** Any closed-class grammar word. */
   grammar: boolean;
   anchor: { act: AnchorAct; full: boolean; source: 'dictionary' | 'conversation-word' } | null;
@@ -121,6 +127,8 @@ export function buildLex(analysis: Analysis, text: string): Lex[] {
       coordinator: isCoordinator(norm),
       polite: isPoliteness(norm),
       sequencer: isSequencer(norm),
+      speech: hasSpeechSense(token.synsetIds),
+      speaker: isFirstPerson(word),
       grammar: false,
       anchor,
       materialAfter: false,

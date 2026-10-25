@@ -9,6 +9,8 @@ import type { Analysis, Clause, ClauseFrame, Meaning } from '../types';
 import { readClause } from './acts';
 import { classifyGap, splitClauses, type UnitRange } from './clauses';
 import { buildLex, materialRanges, type Lex, type MaterialRange } from './lexical';
+import { buildStructure } from './structure/glue';
+import type { MeaningStructure } from './structure/glueTypes';
 
 export const MEANING_LIMITS = { maxTokens: 2000, maxClauses: 64 } as const;
 
@@ -118,5 +120,19 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
     });
   }
   const onlyMaterial = frames.length === 0 && materials.length > 0;
-  return { ok: true, meaning: { clauses: frames, onlyMaterial } };
+  // B03B2 glue: the finer structure (links, parts, pointers, relays). Added beside the clauses; no clause field is changed.
+  let structure: MeaningStructure | undefined;
+  if (units.length > 0) {
+    try {
+      const asks = ranges.map((range, index) => {
+        const slice = units.slice(range.from, range.to);
+        const nextStart = index + 1 < ranges.length ? units[ranges[index + 1]!.from]!.start : text.length;
+        let marks = languageBetween(text, slice[slice.length - 1]!.end, nextStart, materials);
+        for (let k = range.from + 1; k < range.to; k += 1) marks += gapText(k);
+        return marks.includes('?');
+      });
+      structure = buildStructure(units, ranges, (k) => classifyGap(gapText(k)), asks);
+    } catch { structure = undefined; }
+  }
+  return { ok: true, meaning: structure ? { clauses: frames, onlyMaterial, structure } : { clauses: frames, onlyMaterial } };
 }

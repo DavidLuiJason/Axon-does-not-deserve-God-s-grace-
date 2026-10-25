@@ -14,3 +14,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 | 2026-10-25 | Claude 4 (owner message) | owner's words: Canva as a rival too (also video editor), AXON creates from a description, AXON lets the user's mind shine, proceed with the next batch of prompts | owner instruction | recorded in OPEN_ITEMS 11, 22; B03B2c prompt written |
 
 | 2026-10-25 | Claude 5 (fifth account) | `B03B2c-refs.zip` | builder RETURN for B03B2c (references.ts and report) | inspected against the main zip: ACCEPTED; reference test written; merge package B03B2c-merge.zip |
+| 2026-10-25 | Claude 5 (owner message) | owner's words: yes to the glue, the dictionary-based speech flag and the "call" policy; give the B03B2c package with the next batch | owner instruction | glue built; one package B03B2-glue-merge.zip carries B03B2c and the glue |

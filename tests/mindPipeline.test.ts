@@ -112,7 +112,12 @@ function hasRegexLiteral(source: string): boolean {
     if (ch === '/' && next === '/') { lineComment = true; i++; continue; }
     if (ch === '/' && next === '*') { blockComment = true; i++; continue; }
     if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
-    if (ch === '/') return true;
+    if (ch === '/') {
+      // A slash after a word, number, closing bracket or quote is division; only a slash where an expression starts is a regex literal.
+      let k = i - 1; while (k >= 0 && (source[k] === ' ' || source[k] === '\t')) k -= 1;
+      const before = k >= 0 ? source[k]! : '';
+      if (before === '' || '(,=:[!&|?{};+-*%<>~^\n'.includes(before)) return true;
+    }
   }
   return false;
 }

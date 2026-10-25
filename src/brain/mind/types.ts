@@ -5,6 +5,7 @@
  * AXON Mind B1: typed structure for the staged brain pipeline.
  */
 import type { BrainReply, Place } from '../types';
+import type { MeaningStructure } from './meaning/structure/glueTypes';
 
 export type StageId = 'intake' | 'reading' | 'analysis' | 'meaning' | 'resolution' | 'dialogue' | 'planning' | 'execution' | 'verification' | 'response';
 export type StageState = 'ran' | 'passed-through' | 'not-built';
@@ -34,7 +35,8 @@ export interface Frame { act: SpeechAct; confidence: number }
 export interface Clause { span: { start: number; end: number }; tokenRange: { from: number; to: number }; materialIds: number[] }
 export interface ActReading { act: SpeechAct; confidence: number; reason: string }
 export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[] }
-export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean }
+/** `structure` (B03B2): the finer reading of the clauses (links, verb/object/details, pointers, relays). Present when the message has words; not yet used by any stage that acts. */
+export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
 export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; reply?: BrainReply; entries: TraceEntry[] }
