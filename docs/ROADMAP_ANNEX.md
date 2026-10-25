@@ -13,3 +13,7 @@ Web Search, Link Analyzer, Content Extractor, Currency Converter (need a network
 
 ## Parked plan item (owner, 2026-10-24; plan and owner approval first)
 AXON Build screen: keep the look exactly (dropdown, green dot, mark as confirmed). Make the content accurate: tools, capabilities, interfaces and systems as separate groups (tools have a screen, e.g. Text Counter, File Compare; systems are hidden working parts). An interface opens to its own buttons, each markable as confirmed; the interface gets its green dot when all its buttons are confirmed. Do this after B03B.
+
+## A6. Moved out of the roadmap on 2026-10-25 (v18.0), nothing dropped
+The v17.9 roadmap is saved whole as `docs/archive/AXON_ROADMAP_V17_9.md`. Shortened in v18.0: the truth gates, Council, lanes, hands and growth paragraph (full text stays in `docs/AXON_VISION.md`); the B03B part list (full text in `docs/B03B_PLAN.md` and the board); the old repository-status detail (board); the 2026-10-24 owner rules text (kept, reworded). Binding as before.
+

@@ -1,7 +1,7 @@
 # AXON DIRECTOR HANDBOOK (read after the roadmap and the job board)
 
 ## 1. First ten minutes for a new Director
-Read docs/ROADMAP.md, docs/JOB_BOARD.md, this file. Write back the items listed at the end of roadmap section 1. Open nothing else until a job needs it. Do NOT read the archives or the roadmap inside the source zip. Do not re-explain the project to the owner; the board says where things stand. If the owner brings a returned zip, inspect it (section 2). If not, take the first NOT SENT job on the board whose dependencies are MERGED and tell the owner exactly what to attach.
+Read docs/ROADMAP.md (section 0A says what every file the owner attached is and what to do with it), the TAIL of docs/JOB_BOARD.md, this file. Write back the items listed at the end of roadmap section 1. Open nothing else until a job needs it. Do NOT read the archives or the roadmap inside the source zip. Do not re-explain the project to the owner; the board says where things stand. If the owner brings a returned zip, inspect it (section 2). If not, take the first NOT SENT job on the board whose dependencies are MERGED and tell the owner exactly what to attach.
 
 ## 2. Inspecting a returned zip (ChatGPT or an AI Studio export)
 Have: BASE.zip (the zip the builder started from), RETURNED.zip, the job code. Run:
