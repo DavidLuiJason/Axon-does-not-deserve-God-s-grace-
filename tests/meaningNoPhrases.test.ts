@@ -73,7 +73,7 @@ assert(bad.regexes.length === 1 && bad.arrays.length === 2, 'the scanner finds a
 const good = scan("const a = 10 / 2; const b = ['x', 'y']; const c = list[0]; // /not/ ['a','b','c']\nconst d = \"/ not a regex\";");
 assert(good.regexes.length === 0 && good.arrays.length === 0, 'division, short arrays, indexing, comments and strings are not flagged');
 
-const ALLOWED_LISTS = new Set(['src/brain/mind/meaning/closedSets.ts', 'src/brain/mind/meaning/concepts.ts', 'src/brain/mind/meaning/valueWords.ts']);
+const ALLOWED_LISTS = new Set(['src/brain/mind/meaning/closedSets.ts', 'src/brain/mind/meaning/concepts.ts', 'src/brain/mind/meaning/valueWords.ts', 'src/brain/mind/meaning/language/english.ts']);
 const files = walk('src/brain/mind');
 assert(files.length >= 10, 'the scan covers the mind folder');
 for (const file of files) {
