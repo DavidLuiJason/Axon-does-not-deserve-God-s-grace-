@@ -6,6 +6,7 @@
  */
 import type { BrainReply, Place } from '../types';
 import type { MeaningStructure } from './meaning/structure/glueTypes';
+import type { LanguageReading } from './meaning/languageCheck';
 
 export type StageId = 'intake' | 'reading' | 'analysis' | 'meaning' | 'resolution' | 'dialogue' | 'planning' | 'execution' | 'verification' | 'response';
 export type StageState = 'ran' | 'passed-through' | 'not-built';
@@ -36,7 +37,7 @@ export interface Clause { span: { start: number; end: number }; tokenRange: { fr
 export interface ActReading { act: SpeechAct; confidence: number; reason: string }
 export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[] }
 /** `structure` (B03B2): the finer reading of the clauses (links, verb/object/details, pointers, relays). Present when the message has words; not yet used by any stage that acts. */
-export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure }
+export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
 export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; reply?: BrainReply; entries: TraceEntry[] }

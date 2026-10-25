@@ -9,6 +9,7 @@ import type { Analysis, Clause, ClauseFrame, Meaning } from '../types';
 import { readClause } from './acts';
 import { classifyGap, splitClauses, type UnitRange } from './clauses';
 import { buildLex, materialRanges, type Lex, type MaterialRange } from './lexical';
+import { readLanguage } from './languageCheck';
 import { buildStructure } from './structure/glue';
 import type { MeaningStructure } from './structure/glueTypes';
 
@@ -134,5 +135,7 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
       structure = buildStructure(units, ranges, (k) => classifyGap(gapText(k)), asks);
     } catch { structure = undefined; }
   }
-  return { ok: true, meaning: structure ? { clauses: frames, onlyMaterial, structure } : { clauses: frames, onlyMaterial } };
+  // B03B3a: does the message read as English (a reading only; nothing answers with it yet).
+  const language = readLanguage(analysis);
+  return { ok: true, meaning: { clauses: frames, onlyMaterial, ...(structure ? { structure } : {}), language } };
 }
