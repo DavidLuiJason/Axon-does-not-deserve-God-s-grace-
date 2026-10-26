@@ -7,7 +7,7 @@
  * class with a disk reader without changing the production loader.
  */
 import type { Dictionary } from '../dictionary';
-import type { KnowledgeSense } from './slot';
+import type { KnowledgeSense, SenseHint } from './slot';
 import { createKnowledgeSlot, type KnowledgeBackend, type KnowledgeSlot } from './slot';
 
 export const MAX_SENSES = 5;
@@ -61,6 +61,19 @@ export function createDictionarySlot(openDictionary?: OpenDictionary): Knowledge
         ),
       );
       const synsetIds = [...new Set(allSenses.map((sense) => sense.synset).filter((id): id is string => Boolean(id)))].slice(0, 40);
+      // B03B4: evidence for sense choice. One hint per distinct sense (first 16), only when the word has two or more.
+      const hints: SenseHint[] = [];
+      const seenSynsets = new Set<string>();
+      for (const sense of allSenses) {
+        if (!sense.synset || seenSynsets.has(sense.synset) || hints.length >= 16) continue;
+        seenSynsets.add(sense.synset);
+        hints.push({
+          synset: sense.synset, pos: sense.partOfSpeech, gloss: sense.meaning.slice(0, 110),
+          ...(sense.synonyms?.length ? { synonyms: sense.synonyms.slice(0, 5) } : {}),
+          ...(sense.example ? { example: sense.example.slice(0, 90) } : {}),
+        });
+      }
+      const senseHints = hints;
       const senses = allSenses.filter((sense) => sense.meaning.trim().length > 0).slice(0, MAX_SENSES);
 
       if (senses.length === 0) {
@@ -74,6 +87,7 @@ export function createDictionarySlot(openDictionary?: OpenDictionary): Knowledge
       ))];
       return { status: 'found', word: result.matches[0]?.word ?? query, senses,
         ...(synsetIds.length ? { synsetIds } : {}),
+        ...(senseHints.length ? { senseHints } : {}),
         ...(partsOfSpeech.length ? { partsOfSpeech } : {}),
         ...(pronunciations.length ? { pronunciations } : {}),
       };

@@ -6,6 +6,9 @@
  * details (shards, packs and paths) deliberately do not cross this boundary.
  */
 
+/** B03B4: a short evidence record of one dictionary sense (not shown to the owner): its id, part of speech, gloss, a few synonyms, one example. */
+export interface SenseHint { synset: string; pos: string; gloss: string; synonyms?: string[]; example?: string }
+
 export interface KnowledgeSense {
   partOfSpeech: string;
   meaning: string;
@@ -35,6 +38,8 @@ export type KnowledgeLookupResult =
       word: string;
       senses: KnowledgeSense[];
       synsetIds?: string[];
+      /** B03B4: evidence for choosing between senses (for every found word; a reading needs two or more). */
+      senseHints?: SenseHint[];
       /** Every part of speech the word has in the source (all senses, not only the displayed ones). B03A. */
       partsOfSpeech?: string[];
       pronunciations?: string[];
@@ -59,7 +64,7 @@ export type KnowledgeLookupResult =
 export interface KnowledgeBackend {
   status(): KnowledgeSlotStatus;
   lookup(word: string): Promise<
-    | { status: 'found'; word: string; senses: KnowledgeSense[]; synsetIds?: string[]; partsOfSpeech?: string[]; pronunciations?: string[] }
+    | { status: 'found'; word: string; senses: KnowledgeSense[]; synsetIds?: string[]; senseHints?: SenseHint[]; partsOfSpeech?: string[]; pronunciations?: string[] }
     | { status: 'not-found'; word: string }
   >;
   credits(): KnowledgeCredits;
@@ -99,6 +104,7 @@ export function createKnowledgeSlot(backend: KnowledgeBackend): KnowledgeSlot {
           word: result.word,
           senses: result.senses,
           ...(result.synsetIds ? { synsetIds: result.synsetIds } : {}),
+          ...(result.senseHints ? { senseHints: result.senseHints } : {}),
           ...(result.partsOfSpeech ? { partsOfSpeech: result.partsOfSpeech } : {}),
           ...(result.pronunciations ? { pronunciations: result.pronunciations } : {}),
           source: source.source,

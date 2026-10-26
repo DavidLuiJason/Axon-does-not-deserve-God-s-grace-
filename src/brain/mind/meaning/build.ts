@@ -14,6 +14,7 @@ import { readTeaching } from './teach/readTeaching';
 import { buildStructure } from './structure/glue';
 import type { MeaningStructure } from './structure/glueTypes';
 import { readMessageTone } from './tone/toneGlue';
+import { readSenses } from './sense/readSenses';
 
 export const MEANING_LIMITS = { maxTokens: 2000, maxClauses: 64 } as const;
 
@@ -143,5 +144,5 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
   const teaching = readTeaching(units, structure, materials, text);
   // B03B3c glue: the tone (urgency, frustration, emphasis, how to word the answer). A reading only: it never changes what AXON does.
   const tone = readMessageTone(text, units, materials);
-  return { ok: true, meaning: { clauses: frames, onlyMaterial, ...(structure ? { structure } : {}), language, teaching, tone } };
+  return { ok: true, meaning: { clauses: frames, onlyMaterial, ...(structure ? { structure } : {}), language, teaching, tone, senses: readSenses(units, analysis.tokens) } };
 }

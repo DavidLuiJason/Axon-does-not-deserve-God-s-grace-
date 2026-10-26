@@ -5,6 +5,8 @@
  * AXON Mind B1: typed structure for the staged brain pipeline.
  */
 import type { BrainReply, Place } from '../types';
+import type { SenseHint } from '../knowledge/slot';
+import type { SenseReading } from './meaning/sense/senseTypes';
 import type { MeaningStructure } from './meaning/structure/glueTypes';
 import type { LanguageReading } from './meaning/languageCheck';
 import type { TeachingReading } from './meaning/teach/teachTypes';
@@ -23,6 +25,8 @@ export interface Token {
   knowledge?: 'known' | 'unknown' | 'not-checked';
   partsOfSpeech?: string[];
   synsetIds?: string[];
+  /** B03B4: short evidence of each sense, for choosing a sense from the words around (present when the word has two or more senses). */
+  senseHints?: SenseHint[];
   morphology?: { via: 'irregular' | 'rule'; rule: string };
   entry?: { surface: string; start: number; end: number };
 }
@@ -40,7 +44,7 @@ export interface ActReading { act: SpeechAct; confidence: number; reason: string
 export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[] }
 /** `teaching` (B03B3b): teach and correct acts found in the message (a reading only; nothing learns from it yet).
  *  `structure` (B03B2): the finer reading of the clauses (links, verb/object/details, pointers, relays). Present when the message has words; not yet used by any stage that acts. */
-export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading; teaching?: TeachingReading[]; tone?: ToneReading }
+export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading; teaching?: TeachingReading[]; tone?: ToneReading; senses?: SenseReading[] }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
 export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; reply?: BrainReply; entries: TraceEntry[] }
