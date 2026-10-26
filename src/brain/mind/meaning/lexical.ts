@@ -13,6 +13,8 @@ import { anchorOfIds, type AnchorAct } from './concepts';
 import { hasSpeechSense } from './structure/speechSenses';
 import { hasIntendSense, hasTeachSense } from './teach/teachSenses';
 import { isFirstPerson } from './structure/glueWords';
+import { toneSenseFlags } from './tone/toneSenses';
+import { isAboutAxon } from './tone/toneGlue';
 import {
   isAuxiliary, isCoordinator, isDeterminer, isModal, isNegation, isNegativeClitic, isObjectPronoun, isPoliteness,
   isPossessive, isPreposition, isQuestionWord, isSequencer, isSubjectPronoun, normalizeWord, splitClitic,
@@ -54,6 +56,12 @@ export interface Lex {
   /** B03B3b: one of its senses is "has the meaning of" (teach) / "intend to express" (correct), from the dictionary's synset ids. */
   meaning: boolean;
   intend: boolean;
+  /** B03B3c glue: tone word facts from the dictionary's synset ids (tone/toneSenses.ts): urgency 0 to 2, anger 0 to 2, curse or insult. */
+  urgent: 0 | 1 | 2;
+  anger: 0 | 1 | 2;
+  harsh: boolean;
+  /** The word is second person or the product's name (closed set in tone/toneGlue.ts). */
+  addressee: boolean;
   /** Any closed-class grammar word. */
   grammar: boolean;
   anchor: { act: AnchorAct; full: boolean; source: 'dictionary' | 'conversation-word' } | null;
@@ -114,6 +122,7 @@ export function buildLex(analysis: Analysis, text: string): Lex[] {
     const anchor: Lex['anchor'] = fromDictionary
       ? { ...fromDictionary, source: 'dictionary' }
       : conversation ? { act: conversation, full: true, source: 'conversation-word' } : null;
+    const tone = toneSenseFlags(token.synsetIds, last > i);
     const unit: Lex = {
       index: units.length, first: i, last, start, end, norm, pos,
       known: token.knowledge === 'known' || Boolean(token.entry),
@@ -135,6 +144,10 @@ export function buildLex(analysis: Analysis, text: string): Lex[] {
       speaker: isFirstPerson(word),
       meaning: hasTeachSense(token.synsetIds),
       intend: hasIntendSense(token.synsetIds),
+      urgent: tone.urgent,
+      anger: tone.anger,
+      harsh: tone.harsh,
+      addressee: isAboutAxon(word),
       grammar: false,
       anchor,
       materialAfter: false,

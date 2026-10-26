@@ -28,18 +28,21 @@ for (let n = 1; n <= 13; n += 1) {
   assert(text.includes(`${n}. **`), `Building Rule ${n} is present`);
 }
 const required = [
-  'Before you do anything: read the AXON roadmap (all of it, not a part)',
-  'Never add a fixed phrase list to the brain (FL13).',
   'Two-Strike Rule',
   'Foundation Check',
   'Top-View Check',
   'LAW CHECK',
   'SIZE LAW',
-  'docs/archive/AXON_ROADMAP_V15_1.md',
+  'V15_1',
   'Image | Video | Audio',
-  'From picker and a To picker',
+  'a From picker, a To picker',
 ];
 for (const phrase of required) assert(text.includes(phrase), `the roadmap still contains: ${phrase}`);
+// Since v18.4 the Standard Prompt Preamble lives in the annex (A23); it must never be dropped from there.
+const annex = readFileSync('docs/ROADMAP_ANNEX.md', 'utf8');
+for (const phrase of ['Before you do anything: read the AXON roadmap (all of it, not a part)', 'Never add a fixed phrase list to the brain (FL13).']) {
+  assert(annex.includes(phrase), `the annex (A23) still contains the preamble: ${phrase}`);
+}
 assert(existsSync('docs/archive/AXON_ROADMAP_V15_1.md'), 'the archive of the full v15.1 roadmap exists');
 
 console.log(`=== roadmap size tests passed: ${checks} checks (${text.length} of ${CAP} characters) ===`);
