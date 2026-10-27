@@ -38,3 +38,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-27 (Director, twelfth account): roadmap v19.3, main source zip and a dictated message; one job: B04B4 in parts (P1 built); roadmap v19.4 issued.
 2026-10-27 (Director, thirteenth account): roadmap v19.4, main source zip (B04B4P1 merged) and a dictated message; one job: B04B4P2 built (oracle test, `options.status` wired in shadow).
 2026-10-27 (Director, fourteenth account): roadmap v19.4 (48,805 chars), main source zip (4,030 files; B04B4P2 in the repository) and the previous account's chat (P2 built, then limit hit); owner order: P3 alone now, roadmap in the next turn; built B04B4P3a (docs hand-over).
+2026-10-27 (Director, fifteenth account): main source zip (P3a merged), roadmap draft v19.5 (ChatGPT, proposal) and a dictated message; one job: B04B4P3b, roadmap v19.6 written once (37,992 characters).

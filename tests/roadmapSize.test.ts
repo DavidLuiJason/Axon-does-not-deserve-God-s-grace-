@@ -2,14 +2,14 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  *
- * The roadmap size law (owner, 2026-10-16): docs/ROADMAP.md never exceeds 45,000 characters (owner: 40,000 on 2026-10-16, 42,000 on 2026-10-26, 45,000 then 48,000 on 2026-10-27; aim 45,000),
+ * The roadmap size law (owner, 2026-10-16): docs/ROADMAP.md never exceeds 40,000 characters (owner, 2026-10-27: target 38,000, warning 35,000, hard cap 40,000; earlier caps 40,000, 42,000, 45,000, 48,000),
  * and the compression must never drop a law, a rule or the Standard Prompt Preamble.
  * The full history lives in docs/archive and is never required reading.
  */
 import { readFileSync, existsSync } from 'node:fs';
 
-const CAP = 48000;
-const WARN = 38000;
+const CAP = 40000;
+const WARN = 35000;
 const text = readFileSync('docs/ROADMAP.md', 'utf8');
 let checks = 0;
 
