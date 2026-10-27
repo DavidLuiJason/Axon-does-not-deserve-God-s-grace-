@@ -14,7 +14,8 @@ import type { KnowledgeSlot } from '../knowledge/slot';
 import { createAnalyzer } from './analysis/analyze';
 import { buildMeaning } from './meaning';
 import { extractValues } from './meaning/values';
-import { makeRelated } from './resolve/options';
+import { makeRelated, statusMapFrom } from './resolve/options';
+import type { ToolFact } from './schema/schemaTypes';
 import { relationLookupFromTokens } from './resolve/tokenRelations';
 import { resolveMessage } from './resolve/clauseInputs';
 import type { AdapterInput } from './resolve/clauseInputsTypes';
@@ -66,7 +67,7 @@ function makeSegments(text: string): { segments: Segment[]; note: string } {
   }
 }
 
-export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot): MindStage[] {
+export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot, liveFacts?: () => readonly ToolFact[]): MindStage[] {
   function intake(context: MindContext): MindContext {
     const utterance = { id: nextId(), text: context.utterance.text, place: context.utterance.place, at: now() };
     return withEntry(context, 'intake', 'ran', 'request captured', { utterance });
@@ -116,10 +117,16 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         pieces: structure.pieces,
         values,
       };
-      // B04B3: concept closeness from the dictionary synonyms of the message's own words. options.status is still omitted on purpose:
-      // it needs the live tool facts (job B04B4), so a tool that is not built is not yet answered as unavailable.
+      // B04B3: concept closeness from the dictionary synonyms of the message's own words.
+      // B04B4P2: options.status comes from the live tool facts (catalog + registry + left-out list), read at message time because the
+      // registry fills at app start. No facts source, or a source that fails, means no status (a tool is then treated as built), said in the note.
       const related = makeRelated(relationLookupFromTokens(context.analysis.tokens));
-      const resolutions = resolveMessage(adapterInput, { related });
+      let status: ReturnType<typeof statusMapFrom> | undefined;
+      let statusNote = '';
+      if (liveFacts) {
+        try { status = statusMapFrom(liveFacts()); } catch (error) { statusNote = `; live tool facts unavailable: ${error instanceof Error ? error.message : String(error)}`; }
+      }
+      const resolutions = resolveMessage(adapterInput, status ? { related, status } : { related });
       const counts = { match: 0, ask: 0, unavailable: 0, none: 0 };
       for (const item of resolutions) {
         if (item.resolution.kind === 'match') counts.match += 1;
@@ -127,7 +134,7 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         else if (item.resolution.kind === 'unavailable') counts.unavailable += 1;
         else if (item.resolution.kind === 'none') counts.none += 1;
       }
-      const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}`;
+      const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}${statusNote}`;
       return withEntry(context, 'resolution', 'ran', note, { resolutions });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

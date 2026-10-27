@@ -15,6 +15,11 @@ import { createLocalRules } from './localRules';
 import { createDictionaryProvider } from './knowledge/dictionaryProvider';
 import { TEXT_COUNT_COMMAND } from './textCountCommand';
 import { answerAbilityQuestion, answerRequestFallback, describeAbilities } from './abilities';
+import { buildLiveFacts } from './mind/resolve/liveFacts';
+import { CATALOG_TOOLS } from '../tools/toolCatalog';
+import { LEFT_OUT_TOOL_IDS } from '../tools/leftOutTools';
+import { ABILITY_SOURCES, CHAT_ACTION_LINKS } from '../tools/toolFactSources';
+import { listCapabilities } from '../capabilities';
 
 export const BRAIN_COMMANDS = [TEXT_COUNT_COMMAND];
 const BRAIN_PROVIDERS = [createDictionaryProvider()];
@@ -49,7 +54,7 @@ export function getAxonBrain(): Mind {
         answer: answerAbilityQuestion,
       },
     });
-    shared = createMind({ providers: [localRules, ...BRAIN_PROVIDERS], fallback: createFoundation({ abilities: { answerRequestFallback } }), planned: PLANNED_SOURCES });
+    shared = createMind({ providers: [localRules, ...BRAIN_PROVIDERS], fallback: createFoundation({ abilities: { answerRequestFallback } }), planned: PLANNED_SOURCES, liveFacts: () => buildLiveFacts({ catalog: CATALOG_TOOLS, capabilities: listCapabilities(), abilities: ABILITY_SOURCES, leftOut: LEFT_OUT_TOOL_IDS, chatLinks: CHAT_ACTION_LINKS }) });
   }
   return shared;
 }

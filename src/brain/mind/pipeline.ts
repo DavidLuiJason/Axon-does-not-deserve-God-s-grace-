@@ -10,14 +10,15 @@ import { PLANNED_SOURCES } from '../brain';
 import { createLegacyExecutor } from './legacy';
 import { createStages } from './stages';
 import type { KnowledgeSlot } from '../knowledge/slot';
+import type { ToolFact } from './schema/schemaTypes';
 import type { MindContext, MindTrace, Utterance } from './types';
 
-export function createMind(options: { providers: BrainProvider[]; fallback: BrainProvider; planned?: PlannedSource[]; now?: () => number; slot?: KnowledgeSlot }) {
+export function createMind(options: { providers: BrainProvider[]; fallback: BrainProvider; planned?: PlannedSource[]; now?: () => number; slot?: KnowledgeSlot; liveFacts?: () => readonly ToolFact[] }) {
   const now = options.now ?? Date.now;
   let sequence = 0;
   const nextId = () => `utterance-${++sequence}`;
   const executor = createLegacyExecutor(options.providers, options.fallback);
-  const stages = createStages(executor, now, nextId, options.slot);
+  const stages = createStages(executor, now, nextId, options.slot, options.liveFacts);
 
   async function askWithTrace(request: BrainRequest): Promise<{ reply: BrainReply; trace: MindTrace }> {
     const utterance: Utterance = { id: '', text: request.text, place: request.place, at: 0 };
