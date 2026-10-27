@@ -1,0 +1,49 @@
+import { resolveClause } from './resolve';
+import type { ResolveInput, ResolveOptions, ProvidedSlot } from './resolveTypes';
+import type { AdapterInput, PieceInput, PieceResolution, TokenLike } from './clauseInputsTypes';
+
+const arr = <T>(v: unknown): readonly T[] => (Array.isArray(v) ? (v as T[]) : []);
+const SLOT_OF: Record<string, readonly ProvidedSlot['kind'][]> = { number: ['number'], percent: ['number'], roman: ['number'], quantity: ['quantity'], duration: ['duration'], date: ['date'], time: ['time'], datetime: ['date', 'time'] };
+const plain = /^[a-z0-9]+$/;
+const ACTS = ['ask', 'command', 'greet', 'thanks', 'chat', 'unknown'];
+
+export function buildResolveInputs(raw: AdapterInput): PieceInput[] {
+  const a = (raw ?? {}) as Partial<AdapterInput>;
+  const tokens = arr<TokenLike>(a.tokens), words = arr<AdapterInput['words'][number]>(a.words), clauses = arr<AdapterInput['clauses'][number]>(a.clauses);
+  const segments = arr<AdapterInput['segments'][number]>(a.segments), values = arr<AdapterInput['values'][number]>(a.values);
+  return arr<AdapterInput['pieces'][number]>(a.pieces).map((piece, index) => {
+    const clause = piece?.clause;
+    const c = typeof clause === 'number' ? clauses[clause] : undefined;
+    const act = c && ACTS.includes(c.act) ? c.act : 'unknown';
+    const tokenOf = (w: number): TokenLike | undefined => { const word = words[w]; return word ? tokens.find((t) => t.start >= word.start && t.start < word.end) : undefined; };
+    const lemma = (t: TokenLike | undefined): string => (t && typeof t.lemma === 'string' ? t.lemma.toLowerCase() : '');
+    const verbs: string[] = []; const objects: string[] = []; const names: string[] = [];
+    const push = (list: string[], v: string): void => { if (v && !list.includes(v)) list.push(v); };
+    const parts = piece?.parts;
+    if (parts && typeof parts.verb === 'number') { const l = lemma(tokenOf(parts.verb)); if (l) push(verbs, l + ':v'); }
+    const spans = [...(parts?.object ? [parts.object] : []), ...arr<{ from: number; to: number }>(parts?.details)];
+    for (const span of spans) for (let w = span.from; w < span.to; w += 1) {
+      const word = words[w]; if (!word) continue;
+      const t = tokenOf(w); const l = lemma(t);
+      for (const p of t?.partsOfSpeech ?? []) {
+        const v = String(p).toLowerCase();
+        if (l && v.startsWith('n')) push(objects, l + ':n');
+        if (l && (v.startsWith('adj') || v === 'a' || v === 's')) push(objects, l + ':a');
+      }
+      for (const n of [String(word.norm ?? '').toLowerCase(), l]) if (plain.test(n)) push(names, n);
+    }
+    const first = words[piece?.from], last = words[(piece?.to ?? 0) - 1];
+    const provided: Array<{ at: number; kind: ProvidedSlot['kind'] }> = [];
+    if (first && last) {
+      for (const v of values) if (v && v.start >= first.start && v.end <= last.end) for (const k of SLOT_OF[v.kind] ?? []) provided.push({ at: v.start, kind: k });
+      for (const s of segments) if (s && s.kind === 'material' && s.start >= first.start && s.end <= last.end) provided.push({ at: s.start, kind: 'text' });
+    }
+    provided.sort((x, y) => x.at - y.at);
+    const input: ResolveInput = { act: act as ResolveInput['act'], polarity: c?.polarity === 'negative' ? 'negative' : 'positive', verbs, objects, names, provided: provided.map((p) => ({ kind: p.kind })) };
+    return { piece: index, clause: typeof clause === 'number' ? clause : -1, mayRunAlone: piece?.mayRunAlone === true, input };
+  });
+}
+
+export function resolveMessage(input: AdapterInput, options?: ResolveOptions): PieceResolution[] {
+  return buildResolveInputs(input).map((p) => ({ piece: p.piece, clause: p.clause, mayRunAlone: p.mayRunAlone, resolution: resolveClause(p.input, options) }));
+}
