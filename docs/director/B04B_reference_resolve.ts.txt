@@ -1,0 +1,46 @@
+import { ACTION_SCHEMAS } from '../schema/actionSchemas';
+import { ASK_MARGIN, MAX_CANDIDATES } from './resolveTypes';
+import type { ResolveInput, ResolveOptions, Resolution, Candidate } from './resolveTypes';
+
+const r2 = (n: number): number => Math.round(n * 100) / 100;
+const keysOf = (s: { actions: readonly string[]; objects: readonly string[]; names: readonly string[] }) =>
+  [...new Set([...s.actions.map((k) => 'a|' + k), ...s.objects.map((k) => 'o|' + k), ...s.names.map((k) => 'n|' + k)])];
+const COUNT = new Map<string, number>();
+for (const s of ACTION_SCHEMAS) for (const k of keysOf(s)) COUNT.set(k, (COUNT.get(k) ?? 0) + 1);
+
+export function resolveClause(raw: ResolveInput, options: ResolveOptions = {}): Resolution {
+  const arr = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+  const r0 = (raw ?? {}) as Partial<ResolveInput>;
+  const input = { act: r0.act ?? 'unknown', polarity: r0.polarity === 'negative' ? 'negative' : 'positive', verbs: arr(r0.verbs), objects: arr(r0.objects), names: arr(r0.names), provided: Array.isArray(r0.provided) ? r0.provided : [] } as ResolveInput;
+  options = options ?? {};
+  const none = (kind: 'none' | 'not-a-request', reason: string): Resolution => ({ kind, confidence: 0, reason, candidates: [] });
+  if (input.act === 'greet' || input.act === 'thanks' || input.act === 'chat' || input.act === 'unknown') return none('not-a-request', 'The clause is not a request or a question about an ability.');
+  const inKeys = [...new Set([...input.verbs.map((k) => 'a|' + k), ...input.objects.map((k) => 'o|' + k), ...input.names.map((k) => 'n|' + k)])];
+  const sim = (k: string, sk: string): number => {
+    if (inKeys.includes(sk)) return 1;
+    if (!options.related || sk[0] === 'n') return 0;
+    let best = 0;
+    for (const ik of inKeys) if (ik[0] === sk[0]) { const v = options.related(ik.slice(2), sk.slice(2)); if (typeof v === 'number' && v > 0 && v <= 1 && v > best) best = v; }
+    return best;
+  };
+  const scored: Candidate[] = [];
+  for (const s of ACTION_SCHEMAS) {
+    if (!s.acts.includes(input.act as 'command' | 'ask')) continue;
+    let score = 0; const matched: string[] = [];
+    for (const k of keysOf(s)) { const v = sim(k, k); if (v > 0) { score += v / (COUNT.get(k) ?? 1); matched.push(k.slice(2)); } }
+    if (score > 0) scored.push({ tool: s.tool, score: score, matched });
+  }
+  scored.sort((a, b) => b.score - a.score || (a.tool < b.tool ? -1 : 1));
+  const candidates = scored.slice(0, MAX_CANDIDATES);
+  const top = candidates[0]; const second = candidates[1];
+  if (input.polarity === 'negative') return { kind: 'negated', tool: top ? top.tool : null, confidence: top ? r2(top.score / (top.score + (second?.score ?? 0) + 0.25)) : 0, reason: 'The request is negated, so nothing is chosen to run.', candidates };
+  if (!top) return none('none', 'No ability shares a concept with the clause.');
+  const confidence = r2(top.score / (top.score + (second?.score ?? 0) + 0.25));
+  if (second && top.score - second.score < ASK_MARGIN) return { kind: 'ask', choices: candidates.map((c) => c.tool), confidence, reason: 'Several abilities fit about equally.', candidates };
+  const status = options.status?.[top.tool] ?? 'built';
+  if (status === 'unbuilt' || status === 'left-out') return { kind: 'unavailable', tool: top.tool, status, confidence, reason: 'This ability is in the plan but is not available.', candidates };
+  const schema = ACTION_SCHEMAS.find((s) => s.tool === top.tool)!;
+  const pool = input.provided.map((p) => p.kind); const missing: string[] = [];
+  for (const slot of schema.slots) { if (!slot.required) continue; const i = pool.indexOf(slot.kind); if (i >= 0) pool.splice(i, 1); else missing.push(slot.name); }
+  return { kind: 'match', tool: top.tool, missingSlots: missing, confidence, reason: 'Shares the concepts: ' + top.matched.join(', '), candidates };
+}

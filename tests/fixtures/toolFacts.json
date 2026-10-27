@@ -1,0 +1,1622 @@
+[
+ {
+  "kind": "tool",
+  "id": "text-counter",
+  "name": "Text Counter",
+  "description": "Count the words, characters, letters and lines of any text.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "available",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "interface-capture",
+  "name": "Interface Capture",
+  "description": "Capture and export AXON's real interfaces.",
+  "group": "web-data",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "content-extractor",
+  "name": "Content Extractor",
+  "description": "Extract and organize useful content.",
+  "group": "web-data",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "link-analyzer",
+  "name": "Link Analyzer",
+  "description": "Analyze links and detect what they lead to.",
+  "group": "web-data",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "background-proof",
+  "name": "Background Proof",
+  "description": "Prove background execution with native heartbeats while the app is closed.",
+  "group": "device-system",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "ai-assistant",
+  "name": "AI Assistant",
+  "description": "Get help from AXON's AI.",
+  "group": "device-system",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "collage-maker",
+  "name": "Collage Maker",
+  "description": "Make a collage from pictures, with a style choice.",
+  "group": "media",
+  "subgroup": "image",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": true
+ },
+ {
+  "kind": "tool",
+  "id": "picture-to-table",
+  "name": "Picture to Table or Code",
+  "description": "Turn a picture into a table (CSV) or a drawing (SVG).",
+  "group": "media",
+  "subgroup": "image",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": true
+ },
+ {
+  "kind": "tool",
+  "id": "audio-converter",
+  "name": "Audio Converter",
+  "description": "Convert sound files between formats.",
+  "group": "media",
+  "subgroup": "audio",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "text-to-speech",
+  "name": "Text to Speech",
+  "description": "Read any text aloud in a voice you choose.",
+  "group": "media",
+  "subgroup": "audio",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "voice-library",
+  "name": "Voice Library",
+  "description": "Many voices, with pitch, speed, style and emotion you can adjust.",
+  "group": "media",
+  "subgroup": "audio",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": true
+ },
+ {
+  "kind": "tool",
+  "id": "voice-cloner",
+  "name": "Voice Cloner",
+  "description": "Clone a voice you have permission to use, with adjustable speech patterns.",
+  "group": "media",
+  "subgroup": "audio",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": true
+ },
+ {
+  "kind": "tool",
+  "id": "speech-to-text",
+  "name": "Speech to Text",
+  "description": "Turn speech or audio into text.",
+  "group": "media",
+  "subgroup": "audio",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "video-frames",
+  "name": "Video Frames",
+  "description": "Extract pictures from a video as a zip archive.",
+  "group": "media",
+  "subgroup": "video",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Plan frame selections, output names, size estimates and bounded frame runs without decoding video."
+  ],
+  "inputs": [
+   {
+    "name": "video",
+    "kind": "file"
+   },
+   {
+    "name": "selection",
+    "kind": "choice",
+    "choices": [
+     "all",
+     "everyNFrames",
+     "everyNSeconds",
+     "specific",
+     "count"
+    ]
+   },
+   {
+    "name": "deviceTier",
+    "kind": "choice",
+    "choices": [
+     "low",
+     "mid",
+     "high"
+    ]
+   }
+  ],
+  "examples": [
+   "Plan one frame every 2 seconds from a video.",
+   "Select specific frame numbers and a time range."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "video-converter",
+  "name": "Video Converter",
+  "description": "Convert video between formats.",
+  "group": "media",
+  "subgroup": "video",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "video-maker",
+  "name": "Video Maker",
+  "description": "Turn a finished edit into a video.",
+  "group": "media",
+  "subgroup": "video",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "video-downloader",
+  "name": "Video Downloader",
+  "description": "Download a video you have the right to keep from a link.",
+  "group": "media",
+  "subgroup": "video",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "file-converter",
+  "name": "File Converter",
+  "description": "Convert a file from one format to another.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Identify supported files, offer valid output formats, and explain conversion changes before conversion."
+  ],
+  "inputs": [
+   {
+    "name": "file",
+    "kind": "file"
+   },
+   {
+    "name": "to",
+    "kind": "choice"
+   },
+   {
+    "name": "options",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Check what a JSON file can become.",
+   "Plan a PNG to WebP conversion."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "zip-tool",
+  "name": "Zip and Unzip",
+  "description": "Pack files into a zip, or open one.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Create, list and safely extract ZIP archives with path and resource limits."
+  ],
+  "inputs": [
+   {
+    "name": "files",
+    "kind": "file"
+   },
+   {
+    "name": "archive",
+    "kind": "file"
+   },
+   {
+    "name": "entryName",
+    "kind": "text"
+   },
+   {
+    "name": "store",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "List files inside a ZIP archive",
+   "Extract one named file from a ZIP"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "pdf-tools",
+  "name": "PDF Tools",
+  "description": "Make, read, merge and split PDF files.",
+  "group": "files-convert",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "document-converter",
+  "name": "Document Converter",
+  "description": "Convert Word and similar documents to text, PDF or Markdown.",
+  "group": "files-convert",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "batch-convert",
+  "name": "Batch Convert",
+  "description": "Convert many files in one go.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Plan one-target conversions for multiple files, track safe execution, and produce a report and ZIP-ready outputs."
+  ],
+  "inputs": [
+   {
+    "name": "files",
+    "kind": "file"
+   },
+   {
+    "name": "to",
+    "kind": "choice"
+   },
+   {
+    "name": "maxHeldBytes",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Convert a group of CSV files to JSON.",
+   "Plan a batch of pictures for WebP output."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "file-inspector",
+  "name": "File Inspector",
+  "description": "Show a file's type, size and a summary of what is inside.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Identify file types and inspect header bytes without opening or executing files."
+  ],
+  "inputs": [
+   {
+    "name": "file",
+    "kind": "file",
+    "prompt": "File bytes and file name"
+   }
+  ],
+  "examples": [
+   "Identify a file from its first bytes.",
+   "Show a hex dump and image dimensions."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "file-compare",
+  "name": "File Compare",
+  "description": "Compare any two files and see how many differences there are and where.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Compare file bytes, text lines, or decoded image pixels and report differences."
+  ],
+  "inputs": [
+   {
+    "name": "fileA",
+    "kind": "file"
+   },
+   {
+    "name": "fileB",
+    "kind": "file"
+   },
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "bytes",
+     "text",
+     "pixels"
+    ]
+   }
+  ],
+  "examples": [
+   "Compare two files byte for byte.",
+   "Show which text lines changed."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "converter",
+  "name": "Unit & Base Converter",
+  "description": "Convert lengths, weights, temperatures and other units, and number bases.",
+  "group": "files-convert",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Read and write bounded delimited tables with quoted fields and explicit row-shape warnings.",
+   "Read and write XML using AXON’s documented plain-value convention.",
+   "Read and write a safe, documented YAML subset as plain values.",
+   "Plan image output names, dimensions, transparency handling, and quality without decoding or converting pixels."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "delimiter",
+    "kind": "choice",
+    "choices": [
+     ",",
+     "tab",
+     ";"
+    ]
+   },
+   {
+    "name": "header",
+    "kind": "yes-no"
+   },
+   {
+    "name": "detectTypes",
+    "kind": "yes-no"
+   },
+   {
+    "name": "rootName",
+    "kind": "text",
+    "prompt": "Optional root element name when writing"
+   },
+   {
+    "name": "indent",
+    "kind": "choice",
+    "choices": [
+     "2",
+     "4"
+    ],
+    "prompt": "Indent width when writing"
+   },
+   {
+    "name": "image",
+    "kind": "file"
+   },
+   {
+    "name": "toFormat",
+    "kind": "choice",
+    "choices": [
+     "png",
+     "jpg",
+     "webp"
+    ]
+   },
+   {
+    "name": "maxSide",
+    "kind": "text"
+   },
+   {
+    "name": "html",
+    "kind": "text",
+    "prompt": "HTML source"
+   },
+   {
+    "name": "from",
+    "kind": "choice",
+    "choices": [
+     "txt",
+     "md",
+     "html"
+    ]
+   },
+   {
+    "name": "to",
+    "kind": "choice",
+    "choices": [
+     "txt",
+     "md",
+     "html"
+    ]
+   },
+   {
+    "name": "input",
+    "kind": "text",
+    "prompt": "Text to convert"
+   }
+  ],
+  "examples": [
+   "Read this CSV table",
+   "Convert these rows to TSV"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "find-replace",
+  "name": "Find and Replace",
+  "description": "Find text and replace it, with a preview first.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Find literal or regular-expression matches and replace selected or all occurrences, within the engine limits."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "pattern",
+    "kind": "text"
+   },
+   {
+    "name": "replacement",
+    "kind": "text"
+   },
+   {
+    "name": "caseSensitive",
+    "kind": "yes-no"
+   },
+   {
+    "name": "wholeWord",
+    "kind": "yes-no"
+   },
+   {
+    "name": "regex",
+    "kind": "yes-no"
+   },
+   {
+    "name": "replaceAll",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Replace every “cat” with “dog”.",
+   "Find case-sensitive matches and report their positions."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "case-converter",
+  "name": "Case Converter",
+  "description": "Change text to upper, lower, title or sentence case.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Convert text between supported letter-case and identifier styles."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "UPPER",
+     "lower",
+     "Title",
+     "Sentence",
+     "camelCase",
+     "PascalCase",
+     "snake_case",
+     "kebab-case",
+     "CONSTANT_CASE"
+    ]
+   }
+  ],
+  "examples": [
+   "Convert a title to camelCase.",
+   "Make a sentence UPPER case."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "text-cleaner",
+  "name": "Text Cleaner",
+  "description": "Remove extra spaces, blank lines and duplicate lines.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Clean whitespace, blank lines, line endings, zero-width characters and selected punctuation in text."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "trimEachLine",
+    "kind": "yes-no"
+   },
+   {
+    "name": "collapseRepeatedSpaces",
+    "kind": "yes-no"
+   },
+   {
+    "name": "removeBlankLines",
+    "kind": "yes-no"
+   },
+   {
+    "name": "collapseBlankLines",
+    "kind": "yes-no"
+   },
+   {
+    "name": "straightenQuotesAndDashes",
+    "kind": "yes-no"
+   },
+   {
+    "name": "removeZeroWidth",
+    "kind": "yes-no"
+   },
+   {
+    "name": "normalizeLineEndings",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Trim spaces at the start and end of each line.",
+   "Remove blank lines and normalize line endings."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "sort-lines",
+  "name": "Sort Lines",
+  "description": "Sort lines of text and remove duplicates.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Sort, reverse, deduplicate or filter lines; shuffle requires injected randomness."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "ascending",
+     "descending",
+     "by-length",
+     "natural",
+     "reverse",
+     "shuffle"
+    ]
+   },
+   {
+    "name": "ignoreCase",
+    "kind": "yes-no"
+   },
+   {
+    "name": "removeDuplicates",
+    "kind": "yes-no"
+   },
+   {
+    "name": "ignoreBlankLines",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Sort these lines alphabetically.",
+   "Sort lines by length and remove duplicates."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "text-compare",
+  "name": "Text Compare",
+  "description": "Show the differences between two texts.",
+  "group": "text-writing",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Compare two text values by line or word and report same, added and removed tokens."
+  ],
+  "inputs": [
+   {
+    "name": "original",
+    "kind": "text"
+   },
+   {
+    "name": "revised",
+    "kind": "text"
+   },
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "line",
+     "word"
+    ]
+   }
+  ],
+  "examples": [
+   "Compare two versions line by line.",
+   "Show word-level changes between two passages."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "rephraser",
+  "name": "Rephraser",
+  "description": "Say a sentence in other words, with versions to choose from.",
+  "group": "text-writing",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "grammar-helper",
+  "name": "Grammar Helper",
+  "description": "Explain how a sentence is built and point out mistakes.",
+  "group": "text-writing",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "calculator",
+  "name": "Calculator",
+  "description": "Work out sums, with the steps shown.",
+  "group": "numbers-converters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Evaluate a bounded mathematical expression with explicit degree or radian angle mode."
+  ],
+  "inputs": [
+   {
+    "name": "expression",
+    "kind": "text"
+   },
+   {
+    "name": "angle",
+    "kind": "choice",
+    "choices": [
+     "deg",
+     "rad"
+    ]
+   }
+  ],
+  "examples": [
+   "Calculate (12 + 8) / 4.",
+   "Evaluate sin(30) in degree mode."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "number-to-words",
+  "name": "Number to Words",
+  "description": "Write a number in words, and back.",
+  "group": "numbers-converters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Spell supported numeric input as words, with optional ordinal form."
+  ],
+  "inputs": [
+   {
+    "name": "number",
+    "kind": "text"
+   },
+   {
+    "name": "ordinal",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Write 1250 in words.",
+   "Spell 21 as an ordinal."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "percentage-helper",
+  "name": "Percentage Helper",
+  "description": "Work out percentages, changes and shares.",
+  "group": "numbers-converters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Calculate percent-of, what-percent, percent change, adjustment and percent-of-what operations."
+  ],
+  "inputs": [
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "percent-of",
+     "what-percent",
+     "change",
+     "adjust",
+     "percent-of-what"
+    ]
+   },
+   {
+    "name": "values",
+    "kind": "text",
+    "prompt": "Provide the numeric values required by the selected mode."
+   }
+  ],
+  "examples": [
+   "Find 15 percent of 240.",
+   "Calculate the percentage change from 80 to 92."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "timer",
+  "name": "Timer",
+  "description": "Count down from a time you choose.",
+  "group": "time-counters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Manage timer state with caller-supplied timestamps; it does not schedule background callbacks."
+  ],
+  "inputs": [
+   {
+    "name": "durationMs",
+    "kind": "text"
+   },
+   {
+    "name": "operation",
+    "kind": "choice",
+    "choices": [
+     "start",
+     "tick",
+     "pause",
+     "resume",
+     "reset"
+    ]
+   },
+   {
+    "name": "now",
+    "kind": "text",
+    "prompt": "Timestamp in milliseconds supplied by the caller."
+   }
+  ],
+  "examples": [
+   "Start a 90-second timer.",
+   "Pause or resume a running timer."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "stopwatch",
+  "name": "Stopwatch",
+  "description": "Time something, with laps.",
+  "group": "time-counters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Manage stopwatch state and laps using caller-supplied timestamps; it does not run a live clock itself."
+  ],
+  "inputs": [
+   {
+    "name": "operation",
+    "kind": "choice",
+    "choices": [
+     "start",
+     "tick",
+     "pause",
+     "resume",
+     "lap",
+     "reset"
+    ]
+   },
+   {
+    "name": "now",
+    "kind": "text",
+    "prompt": "Timestamp in milliseconds supplied by the caller."
+   }
+  ],
+  "examples": [
+   "Start a stopwatch at a supplied timestamp.",
+   "Record a lap and total elapsed time."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "date-calculator",
+  "name": "Date Calculator",
+  "description": "Add or subtract days, or find the days between two dates.",
+  "group": "time-counters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Parse calendar dates and calculate date differences, offsets, weekdays, day-of-year, ISO weeks and weekdays in a range."
+  ],
+  "inputs": [
+   {
+    "name": "operation",
+    "kind": "choice",
+    "choices": [
+     "add",
+     "difference",
+     "weekday",
+     "day-of-year",
+     "iso-week",
+     "count-weekdays"
+    ]
+   },
+   {
+    "name": "date",
+    "kind": "text"
+   },
+   {
+    "name": "otherDate",
+    "kind": "text"
+   },
+   {
+    "name": "amount",
+    "kind": "text"
+   },
+   {
+    "name": "unit",
+    "kind": "choice",
+    "choices": [
+     "years",
+     "months",
+     "days"
+    ]
+   }
+  ],
+  "examples": [
+   "Add 30 days to a date.",
+   "Find the number of days between two dates."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "tally-counter",
+  "name": "Tally Counter",
+  "description": "Keep a running total with one tap.",
+  "group": "time-counters",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Manage named bounded counters with increments, decrements, set, reset and undo operations."
+  ],
+  "inputs": [
+   {
+    "name": "operation",
+    "kind": "choice",
+    "choices": [
+     "add",
+     "increment",
+     "decrement",
+     "set",
+     "reset",
+     "undo"
+    ]
+   },
+   {
+    "name": "name",
+    "kind": "text"
+   },
+   {
+    "name": "value",
+    "kind": "text"
+   },
+   {
+    "name": "step",
+    "kind": "text"
+   },
+   {
+    "name": "min",
+    "kind": "text"
+   },
+   {
+    "name": "max",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Create a counter named visitors.",
+   "Decrease the visitor tally by one."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "qr-maker",
+  "name": "QR Code Maker",
+  "description": "Turn text or a link into a QR code.",
+  "group": "create-encode",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Create standards-based QR codes for text, links, contact details and Wi-Fi."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text",
+    "prompt": "Text or payload to encode"
+   },
+   {
+    "name": "level",
+    "kind": "choice",
+    "choices": [
+     "L",
+     "M",
+     "Q",
+     "H"
+    ],
+    "prompt": "Error correction level"
+   }
+  ],
+  "examples": [
+   "Encode a website link as a QR code.",
+   "Create a QR code for a Wi-Fi network."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "password-generator",
+  "name": "Password Generator",
+  "description": "Make strong passwords of the length you choose.",
+  "group": "create-encode",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Generate a password from explicit options using an injected random source or the available cryptographic source."
+  ],
+  "inputs": [
+   {
+    "name": "length",
+    "kind": "text"
+   },
+   {
+    "name": "options",
+    "kind": "text"
+   },
+   {
+    "name": "random",
+    "kind": "text",
+    "prompt": "Optional injected random provider for deterministic tests."
+   }
+  ],
+  "examples": [
+   "Generate a 20-character password.",
+   "Create a password that includes symbols."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "random-picker",
+  "name": "Random Picker",
+  "description": "Pick random numbers, names or items from a list.",
+  "group": "create-encode",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Pick, shuffle, roll dice, flip a coin, choose random integers or split items into teams with an injectable random source."
+  ],
+  "inputs": [
+   {
+    "name": "operation",
+    "kind": "choice",
+    "choices": [
+     "pick",
+     "shuffle",
+     "coin-flip",
+     "roll-dice",
+     "random-integer",
+     "split-teams"
+    ]
+   },
+   {
+    "name": "items",
+    "kind": "text"
+   },
+   {
+    "name": "count",
+    "kind": "text"
+   },
+   {
+    "name": "random",
+    "kind": "text",
+    "prompt": "Optional injected random provider for deterministic tests."
+   }
+  ],
+  "examples": [
+   "Pick three names from a list.",
+   "Roll 2d6."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "encoder-decoder",
+  "name": "Encoder and Decoder",
+  "description": "Convert text to and from Base64, URL and hexadecimal.",
+  "group": "create-encode",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Encode or decode text using supported Base64, Base64URL, URL, HTML, hex, binary and ROT13 formats."
+  ],
+  "inputs": [
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "encode",
+     "decode"
+    ]
+   },
+   {
+    "name": "format",
+    "kind": "choice",
+    "choices": [
+     "base64",
+     "base64url",
+     "url",
+     "html",
+     "hex",
+     "binary",
+     "rot13"
+    ]
+   },
+   {
+    "name": "input",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Encode text as Base64.",
+   "Decode a percent-encoded URL value."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "hash-tool",
+  "name": "Hash and Checksum",
+  "description": "Work out the checksum of a text or a file.",
+  "group": "create-encode",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Calculate supported digest or checksum values for text or bytes using the supplied digest provider."
+  ],
+  "inputs": [
+   {
+    "name": "input",
+    "kind": "text",
+    "prompt": "Text or bytes to hash."
+   },
+   {
+    "name": "algorithm",
+    "kind": "choice",
+    "choices": [
+     "MD5",
+     "SHA-1",
+     "SHA-256",
+     "SHA-384",
+     "SHA-512",
+     "CRC32"
+    ]
+   }
+  ],
+  "examples": [
+   "Calculate a SHA-256 digest of text.",
+   "Compute a CRC32 checksum."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "dictionary",
+  "name": "Dictionary",
+  "description": "Look up words, with history, bookmarks, notes and a word of the day.",
+  "group": "reading-knowledge",
+  "screen": true,
+  "chat": "available",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "my-dictionary",
+  "name": "My Dictionary",
+  "description": "Import word lists with meanings from a file and keep them as your own data.",
+  "group": "reading-knowledge",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Keep, search, import with confirmation, export and erase the owner’s own word meanings separately from the English dictionary."
+  ],
+  "inputs": [
+   {
+    "name": "word",
+    "kind": "text"
+   },
+   {
+    "name": "meaning",
+    "kind": "text"
+   },
+   {
+    "name": "partOfSpeech",
+    "kind": "choice",
+    "choices": [
+     "noun",
+     "verb",
+     "adjective",
+     "adverb",
+     "other"
+    ]
+   },
+   {
+    "name": "file",
+    "kind": "file"
+   },
+   {
+    "name": "confirm",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Add a word to my dictionary",
+   "Find entries in my dictionary"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "document-reader",
+  "name": "Document Reader",
+  "description": "Open long text files and search inside them.",
+  "group": "reading-knowledge",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Turns supported text documents into bounded readable blocks with outline, statistics and search."
+  ],
+  "inputs": [
+   {
+    "name": "file",
+    "kind": "file",
+    "prompt": "Choose a supported document"
+   }
+  ],
+  "examples": [
+   "Open a Markdown document and show its headings.",
+   "Search this CSV for a value."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "translator",
+  "name": "Translator",
+  "description": "Translate between languages, one language at a time as they are added.",
+  "group": "reading-knowledge",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "summarizer",
+  "name": "Summarizer",
+  "description": "Shorten a long text and keep what matters.",
+  "group": "reading-knowledge",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Selects important original sentences without rewriting them."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text",
+    "prompt": "Text to summarize"
+   },
+   {
+    "name": "sentences",
+    "kind": "text",
+    "prompt": "Number of sentences to keep"
+   }
+  ],
+  "examples": [
+   "Summarize this article in five sentences.",
+   "Extract the key sentences from these notes."
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "json-viewer",
+  "name": "JSON and Data Viewer",
+  "description": "Open JSON and tables and look through them.",
+  "group": "web-data",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Validate, indent or minify JSON without changing number literals or duplicate keys.",
+   "Inspect valid JSON as a bounded, lazy tree with paths and structural statistics."
+  ],
+  "inputs": [
+   {
+    "name": "text",
+    "kind": "text"
+   },
+   {
+    "name": "indent",
+    "kind": "choice",
+    "choices": [
+     "2",
+     "4",
+     "tab"
+    ]
+   },
+   {
+    "name": "path",
+    "kind": "text"
+   },
+   {
+    "name": "offset",
+    "kind": "text"
+   },
+   {
+    "name": "limit",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "{\"a\":1.0}",
+   "[1e5,true]"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "web-search",
+  "name": "Web Search",
+  "description": "Search the web from the chat.",
+  "group": "web-data",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "axon-code",
+  "name": "AXON Code",
+  "description": "Write code, test it safely and report what passed.",
+  "group": "code",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "code-formatter",
+  "name": "Code Formatter",
+  "description": "Tidy code so it is easy to read.",
+  "group": "code",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Pretty-print or minify JSON, CSS, HTML and XML while preserving meaningful content."
+  ],
+  "inputs": [
+   {
+    "name": "language",
+    "kind": "choice",
+    "choices": [
+     "json",
+     "css",
+     "html",
+     "xml"
+    ]
+   },
+   {
+    "name": "mode",
+    "kind": "choice",
+    "choices": [
+     "pretty",
+     "minify"
+    ]
+   },
+   {
+    "name": "indent",
+    "kind": "choice",
+    "choices": [
+     "2",
+     "4",
+     "tab"
+    ]
+   },
+   {
+    "name": "input",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Pretty-print nested JSON",
+   "Minify a CSS stylesheet"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "pattern-tester",
+  "name": "Pattern Tester",
+  "description": "Try a text pattern (regular expression) and see what it matches.",
+  "group": "code",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Test JavaScript regular expressions against text and inspect matches or replacements."
+  ],
+  "inputs": [
+   {
+    "name": "pattern",
+    "kind": "text",
+    "prompt": "Enter a JavaScript regular expression pattern."
+   },
+   {
+    "name": "flags",
+    "kind": "text",
+    "prompt": "Optional flags: g, i, m, s, u, y."
+   },
+   {
+    "name": "text",
+    "kind": "text",
+    "prompt": "Enter the text to test."
+   },
+   {
+    "name": "replacement",
+    "kind": "text",
+    "prompt": "Optional replacement text."
+   }
+  ],
+  "examples": [
+   "Find every number in a text",
+   "Check whether a pattern matches a line"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "currency-converter",
+  "name": "Currency Converter",
+  "description": "Convert between currencies using rates you can see.",
+  "group": "finance",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "tool",
+  "id": "loan-calculator",
+  "name": "Loan Calculator",
+  "description": "Work out repayments and the total cost.",
+  "group": "finance",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Calculate amortized loan payments and repayment schedules"
+  ],
+  "inputs": [
+   {
+    "name": "amount",
+    "kind": "text"
+   },
+   {
+    "name": "yearlyRate",
+    "kind": "text"
+   },
+   {
+    "name": "term",
+    "kind": "text"
+   },
+   {
+    "name": "extraPayment",
+    "kind": "text"
+   }
+  ],
+  "examples": [
+   "Calculate a 5 year loan",
+   "Show savings from extra payments"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "split-bill",
+  "name": "Split and Tip",
+  "description": "Share a bill between people, with a tip.",
+  "group": "finance",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Split bills and tips fairly in cents"
+  ],
+  "inputs": [
+   {
+    "name": "bill",
+    "kind": "text"
+   },
+   {
+    "name": "tipPercent",
+    "kind": "text"
+   },
+   {
+    "name": "people",
+    "kind": "text"
+   },
+   {
+    "name": "roundUp",
+    "kind": "yes-no"
+   }
+  ],
+  "examples": [
+   "Split a bill among three people",
+   "Split using two parts and one part"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "market-scope",
+  "name": "Market Scope",
+  "description": "Study markets (built separately, joined to AXON later).",
+  "group": "finance",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": true
+ },
+ {
+  "kind": "tool",
+  "id": "device-profile",
+  "name": "Device Profile",
+  "description": "Show what this phone can carry: memory, storage and Android version.",
+  "group": "device-system",
+  "screen": true,
+  "chat": "not-built",
+  "leftOut": false,
+  "purposes": [
+   "Report device and app details supplied by the environment, without guessing missing values."
+  ],
+  "inputs": [
+   {
+    "name": "environment",
+    "kind": "text",
+    "prompt": "Device environment values are supplied by the app."
+   }
+  ],
+  "examples": [
+   "Copy the current device profile",
+   "Check the reported browser version"
+  ]
+ },
+ {
+  "kind": "tool",
+  "id": "backup-restore",
+  "name": "Backup and Restore",
+  "description": "Save your AXON data, or bring it back.",
+  "group": "device-system",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
+  "kind": "ability",
+  "id": "settings",
+  "name": "Settings",
+  "description": "Open AXON Settings.",
+  "group": "ability",
+  "screen": true,
+  "chat": "needs-screen",
+  "leftOut": false
+ },
+ {
+  "kind": "ability",
+  "id": "taught-meanings",
+  "name": "Taught Meanings",
+  "description": "Teach AXON what a word or phrase means, list what was taught, forget one meaning or all of them.",
+  "group": "ability",
+  "screen": false,
+  "chat": "available",
+  "leftOut": false
+ },
+ {
+  "kind": "ability",
+  "id": "axon-source",
+  "name": "AXON Source",
+  "description": "Export the AXON source project.",
+  "group": "ability",
+  "screen": true,
+  "chat": "needs-screen",
+  "leftOut": false
+ }
+]

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/brain/mind/schema/**/*.ts", "src/brain/mind/resolve/**/*.ts"]
+}
