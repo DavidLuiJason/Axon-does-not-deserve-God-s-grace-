@@ -24,3 +24,6 @@ Roadmap section 5.8 gives the roster. This file holds the ratings and the LOG of
 ## Director capacity record (small; size 1 to 10, 1 = one small file, 10 = whole-project work; ESTIMATES)
 - 2026-10-27, four Claude accounts: B04B4 as ONE job, size about 7, delivered nothing, limit hit YES (cause: job too large for one turn; the roadmap and the paste were not the cause).
 - 2026-10-27, twelfth account: read roadmap and board, B04B4P1 (3 files, ~12 commands) plus roadmap v19.4, size about 5, delivered, limit hit NO so far.
+- 2026-10-27, thirteenth account: B04B4P2 (8 files, about 24 commands), size about 5, delivered; limit hit YES at the next message in the same chat (OWNER-REPORTED).
+- 2026-10-27, OWNER-REPORTED: two more accounts hit the limit when P3 and the roadmap were asked in one turn, no output. The owner now asks P3 and the roadmap in separate turns.
+- 2026-10-27, fourteenth account: read roadmap and paste, five doc tails, B04B4P3a (4 docs files, about 6 commands), size about 2, delivered, limit hit NO so far.
