@@ -233,7 +233,9 @@ async function main(): Promise<void> {
     const { reply, trace } = await freshBrain().askWithTrace({ text: item.message, place: 'chat' });
     const keys = [...new Set([...Object.keys(item.reply), ...Object.keys(reply)])];
     for (const key of keys) assert(same((item.reply as Record<string, unknown>)[key], (reply as unknown as Record<string, unknown>)[key]), `golden reply unchanged for ${JSON.stringify(item.message)} field ${key}`);
-    assert(trace.entries.filter((e) => e.stage !== 'meaning').map((e) => `${e.stage}:${e.state}`).join(',') === expectedStates, `only the meaning trace entry is new for ${JSON.stringify(item.message)}`);
+    const resolutionEntry = trace.entries.find((e) => e.stage === 'resolution');
+    assert(resolutionEntry?.state === 'ran' || resolutionEntry?.state === 'not-built', `resolution (B04B2, shadow) is ran or not-built for ${JSON.stringify(item.message)}`);
+    assert(trace.entries.filter((e) => e.stage !== 'meaning').map((e) => e.stage === 'resolution' ? 'resolution:not-built' : `${e.stage}:${e.state}`).join(',') === expectedStates, `only the meaning and resolution trace entries are new for ${JSON.stringify(item.message)}`);
     const meaningEntry = trace.entries.find((e) => e.stage === 'meaning')!;
     assert(meaningEntry.state === 'ran' || meaningEntry.state === 'not-built', 'meaning entry present');
     if (meaningEntry.state === 'ran') meaningRan += 1;

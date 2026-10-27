@@ -14,6 +14,8 @@ import type { KnowledgeSlot } from '../knowledge/slot';
 import { createAnalyzer } from './analysis/analyze';
 import { buildMeaning } from './meaning';
 import { extractValues } from './meaning/values';
+import { makeRelated } from './resolve/options';
+import { relationLookupFromTokens } from './resolve/tokenRelations';
 import { resolveMessage } from './resolve/clauseInputs';
 import type { AdapterInput } from './resolve/clauseInputsTypes';
 
@@ -114,8 +116,10 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         pieces: structure.pieces,
         values,
       };
-      // Deliberately omit options.status and options.related; those belong to later jobs.
-      const resolutions = resolveMessage(adapterInput);
+      // B04B3: concept closeness from the dictionary synonyms of the message's own words. options.status is still omitted on purpose:
+      // it needs the live tool facts (job B04B4), so a tool that is not built is not yet answered as unavailable.
+      const related = makeRelated(relationLookupFromTokens(context.analysis.tokens));
+      const resolutions = resolveMessage(adapterInput, { related });
       const counts = { match: 0, ask: 0, unavailable: 0, none: 0 };
       for (const item of resolutions) {
         if (item.resolution.kind === 'match') counts.match += 1;

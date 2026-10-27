@@ -1,0 +1,44 @@
+import { deriveStatus } from '../schema/schemaTypes';
+import type { Status, ToolFact } from '../schema/schemaTypes';
+import { SYNONYM_SIMILARITY, ONE_STEP_SIMILARITY, TWO_STEP_SIMILARITY, MAX_LIST_ENTRIES } from './optionsTypes';
+import type { RelationLookup, Relations } from './optionsTypes';
+
+const posOf = (key: string): string => key.slice(key.lastIndexOf(':') + 1);
+const list = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string').slice(0, MAX_LIST_ENTRIES) : []);
+
+export function makeRelated(lookup: RelationLookup): (inputKey: string, schemaKey: string) => number {
+  const rel = (key: string): { synonyms: string[]; broader: string[]; narrower: string[] } => {
+    try {
+      const r = lookup(key) as Partial<Relations> | null;
+      if (!r || typeof r !== 'object') return { synonyms: [], broader: [], narrower: [] };
+      return { synonyms: list(r.synonyms), broader: list(r.broader), narrower: list(r.narrower) };
+    } catch { return { synonyms: [], broader: [], narrower: [] }; }
+  };
+  const oneWay = (a: string, b: string): number => {
+    const ra = rel(a);
+    if (ra.synonyms.includes(b)) return SYNONYM_SIMILARITY;
+    if (ra.broader.includes(b) || ra.narrower.includes(b)) return ONE_STEP_SIMILARITY;
+    for (const m of ra.broader) if (rel(m).broader.includes(b)) return TWO_STEP_SIMILARITY;
+    for (const m of ra.narrower) if (rel(m).narrower.includes(b)) return TWO_STEP_SIMILARITY;
+    return 0;
+  };
+  return (inputKey: string, schemaKey: string): number => {
+    if (typeof inputKey !== 'string' || typeof schemaKey !== 'string' || inputKey === '' || schemaKey === '') return 0;
+    if (inputKey === schemaKey) return 1;
+    if (posOf(inputKey) !== posOf(schemaKey)) return 0;
+    return Math.max(oneWay(inputKey, schemaKey), oneWay(schemaKey, inputKey));
+  };
+}
+
+export function statusMapFrom(facts: readonly ToolFact[]): Readonly<Record<string, Status>> {
+  const out: Record<string, Status> = Object.create(null);
+  if (Array.isArray(facts)) {
+    for (const f of facts) {
+      const id = (f as { id?: unknown } | null)?.id;
+      if (typeof id !== 'string' || id === '' || id === '__proto__') continue;
+      if (Object.prototype.hasOwnProperty.call(out, id)) continue;
+      out[id] = deriveStatus(f);
+    }
+  }
+  return Object.freeze(out);
+}
