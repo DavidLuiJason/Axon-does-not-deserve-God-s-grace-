@@ -20,3 +20,7 @@ Roadmap section 5.8 gives the roster. This file holds the ratings and the LOG of
 | 2026-10-25 | ChatGPT | B03B3c TONE: ONE file (about 8,000 characters) against a fixed contract and a 50-check runner, mini-base of 6 files | delivered on the first reply, all proofs pass (builder-reported); Director accepted | two Claude accounts that tried to measure, build, test and package it themselves hit their usage limit: the Director never builds a builder's job |
 
 | 2026-10-25 | ChatGPT | B03B3d MEMORY NOTES: ONE file (about 17,900 characters, 13 functions) against a fixed contract and a 2,166-check runner, prompt 14,044 characters, mini-base of 7 files | delivered on the first reply, all proofs pass (builder-reported); Director's independent differential check: 0 differences in 159,476 checks; worst-case message search 6 times slower than the reference | the same recipe as B03B3c worked: prompt under 16,000 characters, one file, fixed contract, no-install runner |
+
+## Director capacity record (small; size 1 to 10, 1 = one small file, 10 = whole-project work; ESTIMATES)
+- 2026-10-27, four Claude accounts: B04B4 as ONE job, size about 7, delivered nothing, limit hit YES (cause: job too large for one turn; the roadmap and the paste were not the cause).
+- 2026-10-27, twelfth account: read roadmap and board, B04B4P1 (3 files, ~12 commands) plus roadmap v19.4, size about 5, delivered, limit hit NO so far.
