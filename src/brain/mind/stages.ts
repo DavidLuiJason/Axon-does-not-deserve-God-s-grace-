@@ -13,9 +13,17 @@ import { dictionarySlot } from '../knowledge/dictionarySlot';
 import type { KnowledgeSlot } from '../knowledge/slot';
 import { createAnalyzer } from './analysis/analyze';
 import { buildMeaning } from './meaning';
+import { extractValues } from './meaning/values';
+import { resolveMessage } from './resolve/clauseInputs';
+import type { AdapterInput } from './resolve/clauseInputsTypes';
 
 function withEntry(context: MindContext, stage: StageId, state: StageState, note: string, patch: Partial<MindContext> = {}): MindContext {
   return { ...context, ...patch, entries: [...context.entries, { stage, state, note }] };
+}
+
+function utcClock(milliseconds: number): { year: number; month: number; day: number; hour: number; minute: number } {
+  const date = new Date(milliseconds);
+  return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate(), hour: date.getUTCHours(), minute: date.getUTCMinutes() };
 }
 
 function makeSegments(text: string): { segments: Segment[]; note: string } {
@@ -91,7 +99,36 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
     }
   }
   function resolution(context: MindContext): MindContext {
-    return withEntry(context, 'resolution', 'not-built', 'not built: concept resolution arrives in B4');
+    if (!context.analysis) return withEntry(context, 'resolution', 'not-built', 'not built: analysis is missing');
+    if (!context.meaning?.structure) return withEntry(context, 'resolution', 'not-built', 'not built: Meaning structure is missing');
+    try {
+      const extracted = extractValues(context.utterance.text, context.analysis.segments, utcClock(now()));
+      const values = extracted.ok ? extracted.values : [];
+      const valueNote = extracted.ok ? '' : `; values unavailable: ${extracted.message}`;
+      const structure = context.meaning.structure;
+      const adapterInput: AdapterInput = {
+        tokens: context.analysis.tokens,
+        segments: context.analysis.segments,
+        clauses: context.meaning.clauses,
+        words: structure.words,
+        pieces: structure.pieces,
+        values,
+      };
+      // Deliberately omit options.status and options.related; those belong to later jobs.
+      const resolutions = resolveMessage(adapterInput);
+      const counts = { match: 0, ask: 0, unavailable: 0, none: 0 };
+      for (const item of resolutions) {
+        if (item.resolution.kind === 'match') counts.match += 1;
+        else if (item.resolution.kind === 'ask') counts.ask += 1;
+        else if (item.resolution.kind === 'unavailable') counts.unavailable += 1;
+        else if (item.resolution.kind === 'none') counts.none += 1;
+      }
+      const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}`;
+      return withEntry(context, 'resolution', 'ran', note, { resolutions });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return withEntry(context, 'resolution', 'not-built', `resolution failed: ${message}`);
+    }
   }
   function dialogue(context: MindContext): MindContext {
     return withEntry(context, 'dialogue', 'not-built', 'not built: dialogue state arrives in B5');

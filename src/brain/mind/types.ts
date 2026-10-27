@@ -11,6 +11,7 @@ import type { MeaningStructure } from './meaning/structure/glueTypes';
 import type { LanguageReading } from './meaning/languageCheck';
 import type { TeachingReading } from './meaning/teach/teachTypes';
 import type { ToneReading } from './meaning/tone/toneTypes';
+import type { PieceResolution } from './resolve/clauseInputsTypes';
 
 export type StageId = 'intake' | 'reading' | 'analysis' | 'meaning' | 'resolution' | 'dialogue' | 'planning' | 'execution' | 'verification' | 'response';
 export type StageState = 'ran' | 'passed-through' | 'not-built';
@@ -47,5 +48,5 @@ export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positi
 export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading; teaching?: TeachingReading[]; tone?: ToneReading; senses?: SenseReading[] }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
-export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; reply?: BrainReply; entries: TraceEntry[] }
+export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; resolutions?: PieceResolution[]; reply?: BrainReply; entries: TraceEntry[] }
 export interface MindStage { id: StageId; run(context: MindContext): Promise<MindContext> }

@@ -59,7 +59,8 @@ async function main(): Promise<void> {
   assert(holderCalls.join(',') === 'holder', 'holder response prevents later provider calls');
 
   const trace = (await brain.askWithTrace({ text: 'trace states', place: 'chat' })).trace.entries;
-  for (const id of ['resolution', 'dialogue', 'planning', 'verification']) assert(trace.find((entry) => entry.stage === id)?.state === 'not-built', `${id} is not built in B1`);
+  for (const id of ['dialogue', 'planning', 'verification']) assert(trace.find((entry) => entry.stage === id)?.state === 'not-built', `${id} is not built in B1`);
+  assert(trace.find((entry) => entry.stage === 'resolution')?.state === 'not-built' && trace.find((entry) => entry.stage === 'meaning')?.state === 'not-built', 'resolution stays not-built when Meaning cannot complete');
   // B03A: without a dictionary in this test the analysis cannot complete, so the Meaning stage honestly reports that it did not read.
   assert(trace.find((entry) => entry.stage === 'meaning')?.state === 'not-built', 'meaning is not read when the analysis did not complete');
   assert(trace.find((entry) => entry.stage === 'execution')?.state === 'ran', 'execution runs the legacy executor');
