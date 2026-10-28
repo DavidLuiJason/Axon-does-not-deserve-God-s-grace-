@@ -26,6 +26,8 @@ import { BATCH_CONVERT_DESCRIPTOR } from '../tools/engines/files/batchPlan';
 import { MY_DICTIONARY_DESCRIPTOR } from '../tools/engines/dictionary/userDictionary';
 import { TEXT_FORMATS_DESCRIPTOR } from '../tools/engines/text/textFormats';
 import { VIDEO_FRAMES_DESCRIPTOR } from '../tools/engines/video/framePlan';
+import { COLLAGE_DESCRIPTOR } from '../tools/engines/images/collagePlan';
+import { PICTURE_TO_TABLE_DESCRIPTOR } from '../tools/engines/images/tableFromBoxes';
 
 export const ENGINE_DESCRIPTORS = [
   ...LEGACY_ENGINE_DESCRIPTORS,
@@ -36,6 +38,7 @@ export const ENGINE_DESCRIPTORS = [
   HTML_TEXT_DESCRIPTOR, MARKDOWN_DESCRIPTOR, TEXT_FORMATS_DESCRIPTOR,
   SUMMARIZER_DESCRIPTOR, DOCUMENT_READER_DESCRIPTOR, FILE_CONVERTER_DESCRIPTOR, BATCH_CONVERT_DESCRIPTOR, MY_DICTIONARY_DESCRIPTOR,
   VIDEO_FRAMES_DESCRIPTOR,
+  COLLAGE_DESCRIPTOR, PICTURE_TO_TABLE_DESCRIPTOR,
 ] as const;
 
 const NOT_BUILT_NOTE = 'Opens from the Tools menu once its screen exists; chat control arrives with the brain.';

@@ -10,7 +10,7 @@ export type TextResult = { ok: true; text: string } | { ok: false; error: string
 export const PICTURE_TO_TABLE_DESCRIPTOR = {
   toolId: 'picture-to-table',
   displayName: 'Picture to Table',
-  purpose: 'Rebuild a table from word boxes supplied by a separate reading/OCR step that is not built yet, then export CSV or Markdown. This engine does not read letters from pictures.',
+  purpose: 'Rebuild a table from word positions and save it as CSV or Markdown; reading the words from a picture is not built yet.',
   examples: ['Rebuild a table from supplied word positions and export CSV.', 'Turn positioned word boxes into a Markdown table while marking low-confidence cells.'],
   inputs: [
     { name: 'wordBoxes', kind: 'text' as const, prompt: 'Word boxes with text and pixel coordinates, width, height, and optional confidence.' },
