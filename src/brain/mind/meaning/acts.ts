@@ -21,6 +21,8 @@ import { strongObjectCue } from './clauses';
 import type { Lex } from './lexical';
 
 export interface ClauseReading {
+  /** B04C0d-A: the act is 'command' only because the speaker stated a need. */
+  need?: true;
   act: SpeechAct;
   polarity: 'positive' | 'negative';
   confidence: number;
@@ -123,6 +125,21 @@ export function readClause(units: Lex[], questionMark: boolean): ClauseReading {
     else readings.push({ act: 'command', confidence: 0.3, reason: `"${head.norm}" could be a verb but nothing follows it to act on` });
   }
 
+  // NEED STATEMENT (B04C0d-A): a first-person subject (with `would` or 'd allowed), a need or want verb in base form
+  // ("would like" only with would), and then something wanted that is not an object pronoun. Stated, not ordered: confidence just
+  // above chat, and chat stays as the alternative. Resolution decides whether any tool really fits (resolve.ts, rule 13).
+  if (polarity === 'positive' && !facts.askByStructure && !facts.doSupport && head.subject && head.speaker) {
+    let at = hv + 1;
+    let would = head.wouldClitic;
+    if (!would && units[at]?.modal && units[at]!.norm === 'would') { would = true; at += 1; }
+    const verb = units[at];
+    const wanted = units[at + 1];
+    const modalBlocks = !would && units[hv + 1]?.modal === true;
+    if (verb && wanted && !modalBlocks && !verb.aux && !verb.neg && verb.baseForm && (verb.need || (would && verb.wouldLike)) && !wanted.objectPronoun) {
+      readings.push({ act: 'command', confidence: 0.82, reason: `a statement of need: the speaker says "${verb.norm}" and names something wanted`, need: true });
+    }
+  }
+
   // CHAT: a subject with a finite verb
   if (!facts.askByStructure && !facts.doSupport) {
     const auxAt = units.findIndex((unit, index) => index >= hv && unit.aux);
@@ -139,5 +156,5 @@ export function readClause(units: Lex[], questionMark: boolean): ClauseReading {
     .filter((reading) => reading !== chosen && reading.act !== chosen.act && reading.act !== 'unknown' && reading.confidence > ALTERNATIVE_FLOOR)
     .map((reading) => ({ act: reading.act, confidence: round(reading.confidence), reason: reading.reason }));
   const loneVerb = hasVerb(head) && !head.grammar && next === undefined && !head.materialAfter && n - h === 1;
-  return { act: chosen.act, polarity, confidence: round(chosen.confidence), reason: chosen.reason, alternatives, loneVerb };
+  return { act: chosen.act, polarity, confidence: round(chosen.confidence), reason: chosen.reason, alternatives, loneVerb, ...((chosen as ActReading).need === true ? { need: true as const } : {}) };
 }

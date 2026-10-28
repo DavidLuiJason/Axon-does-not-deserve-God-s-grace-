@@ -1,6 +1,6 @@
 import { resolveClause } from './resolve';
 import type { ResolveOptions, ResolveInput, ProvidedSlot } from './resolveTypes';
-import type { AdapterInput, PieceInput, PieceResolution, PieceLike, WordLike, TokenLike, SegmentLike, ValueLike } from './clauseInputsTypes';
+import type { AdapterInput, PieceInput, PieceResolution, PieceLike, WordLike, TokenLike, SegmentLike, ValueLike, DetailLike } from './clauseInputsTypes';
 
 const EMPTY: ResolveInput = { act: 'unknown', polarity: 'positive', verbs: [], objects: [], names: [], provided: [] };
 const array = <T>(value: unknown): readonly T[] => Array.isArray(value) ? value as readonly T[] : [];
@@ -70,8 +70,23 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
     const clause = clauseIndex >= 0 ? clauses[clauseIndex] : undefined;
     const act = clause && ACT_LABELS.split(' ').includes(clause.act) ? clause.act as ResolveInput['act'] : 'unknown';
     const polarity = clause?.polarity === 'negative' ? 'negative' : 'positive';
+    // B04C0d-A rule 11: in a statement of need the word `parts.verb` points to is the need verb, not a verb key; the wanted action is the verb after `to`.
+    const need = clause?.need === true && act === 'command';
+    let needVerb = -1;
+    if (need && validPiece && piece.parts) {
+      for (const detail of array<DetailLike>(piece.parts.details)) {
+        if (!detail || detail.marker !== 'to' || !integer(detail.from) || !integer(detail.to) || detail.from < from || detail.to > to || detail.from + 1 >= detail.to) continue;
+        const candidate = words[detail.from + 1];
+        const candidateToken = validWord(candidate) ? tokenFor(candidate, tokens) : undefined;
+        if (candidateToken && array<string>(candidateToken.partsOfSpeech).some((p) => typeof p === 'string' && p.toLowerCase().startsWith('v'))) { needVerb = detail.from + 1; break; }
+      }
+    }
     const verbs: string[] = [];
-    if (validPiece && piece.parts && integer(piece.parts.verb) && piece.parts.verb >= from && piece.parts.verb < to) {
+    if (needVerb >= 0) {
+      const token = tokenFor(words[needVerb]!, tokens);
+      if (token && typeof token.lemma === 'string') verbs.push(`${token.lemma.toLowerCase()}:v`);
+    }
+    if (!need && validPiece && piece.parts && integer(piece.parts.verb) && piece.parts.verb >= from && piece.parts.verb < to) {
       const word = words[piece.parts.verb];
       if (validWord(word)) {
         const token = tokenFor(word, tokens);
@@ -85,6 +100,7 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
     if (validPiece) {
       const selected = wordIndices(piece, words);
       for (const wi of selected) {
+        if (wi === needVerb) continue;
         const word = words[wi];
         if (!validWord(word)) continue;
         const token = tokenFor(word, tokens);
@@ -113,7 +129,7 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
       });
     }
     provided.sort((a, b) => a.start - b.start || a.order - b.order);
-    const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind, value }) => ({ kind, ...(value === undefined ? {} : { value }) })) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
+    const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind, value }) => ({ kind, ...(value === undefined ? {} : { value }) })), ...(need ? { need: true as const } : {}) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
     return { piece: pieceIndex, clause: clauseIndex >= 0 ? clauseIndex : -1, mayRunAlone: piece.mayRunAlone === true, input: inputValue };
   });
 }

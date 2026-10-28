@@ -91,3 +91,6 @@ How many a day is UNKNOWN: it is limited by how many returns the Director can in
 
 
 2026-10-28 (eighteenth account): C0d-A DESIGN done by the Director (`docs/B04C_PLAN.md`). Next: C0d-A reference, runner and builder prompt (Director turn), then the C0d-A-C prompt (C, M). C0d-B and C0d-C designs follow.
+
+2026-10-28 (eighteenth account, second job): **C0d-A DONE by the Director, code included** (no builder prompt). New rows from the owner's wishes: **MEM-D** (Director design: memory compaction, three tiers, round-trip test), **MEM-C** (builder, M), **OFFER-D** (Director design: AXON offers, after R1 and J2), **OFFER-C** (builder, M). C0d-B and C0d-C remain: Director design, then a builder or the Director. COUNT NOW: sized builder and AI Studio prompts left **39** (32 for ChatGPT or Grok before, minus C0d-A, plus MEM-C and OFFER-C = 33; 6 AI Studio), plus 2 parked, plus the red-team run; Director jobs left about 14; unsized about 55. At 30 prompts a day: 39 sized prompts take 2 days (30 and 9), but only about 25 of them are free to start before the C0d and C1 chain finishes.
+

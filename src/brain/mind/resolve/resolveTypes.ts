@@ -34,7 +34,7 @@
  *      exactly like a command (same keys, same weights, same margin); `need` changes only what may be RETURNED.
  *  13. A need clause returns a `match` or an `unavailable` result ONLY when the scoring alone would return that. Where the scoring would
  *      return `ask`, `none` or `negated`, a need clause returns `not-a-request` instead (reason: "A statement of need names no tool
- *      clearly, so it stays conversation"), because a statement is not an order: AXON never asks "which tool?" about "I need help".
+ *      clearly, so it stays conversation"), because a statement is not an order: AXON never asks "which tool?" about "I need a break". (`unavailable` stays: "I need help" reaching the unavailable AI assistant is an honest answer.)
  *  14. For a need clause the verb that states the need is NOT a verb key (`need` and `want` are not tools); the `verbs` list is the
  *      verb of the wanted action ("to count" in "I need to count the words"), or empty when the clause names a thing ("a QR code").
  *      A need clause never changes how any other clause is scored.

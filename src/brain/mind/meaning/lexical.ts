@@ -11,6 +11,7 @@ import { conversationActOf } from '../../knowledge/conversationWords';
 import type { Analysis } from '../types';
 import { anchorOfIds, type AnchorAct } from './concepts';
 import { hasSpeechSense } from './structure/speechSenses';
+import { hasNeedSense, hasWouldLikeSense } from './structure/needSenses';
 import { hasIntendSense, hasTeachSense } from './teach/teachSenses';
 import { isFirstPerson } from './structure/glueWords';
 import { toneSenseFlags } from './tone/toneSenses';
@@ -51,6 +52,14 @@ export interface Lex {
   sequencer: boolean;
   /** B03B2c: one of the word's senses is telling, asking or instructing someone (from the dictionary's synset ids). */
   speech: boolean;
+  /** B04C0d-A: one of the word's senses is need or want (see structure/needSenses.ts). */
+  need: boolean;
+  /** B04C0d-A: one of the word's senses is "would like to have" (counts only after would or 'd). */
+  wouldLike: boolean;
+  /** B04C0d-A: the word is not a regular past form of another word ("need" yes, "needed" no: it is "need" + "ed"). Every need or want verb is regular. */
+  baseForm: boolean;
+  /** B04C0d-A: a subject pronoun with the contraction 'd ("I'd"). */
+  wouldClitic: boolean;
   /** B03B2c: first person (the speaker): closed set in structure/glueWords.ts. */
   speaker: boolean;
   /** B03B3b: one of its senses is "has the meaning of" (teach) / "intend to express" (correct), from the dictionary's synset ids. */
@@ -141,6 +150,10 @@ export function buildLex(analysis: Analysis, text: string): Lex[] {
       polite: isPoliteness(norm),
       sequencer: isSequencer(norm),
       speech: hasSpeechSense(token.synsetIds),
+      need: hasNeedSense(token.synsetIds),
+      wouldLike: hasWouldLikeSense(token.synsetIds),
+      baseForm: !(token.alternativeLemmas ?? []).some((alt) => norm === `${alt.toLowerCase()}ed`),
+      wouldClitic: clitic !== null && clitic.ending === 'd',
       speaker: isFirstPerson(word),
       meaning: hasTeachSense(token.synsetIds),
       intend: hasIntendSense(token.synsetIds),

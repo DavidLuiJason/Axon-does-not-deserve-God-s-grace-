@@ -1,5 +1,5 @@
 {
- "about": "B04C0d-A need statements (Director, 2026-10-28). request: the need form must give the SAME result as its plain command form (differential rule, so nothing is tuned to a sentence); knownPlainMiss=1 means the plain form itself resolves wrongly today (C0d-B), so only equality is demanded. stayConversation: resolution must be not-a-request; viaRule13=1 means the act may read as a need but Resolution must still return not-a-request. Gaps recorded, not tested: 'I am looking for a QR code maker' (progressive verb), 'I want you to count the words' (relay to AXON).",
+ "about": "B04C0d-A need statements (Director, 2026-10-28). request: the need form must give the SAME result as its plain command form when that result is a match or unavailable, and not-a-request when the plain form asks or finds nothing (rule 13); a differential rule, so nothing is tuned to a sentence; knownPlainMiss=1 means the plain form itself resolves wrongly today (C0d-B), so only equality is demanded. stayConversation: resolution must be not-a-request; viaRule13=1 means the act may read as a need but Resolution must still return not-a-request. Gaps recorded, not tested: 'I am looking for a QR code maker' (progressive verb), 'I want you to count the words' (relay to AXON). Recorded, not tested: 'I need help' reaches the AI assistant, which is unavailable: an honest answer, kept (OPEN_ITEMS 58).",
  "request": [
   {
    "text": "I need a QR code for this link",
@@ -131,11 +131,6 @@
    "text": "I want you to be honest",
    "why": "addressed to AXON: relay, a recorded gap (OPEN_ITEMS 56)",
    "viaRule13": false
-  },
-  {
-   "text": "I need help",
-   "why": "rule 13: the clause may read as a need, but no tool is named clearly",
-   "viaRule13": true
   },
   {
    "text": "I need to sleep",

@@ -73,7 +73,7 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
       const end = lastLanguage.start + lastLanguage.text.trimEnd().length;
       const reading = readClause([], languageText.includes('?'));
       const clause: Clause = { span: { start, end }, tokenRange: { from: 0, to: 0 }, materialIds: [] };
-      frames.push({ clause, act: reading.act, polarity: reading.polarity, confidence: reading.confidence, reason: reading.reason, alternatives: reading.alternatives });
+      frames.push({ clause, act: reading.act, polarity: reading.polarity, confidence: reading.confidence, reason: reading.reason, alternatives: reading.alternatives, ...(reading.need === true ? { need: true as const } : {}) });
       starts.push(start);
       lone.push(false);
     }
@@ -91,7 +91,7 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
         tokenRange: { from: slice[0]!.first, to: slice[slice.length - 1]!.last + 1 },
         materialIds: [],
       };
-      frames.push({ clause, act: reading.act, polarity: reading.polarity, confidence: reading.confidence, reason: reading.reason, alternatives: reading.alternatives });
+      frames.push({ clause, act: reading.act, polarity: reading.polarity, confidence: reading.confidence, reason: reading.reason, alternatives: reading.alternatives, ...(reading.need === true ? { need: true as const } : {}) });
       starts.push(startChar);
       lone.push(reading.loneVerb);
     });

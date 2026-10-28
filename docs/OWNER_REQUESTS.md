@@ -33,3 +33,10 @@ Nothing here is built yet unless marked. Order of work stays: one step at a time
 
 ## Process [owner rule]
 - Items treated as approved without an answer are listed in `docs/AUTO_APPROVED.md`.
+
+## AXON OFFERS (owner wish, 2026-10-28) [wish W15]
+- AXON should make the owner's life easier: it notices what the owner might want and offers it ("say yes and I will start this"), or invites the owner to say what they want. Verdict (rule 12): WORKS ONLY IF it is built on the Judgment stage (7C) and the Router (R1), offers are rare and relevant, nothing runs without the owner's yes, the owner can switch it off, and a refused offer is not repeated. CANNOT JUDGE how often the owner will like it until a small version is tried. Design job OFFER-D (Director), then one builder job.
+- CONFIRM, NOT ASK: AXON says what it understood and proceeds; it asks only when it cannot choose or the action has a cost or cannot be undone (OPEN_ITEMS 55).
+
+## MEMORY COMPACTION (owner wish, 2026-10-28)
+- AXON's memory nodes must be updated and SUMMARISED so they take little space, without being damaged: the meaning must survive, and AXON must still be able to understand and use them. Nothing in the roadmap plans this yet (only searchable compression of shelves, FL6). Director PROPOSAL for the design job MEM-D: three tiers (working note, summary, archive); the original always stays in the compressed archive (never lost, roadmap 7F rule 4); only the summary is loaded; a summary is accepted only if a fixed list of questions gets the SAME answers from the summary as from the original (a round-trip test), and a failed summary is not used; contradictions and corrections never get summarised away; the owner can open the original. Honest limit: a summary loses detail by definition, so the test is about the questions that matter, not about every word.

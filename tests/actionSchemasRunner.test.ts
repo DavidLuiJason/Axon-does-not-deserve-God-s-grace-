@@ -57,7 +57,9 @@ function check(schemas: unknown, factList: ToolFact[], dict: Map<string, string>
     const s = s0 as Record<string, any>;
     const id = String(s?.tool);
     const bad = (m: string): void => { p.push(`${id}: ${m}`); };
-    if (!sameKeys(s, 'tool acts actions objects names slots effects preconditions cost undo')) { bad('keys are not exactly tool acts actions objects names slots effects preconditions cost undo'); continue; }
+    // B04C0b-C: `values` (the primary value kinds a tool is for) is OPTIONAL; its own rules are checked by tests/valueEvidenceRunner.test.ts.
+    const rest = Object.fromEntries(Object.entries(s).filter(([key]) => key !== 'values'));
+    if (!sameKeys(rest, 'tool acts actions objects names slots effects preconditions cost undo')) { bad('keys are not exactly tool acts actions objects names slots effects preconditions cost undo (values is optional)'); continue; }
     const f = factOf.get(id);
     if (!f) continue;
     if (!isStrList(s.acts) || s.acts.length < 1 || s.acts.length > 2 || !uniq(s.acts) || !s.acts.every((a: string) => ACTS.includes(a))) bad('acts must be 1 or 2 different labels');

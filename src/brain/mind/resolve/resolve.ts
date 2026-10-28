@@ -58,7 +58,16 @@ function reasonFor(matched: readonly string[], kind: Resolution['kind']): string
   return `The clause matches the concepts ${concepts.join(', ')}.`;
 }
 
+/** B04C0d-A rules 12 and 13: a statement of need is scored like a command, but only a clear `match` or `unavailable` may come out of it. */
 export function resolveClause(input: ResolveInput, options: ResolveOptions = {}): Resolution {
+  const result = resolveScored(input, options);
+  if (validInput(input) && input.need === true && result.kind !== 'match' && result.kind !== 'unavailable') {
+    return empty('not-a-request', 'A statement of need names no tool clearly, so it stays conversation.');
+  }
+  return result;
+}
+
+function resolveScored(input: ResolveInput, options: ResolveOptions): Resolution {
   if (!validInput(input)) return empty('none', 'The input is incomplete or malformed, so no safe match can be made.');
   if (input.act === 'greet' || input.act === 'thanks' || input.act === 'chat' || input.act === 'unknown') {
     return empty('not-a-request', 'The clause is not a tool request or question.');
