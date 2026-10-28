@@ -40,12 +40,13 @@ function wordIndices(piece: PieceLike, words: readonly WordLike[]): number[] {
 }
 function valueKinds(kind: string): ProvidedSlot[] {
   switch (kind) {
-    case 'number': case 'percent': case 'roman': return [{ kind: 'number' }];
-    case 'quantity': return [{ kind: 'quantity' }];
-    case 'duration': return [{ kind: 'duration' }];
-    case 'date': return [{ kind: 'date' }];
-    case 'time': return [{ kind: 'time' }];
-    case 'datetime': return [{ kind: 'date' }, { kind: 'time' }];
+    case 'number': case 'roman': return [{ kind: 'number' }];
+    case 'percent': return [{ kind: 'number', value: 'percent' }];
+    case 'quantity': return [{ kind: 'quantity', value: 'quantity' }];
+    case 'duration': return [{ kind: 'duration', value: 'duration' }];
+    case 'date': return [{ kind: 'date', value: 'date' }];
+    case 'time': return [{ kind: 'time', value: 'time' }];
+    case 'datetime': return [{ kind: 'date', value: 'date' }, { kind: 'time', value: 'time' }];
     default: return [];
   }
 }
@@ -99,11 +100,11 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
         }
       }
     }
-    const provided: Array<{ kind: ProvidedSlot['kind']; start: number; order: number }> = [];
+    const provided: Array<{ kind: ProvidedSlot['kind']; value?: ProvidedSlot['value']; start: number; order: number }> = [];
     if (start >= 0 && end >= start) {
       values.forEach((value, order) => {
         if (!value || typeof value.kind !== 'string' || !integer(value.start) || !integer(value.end) || value.start < start || value.end > end || value.end < value.start) return;
-        for (const slot of valueKinds(value.kind)) provided.push({ kind: slot.kind, start: value.start, order });
+        for (const slot of valueKinds(value.kind)) provided.push({ kind: slot.kind, ...(slot.value === undefined ? {} : { value: slot.value }), start: value.start, order });
       });
       segments.forEach((segment, order) => {
         if (segment && segment.kind === 'material' && integer(segment.start) && integer(segment.end) && segment.start >= start && segment.end <= end && segment.end >= segment.start) {
@@ -112,7 +113,7 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
       });
     }
     provided.sort((a, b) => a.start - b.start || a.order - b.order);
-    const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind }) => ({ kind })) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
+    const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind, value }) => ({ kind, ...(value === undefined ? {} : { value }) })) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
     return { piece: pieceIndex, clause: clauseIndex >= 0 ? clauseIndex : -1, mayRunAlone: piece.mayRunAlone === true, input: inputValue };
   });
 }

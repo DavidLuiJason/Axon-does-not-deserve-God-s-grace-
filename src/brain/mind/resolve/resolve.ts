@@ -1,6 +1,7 @@
 import { ACTION_SCHEMAS } from '../schema/actionSchemas';
-import type { ActionSchema, SlotKind, Status } from '../schema/schemaTypes';
-import { ASK_MARGIN, MAX_CANDIDATES } from './resolveTypes';
+import { VALUE_KIND_LABELS } from '../schema/schemaTypes';
+import type { ActionSchema, SlotKind, Status, ValueKind } from '../schema/schemaTypes';
+import { ASK_MARGIN, MAX_CANDIDATES, VALUE_WEIGHT } from './resolveTypes';
 import type { Candidate, Resolution, ResolveInput, ResolveOptions } from './resolveTypes';
 
 const schemaKeys = new Map<ActionSchema, readonly string[]>();
@@ -9,7 +10,8 @@ for (const schema of ACTION_SCHEMAS) {
   const keys = [...new Set([
     ...schema.actions.map((value) => `a|${value}`),
     ...schema.objects.map((value) => `o|${value}`),
-    ...schema.names.map((value) => `n|name:${value}`)
+    ...schema.names.map((value) => `n|name:${value}`),
+    ...(schema.values ?? []).map((value) => `v|${value}`)
   ])];
   schemaKeys.set(schema, keys);
   for (const key of keys) keyCounts.set(key, (keyCounts.get(key) ?? 0) + 1);
@@ -28,11 +30,16 @@ function validInput(value: unknown): value is ResolveInput {
   return value.provided.every((slot) => isRecord(slot) && typeof slot.kind === 'string');
 }
 function round2(value: number): number { return Math.round(value * 100) / 100; }
-function conceptKeys(input: ResolveInput): { all: Set<string>; actions: Set<string>; objects: Set<string>; names: Set<string> } {
+function conceptKeys(input: ResolveInput): { all: Set<string>; actions: Set<string>; objects: Set<string>; names: Set<string>; values: Set<string> } {
   const actions = new Set(input.verbs.filter((v) => v.length > 0).map((v) => `a|${v}`));
   const objects = new Set(input.objects.filter((v) => v.length > 0).map((v) => `o|${v}`));
   const names = new Set(input.names.filter((v) => v.length > 0).map((v) => `n|name:${v}`));
-  return { all: new Set([...actions, ...objects, ...names]), actions, objects, names };
+  const labels = VALUE_KIND_LABELS.split(' ');
+  const values = new Set(input.provided.flatMap((slot) => {
+    const value: unknown = slot && typeof slot === 'object' ? slot.value : undefined;
+    return typeof value === 'string' && labels.includes(value) ? [`v|${value as ValueKind}`] : [];
+  }));
+  return { all: new Set([...actions, ...objects, ...names, ...values]), actions, objects, names, values };
 }
 function similarity(inputKey: string, schemaKey: string, group: string, related: ResolveOptions['related']): number {
   if (inputKey === schemaKey) return 1;
@@ -66,10 +73,13 @@ export function resolveClause(input: ResolveInput, options: ResolveOptions = {})
     for (const schemaKey of schemaKeys.get(schema) ?? []) {
       const group = schemaKey.slice(0, 1);
       let best = 0;
-      const groupInputs = group === 'a' ? keys.actions : group === 'o' ? keys.objects : keys.names;
-      for (const inputKey of groupInputs) best = Math.max(best, similarity(inputKey, schemaKey, group, options.related));
+      const groupInputs = group === 'a' ? keys.actions : group === 'o' ? keys.objects : group === 'n' ? keys.names : keys.values;
+      for (const inputKey of groupInputs) {
+        const matchedSimilarity = group === 'v' ? (inputKey === schemaKey ? 1 : 0) : similarity(inputKey, schemaKey, group, options.related);
+        best = Math.max(best, matchedSimilarity);
+      }
       if (best > 0) {
-        score += best / (keyCounts.get(schemaKey) ?? 1);
+        score += (best / (keyCounts.get(schemaKey) ?? 1)) * (group === 'v' ? VALUE_WEIGHT : 1);
         matched.push(schemaKey);
       }
     }
@@ -81,16 +91,19 @@ export function resolveClause(input: ResolveInput, options: ResolveOptions = {})
   const second = scored[1]?.score ?? 0;
   const candidates: Candidate[] = scored.slice(0, MAX_CANDIDATES).map(({ schema, score, matched }) => ({ tool: schema.tool, score, matched: [...matched] }));
   const confidence = round2(top.score / (top.score + second + 0.25));
+  const hasValue = top.matched.some((key) => key.startsWith('v|'));
+  const hasConcept = top.matched.some((key) => !key.startsWith('v|'));
+  const evidence: 'concept' | 'value' | 'both' = hasValue && hasConcept ? 'both' : hasValue ? 'value' : 'concept';
   if (input.polarity === 'negative') {
-    return { kind: 'negated', tool: top.schema.tool, confidence, reason: reasonFor(top.matched, 'negated'), candidates };
+    return { kind: 'negated', tool: top.schema.tool, confidence, reason: reasonFor(top.matched, 'negated'), candidates, evidence };
   }
   if (scored.length > 1 && top.score - second < ASK_MARGIN) {
     const choices = candidates.map((candidate) => candidate.tool);
-    return { kind: 'ask', choices, confidence, reason: reasonFor([...new Set(scored.slice(0, choices.length).flatMap((item) => item.matched))], 'ask'), candidates };
+    return { kind: 'ask', choices, confidence, reason: reasonFor([...new Set(scored.slice(0, choices.length).flatMap((item) => item.matched))], 'ask'), candidates, evidence };
   }
   const status = options.status?.[top.schema.tool];
   if (status === 'unbuilt' || status === 'left-out') {
-    return { kind: 'unavailable', tool: top.schema.tool, status: status as Status, confidence, reason: reasonFor(top.matched, 'unavailable'), candidates };
+    return { kind: 'unavailable', tool: top.schema.tool, status: status as Status, confidence, reason: reasonFor(top.matched, 'unavailable'), candidates, evidence };
   }
   const remaining = new Map<SlotKind, number>();
   for (const slot of input.provided) {
@@ -103,5 +116,5 @@ export function resolveClause(input: ResolveInput, options: ResolveOptions = {})
     if (count > 0) remaining.set(slot.kind, count - 1);
     else missingSlots.push(slot.name);
   }
-  return { kind: 'match', tool: top.schema.tool, missingSlots, confidence, reason: reasonFor(top.matched, 'match'), candidates };
+  return { kind: 'match', tool: top.schema.tool, missingSlots, confidence, reason: reasonFor(top.matched, 'match'), candidates, evidence };
 }

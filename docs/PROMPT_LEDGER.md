@@ -66,7 +66,7 @@ Truth vocabulary (roadmap 7F rule 7): the code names migrate when row L26 (B06B)
 |---|---|---|---|---|---|
 | C0a | **measure and ratchet** Resolution on 57 requests (DONE 2026-10-28: dev 21/57, held-out 11/57) | D | done | none | test in `test:kernel` |
 | C0b-D | design **typed values as evidence** for a tool (DONE 2026-10-28: dev prototype 21 to 27 exact) | D | done | C0a | contract plus value corpus |
-| C0b-C | build it in Resolution scoring | C | M | C0b-D | dev exact up; golden unchanged |
+| C0b-C | build it in Resolution scoring (DONE 2026-10-28: builder return accepted, dev 27/57; held-out pending the owner's run) | C | M | C0b-D | dev exact at least 27, wrong tool at most 11; golden unchanged |
 | C0c-1 | schema vocabulary fixes: text-writing and create-encode | C | M | C0b-C | dev and held-out up; no hard-coded phrases |
 | C0c-2 | schema vocabulary fixes: numbers, time, converter | C | M | C0b-C | same |
 | C0c-3 | schema vocabulary fixes: files-convert and the rest | C | M | C0b-C | same |

@@ -2,7 +2,8 @@
  * B04A action schemas: meaning, typed inputs, effects, preconditions, estimated cost and undo.
  * Concepts are dictionary lemmas; technical names are used only when absent from that dictionary.
  */
-import type { ActionSchema, Act, SlotKind, Effect, Precondition, CostTime, CostMemory, UndoKind } from './schemaTypes';
+import { VALUE_KIND_LABELS } from './schemaTypes';
+import type { ActionSchema, Act, SlotKind, Effect, Precondition, CostTime, CostMemory, UndoKind, ValueKind } from './schemaTypes';
 
 const DATA = `
 text-counter | c a | count measure | word:n line:n character:n |  |  | shows-result |  | quick low | not-needed
@@ -29,7 +30,7 @@ document-converter | c a | convert change | document:n manuscript:n |  |  | writ
 batch-convert | c a | convert handle | batch:n file:n |  | files:file:r to:choice:r maxHeldBytes:number:o | reads-file writes-file |  | slow high | by-removal
 file-inspector | c a | inspect measure | file:n size:n |  | file:file:r | reads-file shows-result |  | quick low | not-needed
 file-compare | c a | compare detect | file:n comparison:n |  | fileA:file:r fileB:file:r mode:choice:r | reads-file shows-result |  | slow mid | not-needed
-converter | c a | convert calculate | unit:n quantity:n |  | text:text:r delimiter:choice:o header:yes-no:o detectTypes:yes-no:o rootName:text:o indent:choice:o image:file:o toFormat:choice:r maxSide:number:o html:text:o from:choice:r to:choice:r input:text:r | reads-file writes-file |  | slow high | by-removal
+converter | c a | convert calculate | unit:n quantity:n |  | text:text:r delimiter:choice:o header:yes-no:o detectTypes:yes-no:o rootName:text:o indent:choice:o image:file:o toFormat:choice:r maxSide:number:o html:text:o from:choice:r to:choice:r input:text:r | reads-file writes-file |  | slow high | by-removal | quantity
 find-replace | c a | find replace | text:n replacement:n |  | text:text:r pattern:text:r replacement:text:o caseSensitive:yes-no:o wholeWord:yes-no:o regex:yes-no:o replaceAll:yes-no:o | shows-result |  | quick low | not-needed
 case-converter | c a | convert change | case:n letter:n |  | text:text:r mode:choice:r | shows-result |  | quick low | not-needed
 text-cleaner | c a | clean remove | text:n space:n |  | text:text:r trimEachLine:yes-no:o collapseRepeatedSpaces:yes-no:o removeBlankLines:yes-no:o collapseBlankLines:yes-no:o straightenQuotesAndDashes:yes-no:o removeZeroWidth:yes-no:o normalizeLineEndings:yes-no:o | shows-result |  | quick low | not-needed
@@ -39,10 +40,10 @@ rephraser | c a | rephrase change | sentence:n wording:n |  |  | shows-result | 
 grammar-helper | c a | explain detect | grammar:n sentence:n |  |  | shows-result |  | quick low | not-needed
 calculator | c a | calculate evaluate | expression:n number:n |  | expression:text:r angle:choice:r | shows-result |  | quick low | not-needed
 number-to-words | c a | convert spell | number:n word:n |  | number:number:r ordinal:yes-no:o | shows-result |  | quick low | not-needed
-percentage-helper | c a | calculate compare | percentage:n change:n |  | mode:choice:r values:text:r | shows-result |  | quick low | not-needed
-timer | c a | count measure | timer:n duration:n |  | durationMs:duration:r operation:choice:r now:time:o | shows-result |  | quick low | not-needed
+percentage-helper | c a | calculate compare | percentage:n change:n |  | mode:choice:r values:text:r | shows-result |  | quick low | not-needed | percent
+timer | c a | count measure | timer:n duration:n |  | durationMs:duration:r operation:choice:r now:time:o | shows-result |  | quick low | not-needed | duration
 stopwatch | c a | measure record | stopwatch:n lap:n |  | operation:choice:r now:time:o | shows-result |  | quick low | not-needed
-date-calculator | c a | calculate count | date:n interval:n |  | operation:choice:r date:date:r otherDate:date:o amount:number:o unit:choice:o | shows-result |  | quick low | not-needed
+date-calculator | c a | calculate count | date:n interval:n |  | operation:choice:r date:date:r otherDate:date:o amount:number:o unit:choice:o | shows-result |  | quick low | not-needed | date
 tally-counter | c a | count change | counter:n tally:n |  | operation:choice:r name:text:r value:number:r step:number:o min:number:o max:number:o | shows-result |  | quick low | not-needed
 qr-maker | c a | encode make | code:n image:n | qr | text:text:r level:choice:r | shows-result |  | quick low | not-needed
 password-generator | c a | generate create | password:n length:n |  | length:number:r options:text:r random:text:o | shows-result |  | quick low | not-needed
@@ -86,7 +87,7 @@ function deepFreeze<T>(value: T): T {
 
 function make(row: string): ActionSchema {
   const columns = row.split('|').map((part) => part.trim());
-  const [tool, actCodes, actionWords, objectWords, nameWords, slotWords, effectWords, preWords, costWords, undo] = columns;
+  const [tool, actCodes, actionWords, objectWords, nameWords, slotWords, effectWords, preWords, costWords, undo, valueWords] = columns;
   const acts = words(actCodes!).map((act) => act === 'c' ? 'command' : 'ask') as Act[];
   const actions = words(actionWords!).map((word) => word + ':v');
   const objects = words(objectWords!);
@@ -98,6 +99,7 @@ function make(row: string): ActionSchema {
   const effects = words(effectWords!) as Effect[];
   const preconditions = words(preWords!) as Precondition[];
   const costs = words(costWords!);
+  const values = words(valueWords ?? '').filter((value) => VALUE_KIND_LABELS.split(' ').includes(value)) as ValueKind[];
   return {
     tool: tool!,
     acts,
@@ -108,7 +110,8 @@ function make(row: string): ActionSchema {
     effects,
     preconditions,
     cost: { time: costs[0] as CostTime, memory: costs[1] as CostMemory, basis: 'estimate' },
-    undo: undo as UndoKind
+    undo: undo as UndoKind,
+    ...(values.length > 0 ? { values } : {})
   };
 }
 
