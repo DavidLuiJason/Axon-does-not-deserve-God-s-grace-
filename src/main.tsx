@@ -32,6 +32,10 @@ registerAxonSourceCapability();
 registerInterfaceCaptureCapability();
 // Stage 6: Background Proof capability
 registerBackgroundProofCapability();
+// B04B4P4 (owner yes, 2026-10-27): the dictionary and the planned abilities were imported but never called, so the app
+// told the brain `dictionary` was not built. The tests already register both; now the app does too.
+registerDictionaryCapability();
+registerPlannedCapabilities();
 // Phase C2: taught meanings are available through the existing local rules.
 registerTaughtMeaningsCapability();
 // Phase C2: planned media actions are declared honestly before implementation.
