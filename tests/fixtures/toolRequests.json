@@ -1,0 +1,230 @@
+[
+ {
+  "text": "Count the words in 'the quick brown fox'",
+  "tool": "text-counter"
+ },
+ {
+  "text": "How many characters are in this sentence: 'good morning'",
+  "tool": "text-counter"
+ },
+ {
+  "text": "Replace 'cat' with 'dog' in 'the cat sat'",
+  "tool": "find-replace"
+ },
+ {
+  "text": "Find the word apple and change it to pear in my text",
+  "tool": "find-replace"
+ },
+ {
+  "text": "Change 'hello world' to upper case",
+  "tool": "case-converter"
+ },
+ {
+  "text": "Make this text lowercase: 'LOUD NOISE'",
+  "tool": "case-converter"
+ },
+ {
+  "text": "Remove the extra spaces from 'too    many   spaces'",
+  "tool": "text-cleaner"
+ },
+ {
+  "text": "Clean up the blank lines and duplicate lines in my text",
+  "tool": "text-cleaner"
+ },
+ {
+  "text": "Sort these lines alphabetically",
+  "tool": "sort-lines"
+ },
+ {
+  "text": "Sort my list of names and remove the duplicates",
+  "tool": "sort-lines"
+ },
+ {
+  "text": "What is different between these two texts",
+  "tool": "text-compare"
+ },
+ {
+  "text": "Compare 'the red car' with 'the blue car'",
+  "tool": "text-compare"
+ },
+ {
+  "text": "Say 'the meeting was cancelled' in other words",
+  "tool": "rephraser"
+ },
+ {
+  "text": "Rephrase this sentence for me",
+  "tool": "rephraser"
+ },
+ {
+  "text": "Is this sentence correct: 'she go to school'",
+  "tool": "grammar-helper"
+ },
+ {
+  "text": "Explain how this sentence is built",
+  "tool": "grammar-helper"
+ },
+ {
+  "text": "What is 12 times 7 plus 3",
+  "tool": "calculator"
+ },
+ {
+  "text": "Work out 450 divided by 15",
+  "tool": "calculator"
+ },
+ {
+  "text": "Write 1250 in words",
+  "tool": "number-to-words"
+ },
+ {
+  "text": "Turn the words 'forty two' into a number",
+  "tool": "number-to-words"
+ },
+ {
+  "text": "What is 15 percent of 240",
+  "tool": "percentage-helper"
+ },
+ {
+  "text": "How much is a 20 percent increase on 80",
+  "tool": "percentage-helper"
+ },
+ {
+  "text": "Set a timer for 10 minutes",
+  "tool": "timer"
+ },
+ {
+  "text": "Count down from 5 minutes",
+  "tool": "timer"
+ },
+ {
+  "text": "Start the stopwatch",
+  "tool": "stopwatch"
+ },
+ {
+  "text": "Time how long this takes with laps",
+  "tool": "stopwatch"
+ },
+ {
+  "text": "How many days until 2026-12-25",
+  "tool": "date-calculator"
+ },
+ {
+  "text": "What is the date 30 days after 2026-11-01",
+  "tool": "date-calculator"
+ },
+ {
+  "text": "Add one to my tally",
+  "tool": "tally-counter"
+ },
+ {
+  "text": "Keep a running count with the tally counter",
+  "tool": "tally-counter"
+ },
+ {
+  "text": "Make a QR code for 'https://example.com'",
+  "tool": "qr-maker"
+ },
+ {
+  "text": "Turn this link into a QR code",
+  "tool": "qr-maker"
+ },
+ {
+  "text": "Generate a password of 16 characters",
+  "tool": "password-generator"
+ },
+ {
+  "text": "Make me a strong password",
+  "tool": "password-generator"
+ },
+ {
+  "text": "Pick a random name from this list",
+  "tool": "random-picker"
+ },
+ {
+  "text": "Pick a random number between 1 and 10",
+  "tool": "random-picker"
+ },
+ {
+  "text": "Encode 'hello' in Base64",
+  "tool": "encoder-decoder"
+ },
+ {
+  "text": "Decode this hexadecimal text",
+  "tool": "encoder-decoder"
+ },
+ {
+  "text": "Work out the checksum of this text",
+  "tool": "hash-tool"
+ },
+ {
+  "text": "Give me the hash of 'hello'",
+  "tool": "hash-tool"
+ },
+ {
+  "text": "Convert this image file from PNG to JPEG",
+  "tool": "file-converter"
+ },
+ {
+  "text": "Change my file from CSV to JSON",
+  "tool": "file-converter"
+ },
+ {
+  "text": "Zip these files together",
+  "tool": "zip-tool"
+ },
+ {
+  "text": "Unzip this archive",
+  "tool": "zip-tool"
+ },
+ {
+  "text": "Merge these two PDF files",
+  "tool": "pdf-tools"
+ },
+ {
+  "text": "Split this PDF into pages",
+  "tool": "pdf-tools"
+ },
+ {
+  "text": "Convert this Word document to PDF",
+  "tool": "document-converter"
+ },
+ {
+  "text": "Turn my document into Markdown",
+  "tool": "document-converter"
+ },
+ {
+  "text": "Convert all these files in one go",
+  "tool": "batch-convert"
+ },
+ {
+  "text": "Batch convert my photos to jpg",
+  "tool": "batch-convert"
+ },
+ {
+  "text": "What type of file is this and how big is it",
+  "tool": "file-inspector"
+ },
+ {
+  "text": "Show me what is inside this file",
+  "tool": "file-inspector"
+ },
+ {
+  "text": "Compare these two files",
+  "tool": "file-compare"
+ },
+ {
+  "text": "How many differences are there between these two files",
+  "tool": "file-compare"
+ },
+ {
+  "text": "Convert 5 miles to kilometres",
+  "tool": "converter"
+ },
+ {
+  "text": "How many pounds is 3 kilograms",
+  "tool": "converter"
+ },
+ {
+  "text": "Convert 255 to binary",
+  "tool": "converter"
+ }
+]

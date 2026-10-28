@@ -31,3 +31,4 @@ Roadmap section 5.8 gives the roster. This file holds the ratings and the LOG of
 - 2026-10-28, sixteenth account: B04B4P4 (main.tsx, 1 test, package.json, roadmap v19.7 small edit, 4 docs; about 14 commands), size about 3, delivered; limit hit NO so far.
 - 2026-10-28, OWNER-MEASURED: Grok handles much larger jobs than ChatGPT and is slightly more flexible in how it returns results; ChatGPT is also flexible. Use Grok first for large jobs and the red-team run (roadmap 7I).
 - 2026-10-28, sixteenth account, second job: roadmap v19.8 (exact replacements, 24 segments audited) plus ledger update, 6 docs files, about 20 commands, size about 5, delivered; limit hit NO so far.
+- 2026-10-28, sixteenth account, third job: B04C sizing (read stages, types, probe) plus C0a (test, 2 fixtures, plan, ledger; 9 files, about 14 commands), size about 4, delivered; limit hit NO so far.
