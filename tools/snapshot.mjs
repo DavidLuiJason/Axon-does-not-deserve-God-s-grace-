@@ -15,7 +15,7 @@ export const EXCLUDED = ['node_modules/', '.git/', 'dist/', 'build/', 'android/'
   // Files that package installers and operating systems create by themselves (AI Studio adds bun.lock).
   // Listed one by one on purpose: an unknown stray file must still show up as a difference. package-lock.json is NOT here.
   'bun.lock', 'bun.lockb', 'yarn.lock', 'pnpm-lock.yaml', 'Thumbs.db'];
-const MAX_Z1_FILES = 600;
+const MAX_Z1_FILES = 1000; // raised from 600 by the Director 2026-10-28 (build #47 failed at 603); bytes cap unchanged
 const MAX_Z1_BYTES = 25 * 1024 * 1024;
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const clean = (s) => s.split('\\').join('/');
