@@ -6,7 +6,7 @@ import { VALUE_KIND_LABELS } from './schemaTypes';
 import type { ActionSchema, Act, SlotKind, Effect, Precondition, CostTime, CostMemory, UndoKind, ValueKind } from './schemaTypes';
 
 const DATA = `
-text-counter | c a | count measure | word:n line:n character:n |  |  | shows-result |  | quick low | not-needed
+text-counter | c a | count measure | word:n line:n character:n letter:n |  |  | shows-result |  | quick low | not-needed
 interface-capture | c a | capture export | interface:n source:n |  |  | writes-file |  | slow mid | by-removal
 content-extractor | c a | extract organize | content:n material:n |  |  | shows-result |  | quick low | not-needed
 link-analyzer | c a | analyze detect | link:n destination:n |  |  | shows-result |  | quick low | not-needed
@@ -31,13 +31,13 @@ batch-convert | c a | convert handle | batch:n file:n |  | files:file:r to:choic
 file-inspector | c a | inspect measure | file:n size:n |  | file:file:r | reads-file shows-result |  | quick low | not-needed
 file-compare | c a | compare detect | file:n comparison:n |  | fileA:file:r fileB:file:r mode:choice:r | reads-file shows-result |  | slow mid | not-needed
 converter | c a | convert calculate | unit:n quantity:n |  | text:text:r delimiter:choice:o header:yes-no:o detectTypes:yes-no:o rootName:text:o indent:choice:o image:file:o toFormat:choice:r maxSide:number:o html:text:o from:choice:r to:choice:r input:text:r | reads-file writes-file |  | slow high | by-removal | quantity
-find-replace | c a | find replace | text:n replacement:n |  | text:text:r pattern:text:r replacement:text:o caseSensitive:yes-no:o wholeWord:yes-no:o regex:yes-no:o replaceAll:yes-no:o | shows-result |  | quick low | not-needed
-case-converter | c a | convert change | case:n letter:n |  | text:text:r mode:choice:r | shows-result |  | quick low | not-needed
-text-cleaner | c a | clean remove | text:n space:n |  | text:text:r trimEachLine:yes-no:o collapseRepeatedSpaces:yes-no:o removeBlankLines:yes-no:o collapseBlankLines:yes-no:o straightenQuotesAndDashes:yes-no:o removeZeroWidth:yes-no:o normalizeLineEndings:yes-no:o | shows-result |  | quick low | not-needed
+find-replace | c a | find replace | text:n replacement:n occurrence:n |  | text:text:r pattern:text:r replacement:text:o caseSensitive:yes-no:o wholeWord:yes-no:o regex:yes-no:o replaceAll:yes-no:o | shows-result |  | quick low | not-needed
+case-converter | c a | convert change | case:n letter:n upper:a lower:a lowercase:a uppercase:a |  | text:text:r mode:choice:r | shows-result |  | quick low | not-needed
+text-cleaner | c a | clean remove | text:n space:n line:n blank:a duplicate:a |  | text:text:r trimEachLine:yes-no:o collapseRepeatedSpaces:yes-no:o removeBlankLines:yes-no:o collapseBlankLines:yes-no:o straightenQuotesAndDashes:yes-no:o removeZeroWidth:yes-no:o normalizeLineEndings:yes-no:o | shows-result |  | quick low | not-needed
 sort-lines | c a | sort remove | line:n order:n |  | text:text:r mode:choice:r ignoreCase:yes-no:o removeDuplicates:yes-no:o ignoreBlankLines:yes-no:o | shows-result |  | quick low | not-needed
-text-compare | c a | compare detect | text:n passage:n |  | original:text:r revised:text:r mode:choice:r | shows-result |  | quick low | not-needed
-rephraser | c a | rephrase change | sentence:n wording:n |  |  | shows-result |  | quick low | not-needed
-grammar-helper | c a | explain detect | grammar:n sentence:n |  |  | shows-result |  | quick low | not-needed
+text-compare | c a | compare detect | text:n passage:n difference:n |  | original:text:r revised:text:r mode:choice:r | shows-result |  | quick low | not-needed
+rephraser | c a | rephrase change | sentence:n wording:n version:n |  |  | shows-result |  | quick low | not-needed
+grammar-helper | c a | explain detect | grammar:n sentence:n mistake:n |  |  | shows-result |  | quick low | not-needed
 calculator | c a | calculate evaluate | expression:n number:n |  | expression:text:r angle:choice:r | shows-result |  | quick low | not-needed
 number-to-words | c a | convert spell | number:n word:n |  | number:number:r ordinal:yes-no:o | shows-result |  | quick low | not-needed
 percentage-helper | c a | calculate compare | percentage:n change:n |  | mode:choice:r values:text:r | shows-result |  | quick low | not-needed | percent
@@ -45,11 +45,11 @@ timer | c a | count measure | timer:n duration:n |  | durationMs:duration:r oper
 stopwatch | c a | measure record | stopwatch:n lap:n |  | operation:choice:r now:time:o | shows-result |  | quick low | not-needed
 date-calculator | c a | calculate count | date:n interval:n |  | operation:choice:r date:date:r otherDate:date:o amount:number:o unit:choice:o | shows-result |  | quick low | not-needed | date
 tally-counter | c a | count change | counter:n tally:n |  | operation:choice:r name:text:r value:number:r step:number:o min:number:o max:number:o | shows-result |  | quick low | not-needed
-qr-maker | c a | encode make | code:n image:n | qr | text:text:r level:choice:r | shows-result |  | quick low | not-needed
-password-generator | c a | generate create | password:n length:n |  | length:number:r options:text:r random:text:o | shows-result |  | quick low | not-needed
-random-picker | c a | choose shuffle | random:a item:n |  | operation:choice:r items:text:r count:number:r random:text:o | shows-result |  | quick low | not-needed
-encoder-decoder | c a | encode decode | encoding:n text:n |  | mode:choice:r format:choice:r input:text:r | shows-result |  | quick low | not-needed
-hash-tool | c a | calculate check | hash:n checksum:n |  | input:text:r algorithm:choice:r | shows-result |  | quick low | not-needed
+qr-maker | c a | encode make | code:n image:n text:n link:n | qr | text:text:r level:choice:r | shows-result |  | quick low | not-needed
+password-generator | c a | generate create | password:n length:n strong:a |  | length:number:r options:text:r random:text:o | shows-result |  | quick low | not-needed
+random-picker | c a | choose pick shuffle | random:a item:n |  | operation:choice:r items:text:r count:number:r random:text:o | shows-result |  | quick low | not-needed
+encoder-decoder | c a | encode decode | encoding:n text:n hexadecimal:a | base64 url | mode:choice:r format:choice:r input:text:r | shows-result |  | quick low | not-needed
+hash-tool | c a | calculate check | hash:n checksum:n text:n file:n |  | input:text:r algorithm:choice:r | shows-result |  | quick low | not-needed
 dictionary | c a | define explain | dictionary:n word:n |  |  | shows-result |  | quick low | not-needed
 my-dictionary | c a | store search | meaning:n entry:n |  | word:text:r meaning:text:r partOfSpeech:choice:o file:file:r confirm:yes-no:o | reads-file stores-note | owner-approval | slow mid | by-tool
 document-reader | c a | read search | document:n heading:n |  | file:file:r | reads-file shows-result |  | slow mid | not-needed

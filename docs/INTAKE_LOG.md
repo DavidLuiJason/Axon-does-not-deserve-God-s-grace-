@@ -45,3 +45,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-28 (Director, seventeenth account): roadmap v19.9, main source zip (C0a merged) and a dictated message (B04C0a completed); one job: C0b-D designed and built (contract, value corpus, test).
 2026-10-28 (Director, seventeenth account, second job): dictated message only (C0b-D merged, write the next prompt); one job: B04C0bC prompt, mini-base, proof runner and reference built.
 2026-10-28 (Director, seventeenth account, third job): builder return 703a98e0-B04C0bC-value-evidence.zip (ChatGPT or Grok); inspected, accepted, ratchet 27/57.
+2026-10-28 (Director, seventeenth account, fourth job): dictated message only (go ahead with C0c-1); one job: C0c-1 done by the Director with a second corpus; finding: vocabulary is not the main lever.
