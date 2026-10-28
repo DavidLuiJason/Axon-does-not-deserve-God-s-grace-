@@ -1,0 +1,53 @@
+diff -ru /home/claude/mind_orig/meaning/acts.ts ./meaning/acts.ts
+--- /home/claude/mind_orig/meaning/acts.ts	2026-10-28 10:10:55.024462503 +0000
++++ ./meaning/acts.ts	2026-10-28 10:10:55.047513551 +0000
+@@ -123,6 +123,19 @@
+     else readings.push({ act: 'command', confidence: 0.3, reason: `"${head.norm}" could be a verb but nothing follows it to act on` });
+   }
+ 
++  // NEED STATEMENT (prototype): first-person subject, optional "would", a need/want verb, then something wanted.
++  {
++    const s = hv; const subj = units[s];
++    if (subj && subj.subject && subj.speaker && polarity === 'positive' && !facts.askByStructure && !facts.doSupport) {
++      let v = s + 1; let would = false;
++      if (units[v]?.modal && units[v]!.norm !== 'would') v = -1;
++      else if (units[v]?.modal) { would = true; v += 1; }
++      const verb = v >= 0 ? units[v] : undefined;
++      const ok = verb && (verb.need || (would && verb.wouldLike)) && !units[v + 1]?.objectPronoun && units[v + 1] !== undefined;
++      const aux2 = units.slice(v + 1).some((u) => u.aux && !u.modal && false);
++      if (ok && !aux2) readings.push({ act: 'command', confidence: 0.82, reason: `a statement of need: the speaker says "${verb!.norm}" and names something wanted` });
++    }
++  }
+   // CHAT: a subject with a finite verb
+   if (!facts.askByStructure && !facts.doSupport) {
+     const auxAt = units.findIndex((unit, index) => index >= hv && unit.aux);
+diff -ru /home/claude/mind_orig/meaning/lexical.ts ./meaning/lexical.ts
+--- /home/claude/mind_orig/meaning/lexical.ts	2026-10-28 10:10:55.024740468 +0000
++++ ./meaning/lexical.ts	2026-10-28 10:10:55.047206205 +0000
+@@ -11,6 +11,7 @@
+ import type { Analysis } from '../types';
+ import { anchorOfIds, type AnchorAct } from './concepts';
+ import { hasSpeechSense } from './structure/speechSenses';
++import { hasNeedSense, hasWouldLikeSense } from './structure/needSenses';
+ import { hasIntendSense, hasTeachSense } from './teach/teachSenses';
+ import { isFirstPerson } from './structure/glueWords';
+ import { toneSenseFlags } from './tone/toneSenses';
+@@ -51,6 +52,8 @@
+   sequencer: boolean;
+   /** B03B2c: one of the word's senses is telling, asking or instructing someone (from the dictionary's synset ids). */
+   speech: boolean;
++  need: boolean;
++  wouldLike: boolean;
+   /** B03B2c: first person (the speaker): closed set in structure/glueWords.ts. */
+   speaker: boolean;
+   /** B03B3b: one of its senses is "has the meaning of" (teach) / "intend to express" (correct), from the dictionary's synset ids. */
+@@ -141,6 +144,8 @@
+       polite: isPoliteness(norm),
+       sequencer: isSequencer(norm),
+       speech: hasSpeechSense(token.synsetIds),
++      need: hasNeedSense(token.synsetIds),
++      wouldLike: hasWouldLikeSense(token.synsetIds),
+       speaker: isFirstPerson(word),
+       meaning: hasTeachSense(token.synsetIds),
+       intend: hasIntendSense(token.synsetIds),
+Only in ./meaning/structure: needSenses.ts

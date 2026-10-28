@@ -24,6 +24,10 @@
  *  8. `mayRunAlone` is copied from the piece.
  *  9. Hostile input (missing arrays, indexes out of range, null) never throws.
  * 10. Inputs are never changed; the same input gives the same output.
+ * 11. (B04C0d-A) `need: true` on `clauses[piece.clause]` gives `need: true` on the input; otherwise the field is absent. For such a piece rule 4
+ *     changes: the word `parts.verb` points to is NOT a verb (it is the need verb). If a `parts.details` span with marker `to` exists, the first
+ *     word of the first such span that has a verb part of speech gives `lemma:v` (the wanted action) and the words after it, in that span, are read
+ *     by rule 5 like any detail; with no such span `verbs` is empty. Rule 5 still reads `parts.object`. No other piece is affected.
  */
 import type { ProvidedSlot, ResolveInput, ResolveOptions, Resolution } from './resolveTypes';
 
@@ -34,7 +38,7 @@ export interface SpanLike { readonly from: number; readonly to: number }
 export interface DetailLike { readonly marker: string; readonly from: number; readonly to: number }
 export interface PartsLike { readonly verb: number | null; readonly object: SpanLike | null; readonly details: readonly DetailLike[] }
 export interface PieceLike { readonly from: number; readonly to: number; readonly clause: number; readonly mayRunAlone: boolean; readonly parts: PartsLike }
-export interface ClauseLike { readonly act: string; readonly polarity: 'positive' | 'negative' }
+export interface ClauseLike { readonly act: string; readonly polarity: 'positive' | 'negative'; readonly need?: boolean }
 export interface ValueLike { readonly kind: string; readonly start: number; readonly end: number }
 
 export interface AdapterInput {

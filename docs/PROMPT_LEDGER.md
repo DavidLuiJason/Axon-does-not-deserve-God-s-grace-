@@ -88,3 +88,6 @@ How many a day is UNKNOWN: it is limited by how many returns the Director can in
 
 ## STATUS
 2026-10-28: L01 and L12 DONE, B04B2 to B04B4 DONE, all merged and green. Not started: everything else. C0b-D DONE (2026-10-28). Next: the C0b-C prompt (Director writes it, ChatGPT or Grok builds), then C0c-1 to C0c-3.
+
+
+2026-10-28 (eighteenth account): C0d-A DESIGN done by the Director (`docs/B04C_PLAN.md`). Next: C0d-A reference, runner and builder prompt (Director turn), then the C0d-A-C prompt (C, M). C0d-B and C0d-C designs follow.

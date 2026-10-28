@@ -41,8 +41,9 @@ export type SpeechAct = 'ask' | 'command' | 'greet' | 'thanks' | 'chat' | 'unkno
 export interface Frame { act: SpeechAct; confidence: number }
 /** B03A: one instruction-sized piece of a message. `tokenRange` is [from, to) over `Analysis.tokens`; `materialIds` index `Analysis.segments`. */
 export interface Clause { span: { start: number; end: number }; tokenRange: { from: number; to: number }; materialIds: number[] }
-export interface ActReading { act: SpeechAct; confidence: number; reason: string }
-export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[] }
+export interface ActReading { act: SpeechAct; confidence: number; reason: string; need?: true }
+/** `need` (B04C0d-A): the act is 'command' only because the speaker STATED A NEED ("I need a QR code"), not because they gave an order. Absent for every other clause. */
+export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positive' | 'negative'; confidence: number; reason: string; alternatives: ActReading[]; need?: true }
 /** `teaching` (B03B3b): teach and correct acts found in the message (a reading only; nothing learns from it yet).
  *  `structure` (B03B2): the finer reading of the clauses (links, verb/object/details, pointers, relays). Present when the message has words; not yet used by any stage that acts. */
 export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading; teaching?: TeachingReading[]; tone?: ToneReading; senses?: SenseReading[] }

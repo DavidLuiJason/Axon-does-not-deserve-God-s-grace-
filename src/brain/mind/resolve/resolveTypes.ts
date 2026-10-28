@@ -30,6 +30,14 @@
  *      both did. A value-only winner is a normal match for Resolution; the stage that RUNS the tool (C1) decides whether to confirm first
  *      (MEASURED trap: "Is 5 minutes a long time" carries a duration and is not a request to start a timer).
  *  11. A tool whose `values` is absent scores exactly as before: adding this changes nothing for any tool that declares no value.
+ *  12. (B04C0d-A) `need: true` means the speaker STATED A NEED ("I need a QR code"); it did not give an order. The clause is scored
+ *      exactly like a command (same keys, same weights, same margin); `need` changes only what may be RETURNED.
+ *  13. A need clause returns a `match` or an `unavailable` result ONLY when the scoring alone would return that. Where the scoring would
+ *      return `ask`, `none` or `negated`, a need clause returns `not-a-request` instead (reason: "A statement of need names no tool
+ *      clearly, so it stays conversation"), because a statement is not an order: AXON never asks "which tool?" about "I need help".
+ *  14. For a need clause the verb that states the need is NOT a verb key (`need` and `want` are not tools); the `verbs` list is the
+ *      verb of the wanted action ("to count" in "I need to count the words"), or empty when the clause names a thing ("a QR code").
+ *      A need clause never changes how any other clause is scored.
  */
 import type { Act, SlotKind, Status, ValueKind } from '../schema/schemaTypes';
 
@@ -52,6 +60,8 @@ export interface ResolveInput {
   readonly names: readonly string[];
   /** the typed values the Meaning stage found in this clause (one entry per value) */
   readonly provided: readonly ProvidedSlot[];
+  /** B04C0d-A: the clause is a STATEMENT OF NEED read as a request (rules 12 to 14). Absent for every other clause. */
+  readonly need?: true;
 }
 export interface ResolveOptions {
   readonly related?: (inputKey: string, schemaKey: string) => number;

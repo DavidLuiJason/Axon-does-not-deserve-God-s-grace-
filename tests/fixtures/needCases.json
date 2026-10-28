@@ -1,0 +1,161 @@
+{
+ "about": "B04C0d-A need statements (Director, 2026-10-28). request: the need form must give the SAME result as its plain command form (differential rule, so nothing is tuned to a sentence); knownPlainMiss=1 means the plain form itself resolves wrongly today (C0d-B), so only equality is demanded. stayConversation: resolution must be not-a-request; viaRule13=1 means the act may read as a need but Resolution must still return not-a-request. Gaps recorded, not tested: 'I am looking for a QR code maker' (progressive verb), 'I want you to count the words' (relay to AXON).",
+ "request": [
+  {
+   "text": "I need a QR code for this link",
+   "plain": "Make a QR code for this link",
+   "tool": "qr-maker",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I need a new password",
+   "plain": "Generate a new password",
+   "tool": "password-generator",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I want a random number between 1 and 10",
+   "plain": "Give me a random number between 1 and 10",
+   "tool": "random-picker",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I would like a QR code for my website",
+   "plain": "Make a QR code for my website",
+   "tool": "qr-maker",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I'd like a QR code for my website",
+   "plain": "Make a QR code for my website",
+   "tool": "qr-maker",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I want to convert 5 miles to kilometres",
+   "plain": "Convert 5 miles to kilometres",
+   "tool": "converter",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "We need a timer for 10 minutes",
+   "plain": "Set a timer for 10 minutes",
+   "tool": "timer",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I need a timer for 25 minutes",
+   "plain": "Set a timer for 25 minutes",
+   "tool": "timer",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I want a hash of this text",
+   "plain": "Give me a hash of this text",
+   "tool": "hash-tool",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I want to encode 'hello' as Base64",
+   "plain": "Encode 'hello' as Base64",
+   "tool": "encoder-decoder",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I need to count the characters in this sentence",
+   "plain": "Count the characters in this sentence",
+   "tool": "text-counter",
+   "knownPlainMiss": false
+  },
+  {
+   "text": "I would like to count the words in my essay",
+   "plain": "Count the words in my essay",
+   "tool": "text-counter",
+   "knownPlainMiss": true
+  },
+  {
+   "text": "I need to count the words in this text",
+   "plain": "Count the words in this text",
+   "tool": "text-counter",
+   "knownPlainMiss": true
+  },
+  {
+   "text": "I want a password with 16 characters",
+   "plain": "Make a password with 16 characters",
+   "tool": "password-generator",
+   "knownPlainMiss": true
+  }
+ ],
+ "stayConversation": [
+  {
+   "text": "I like pizza",
+   "why": "a liking, not a want",
+   "viaRule13": false
+  },
+  {
+   "text": "I do not need a password",
+   "why": "negative",
+   "viaRule13": false
+  },
+  {
+   "text": "I needed a password yesterday",
+   "why": "past tense",
+   "viaRule13": false
+  },
+  {
+   "text": "I wish I had a new password",
+   "why": "a wish, not a need",
+   "viaRule13": false
+  },
+  {
+   "text": "If I need a password, I will tell you",
+   "why": "a condition: never runs alone",
+   "viaRule13": false
+  },
+  {
+   "text": "She needs a new password",
+   "why": "third person",
+   "viaRule13": false
+  },
+  {
+   "text": "You need a password",
+   "why": "second person",
+   "viaRule13": false
+  },
+  {
+   "text": "I need it by Friday",
+   "why": "a pronoun names nothing",
+   "viaRule13": false
+  },
+  {
+   "text": "I want you to be honest",
+   "why": "addressed to AXON: relay, a recorded gap (OPEN_ITEMS 56)",
+   "viaRule13": false
+  },
+  {
+   "text": "I need help",
+   "why": "rule 13: the clause may read as a need, but no tool is named clearly",
+   "viaRule13": true
+  },
+  {
+   "text": "I need to sleep",
+   "why": "rule 13",
+   "viaRule13": true
+  },
+  {
+   "text": "I want to talk about my day",
+   "why": "rule 13",
+   "viaRule13": true
+  },
+  {
+   "text": "I need a break",
+   "why": "rule 13",
+   "viaRule13": true
+  },
+  {
+   "text": "I want a pony",
+   "why": "rule 13",
+   "viaRule13": true
+  }
+ ]
+}
