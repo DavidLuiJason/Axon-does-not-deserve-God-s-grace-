@@ -65,7 +65,7 @@ Truth vocabulary (roadmap 7F rule 7): the code names migrate when row L26 (B06B)
 | ID | Job | By | Size | Needs | Proof |
 |---|---|---|---|---|---|
 | C0a | **measure and ratchet** Resolution on 57 requests (DONE 2026-10-28: dev 21/57, held-out 11/57) | D | done | none | test in `test:kernel` |
-| C0b-D | design **typed values as evidence** for a tool | D | S | C0a | contract plus value corpus |
+| C0b-D | design **typed values as evidence** for a tool (DONE 2026-10-28: dev prototype 21 to 27 exact) | D | done | C0a | contract plus value corpus |
 | C0b-C | build it in Resolution scoring | C | M | C0b-D | dev exact up; golden unchanged |
 | C0c-1 | schema vocabulary fixes: text-writing and create-encode | C | M | C0b-C | dev and held-out up; no hard-coded phrases |
 | C0c-2 | schema vocabulary fixes: numbers, time, converter | C | M | C0b-C | same |
@@ -83,8 +83,8 @@ Go-live of each family is a small Director step (no prompt): the changed replies
 M5 to M9 (about 9 jobs), J4 and J5, shelves (history, health, philosophy and quotes, human nature, AI prompting, code security, audio; each: a source-gathering job by the owner and Director, then a build job, then a test job), shapes and faces, body and motion notes, video scene engine, AXON Code AC1 to AC4, remaining tools and screens, cleanup. Each gets its row when the job above it is accepted (Rule 3: never from the sky down).
 
 ## COUNT (honest, 2026-10-28, after the B04C split)
-Done: L01, L12, C0a, plus B04B2, B04B3, B04B4. **Sized rows left: 43** = the original table minus the 6 B04C rows it replaces (24) + 6 new rows (R1, SC1, CAP1, PT1a, PT1b, Z1) + 13 B04C rows (counting C0b-D to C2g, with C2f and C2g parked) = 43. Of the 43: **5 AI Studio** (L08, L09, L10, L29, PT1b), **4 Director-only** (L11, CAP1, C0b-D, C1), **1 red-team run** (Z1), **33 ChatGPT/Grok prompts** (L28 and SC1 are mixed; C2f and C2g are parked). **Not yet sized: about 55** (day 4 onward). **Total left: about 98 (range 80 to 112).** The split of B04C grew the count by 7: the evidence showed Resolution accuracy has to be fixed first.
+Done: L01, L12, C0a, C0b-D, plus B04B2, B04B3, B04B4. **Sized rows left: 42** = the original table minus the 6 B04C rows it replaces (24) + 6 new rows (R1, SC1, CAP1, PT1a, PT1b, Z1) + 13 B04C rows (counting C0b-D to C2g, with C2f and C2g parked) = 43 before C0b-D, 42 after. Of the 42: **5 AI Studio** (L08, L09, L10, L29, PT1b), **3 Director-only** (L11, CAP1, C1), **1 red-team run** (Z1), **33 ChatGPT/Grok prompts** (L28 and SC1 are mixed; C2f and C2g are parked). **Not yet sized: about 55** (day 4 onward). **Total left: about 97 (range 79 to 111).** The split of B04C grew the count by 7: the evidence showed Resolution accuracy has to be fixed first.
 How many a day is UNKNOWN: it is limited by how many returns the Director can inspect, not by the builders. Start with 4 to 6 independent systems rows a day and record how many were inspected.
 
 ## STATUS
-2026-10-28: L01 and L12 DONE, B04B2 to B04B4 DONE, all merged and green. Not started: everything else. Next: C0b-D (typed values as evidence), then C0b-C and C0c-1 to C0c-3 for the builders.
+2026-10-28: L01 and L12 DONE, B04B2 to B04B4 DONE, all merged and green. Not started: everything else. C0b-D DONE (2026-10-28). Next: the C0b-C prompt (Director writes it, ChatGPT or Grok builds), then C0c-1 to C0c-3.

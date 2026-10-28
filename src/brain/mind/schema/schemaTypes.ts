@@ -25,6 +25,9 @@ export const COST_TIME_LABELS = 'instant quick slow';
 export const COST_MEMORY_LABELS = 'low mid high';
 export const UNDO_LABELS = 'not-needed by-tool by-removal irreversible';
 export const STATUS_LABELS = 'ready built unbuilt left-out';
+/** B04C0b-D (Director, 2026-10-28): the VALUE KINDS that count as EVIDENCE for a tool. Closed labels (structure, not vocabulary; FL13).
+ *  A bare number, a Roman numeral and quoted text are NEVER evidence: MEASURED, a number is read inside "Base64" (64), "two files" and "one go". */
+export const VALUE_KIND_LABELS = 'percent quantity duration date time';
 export const CHAT_STATUS_LABELS = 'available needs-screen needs-permission not-built';
 /** Concept parts of speech: a = adjective (including satellite adjectives), n = noun, v = verb. */
 export const OBJECT_POS_LABELS = 'n a';
@@ -47,6 +50,7 @@ export type CostTime = 'instant' | 'quick' | 'slow';
 export type CostMemory = 'low' | 'mid' | 'high';
 export type UndoKind = 'not-needed' | 'by-tool' | 'by-removal' | 'irreversible';
 export type Status = 'ready' | 'built' | 'unbuilt' | 'left-out';
+export type ValueKind = 'percent' | 'quantity' | 'duration' | 'date' | 'time';
 
 /** One typed argument. A 'choice' slot carries NO choices here: the registry descriptor owns them. */
 export interface SlotSpec { readonly name: string; readonly kind: SlotKind; readonly required: boolean }
@@ -68,6 +72,10 @@ export interface ActionSchema {
   readonly preconditions: readonly Precondition[];
   readonly cost: Cost;
   readonly undo: UndoKind;
+  /** B04C0b-D: the PRIMARY value kinds this tool is FOR (0 to 2, from VALUE_KIND_LABELS, no duplicates): what a message must carry for this tool to be the natural reading
+   *  (percent for a percentage tool, quantity for a unit converter, duration for a timer, date for a date calculator). A tool that merely MAY take a value (an optional
+   *  tip, an optional start time) does not list it. Absent means none. Reviewed by the Director per family (C0c). */
+  readonly values?: readonly ValueKind[];
 }
 
 /** What the Director extracted from the live Tools menu and the registry (tests/fixtures/toolFacts.json). READ ONLY. */

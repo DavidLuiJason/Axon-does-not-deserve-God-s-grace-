@@ -19,6 +19,7 @@
  *  7. provided: the values (`ValueLike`) lying fully inside the piece's characters [words[from].start, words[to-1].end), in order of
  *     start: number, percent, roman -> number; quantity -> quantity; duration -> duration; date -> date; time -> time;
  *     datetime -> date then time; any other kind is ignored. Each 'material' segment lying fully inside those characters gives one 'text'.
+ *     B04C0b-D: an entry built from a percent, quantity, duration, date or time value ALSO carries `value` with that kind (a datetime gives one entry of kind date and one of kind time, each with its own `value`); numbers, Roman numerals and text carry none.
  *     Values are merged with the material entries by start position.
  *  8. `mayRunAlone` is copied from the piece.
  *  9. Hostile input (missing arrays, indexes out of range, null) never throws.

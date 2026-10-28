@@ -42,3 +42,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-28 (Director, sixteenth account): dictated message only (P3b merged, all checks green, OPEN_ITEMS 44 yes, systems before AI Studio prompts); one job: B04B4P4 plus roadmap v19.7.
 2026-10-28 (Director, sixteenth account, second job): ChatGPT review text (proposal) and a dictated message; one job: roadmap v19.8 plus ledger update.
 2026-10-28 (Director, sixteenth account, third job): dictated message only (B04C); one job: B04C sized, C0a built.
+2026-10-28 (Director, seventeenth account): roadmap v19.9, main source zip (C0a merged) and a dictated message (B04C0a completed); one job: C0b-D designed and built (contract, value corpus, test).

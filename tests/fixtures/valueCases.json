@@ -1,0 +1,228 @@
+[
+ {
+  "text": "What is 15% of 240",
+  "expect": [
+   "percent"
+  ]
+ },
+ {
+  "text": "What is twenty percent of 80",
+  "expect": [
+   "percent"
+  ]
+ },
+ {
+  "text": "Add 8 per cent tax to 50",
+  "expect": [
+   "percent"
+  ]
+ },
+ {
+  "text": "How much is a 12.5% discount on 200",
+  "expect": [
+   "percent"
+  ]
+ },
+ {
+  "text": "Convert 10 km to miles",
+  "expect": [
+   "quantity"
+  ]
+ },
+ {
+  "text": "How many ounces are in 2 pounds",
+  "expect": [
+   "quantity"
+  ]
+ },
+ {
+  "text": "What is 98.6 degrees Fahrenheit in Celsius",
+  "expect": [
+   "quantity"
+  ],
+  "gap": {
+   "actual": [],
+   "why": "temperature in degrees is not read as a quantity (MEASURED: only the number 98.6 is found)"
+  }
+ },
+ {
+  "text": "How tall is 6 feet in centimetres",
+  "expect": [
+   "quantity"
+  ]
+ },
+ {
+  "text": "Set a timer for 90 seconds",
+  "expect": [
+   "duration"
+  ]
+ },
+ {
+  "text": "Remind me in 2 hours",
+  "expect": [
+   "duration"
+  ]
+ },
+ {
+  "text": "Count down from 1 hour 30 minutes",
+  "expect": [
+   "duration"
+  ]
+ },
+ {
+  "text": "Start a ten minute countdown",
+  "expect": [
+   "duration"
+  ]
+ },
+ {
+  "text": "How many days until 2027-01-01",
+  "expect": [
+   "date"
+  ]
+ },
+ {
+  "text": "What day of the week is 25 December 2026",
+  "expect": [
+   "date"
+  ]
+ },
+ {
+  "text": "How long between 2026-03-01 and 2026-09-15",
+  "expect": [
+   "date",
+   "date"
+  ]
+ },
+ {
+  "text": "What is the date 45 days after 2026-11-01",
+  "expect": [
+   "duration",
+   "date"
+  ]
+ },
+ {
+  "text": "Wake me at 7:30",
+  "expect": [
+   "time"
+  ]
+ },
+ {
+  "text": "Set an alarm for 6 pm",
+  "expect": [
+   "time"
+  ]
+ },
+ {
+  "text": "Count the words in 'ten minutes late'",
+  "expect": []
+ },
+ {
+  "text": "Encode 'hello' in Base64",
+  "expect": [],
+  "trap": "the number 64 is read inside the technical name Base64: a bare number is never evidence (rule 8)"
+ },
+ {
+  "text": "Compare these two files",
+  "expect": [],
+  "trap": "\"two\" and \"one\" are read as numbers although they only count the object: a bare number is never evidence (rule 8)"
+ },
+ {
+  "text": "Convert all these files in one go",
+  "expect": [],
+  "trap": "\"two\" and \"one\" are read as numbers although they only count the object: a bare number is never evidence (rule 8)"
+ },
+ {
+  "text": "Pick a random number between 1 and 10",
+  "expect": []
+ },
+ {
+  "text": "What is 12 times 7 plus 3",
+  "expect": []
+ },
+ {
+  "text": "Write 1250 in words",
+  "expect": []
+ },
+ {
+  "text": "Make a password of 16 characters",
+  "expect": []
+ },
+ {
+  "text": "Is 5 minutes a long time",
+  "expect": [
+   "duration"
+  ],
+  "trap": "carries a duration but is not a request to start a timer (value-only match must be confirmed, rule 10)"
+ },
+ {
+  "text": "Split a 60 dollar bill between 4 people with a 10 percent tip",
+  "expect": [
+   "percent"
+  ]
+ },
+ {
+  "text": "Count the characters in this text",
+  "expect": []
+ },
+ {
+  "text": "Sort these lines alphabetically",
+  "expect": []
+ },
+ {
+  "text": "Show me my loan repayment over 5 years at 6 percent",
+  "expect": [
+   "duration",
+   "percent"
+  ],
+  "gap": {
+   "actual": [
+    "percent"
+   ],
+   "why": "\"5 years\" is not read as a duration (MEASURED: only the number 5 and the percent are found)"
+  }
+ },
+ {
+  "text": "Cut 3 inches off 2 metres of rope",
+  "expect": [
+   "quantity",
+   "quantity"
+  ]
+ },
+ {
+  "text": "Roman numeral XIV to a number",
+  "expect": []
+ },
+ {
+  "text": "Remind me at 14:45",
+  "expect": [
+   "time"
+  ]
+ },
+ {
+  "text": "Set the alarm for 18:45",
+  "expect": [
+   "time"
+  ]
+ },
+ {
+  "text": "What is 3:15 pm in 24 hour time",
+  "expect": [
+   "time"
+  ],
+  "gap": {
+   "actual": [
+    "time",
+    "duration"
+   ],
+   "why": "\"24 hour\" in \"24 hour time\" is read as a duration (MEASURED), though it names a clock format"
+  }
+ },
+ {
+  "text": "Swap the 10 minutes for 20 minutes on the timer",
+  "expect": [
+   "duration",
+   "duration"
+  ]
+ }
+]
