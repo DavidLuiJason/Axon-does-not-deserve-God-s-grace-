@@ -95,16 +95,30 @@ for (const s of ACTION_SCHEMAS) {
   for (const subset of [ks.filter((k) => (keyCount.get(k) ?? 0) > 1), ks.slice(0, 1), ks.slice(0, 2), ks.slice(0, 3)]) {
     if (subset.length === 0) continue;
     const inp = mk({ verbs: subset.filter((k) => k[0] === 'a').map((k) => k.slice(2)), objects: subset.filter((k) => k[0] === 'o').map((k) => k.slice(2)) });
-    const scores = ACTION_SCHEMAS.filter((x) => x.acts.includes('command')).map((x) => ({ tool: x.tool, score: keysOf(x).reduce((t, k) => t + (subset.includes(k) ? 1 / (keyCount.get(k) ?? 1) : 0), 0) })).filter((c) => c.score > 1e-12).sort((a, b) => b.score - a.score || (a.tool < b.tool ? -1 : 1));
+    const spokenGroups = ['a', 'o'].filter((g) => subset.some((k) => k[0] === g));
+    const scores = ACTION_SCHEMAS.filter((x) => x.acts.includes('command')).map((x) => ({ tool: x.tool, score: keysOf(x).reduce((t, k) => t + (subset.includes(k) ? 1 / (keyCount.get(k) ?? 1) : 0), 0), complete: spokenGroups.length > 0 && spokenGroups.every((g) => keysOf(x).some((k) => k[0] === g && subset.includes(k))) })).filter((c) => c.score > 1e-12).sort((a, b) => Number(b.complete) - Number(a.complete) || b.score - a.score || (a.tool < b.tool ? -1 : 1));
     const r = resolve(inp); oracleCases += 1;
     if (scores.length === 0) { ok(r.kind === 'none', `${s.tool}: oracle none`); continue; }
-    const askExpected = scores.length > 1 && scores[0]!.score - scores[1]!.score < ASK_MARGIN - 1e-9;
-    const matchExpected = !(scores.length > 1 && scores[0]!.score - scores[1]!.score < ASK_MARGIN + 1e-9) ;
-    if (askExpected) ok(r.kind === 'ask' && J(r.choices) === J(scores.slice(0, 4).map((c) => c.tool)), `${s.tool}: oracle ask [${subset}] got ${r.kind}`);
+    const tier = scores.filter((c) => c.complete === scores[0]!.complete); // RESOLVE-TC rule 15: the ask margin only counts inside the winner's tier
+    const askExpected = tier.length > 1 && tier[0]!.score - tier[1]!.score < ASK_MARGIN - 1e-9;
+    const matchExpected = !(tier.length > 1 && tier[0]!.score - tier[1]!.score < ASK_MARGIN + 1e-9) ;
+    if (askExpected) ok(r.kind === 'ask' && J(r.choices) === J(tier.slice(0, 4).map((c) => c.tool)), `${s.tool}: oracle ask [${subset}] got ${r.kind}`);
     else if (matchExpected) ok(r.kind === 'match' && r.tool === scores[0]!.tool, `${s.tool}: oracle match [${subset}] got ${r.kind}`);
   }
 }
 ok(oracleCases > 100, 'oracle ran over many partial inputs');
+
+// 7c. RESOLVE-TC rule 15, named cases (the message speaks in a verb AND an object).
+const cm = resolve(mk({ verbs: ['count:v'], objects: ['word:n', 'in:n'] }));
+ok(cm.kind === 'match' && cm.tool === 'text-counter', `count + word: the one complete tool wins, got ${cm.kind}`);
+const cr = resolve(mk({ verbs: ['count:v'], objects: ['words:n', 'word:n'] }), { related: (a: string, b: string) => (a === 'words:n' && b === 'language:n' ? 0.8 : 0) });
+ok(cr.kind !== 'match' || cr.tool !== 'translator', 'a related-only match never beats a complete exact one');
+const ow = resolve(mk({ objects: ['word:n'] }));
+ok(ow.kind === 'ask' && ['text-counter', 'dictionary', 'number-to-words'].every((t) => ow.choices.includes(t)), 'object only: all tools owning it still ask');
+const vo = resolve(mk({ verbs: ['count:v'] }));
+ok(vo.kind === 'ask' && vo.choices.includes('text-counter'), 'verb only: still an ask');
+const none = resolve(mk({ verbs: ['count:v'], objects: ['chars:n'] }));
+ok(none.kind === 'ask', 'verb exact, object unknown: nobody complete, so the old ask');
 
 // 8. nothing known, empty, hostile, not a request
 for (const act of ['greet', 'thanks', 'chat', 'unknown'] as const) { const r = resolve(mk({ act, verbs: [ACTION_SCHEMAS[0]!.actions[0]!] })); ok(r.kind === 'not-a-request' && r.confidence === 0 && r.reason.length > 3, `${act}: not a request`); }

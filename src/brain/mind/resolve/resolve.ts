@@ -75,29 +75,39 @@ function resolveScored(input: ResolveInput, options: ResolveOptions): Resolution
   if (input.act !== 'command' && input.act !== 'ask') return empty('none', 'The clause has no recognised speech act.');
   const keys = conceptKeys(input);
   const eligible = ACTION_SCHEMAS.filter((schema) => schema.acts.includes(input.act as 'command' | 'ask'));
-  const scored: { schema: ActionSchema; score: number; matched: string[] }[] = [];
+  const scored: { schema: ActionSchema; score: number; matched: string[]; complete: boolean }[] = [];
+  // RESOLVE-TC rule 15: the groups the message itself speaks in (a verb, an object) must each be met by an IDENTICAL key for a schema to be COMPLETE.
+  const spoken = new Set<string>();
+  if (keys.actions.size > 0) spoken.add('a');
+  if (keys.objects.size > 0) spoken.add('o');
   for (const schema of eligible) {
     const matched: string[] = [];
+    const exactGroups = new Set<string>();
     let score = 0;
     for (const schemaKey of schemaKeys.get(schema) ?? []) {
       const group = schemaKey.slice(0, 1);
       let best = 0;
+      let exact = false;
       const groupInputs = group === 'a' ? keys.actions : group === 'o' ? keys.objects : group === 'n' ? keys.names : keys.values;
       for (const inputKey of groupInputs) {
         const matchedSimilarity = group === 'v' ? (inputKey === schemaKey ? 1 : 0) : similarity(inputKey, schemaKey, group, options.related);
         best = Math.max(best, matchedSimilarity);
+        if (matchedSimilarity === 1) exact = true;
       }
       if (best > 0) {
         score += (best / (keyCounts.get(schemaKey) ?? 1)) * (group === 'v' ? VALUE_WEIGHT : 1);
         matched.push(schemaKey);
+        if (exact) exactGroups.add(group);
       }
     }
-    if (score > 0) scored.push({ schema, score, matched });
+    if (score > 0) scored.push({ schema, score, matched, complete: spoken.size > 0 && [...spoken].every((group) => exactGroups.has(group)) });
   }
-  scored.sort((a, b) => b.score - a.score || (a.schema.tool < b.schema.tool ? -1 : a.schema.tool > b.schema.tool ? 1 : 0));
+  scored.sort((a, b) => Number(b.complete) - Number(a.complete) || b.score - a.score || (a.schema.tool < b.schema.tool ? -1 : a.schema.tool > b.schema.tool ? 1 : 0));
   if (scored.length === 0) return empty('none', 'No schema shares a recognised concept with this clause.');
   const top = scored[0]!;
   const second = scored[1]?.score ?? 0;
+  const sameTier = scored.filter((item) => item.complete === top.complete);
+  const rival = sameTier[1]?.score;
   const candidates: Candidate[] = scored.slice(0, MAX_CANDIDATES).map(({ schema, score, matched }) => ({ tool: schema.tool, score, matched: [...matched] }));
   const confidence = round2(top.score / (top.score + second + 0.25));
   const hasValue = top.matched.some((key) => key.startsWith('v|'));
@@ -106,8 +116,8 @@ function resolveScored(input: ResolveInput, options: ResolveOptions): Resolution
   if (input.polarity === 'negative') {
     return { kind: 'negated', tool: top.schema.tool, confidence, reason: reasonFor(top.matched, 'negated'), candidates, evidence };
   }
-  if (scored.length > 1 && top.score - second < ASK_MARGIN) {
-    const choices = candidates.map((candidate) => candidate.tool);
+  if (rival !== undefined && top.score - rival < ASK_MARGIN) {
+    const choices = sameTier.slice(0, MAX_CANDIDATES).map((item) => item.schema.tool);
     return { kind: 'ask', choices, confidence, reason: reasonFor([...new Set(scored.slice(0, choices.length).flatMap((item) => item.matched))], 'ask'), candidates, evidence };
   }
   const status = options.status?.[top.schema.tool];

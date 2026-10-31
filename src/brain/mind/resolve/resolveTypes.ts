@@ -38,6 +38,14 @@
  *  14. For a need clause the verb that states the need is NOT a verb key (`need` and `want` are not tools); the `verbs` list is the
  *      verb of the wanted action ("to count" in "I need to count the words"), or empty when the clause names a thing ("a QR code").
  *      A need clause never changes how any other clause is scored.
+ *
+ * COMPLETE MATCH (RESOLVE-TC part 3, Director 2026-10-31; owner: "think about it properly yourself"; MEASURED on the 50 text-counter requests with the real stages: 5 to 30 exact, wrong tool 15 to 0):
+ *  15. The input SPEAKS in the groups where it has at least one key: `a` (verbs) and/or `o` (objects). A schema is COMPLETE when, in EVERY group the input speaks in, at
+ *      least one of its keys is matched by an IDENTICAL input key (similarity 1; a related match never completes). An input that speaks in neither group completes nobody.
+ *      Ranking becomes: complete schemas first, then score (rule 4) best first, then tool id. Rules 5 and 7 are unchanged (the candidate list and the confidence use the ranked list and the real second score).
+ *      Rule 6 is applied INSIDE the top tier only: the rival is the next schema with the same completeness as the winner. No rival, no ask: a lone complete schema is a match even when an incomplete
+ *      one scores higher (a synonym or a shared single concept cannot outvote a message whose verb AND object both name the tool). The choices of an ask are the first MAX_CANDIDATES schemas of the top tier.
+ *      Reason: the old sum let one related concept that only one tool owns (words ~ language, 0.8 of the translator) beat an exact verb plus an exact object shared by several tools.
  */
 import type { Act, SlotKind, Status, ValueKind } from '../schema/schemaTypes';
 
