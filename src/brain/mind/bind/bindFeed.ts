@@ -72,6 +72,17 @@ export function buildBindInputs(input: FeedInput): FeedItem[] {
         if (!isInt(d.from) || !isInt(d.to) || from >= d.to || from < piece.from || d.to > piece.to) continue;
         details.push({ start: words[from]!.start, end: words[d.to - 1]!.end });
       }
+      // PARTS-TEXT part 4: a colon between two words opens the detail when no marker word did ("word count: plain words follow"). The colon is not a word, so it is read from the characters between the words.
+      if (details.length === 0) {
+        for (let k = piece.from; k + 1 < piece.to; k += 1) {
+          if (!message.slice(words[k]!.end, words[k + 1]!.start).includes(':')) continue;
+          const textStart = words[k + 1]!.start;
+          details.push({ start: textStart, end: words[piece.to - 1]!.end });
+          // the words after the colon ARE the text, never clause words ("word count: plain words follow" has one unit word, the first)
+          for (let q = pieceWords.length - 1; q >= 0; q -= 1) if (pieceWords[q]!.start >= textStart) pieceWords.splice(q, 1);
+          break;
+        }
+      }
       const references: BindSpan[] = [];
       for (const p of piece.refs.pointers) {
         if (!isInt(p.at) || p.at < piece.from || p.at >= piece.to) continue;

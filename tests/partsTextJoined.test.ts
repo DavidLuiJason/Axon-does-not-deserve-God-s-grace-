@@ -39,5 +39,9 @@ const e = await bound('count words in "hello brave new world"');
 check(e?.decision === 'run' && e.args.text === 'hello brave new world', 'quoted text unchanged');
 const f = await bound('how many words are in the quick brown fox');
 check(f?.decision === 'run' && f.args.text === 'the quick brown fox' && f.args.unit === 'words', '"brown" inside the detail is not the main verb');
+const g = await bound('word count: plain words follow');
+check(g?.decision === 'run' && g.args.text === 'plain words follow' && g.args.unit === 'word', 'unquoted text after a colon is the text, its words are not clause words');
+const h = await bound('count words: "red green"');
+check(h?.decision === 'run' && h.args.text === 'red green', 'quoted text after a colon unchanged');
 if (fails.length) { console.error(fails.join('\n')); throw new Error(`partsTextJoined: ${fails.length} failed`); }
-console.log('partsTextJoined: 6 checks passed');
+console.log('partsTextJoined: 8 checks passed');
