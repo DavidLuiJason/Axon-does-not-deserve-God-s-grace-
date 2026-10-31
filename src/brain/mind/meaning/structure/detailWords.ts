@@ -1,1 +1,1 @@
-export const DETAIL_WORDS = 'for in to by at';
+export const DETAIL_WORDS = 'for in to by at of';
