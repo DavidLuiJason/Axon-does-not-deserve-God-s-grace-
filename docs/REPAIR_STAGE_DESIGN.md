@@ -37,4 +37,4 @@ Phone cost is NOT MEASURED. The risky part is R3/R4: searching headwords means r
 
 ## 7. Laws touched (FL11)
 FL1 map above; FL4 corpus before and after, Two-Strike; FL12 repairs reach Resolution only as stage output; FL13 closed grammar sets only, owner approves each, no phrase accumulation; FL14 same engines, no copies; FL15 INFERRED label, loud failure, trace; 7K act-or-ask by cost.
-**Owner decisions needed before REP1:** approve R1 restart/repeat marker set; approve the repair limits (3 per message, 4 readings per piece); confirm that R5 stays out of this stage.
+**DECIDED 2026-10-31 (owner said "choose"; the Director chose; owner may overrule):** (1) R1 starts with EXACT repeats only, plus a closed marker set of two words, `wait` and `oops` (own named group in `closedSets.ts`), dropped ONLY when the marker is a whole piece by itself ("Wait, let me think."), never inside a clause that has a verb or object ("wait 5 minutes" is a timer request). `sorry` stays OUT (it carries meaning: "say sorry in French"). (2) Limits accepted: 3 repairs per message, 4 readings per piece. (3) R5 stays out. Each set still needs a test that fails when the set is removed.
