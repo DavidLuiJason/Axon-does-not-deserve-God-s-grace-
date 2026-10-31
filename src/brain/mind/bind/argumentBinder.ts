@@ -44,6 +44,8 @@ export interface BindInput {
   readonly materials: readonly BindSpan[];
   /** character ranges of the detail spans of the clause, WITHOUT the marker word */
   readonly details: readonly BindSpan[];
+  /** OPTIONAL: character ranges of REFERENCE words ("this text", "it", "the above") from the references stage: a detail span lying fully inside one is a pointer to text, not the text, so it is not used as text */
+  readonly references?: readonly BindSpan[];
   readonly words: readonly BindWord[];
   /** slot name -> the choices of the tool's descriptor */
   readonly choices: Readonly<Record<string, readonly string[]>>;
@@ -154,7 +156,8 @@ export function bindArguments(input: BindInput): BindResult {
     const strip = (t: string): string => (t.length >= 2 && QUOTES[t[0]] === true && QUOTES[t[t.length - 1]] === true ? t.slice(1, -1) : t);
     const byStart = (a: BindSpan, b: BindSpan): number => a.start - b.start;
     const mats = list(input.materials).filter((s) => validSpan(s, message.length)).slice().sort(byStart).map((s) => strip(message.slice(s.start, s.end)));
-    const dets = list(input.details).filter((s) => validSpan(s, message.length)).slice().sort(byStart).map(cut);
+    const refs = list(input.references).filter((s) => validSpan(s, message.length));
+    const dets = list(input.details).filter((s) => validSpan(s, message.length) && !refs.some((r) => r.start <= s.start && s.end <= r.end)).slice().sort(byStart).map(cut);
     const sources = (mats.length >= textSlots.length ? mats : mats.concat(dets)).filter((t) => t !== '');
     textSlots.forEach((slot, i) => { if (i < sources.length) { args[slot.name] = sources[i]; kinds[slot.name] = 'text'; } });
     if (sources.length > textSlots.length) assumptions.push('I used the first piece of text and left the rest.');

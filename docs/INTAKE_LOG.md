@@ -51,3 +51,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-31 (Director, twentieth account, second job): builder return C2E-create-runners.zip (ChatGPT); inspected, ACCEPTED, cumulative merge package with C2D built.
 2026-10-31 (Director, twentieth account, third job): dictated message only (give me C1); C1 sized into three parts; part 1 (registry and switch) built.
 2026-10-31 (Director, twentieth account, fourth job): dictated message only (give me part two); C1 part 2 (argument binder) built; boundary failure found and fixed.
+2026-10-31 | twenty-first account intake: roadmap v20.5 read in full; repo zip checked (MERGE_TAG: C1 part 2 present); C1 part 3 built and packaged.

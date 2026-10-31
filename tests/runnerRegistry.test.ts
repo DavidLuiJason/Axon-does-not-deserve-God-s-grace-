@@ -8,13 +8,13 @@ const deps: RunnerDeps = Object.freeze({ now: 1000, randomBelow: () => 0, random
 
 // registry
 const ids = runnerToolIds();
-check(ids.length === 18, '18 runners registered');
+check(ids.length === 19, '19 runners registered (18 + the text-counter pilot)');
 check(new Set(ids).size === ids.length, 'no tool id twice');
 const schemaIds = new Set(listSchemas().map((s) => s.tool));
 check(ids.every((i) => schemaIds.has(i)), 'every runner has a schema');
 check(Object.isFrozen(ALL_RUNNERS) && Object.isFrozen(DEFAULT_SWITCHES), 'registry and default switches are frozen');
-for (const id of ['timer', 'hash-tool', 'calculator', 'sort-lines']) check(findRunner(id)?.toolId === id, 'finds ' + id);
-for (const id of ['text-counter', 'rephraser', 'grammar-helper', '', '__proto__', 'constructor', 'toString']) check(findRunner(id) === null, 'no runner for ' + JSON.stringify(id));
+for (const id of ['timer', 'hash-tool', 'calculator', 'sort-lines', 'text-counter']) check(findRunner(id)?.toolId === id, 'finds ' + id);
+for (const id of ['rephraser', 'grammar-helper', '', '__proto__', 'constructor', 'toString']) check(findRunner(id) === null, 'no runner for ' + JSON.stringify(id));
 check(findRunner(undefined as unknown as string) === null, 'non-text id gives none');
 
 // switch

@@ -6,7 +6,7 @@ import { VALUE_KIND_LABELS } from './schemaTypes';
 import type { ActionSchema, Act, SlotKind, Effect, Precondition, CostTime, CostMemory, UndoKind, ValueKind } from './schemaTypes';
 
 const DATA = `
-text-counter | c a | count measure | word:n line:n character:n letter:n |  |  | shows-result |  | quick low | not-needed
+text-counter | c a | count measure | word:n line:n character:n letter:n |  | text:text:r unit:choice:o | shows-result |  | quick low | not-needed
 interface-capture | c a | capture export | interface:n source:n |  |  | writes-file |  | slow mid | by-removal
 content-extractor | c a | extract organize | content:n material:n |  |  | shows-result |  | quick low | not-needed
 link-analyzer | c a | analyze detect | link:n destination:n |  |  | shows-result |  | quick low | not-needed
