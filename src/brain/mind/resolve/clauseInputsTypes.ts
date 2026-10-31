@@ -23,6 +23,8 @@
  *     Values are merged with the material entries by start position.
  *  8. `mayRunAlone` is copied from the piece.
  *  9. Hostile input (missing arrays, indexes out of range, null) never throws.
+ * 16. (RESOLVE-TC part 4, owner-approved 2026-10-31.) QUANTITY: when `parts.quantity` (the counted noun after "how many", from the closed set in closedSets.ts) lies inside the piece, `verbs` gets `count:v` (the one meaning of the set) and the words of that span count as object words (rule 5); a copula verb of such a piece is NOT a verb key; verbs never repeat.
+ * 17. TWO READINGS OF A COMPOUND (the "word count" rule): when `parts.verb` and the first word of `parts.object` are neighbours, neither a copula nor a need verb, and BOTH words can be noun and verb and each stands in its base form (surface = lemma), `PieceInput.alternative` holds the swapped reading (second word = the verb, first word = an object, the rest unchanged). `resolveMessage` resolves both and takes the alternative ONLY if it is a match with strictly fewer empty required slots than the first reading; then `PieceResolution.reading` is 'alternative' (loud, FL15). No word list is involved.
  * 10. Inputs are never changed; the same input gives the same output.
  * 11. (B04C0d-A) `need: true` on `clauses[piece.clause]` gives `need: true` on the input; otherwise the field is absent. For such a piece rule 4
  *     changes: the word `parts.verb` points to is NOT a verb (it is the need verb). If a `parts.details` span with marker `to` exists, the first
@@ -36,7 +38,7 @@ export interface SegmentLike { readonly kind: 'language' | 'material'; readonly 
 export interface WordLike { readonly norm: string; readonly start: number; readonly end: number }
 export interface SpanLike { readonly from: number; readonly to: number }
 export interface DetailLike { readonly marker: string; readonly from: number; readonly to: number }
-export interface PartsLike { readonly verb: number | null; readonly object: SpanLike | null; readonly details: readonly DetailLike[] }
+export interface PartsLike { readonly verb: number | null; readonly object: SpanLike | null; readonly details: readonly DetailLike[]; readonly copula?: boolean; readonly quantity?: SpanLike | null }
 export interface PieceLike { readonly from: number; readonly to: number; readonly clause: number; readonly mayRunAlone: boolean; readonly parts: PartsLike }
 export interface ClauseLike { readonly act: string; readonly polarity: 'positive' | 'negative'; readonly need?: boolean }
 export interface ValueLike { readonly kind: string; readonly start: number; readonly end: number }
@@ -49,8 +51,10 @@ export interface AdapterInput {
   readonly pieces: readonly PieceLike[];
   readonly values: readonly ValueLike[];
 }
-export interface PieceInput { readonly piece: number; readonly clause: number; readonly mayRunAlone: boolean; readonly input: ResolveInput }
-export interface PieceResolution { readonly piece: number; readonly clause: number; readonly mayRunAlone: boolean; readonly resolution: Resolution }
+/** `alternative` (RESOLVE-TC part 4, rule 16): the second reading of a two-word compound ("word count": noun + noun-or-verb); absent when there is none. */
+export interface PieceInput { readonly piece: number; readonly clause: number; readonly mayRunAlone: boolean; readonly input: ResolveInput; readonly alternative?: ResolveInput }
+/** `reading` (FL15, loud): 'alternative' when the compound's second reading won; absent otherwise. */
+export interface PieceResolution { readonly piece: number; readonly clause: number; readonly mayRunAlone: boolean; readonly resolution: Resolution; readonly reading?: 'alternative' }
 
 /** Required exports of src/brain/mind/resolve/clauseInputs.ts */
 export interface ClauseInputsApi {

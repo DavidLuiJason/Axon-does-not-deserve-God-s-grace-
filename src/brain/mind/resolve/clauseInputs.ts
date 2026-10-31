@@ -1,5 +1,6 @@
 import { resolveClause } from './resolve';
-import type { ResolveOptions, ResolveInput, ProvidedSlot } from './resolveTypes';
+import { QUANTITY_QUESTION_MEANING } from '../meaning/closedSets';
+import type { ResolveOptions, ResolveInput, ProvidedSlot, Resolution } from './resolveTypes';
 import type { AdapterInput, PieceInput, PieceResolution, PieceLike, WordLike, TokenLike, SegmentLike, ValueLike, DetailLike } from './clauseInputsTypes';
 
 const EMPTY: ResolveInput = { act: 'unknown', polarity: 'positive', verbs: [], objects: [], names: [], provided: [] };
@@ -32,6 +33,7 @@ function wordIndices(piece: PieceLike, words: readonly WordLike[]): number[] {
   const indices = new Set<number>();
   const spans: Array<{ from: number; to: number }> = [];
   if (piece.parts && validSpan(piece.parts.object, words.length)) spans.push(piece.parts.object);
+  if (piece.parts && validSpan(piece.parts.quantity, words.length)) spans.push(piece.parts.quantity); // RESOLVE-TC part 4: the counted noun after "how many"
   for (const detail of array<{ from: number; to: number }>(piece.parts?.details)) {
     if (detail && validSpan(detail, words.length)) spans.push(detail);
   }
@@ -86,21 +88,24 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
       const token = tokenFor(words[needVerb]!, tokens);
       if (token && typeof token.lemma === 'string') verbs.push(`${token.lemma.toLowerCase()}:v`);
     }
-    if (!need && validPiece && piece.parts && integer(piece.parts.verb) && piece.parts.verb >= from && piece.parts.verb < to) {
+    // RESOLVE-TC part 4 (owner-approved closed set): a quantity question ("how many ...") asks to count; the copula of such a question ("are") is not a verb key.
+    const quantityAsk = !need && validPiece && !!piece.parts && validSpan(piece.parts.quantity, words.length) && piece.parts.quantity.from >= from && piece.parts.quantity.to <= to;
+    if (quantityAsk) verbs.push(`${QUANTITY_QUESTION_MEANING}:v`);
+    if (!need && validPiece && piece.parts && integer(piece.parts.verb) && piece.parts.verb >= from && piece.parts.verb < to && !(quantityAsk && piece.parts.copula === true)) {
       const word = words[piece.parts.verb];
       if (validWord(word)) {
         const token = tokenFor(word, tokens);
-        if (token && typeof token.lemma === 'string') verbs.push(`${token.lemma.toLowerCase()}:v`);
+        const key = token && typeof token.lemma === 'string' ? `${token.lemma.toLowerCase()}:v` : '';
+        if (key && !verbs.includes(key)) verbs.push(key);
       }
     }
-    const objects: string[] = [];
-    const names: string[] = [];
-    const seenObjects = new Set<string>();
-    const seenNames = new Set<string>();
-    if (validPiece) {
-      const selected = wordIndices(piece, words);
+    const collect = (selected: readonly number[], skipWord: number): { objects: string[]; names: string[] } => {
+      const objects: string[] = [];
+      const names: string[] = [];
+      const seenObjects = new Set<string>();
+      const seenNames = new Set<string>();
       for (const wi of selected) {
-        if (wi === needVerb) continue;
+        if (wi === needVerb || wi === skipWord) continue;
         const word = words[wi];
         if (!validWord(word)) continue;
         const token = tokenFor(word, tokens);
@@ -122,6 +127,24 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
           if (plainName(name) && !seenNames.has(name)) { seenNames.add(name); names.push(name); }
         }
       }
+      return { objects, names };
+    };
+    const selectedWords = validPiece ? wordIndices(piece, words) : [];
+    const { objects, names } = collect(selectedWords, -1);
+    // RESOLVE-TC part 4, rule 16 (two readings of a compound): "word count" is a noun + noun that the clause parts read as verb + object. When the verb word and the first object word are neighbours and BOTH can be a noun and a verb in their base form, the swapped reading (second word = verb, first word = object) is kept open as `alternative`.
+    let alternative: ResolveInput | undefined;
+    const verbAt = !need && validPiece && piece.parts && piece.parts.copula !== true && integer(piece.parts.verb) ? piece.parts.verb : -1;
+    if (verbAt >= from && verbAt + 1 < to && piece.parts && validSpan(piece.parts.object, words.length) && piece.parts.object.from === verbAt + 1) {
+      const first = words[verbAt];
+      const second = words[verbAt + 1];
+      const t1 = validWord(first) ? tokenFor(first, tokens) : undefined;
+      const t2 = validWord(second) ? tokenFor(second, tokens) : undefined;
+      const has = (token: TokenLike | undefined, letter: string): boolean => !!token && array<string>(token.partsOfSpeech).some((p) => typeof p === 'string' && p.toLowerCase().startsWith(letter));
+      const base = (word: WordLike, token: TokenLike | undefined): boolean => !!token && typeof token.lemma === 'string' && token.lemma.toLowerCase() === word.norm.toLowerCase();
+      if (validWord(first) && validWord(second) && has(t1, 'n') && has(t1, 'v') && has(t2, 'n') && has(t2, 'v') && base(first, t1) && base(second, t2)) {
+        const swapped = collect([verbAt, ...selectedWords], verbAt + 1);
+        alternative = { act, polarity, verbs: [`${t2!.lemma.toLowerCase()}:v`], objects: swapped.objects, names: swapped.names, provided: [] };
+      }
     }
     const provided: Array<{ kind: ProvidedSlot['kind']; value?: ProvidedSlot['value']; start: number; order: number }> = [];
     if (start >= 0 && end >= start) {
@@ -137,10 +160,20 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
     }
     provided.sort((a, b) => a.start - b.start || a.order - b.order);
     const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind, value }) => ({ kind, ...(value === undefined ? {} : { value }) })), ...(need ? { need: true as const } : {}) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
-    return { piece: pieceIndex, clause: clauseIndex >= 0 ? clauseIndex : -1, mayRunAlone: piece.mayRunAlone === true, input: inputValue };
+    const alt = alternative && validPiece ? { ...alternative, provided: inputValue.provided } : undefined;
+    return { piece: pieceIndex, clause: clauseIndex >= 0 ? clauseIndex : -1, mayRunAlone: piece.mayRunAlone === true, input: inputValue, ...(alt ? { alternative: alt } : {}) };
   });
 }
 
 export function resolveMessage(input: AdapterInput, options?: ResolveOptions): PieceResolution[] {
-  return buildResolveInputs(input).map((piece) => ({ piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: resolveClause(piece.input, options) }));
+  return buildResolveInputs(input).map((piece) => {
+    const primary = resolveClause(piece.input, options);
+    // Rule 16: the second reading wins only if it is a match with STRICTLY fewer required slots left empty than the first reading (a first reading that is not a match counts as worse). Otherwise the first reading stands.
+    if (piece.alternative) {
+      const second = resolveClause(piece.alternative, options);
+      const left = (r: Resolution): number => r.kind === 'match' ? r.missingSlots.length : Number.MAX_SAFE_INTEGER;
+      if (second.kind === 'match' && left(second) < left(primary)) return { piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: second, reading: 'alternative' as const };
+    }
+    return { piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: primary };
+  });
 }

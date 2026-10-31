@@ -1,6 +1,7 @@
 import { DETAIL_WORDS } from './detailWords';
 import type { ClauseParts, Detail, PartFacts, ReadClauseParts, Span } from './partsTypes';
 import type { WordRange } from './types';
+import { isPoliteness, isQuantityPair } from '../closedSets';
 
 const EMPTY_PARTS: ClauseParts = {
   verb: null,
@@ -8,6 +9,7 @@ const EMPTY_PARTS: ClauseParts = {
   object: null,
   details: [],
   infinitive: null,
+  quantity: null,
 };
 
 const MARKERS = new Set(DETAIL_WORDS.split(' '));
@@ -62,10 +64,22 @@ export const readClauseParts: ReadClauseParts = (words, ranges) => {
         continue;
       }
 
+      // RESOLVE-TC part 4 (owner-approved closed set): after "how many" the next words are the COUNTED NOUN, never the verb.
+      let quantity: Span | null = null;
+      for (let q = from; q + 2 < to; q += 1) {
+        if (!isQuantityPair(words[q]!.norm, words[q + 1]!.norm)) continue;
+        let end = q + 2;
+        while (end < to && !words[end]!.aux && !MARKERS.has(words[end]!.norm)) end += 1;
+        if (end > q + 2) quantity = { from: q + 2, to: end };
+        break;
+      }
+
       let firstAux: number | null = null;
       let mainVerb: number | null = null;
       for (let i = from; i < to; i += 1) {
         const word = words[i]!;
+        if (isPoliteness(word.norm)) continue; // RESOLVE-TC part 4 (owner-approved closed set): "please" and "kindly" never carry the verb
+        if (quantity !== null && i >= quantity.from && i < quantity.to) continue;
         if (word.aux && firstAux === null) firstAux = i;
         if (word.verb && !word.aux && (i === from || !words[i - 1]!.determiner)) {
           mainVerb = i;
@@ -110,7 +124,7 @@ export const readClauseParts: ReadClauseParts = (words, ranges) => {
         if (mainVerb + 1 < objectTo) object = { from: mainVerb + 1, to: objectTo };
       }
 
-      output.push({ verb: mainVerb, copula, object, details: markers, infinitive });
+      output.push({ verb: mainVerb, copula, object, details: markers, infinitive, quantity });
     }
     return output;
   } catch {

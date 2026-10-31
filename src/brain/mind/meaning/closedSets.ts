@@ -61,6 +61,12 @@ const NEGATIVE_CONTRACTIONS: ReadonlySet<string> = new Set([
 /** Closed class: politeness markers. */
 const POLITENESS: ReadonlySet<string> = new Set(['please', 'kindly']);
 
+/** Owner-approved closed set (2026-10-31, RESOLVE-TC part 4): the word that, after "how", opens a question about a quantity ("how many"). */
+const QUANTITY_FOLLOWERS: ReadonlySet<string> = new Set(['many']);
+
+/** Owner-approved: a quantity question ("how many") asks to COUNT. This is the one meaning the set carries. */
+export const QUANTITY_QUESTION_MEANING = 'count';
+
 /** Closed class: sequencing adverbs that open a following step. */
 const SEQUENCERS: ReadonlySet<string> = new Set(['then', 'now', 'next', 'also']);
 
@@ -88,6 +94,7 @@ export const isCoordinator = (w: string): boolean => COORDINATORS.has(w);
 export const isNegation = (w: string): boolean => NEGATIONS.has(w);
 export const isNegativeClitic = (w: string): boolean => NEGATIVE_CONTRACTIONS.has(w);
 export const isPoliteness = (w: string): boolean => POLITENESS.has(w);
+export const isQuantityPair = (first: string, second: string): boolean => first === 'how' && QUANTITY_FOLLOWERS.has(second);
 export const isSequencer = (w: string): boolean => SEQUENCERS.has(w);
 
 /** The one negative contraction that starts a do-support imperative ("don't delete it"). */

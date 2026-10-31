@@ -38,7 +38,7 @@ check('Go to work', 'go', null, ['to:to work'], null);
 check('Give the call to Tom', 'give', 'the call', ['to:to tom'], null);
 check('Turn off the light', 'turn', 'off the light', [], null);
 check('Look at', null, null, [], null);
-check('Please set a timer', 'please', 'set a timer', [], null); // known limit: the caller's verb flag decides
+check('Please set a timer', 'set', 'a timer', [], null); // RESOLVE-TC part 4: owner-approved politeness set, "please" never carries the verb
 
 // One result per range, hostile input never throws, inputs are not changed, speed.
 const words = mk('set a timer for 5 minutes');
