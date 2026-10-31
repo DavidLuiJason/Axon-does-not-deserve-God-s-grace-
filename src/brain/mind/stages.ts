@@ -19,6 +19,7 @@ import type { ToolFact } from './schema/schemaTypes';
 import { relationLookupFromTokens } from './resolve/tokenRelations';
 import { resolveMessage } from './resolve/clauseInputs';
 import type { AdapterInput } from './resolve/clauseInputsTypes';
+import { runDirectLane, type LaneConfig } from './directLane';
 
 function withEntry(context: MindContext, stage: StageId, state: StageState, note: string, patch: Partial<MindContext> = {}): MindContext {
   return { ...context, ...patch, entries: [...context.entries, { stage, state, note }] };
@@ -67,7 +68,7 @@ function makeSegments(text: string): { segments: Segment[]; note: string } {
   }
 }
 
-export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot, liveFacts?: () => readonly ToolFact[]): MindStage[] {
+export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot, liveFacts?: () => readonly ToolFact[], lane?: LaneConfig): MindStage[] {
   function intake(context: MindContext): MindContext {
     const utterance = { id: nextId(), text: context.utterance.text, place: context.utterance.place, at: now() };
     return withEntry(context, 'intake', 'ran', 'request captured', { utterance });
@@ -135,7 +136,7 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         else if (item.resolution.kind === 'none') counts.none += 1;
       }
       const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}${statusNote}`;
-      return withEntry(context, 'resolution', 'ran', note, { resolutions });
+      return withEntry(context, 'resolution', 'ran', note, { resolutions, values: values as never });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return withEntry(context, 'resolution', 'not-built', `resolution failed: ${message}`);
@@ -149,8 +150,18 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
   }
   async function execution(context: MindContext): Promise<MindContext> {
     const request: BrainRequest = { text: context.utterance.text, place: context.utterance.place };
+    // LIVE1b: the direct lane (LIVE0 design). No lane configured means this stage behaves exactly as before.
+    let laneNote = '';
+    if (lane) {
+      const outcome = await runDirectLane({
+        message: context.utterance.text, holdsConversation: executor.holdsConversation(), segments: context.analysis?.segments ?? [],
+        values: context.values ?? [], meaning: context.meaning, resolutions: context.resolutions,
+      }, lane);
+      if (outcome.kind === 'answer') return withEntry(context, 'execution', 'ran', outcome.note, { reply: outcome.reply });
+      laneNote = `; direct lane yielded: ${outcome.reason}`;
+    }
     const reply = await executor.run(request);
-    return withEntry(context, 'execution', 'ran', 'legacy executor preserves current provider order and fallback', { reply });
+    return withEntry(context, 'execution', 'ran', `legacy executor preserves current provider order and fallback${laneNote}`, { reply });
   }
   function verification(context: MindContext): MindContext {
     return withEntry(context, 'verification', 'not-built', 'not built: verification arrives in B6');

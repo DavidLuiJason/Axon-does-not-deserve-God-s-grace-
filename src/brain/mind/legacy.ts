@@ -15,11 +15,14 @@ export const LEGACY_REGISTER: LegacyEntry[] = [
   { providerId: 'foundation', retireAt: 'B6', reason: 'Honest fallback remains until planning and response stages replace it.' },
 ];
 
-export function createLegacyExecutor(providers: BrainProvider[], fallback: BrainProvider): { run(request: BrainRequest): Promise<BrainReply> } {
+export function createLegacyExecutor(providers: BrainProvider[], fallback: BrainProvider): { run(request: BrainRequest): Promise<BrainReply>; holdsConversation(): boolean } {
   async function tryProvider(provider: BrainProvider, request: BrainRequest): Promise<BrainReply | null> {
     try { return await provider.handle(request); } catch { return null; }
   }
   return {
+    holdsConversation(): boolean {
+      try { return providers.some((provider) => provider.holdsConversation()); } catch { return true; }
+    },
     async run(request: BrainRequest): Promise<BrainReply> {
       if (request.text.trim() !== '') {
         const holder = providers.find((provider) => provider.holdsConversation());
