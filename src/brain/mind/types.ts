@@ -21,6 +21,8 @@ export interface Token {
   surface: string;
   lemma: string;
   alternativeLemmas?: string[];
+  /** RESOLVE-TC: the part of alternativeLemmas that is a NOUN base of this surface (e.g. 'words' is itself a headword, its noun base is 'word'). Present only when there is one. */
+  alternativeNounLemmas?: string[];
   start: number;
   end: number;
   knowledge?: 'known' | 'unknown' | 'not-checked';

@@ -12,7 +12,7 @@
  *  3. A word is joined to a token when the token's `start` lies inside [word.start, word.end). The first such token wins.
  *  4. verbs: the word `piece.parts.verb` points to, as `lemma:v` (lemma lowercased). Nothing else is a verb.
  *  5. objects: every word inside `parts.object` and inside every `parts.details` span (from inclusive, to exclusive) whose joined token
- *     has a part of speech starting with 'n' gives `lemma:n`, and one starting with 'adj' or equal to 'a' or 's' gives `lemma:a`.
+ *     has a part of speech starting with 'n' gives `lemma:n` (RESOLVE-TC: and also `base:n` for each of the token's `alternativeNounLemmas`, so a plural that is itself a headword keeps both readings), and one starting with 'adj' or equal to 'a' or 's' gives `lemma:a`.
  *     A token with both gives both. Word order, no duplicates. A word with no token or no such part of speech gives nothing.
  *  6. names: for the same words as rule 5, the lowercase `norm` and the lowercase lemma, kept only if they are made of letters a to z
  *     and digits 0 to 9, word order, no duplicates. (Names are matched exactly by the resolver and only if some schema owns them.)
@@ -31,7 +31,7 @@
  */
 import type { ProvidedSlot, ResolveInput, ResolveOptions, Resolution } from './resolveTypes';
 
-export interface TokenLike { readonly lemma: string; readonly partsOfSpeech?: readonly string[]; readonly start: number; readonly end: number }
+export interface TokenLike { readonly lemma: string; readonly alternativeNounLemmas?: readonly string[]; readonly partsOfSpeech?: readonly string[]; readonly start: number; readonly end: number }
 export interface SegmentLike { readonly kind: 'language' | 'material'; readonly start: number; readonly end: number }
 export interface WordLike { readonly norm: string; readonly start: number; readonly end: number }
 export interface SpanLike { readonly from: number; readonly to: number }

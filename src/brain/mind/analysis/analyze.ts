@@ -144,6 +144,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
         const candidates = lemmaCandidates(item.surface);
         let primary: { base: string; via: 'irregular' | 'rule'; rule: string; pos: string; synsetIds?: string[]; senseHints?: SenseHint[] } | undefined;
         const alternatives: string[] = [];
+        const nounAlternatives: string[] = [];
         for (const candidate of candidates) {
           const candidateResult = await lookup(candidate.base);
           if (candidateResult === null) break;
@@ -154,6 +155,7 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           if (!(isHeadword && hasCandidatePos) && !(original.status === 'found' && isHeadword && candidate.pos === 'v')) continue;
           if (original.status === 'not-found' && !primary) primary = { base: candidateResult.word, via: candidate.via, rule: candidate.rule, pos: candidate.pos, ...(candidateResult.synsetIds?.length ? { synsetIds: [...candidateResult.synsetIds] } : {}), ...(candidateResult.senseHints?.length ? { senseHints: candidateResult.senseHints } : {}) };
           else if (original.status === 'found' && isHeadword && candidateResult.word.toLowerCase() !== original.word.toLowerCase() && !alternatives.some((value) => value.toLowerCase() === candidateResult.word.toLowerCase())) alternatives.push(candidateResult.word);
+          if (original.status === 'found' && isHeadword && hasCandidatePos && candidate.pos === 'n' && candidateResult.word.toLowerCase() !== original.word.toLowerCase() && !nounAlternatives.some((value) => value.toLowerCase() === candidateResult.word.toLowerCase())) nounAlternatives.push(candidateResult.word);
           if (primary && original.status === 'not-found') break;
         }
         if (primary) {
@@ -163,7 +165,10 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
           token.partsOfSpeech = [primary.pos];
           if (primary.synsetIds?.length) token.synsetIds = [...primary.synsetIds];
           if (primary.senseHints?.length) token.senseHints = primary.senseHints;
-        } else if (alternatives.length) token.alternativeLemmas = alternatives;
+        } else {
+          if (alternatives.length) token.alternativeLemmas = alternatives;
+          if (nounAlternatives.length) token.alternativeNounLemmas = nounAlternatives;
+        }
       }
 
       // Pass 3: phrases only after every surface word and its morphology have

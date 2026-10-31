@@ -110,6 +110,13 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
             const key = pos.startsWith('n') ? `${lemma}:n` : (pos.startsWith('adj') || pos === 'a' || pos === 's') ? `${lemma}:a` : '';
             if (key && !seenObjects.has(key)) { seenObjects.add(key); objects.push(key); }
           }
+          // RESOLVE-TC: a surface that is itself a headword ("words") also keeps its noun base ("word"): both readings stay open.
+          if (array<string>(token.partsOfSpeech).some((p) => typeof p === 'string' && p.toLowerCase().startsWith('n'))) {
+            for (const base of array<string>(token.alternativeNounLemmas)) {
+              const key = typeof base === 'string' && base.length > 0 ? `${base.toLowerCase()}:n` : '';
+              if (key && !seenObjects.has(key)) { seenObjects.add(key); objects.push(key); }
+            }
+          }
         }
         for (const name of [word.norm.toLowerCase(), ...(token && typeof token.lemma === 'string' ? [token.lemma.toLowerCase()] : [])]) {
           if (plainName(name) && !seenNames.has(name)) { seenNames.add(name); names.push(name); }

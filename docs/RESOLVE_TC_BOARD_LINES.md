@@ -19,3 +19,16 @@
 Target: far above 5 of 50; the number is reported as measured, whatever it is.
 
 **NOT RUN:** any fix, the full suite, the scoreboard. This part changed no source file.
+
+---
+# PART 2 (Director, 2026-10-31): fix 1, plural keeps its noun base. BUILT and checked by the Director only.
+**Change (4 source files, 1 new test):** `analyze.ts` records `token.alternativeNounLemmas` (the noun bases of a surface that is itself a headword, found by the same morphology rules, no list); `types.ts` and `clauseInputsTypes.ts` declare it (optional); `clauseInputs.ts` rule 5 gives `base:n` for it next to the surface's own `words:n` (both readings stay open); contract line added. New test `tests/pluralBaseReading.test.ts` (7 checks: pure binder cases, hostile field, real dictionary: "words" keeps `word`, "lines" unchanged). ADD TO `test:kernel` (owner/Director merge step; package.json NOT touched): `&& tsx tests/pluralBaseReading.test.ts`.
+
+**MEASURED, 50 requests, real stages, before to after:** text-counter 5 to 5; translator 15 to 0; tally-counter 6 to 5; ask 13 to 29; none 11 to 11. So the fix removed 15 confident WRONG answers (all became questions) but gained no hits. The goal is not met.
+
+**WHY NO HITS (MEASURED candidates, e.g. "count words in ..."):** translator scores 0.80 on ONE related concept (`words` ~ `language:n`, synonym closeness 0.8, and `language:n` belongs to one tool only, so it weighs 1.0); text-counter scores 0.58 (`count:v` 0.25 + `word:n` 0.33, because `word:n` is shared with dictionary and number-to-words). The margin (0.22) is below ASK_MARGIN 0.5, so Resolution asks. "letters" asks between text-counter, case-converter, date-calculator, tally-counter (`count:v` and `letter:n` shared). So the remaining defect is in the SCORING of Resolution (B04B), not in reading: a related (synonym) match counts almost as much as an exact one, an exact verb match is weighed down because `count` is shared by four tools, and nothing credits an input verb that matches no word of a tool.
+**THROWAWAY EXPERIMENT (reverted; MEASURED):** ASK_MARGIN 0.3 gives 5 hits; 0.2 gives 15 hits but the translator then wins 15 again and the contract-constants test fails. The margin is NOT the lever.
+
+**REGRESSION (MEASURED, node transform mode):** analysis 327, resolveRunner 1575, resolveOptionsRunner 769, resolutionStage 54, argumentBinder 58, textCounterPilot 17 (shadow 50/50), brainBoundary, mindPipeline 156, brainGolden 79 messages, clauseInputsRunner 277, meaningNoPhrases 137, guard OK. **PRE-EXISTING FAILURE (not caused by this fix; same result on the original files):** `tests/meaningA.test.ts` N07 "I want tea and coffee" expects act chat, gets command. Log in OPEN_ITEMS. NOT RUN: full suite, cloud build, mutants on the new test (only the before/after measurement shows the change bites).
+
+**NEXT (Director, part 3):** a design choice is needed in Resolution scoring before fix 2 (how many) pays off, because fix 2 alone leaves the same ties. Options, to measure on the 50 AND the Resolution scoreboard: (a) credit a verb that exactly matches a schema action more than a related noun (weight by exact vs related); (b) cap a synonym-only match below any exact match; (c) both. Owner decision needed on which scoring rule may change (B04B contract constants are locked by test). Then the "how many" fix (cause 2) and compounds (cause 3).
