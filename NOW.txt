@@ -1,1 +1,1 @@
-2026-10-31 | roadmap v20.7 | last merged: roadmap v20.7 [failure-check wording: an internal step of AXON's thinking, never a shown list] | NEXT: RESOLVE-TC [real Resolution picks the Text Counter on only 5 of 50 test requests: plural 'words' does not match 'word', 'how many words' reads 'words' as a verb; fix the reading, then re-measure] | waiting on owner: nothing
+2026-10-31 | roadmap v20.7 | last merged: roadmap v20.7 | NEXT: RESOLVE-TC part 2 [fix 1 of 3: plural words keep their own headword as lemma; read docs/RESOLVE_TC_BOARD_LINES.md] | waiting on owner: nothing

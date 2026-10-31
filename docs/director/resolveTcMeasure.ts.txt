@@ -1,0 +1,41 @@
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+const R = process.cwd();
+const { Dictionary } = await import('../../src/brain/dictionary');
+const { createDictionarySlot } = await import('../../src/brain/knowledge/dictionarySlot');
+const { createStages } = await import('../../src/brain/mind/stages');
+const sha = (t: string) => createHash('sha256').update(t, 'utf8').digest('hex');
+const executor = { run: async () => ({ content: 'x', source: 'test' }) } as never;
+const REQUESTS: string[] = [
+  'count words in "hello brave new world"', 'count the words in "one"', 'count characters in "good morning"', 'count the characters of "a b c"',
+  'count letters in "abc 123"', 'count lines in "a\nb\nc"', 'how many words are in "the quick brown fox"', 'how many characters are in "good morning"',
+  'how many letters in "hello"', 'how many lines in "x\ny"', 'how many word in "hi"', 'word count of "hello there world"',
+  'character count of "hello"', 'letter count "abc"', 'line count of "a\nb"', 'please count words in "thanks a lot"',
+  'can you count words in "it is fine"', 'could you count the letters in "kind"', 'count words: "colon form here"', 'count chars in "abcd"',
+  'count words in hello brave new world', 'count characters in good morning', 'how many words are in the quick brown fox', 'how many lines in one two',
+  'count the words in this is plain text', 'count letters of abcdef', 'word count: plain words follow', 'count lines in alpha beta',
+  'count words in "  spaced   out  "', 'count characters in "émigré naïve"', 'count words in "😀 😀 ok"', 'count words in ""',
+  'count words in "tab\tseparated\tparts"', 'count lines in "last line\n"', 'how many characters in "x"', 'count letters in "ab-cd ef"',
+  'count words in "one, two; three."', 'how many words are there in "a b"', 'count the lines of "only one"', 'count words in "日本語 テキスト"',
+  'count words', 'count the characters', 'how many lines', 'count letters in this text', 'count words in the following', 'word count',
+  'count lines in that', 'how many characters are in it', 'count words in the above', 'please count letters',
+];
+const dictionary = await Dictionary.open({ read: async (p: string) => readFile(join(R, 'public/dictionary/en', p), 'utf8'), hash: sha });
+const stages = createStages(executor, () => Date.UTC(2026, 0, 1, 12, 30), () => 'test', createDictionarySlot(async () => dictionary));
+const mode = process.argv[3] ?? 'summary';
+const tally: Record<string, number> = {};
+let hits = 0;
+for (const text of REQUESTS) {
+  let ctx: any = { utterance: { id: 't', text, place: 'chat', at: 0 }, entries: [] };
+  for (const st of stages) ctx = await st.run(ctx);
+  const rs = ctx.resolutions ?? [];
+  const res = rs.map((r: any) => r.resolution);
+  const first = res[0];
+  const label = first ? (first.kind === 'match' ? 'match:' + (first.tool ?? first.capability ?? first.id ?? JSON.stringify(first).slice(0, 60)) : first.kind) : 'no-resolution';
+  const ok = label === 'match:text-counter';
+  if (ok) hits++;
+  tally[label] = (tally[label] ?? 0) + 1;
+  if (mode === 'detail') console.log(JSON.stringify(text).slice(0, 50).padEnd(52), label, ok ? 'HIT' : '', mode === 'detail' && !ok ? JSON.stringify(first).slice(0, 230) : '');
+}
+console.log('TEXT-COUNTER HITS', hits, 'of', REQUESTS.length, JSON.stringify(tally));
