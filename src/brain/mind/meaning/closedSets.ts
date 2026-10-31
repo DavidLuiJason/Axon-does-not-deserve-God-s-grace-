@@ -64,6 +64,9 @@ const POLITENESS: ReadonlySet<string> = new Set(['please', 'kindly']);
 /** Owner-approved closed set (2026-10-31, RESOLVE-TC part 4): the word that, after "how", opens a question about a quantity ("how many"). */
 const QUANTITY_FOLLOWERS: ReadonlySet<string> = new Set(['many']);
 
+/** SECOND-READING set (RESOLVE-TC part 5, Director's proposal on the owner's wish W23, owner confirms): "how much" is often a slip for "how many" but also means price or amount, so it is NEVER read as a count by itself; the count reading is kept only as a second reading that must win on evidence (adapter rule 18). */
+const QUANTITY_SECOND_FOLLOWERS: ReadonlySet<string> = new Set(['much']);
+
 /** Owner-approved: a quantity question ("how many") asks to COUNT. This is the one meaning the set carries. */
 export const QUANTITY_QUESTION_MEANING = 'count';
 
@@ -95,6 +98,7 @@ export const isNegation = (w: string): boolean => NEGATIONS.has(w);
 export const isNegativeClitic = (w: string): boolean => NEGATIVE_CONTRACTIONS.has(w);
 export const isPoliteness = (w: string): boolean => POLITENESS.has(w);
 export const isQuantityPair = (first: string, second: string): boolean => first === 'how' && QUANTITY_FOLLOWERS.has(second);
+export const isSecondQuantityPair = (first: string, second: string): boolean => first === 'how' && QUANTITY_SECOND_FOLLOWERS.has(second);
 export const isSequencer = (w: string): boolean => SEQUENCERS.has(w);
 
 /** The one negative contraction that starts a do-support imperative ("don't delete it"). */

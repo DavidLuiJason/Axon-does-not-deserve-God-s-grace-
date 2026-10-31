@@ -1,7 +1,7 @@
 import { DETAIL_WORDS } from './detailWords';
 import type { ClauseParts, Detail, PartFacts, ReadClauseParts, Span } from './partsTypes';
 import type { WordRange } from './types';
-import { isPoliteness, isQuantityPair } from '../closedSets';
+import { isPoliteness, isQuantityPair, isSecondQuantityPair } from '../closedSets';
 
 const EMPTY_PARTS: ClauseParts = {
   verb: null,
@@ -10,6 +10,7 @@ const EMPTY_PARTS: ClauseParts = {
   details: [],
   infinitive: null,
   quantity: null,
+  quantitySecond: null,
 };
 
 const MARKERS = new Set(DETAIL_WORDS.split(' '));
@@ -74,6 +75,18 @@ export const readClauseParts: ReadClauseParts = (words, ranges) => {
         break;
       }
 
+      // RESOLVE-TC part 5: "how much <noun phrase>" keeps the noun phrase as a SECOND reading only; the verb search is NOT changed.
+      let quantitySecond: Span | null = null;
+      if (quantity === null) {
+        for (let q = from; q + 2 < to; q += 1) {
+          if (!isSecondQuantityPair(words[q]!.norm, words[q + 1]!.norm)) continue;
+          let end = q + 2;
+          while (end < to && !words[end]!.aux && !MARKERS.has(words[end]!.norm)) end += 1;
+          if (end > q + 2) quantitySecond = { from: q + 2, to: end };
+          break;
+        }
+      }
+
       let firstAux: number | null = null;
       let mainVerb: number | null = null;
       for (let i = from; i < to; i += 1) {
@@ -124,7 +137,7 @@ export const readClauseParts: ReadClauseParts = (words, ranges) => {
         if (mainVerb + 1 < objectTo) object = { from: mainVerb + 1, to: objectTo };
       }
 
-      output.push({ verb: mainVerb, copula, object, details: markers, infinitive, quantity });
+      output.push({ verb: mainVerb, copula, object, details: markers, infinitive, quantity, quantitySecond });
     }
     return output;
   } catch {

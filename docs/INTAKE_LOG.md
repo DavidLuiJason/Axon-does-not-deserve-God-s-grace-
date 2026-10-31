@@ -55,3 +55,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-31 | twenty-first account, second turn: owner dictation (explain defaults and the one-line current-point tag); roadmap v20.6 written once; council and failure-seat status checked.
 2026-10-31 | twenty-first account, third turn: real-Resolution measurement of the text-counter pilot (5 of 50); NEXT set to RESOLVE-TC.
 2026-10-31 | twenty-second account intake: roadmap v20.7 read; repo zip checked (MERGE_TAG: RESOLVE-TC parts 1 to 3 present; NOW.txt still said part 2); previous account's part 4 was never delivered. Second turn: RESOLVE-TC part 4 built.
+2026-10-31 | twenty-second account, third turn: owner decisions ('choose') recorded; RESOLVE-TC part 5 built (how much second reading) and repair-stage design written.

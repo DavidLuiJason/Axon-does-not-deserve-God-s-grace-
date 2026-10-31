@@ -160,6 +160,15 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
     }
     provided.sort((a, b) => a.start - b.start || a.order - b.order);
     const inputValue: ResolveInput = validPiece ? { act, polarity, verbs, objects, names, provided: provided.map(({ kind, value }) => ({ kind, ...(value === undefined ? {} : { value }) })), ...(need ? { need: true as const } : {}) } : { ...EMPTY, verbs: [], objects: [], names: [], provided: [] };
+    // RESOLVE-TC part 5, rule 18: "how much <nouns> ..." keeps a count reading as the alternative.
+    const second = !need && validPiece && piece.parts && !validSpan(piece.parts.quantity, words.length) && validSpan(piece.parts.quantitySecond, words.length) ? piece.parts.quantitySecond : null;
+    if (second && second.from >= from && second.to <= to) {
+      const indices: number[] = [];
+      for (let i = second.from; i < second.to; i += 1) indices.push(i);
+      for (const detail of array<DetailLike>(piece.parts?.details)) if (detail && validSpan(detail, words.length) && detail.from >= from && detail.to <= to) for (let i = detail.from; i < detail.to; i += 1) if (!indices.includes(i)) indices.push(i);
+      const counted = collect(indices.sort((a, b) => a - b), -1);
+      alternative = { act, polarity, verbs: [`${QUANTITY_QUESTION_MEANING}:v`], objects: counted.objects, names: counted.names, provided: [] };
+    }
     const alt = alternative && validPiece ? { ...alternative, provided: inputValue.provided } : undefined;
     return { piece: pieceIndex, clause: clauseIndex >= 0 ? clauseIndex : -1, mayRunAlone: piece.mayRunAlone === true, input: inputValue, ...(alt ? { alternative: alt } : {}) };
   });
@@ -172,7 +181,9 @@ export function resolveMessage(input: AdapterInput, options?: ResolveOptions): P
     if (piece.alternative) {
       const second = resolveClause(piece.alternative, options);
       const left = (r: Resolution): number => r.kind === 'match' ? r.missingSlots.length : Number.MAX_SAFE_INTEGER;
-      if (second.kind === 'match' && left(second) < left(primary)) return { piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: second, reading: 'alternative' as const };
+      // The second reading is a guess that ADDS a verb, so the tool it picks must be matched by exactly that verb (a verb key is matched by identity, `a|` evidence): a synonym-only match of a noun is never enough.
+      const backed = second.kind === 'match' && piece.alternative.verbs.every((verb) => second.candidates.some((candidate) => candidate.tool === second.tool && candidate.matched.includes(`a|${verb}`)));
+      if (second.kind === 'match' && backed && left(second) < left(primary)) return { piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: second, reading: 'alternative' as const };
     }
     return { piece: piece.piece, clause: piece.clause, mayRunAlone: piece.mayRunAlone, resolution: primary };
   });
