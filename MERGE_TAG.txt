@@ -1,0 +1,1 @@
+2026-10-31 | roadmap v20.5 | C29-FIX [physics repair: unit groups for acceleration, force, energy, power, momentum; negative-time note; missing-input list] | ChatGPT return verified by Director; Director added milliwatt (mW), refuse-to-guess for ambiguous letter-case unit names, one wording fix; test:kernel line added

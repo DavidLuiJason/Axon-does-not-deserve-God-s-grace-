@@ -1,4 +1,4 @@
-import { convert, type UnitCategory } from '../numbers/unitConvert';
+import { convert, type AnyUnitCategory } from '../numbers/unitConvert';
 
 export const STANDARD_GRAVITY = 9.80665;
 export const PHYSICS_LIMITS = Object.freeze({ maxAbsValue: 1e12, maxInputCount: 16, maxProjectileAngleDegrees: 90 });
@@ -13,31 +13,35 @@ const fail = (error: PhysicsErrorCode, message: string): PhysicsFailure => ({ ok
 const good = (values: PhysicsSuccess['values'], label: PhysicsLabel='EXACT', assumptions: string[]=[]): PhysicsSuccess => ({ok:true, values, label, assumptions});
 const finite = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && Math.abs(n) <= PHYSICS_LIMITS.maxAbsValue;
 const validQ = (q: unknown): q is Quantity => !!q && typeof q === 'object' && finite((q as Quantity).value) && typeof (q as Quantity).unit === 'string' && (q as Quantity).unit.length > 0;
-function toSI(q: Quantity, category: UnitCategory, si: string): number | PhysicsFailure {
+function toSI(q: Quantity, category: AnyUnitCategory, si: string): number | PhysicsFailure {
   if (!validQ(q)) return fail('invalid-input','Each quantity needs a finite value and a unit.');
   const r=convert(q.value,q.unit,si);
   if (r.ok === false) return fail(r.error==='category-mismatch'?'unit-mismatch':'invalid-unit',`Unit “${q.unit}” is not a valid ${category} unit; expected ${si} or a convertible ${category} unit.`);
   if (!finite(r.value)) return fail('out-of-range','The converted value exceeds the supported limit.');
   return r.value;
 }
-function output(value:number, si:string, requested?:string, category?:UnitCategory): Quantity | PhysicsFailure {
+function output(value:number, si:string, requested?:string, category?:AnyUnitCategory): Quantity | PhysicsFailure {
   if(!finite(value)) return fail('out-of-range','The result is non-finite or exceeds 1e12.');
   if(requested && requested!==si && category){const r=convert(value,si,requested);if(r.ok === false)return fail('invalid-unit',`Cannot express this result in “${requested}”.`);return {value:r.value,unit:requested};}
   return {value,unit:si};
 }
-const units: Record<'u'|'v'|'a'|'t'|'s',{cat:UnitCategory;si:string}>={u:{cat:'speed',si:'m/s'},v:{cat:'speed',si:'m/s'},a:{cat:'length',si:'m'},t:{cat:'time',si:'s'},s:{cat:'length',si:'m'}};
-// Acceleration has no category in the shared unit engine: m/s² is accepted as SI only.
+const units: Record<'u'|'v'|'a'|'t'|'s',{cat:AnyUnitCategory;si:string}>={u:{cat:'speed',si:'m/s'},v:{cat:'speed',si:'m/s'},a:{cat:'acceleration',si:'m/s²'},t:{cat:'time',si:'s'},s:{cat:'length',si:'m'}};
+function missingMotionMessage(keys:string[]):string {
+ const count=keys.length, remaining=(['u','v','a','t','s'] as const).filter(k=>!keys.includes(k));
+ const countWord='quantities', more=3-count, moreWord=more===1?'one more':`${more} more`;
+ return `You gave ${count} of the 3 ${countWord} needed (${keys.join(', ')}). Add ${moreWord} of ${remaining.join(', ')}.`;
+}
 function readMotion(known: MotionKnown): {data:Partial<Record<'u'|'v'|'a'|'t'|'s',number>>; requested:MotionKnown}|PhysicsFailure {
   if(!known||typeof known!=='object'||Array.isArray(known))return fail('invalid-input','Provide an object of known motion quantities.');
-  const keys=Object.keys(known); if(keys.length<3)return fail('missing-input','Provide any three of u, v, a, t and s.'); if(keys.length>5||keys.some(k=>!['u','v','a','t','s'].includes(k)))return fail('invalid-input','Use only u, v, a, t and s.');
+  const keys=Object.keys(known); if(keys.length<3)return fail('missing-input',missingMotionMessage(keys)); if(keys.length>5||keys.some(k=>!['u','v','a','t','s'].includes(k)))return fail('invalid-input','Use only u, v, a, t and s.');
   const data:Partial<Record<'u'|'v'|'a'|'t'|'s',number>>={};
-  for(const k of keys as (keyof MotionKnown)[]){const q=known[k];if(!validQ(q))return fail('invalid-input',`Quantity ${k} needs a finite number and unit.`);if(k==='t'&&q.value<0)return fail('invalid-input','Time cannot be negative.');if(k==='a'){if(q.unit!=='m/s²'&&q.unit!=='m/s^2')return fail('invalid-unit','Acceleration must use m/s² or m/s^2 because the shared unit engine has no acceleration category.');data.a=q.value;}else {const spec=units[k!];const n=toSI(q,spec.cat,spec.si);if(typeof n!=='number')return n;data[k!]=n;}}
+  for(const k of keys as (keyof MotionKnown)[]){const q=known[k];if(!validQ(q))return fail('invalid-input',`Quantity ${k} needs a finite number and unit.`);if(k==='t'&&q.value<0)return fail('invalid-input','Time cannot be negative.');const spec=units[k!];const n=toSI(q,spec.cat,spec.si);if(typeof n!=='number')return n;data[k!]=n;}
   return {data,requested:known};
 }
 function near(a:number,b:number):boolean{return Math.abs(a-b)<=1e-8*Math.max(1,Math.abs(a),Math.abs(b));}
 export function solveMotion(known: MotionKnown): PhysicsResult {
  const parsed=readMotion(known);if('ok' in parsed)return parsed;const d=parsed.data, req=parsed.requested;
- const keys=Object.keys(d); if(keys.length<3)return fail('missing-input','Provide any three of u, v, a, t and s.');
+ const keys=Object.keys(d); if(keys.length<3)return fail('missing-input',missingMotionMessage(keys));
  const [u,v,a,t,s]=[d.u,d.v,d.a,d.t,d.s]; let sols:Partial<Record<'u'|'v'|'a'|'t'|'s',number>>[]=[];
  const add=(x:Partial<Record<'u'|'v'|'a'|'t'|'s',number>>)=>{if(Object.values(x).every(Number.isFinite))sols.push(x);};
  // Solve the independent kinematic equations; quadratic branches are preserved.
@@ -55,37 +59,49 @@ export function solveMotion(known: MotionKnown): PhysicsResult {
  if(!sols.length)return fail('no-real-solution','The supplied quantities do not produce a supported real solution.');
  sols=sols.filter(x=>Object.entries(d).every(([k,val])=>x[k as keyof typeof x]===undefined||near(x[k as keyof typeof x]!,val)));
  // Merge solutions that differ only by floating-point noise; retain distinct quadratic roots.
- const uniq=sols.filter((x,i)=>sols.findIndex(y=>Object.keys(x).every(k=>x[k as keyof typeof x]!==undefined&&y[k as keyof typeof y]!==undefined&&near(x[k as keyof typeof x]!,y[k as keyof typeof y]!)))===i);
+ const uniqAll=sols.filter((x,i)=>sols.findIndex(y=>Object.keys(x).every(k=>x[k as keyof typeof x]!==undefined&&y[k as keyof typeof y]!==undefined&&near(x[k as keyof typeof x]!,y[k as keyof typeof y]!)))===i);
+ const negativeTimes=uniqAll.map(x=>x.t).filter((value):value is number=>value!==undefined&&value<0);
+ const uniq=uniqAll.filter(x=>x.t===undefined||x.t>=0);
+ if(!uniq.length&&negativeTimes.length)return fail('no-real-solution','Every real time solution lies before the start; no non-negative-time answer exists.');
  const full:Record<string,Quantity|Quantity[]>={};const names=['u','v','a','t','s'] as const;const results:Record<string,Quantity[]>={};
- for(const k of names){if(d[k]!==undefined)continue;const vals=uniq.map(x=>x[k]).filter((x):x is number=>x!==undefined);if(!vals.length)return fail('no-real-solution',`Could not determine ${k}.`);const q=vals.map(n=>output(n,k==='u'||k==='v'?'m/s':k==='a'?'m/s²':k==='t'?'s':'m',req[k]?.unit, k==='u'||k==='v'?'speed':k==='t'?'time':k==='s'?'length':undefined));if(q.some(x=>'ok'in x))return q.find(x=>'ok'in x) as PhysicsFailure;const quantities=q as Quantity[];results[k]=quantities;full[k]=quantities.length===1?quantities[0]:quantities;}
+ for(const k of names){if(d[k]!==undefined)continue;const vals=uniq.map(x=>x[k]).filter((x):x is number=>x!==undefined);if(!vals.length)return fail('no-real-solution',`Could not determine ${k}.`);const q=vals.map(n=>output(n,k==='u'||k==='v'?'m/s':k==='a'?'m/s²':k==='t'?'s':'m',req[k]?.unit, k==='u'||k==='v'?'speed':k==='a'?'acceleration':k==='t'?'time':k==='s'?'length':undefined));if(q.some(x=>'ok'in x))return q.find(x=>'ok'in x) as PhysicsFailure;const quantities=q as Quantity[];results[k]=quantities;full[k]=quantities.length===1?quantities[0]:quantities;}
  for(const k of names){if(d[k]!==undefined)full[k]=req[k]!;}
- const assumptions:string[]=[]; if(Object.keys(full).some(k=>Array.isArray(full[k])))assumptions.push('Multiple real branches are returned in order; all real mathematical branches are retained; a negative solved time denotes the branch relative to the chosen time origin.');
+ const assumptions:string[]=[];
+ if(negativeTimes.length)for(const value of negativeTimes)assumptions.push(`Discarded a negative-time solution (t = ${Number(value.toPrecision(12))} s, before the start).`);
+ if(Object.keys(full).some(k=>Array.isArray(full[k])))assumptions.push('Multiple real branches are returned in order; all non-negative-time mathematical branches are retained.');
  return good(full,'EXACT',assumptions);
 }
-export type ForceEnergyKnown = { mass?:Quantity; acceleration?:Quantity; velocity?:Quantity; initialVelocity?:Quantity; finalVelocity?:Quantity; height?:Quantity; displacement?:Quantity; force?:Quantity; angleDegrees?:number; time?:Quantity; power?:Quantity };
-function readNumber(q:Quantity|undefined,cat:UnitCategory,si:string,name:string,required=true):number|PhysicsFailure|undefined {if(!q){return required?fail('missing-input',`Missing ${name}.`):undefined;}return toSI(q,cat,si);}
-function scalar(q:Quantity|undefined,si:string,name:string,required=true):number|PhysicsFailure|undefined {if(!q)return required?fail('missing-input',`Missing ${name}.`):undefined;if(!validQ(q))return fail('invalid-input',`${name} must be finite and include a unit.`);if(q.unit!==si)return fail('invalid-unit',`${name} must use ${si}; the shared unit engine has no compatible category for it.`);return q.value;}
+export type ForceEnergyKnown = { mass?:Quantity; acceleration?:Quantity; velocity?:Quantity; initialVelocity?:Quantity; finalVelocity?:Quantity; height?:Quantity; displacement?:Quantity; force?:Quantity; angleDegrees?:number; time?:Quantity; power?:Quantity; energy?:Quantity; momentum?:Quantity };
+function readNumber(q:Quantity|undefined,cat:AnyUnitCategory,si:string,name:string,required=true):number|PhysicsFailure|undefined {if(!q){return required?fail('missing-input',`Missing ${name}.`):undefined;}return toSI(q,cat,si);}
 export function forceAndEnergy(known: ForceEnergyKnown): PhysicsResult {
  if(!known||typeof known!=='object')return fail('invalid-input','Provide a force-and-energy input object.');const values:Record<string,Quantity>={};
  const m=readNumber(known.mass,'mass','kg','mass',false);if(m&&typeof m!=='number')return m;if(typeof m==='number'&&m<0)return fail('invalid-input','Mass cannot be negative.');
- const acc=scalar(known.acceleration,'m/s²','acceleration',false);if(acc&&typeof acc!=='number')return acc;
+ const acc=readNumber(known.acceleration,'acceleration','m/s²','acceleration',false);if(acc&&typeof acc!=='number')return acc;
  if(typeof m==='number'&&typeof acc==='number')values.force={value:m*acc,unit:'N'};
  if(typeof m==='number')values.weight={value:m*STANDARD_GRAVITY,unit:'N'};
  const vel=readNumber(known.velocity,'speed','m/s','velocity',false);if(vel&&typeof vel!=='number')return vel;
  if(typeof m==='number'&&typeof vel==='number'){values.momentum={value:m*vel,unit:'kg·m/s'};values.kineticEnergy={value:.5*m*vel*vel,unit:'J'};}
  const h=readNumber(known.height,'length','m','height',false);if(h&&typeof h!=='number')return h;if(typeof m==='number'&&typeof h==='number')values.gravitationalPotentialEnergy={value:m*STANDARD_GRAVITY*h,unit:'J'};
- const f=scalar(known.force,'N','force',false);if(f&&typeof f!=='number')return f;const dist=readNumber(known.displacement,'length','m','displacement',false);if(dist&&typeof dist!=='number')return dist;
+ const f=readNumber(known.force,'force','N','force',false);if(f&&typeof f!=='number')return f;const dist=readNumber(known.displacement,'length','m','displacement',false);if(dist&&typeof dist!=='number')return dist;
  if(typeof f==='number'&&typeof dist==='number'){const angle=known.angleDegrees??0;if(!finite(angle))return fail('invalid-input','Angle must be a finite number.');values.work={value:f*dist*Math.cos(angle*Math.PI/180),unit:'J'};}
- const power=scalar(known.power,'W','power',false);if(power&&typeof power!=='number')return power;const time=readNumber(known.time,'time','s','time',false);if(time&&typeof time!=='number')return time;
+ const power=readNumber(known.power,'power','W','power',false);if(power&&typeof power!=='number')return power;const time=readNumber(known.time,'time','s','time',false);if(time&&typeof time!=='number')return time;
  if(typeof f==='number'&&typeof dist==='number'&&typeof time==='number'&&time>0)values.powerFromWork={value:f*dist*Math.cos((known.angleDegrees??0)*Math.PI/180)/time,unit:'W'};
  if(typeof power==='number')values.power={value:power,unit:'W'};
- if(!Object.keys(values).length)return fail('missing-input','Provide mass and acceleration, mass for weight, mass and velocity, mass and height, force and displacement, or power.');
+ const energy=readNumber(known.energy,'energy','J','energy',false);if(energy&&typeof energy!=='number')return energy;if(typeof energy==='number')values.energy={value:energy,unit:'J'};
+ const momentum=readNumber(known.momentum,'momentum','kg·m/s','momentum',false);if(momentum&&typeof momentum!=='number')return momentum;if(typeof momentum==='number')values.momentum={value:momentum,unit:'kg·m/s'};
+ if(!Object.keys(values).length)return fail('missing-input','Missing required fields: mass and acceleration, mass, velocity, height, force and displacement, power, energy, or momentum.');
  for(const [k,q] of Object.entries(values))if(!finite(q.value))return fail('out-of-range',`${k} exceeds the supported limit.`);
  return good(values,'EXACT',[]);
 }
 export interface ProjectileInput { launchSpeed:Quantity; angleDegrees:number; launchHeight:Quantity; }
 export function projectile(input: ProjectileInput): PhysicsResult {
- if(!input||typeof input!=='object'||!validQ(input.launchSpeed)||!validQ(input.launchHeight)||!finite(input.angleDegrees))return fail('invalid-input','Provide finite launch speed, angle in degrees, and launch height quantities.');
+ if(!input||typeof input!=='object')return fail('invalid-input','Missing projectile input object.');
+ if(!('launchSpeed' in input))return fail('missing-input','Missing launchSpeed.');
+ if(!validQ(input.launchSpeed))return fail('invalid-input','launchSpeed must be finite and include a unit.');
+ if(!('angleDegrees' in input))return fail('missing-input','Missing angleDegrees.');
+ if(!finite(input.angleDegrees))return fail('invalid-input','angleDegrees must be finite.');
+ if(!('launchHeight' in input))return fail('missing-input','Missing launchHeight.');
+ if(!validQ(input.launchHeight))return fail('invalid-input','launchHeight must be finite and include a unit.');
  const speed=toSI(input.launchSpeed,'speed','m/s');if(typeof speed!=='number')return speed;const height=toSI(input.launchHeight,'length','m');if(typeof height!=='number')return height;
  if(speed<0)return fail('invalid-input','Launch speed cannot be negative.');if(height<0)return fail('invalid-input','Launch height cannot be negative.');if(input.angleDegrees< -PHYSICS_LIMITS.maxProjectileAngleDegrees||input.angleDegrees>PHYSICS_LIMITS.maxProjectileAngleDegrees)return fail('out-of-range','Launch angle must be between -90 and 90 degrees.');
  const rad=input.angleDegrees*Math.PI/180,vx=speed*Math.cos(rad),vy=speed*Math.sin(rad),disc=vy*vy+2*STANDARD_GRAVITY*height;if(disc<0)return fail('no-real-solution','The projectile cannot reach ground under this model.');const flight=(vy+Math.sqrt(disc))/STANDARD_GRAVITY;if(flight<0)return fail('no-real-solution','The projectile has no non-negative time of flight.');const range=vx*flight,maxHeight=height+Math.max(0,vy*vy/(2*STANDARD_GRAVITY)),landing=Math.sqrt(vx*vx+(vy-STANDARD_GRAVITY*flight)**2);

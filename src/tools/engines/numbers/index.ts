@@ -1,7 +1,7 @@
 export { evaluate } from './calculator';
 export type { CalculatorErrorCode, CalculatorResult } from './calculator';
-export { convert, listUnits, UNITS } from './unitConvert';
-export type { Unit, UnitCategory, UnitConvertResult } from './unitConvert';
+export { convert, listUnits, UNITS, PHYSICS_UNITS } from './unitConvert';
+export type { Unit, UnitCategory, PhysicsUnit, PhysicsUnitCategory, AnyUnitCategory, ConvertibleUnit, UnitConvertResult } from './unitConvert';
 export { convertBase } from './baseConvert';
 export type { BaseConvertResult } from './baseConvert';
 export { numberToWords } from './numberToWords';

@@ -1,10 +1,12 @@
 import { strict as assert } from 'node:assert';
 import { solveMotion, forceAndEnergy, projectile, STANDARD_GRAVITY } from '../src/tools/engines/science/physics';
+import { convert as convertUnits } from '../src/tools/engines/numbers/unitConvert';
 let checks=0; const check=(condition:unknown,message:string)=>{assert.ok(condition,message);checks++;};
 const q=(value:number,unit:string)=>({value,unit});
 const motion=(known:Record<string,{value:number;unit:string}>)=>solveMotion(known as never);
+const convertForceForTest=(value:number,from:string,to:string):number|null=>{const r=convertUnits(value,from,to);return r.ok?r.value:null;};
 // Independent reference values are written directly from the textbook equations, not from the engine.
-const m1=motion({u:q(0,'m/s'),a:q(9.80665,'m/s²'),s:q(20,'m')});check(m1.ok,'dropped stone solves');if(m1.ok){const t=Math.sqrt(2*20/9.80665);const times=m1.values.t as Array<{value:number}>;const speeds=m1.values.v as Array<{value:number}>;check(Array.isArray(times)&&times.length===2,'dropped stone returns both mathematical time roots');check(Math.abs(times[0].value-t)<1e-8,'dropped stone positive time');check(Array.isArray(speeds)&&Math.abs(speeds[0].value-Math.sqrt(2*9.80665*20))<1e-8,'dropped stone positive speed');}
+const m1=motion({u:q(0,'m/s'),a:q(9.80665,'m/s²'),s:q(20,'m')});check(m1.ok,'dropped stone solves');if(m1.ok){const t=Math.sqrt(2*20/9.80665);const times=m1.values.t as {value:number}|Array<{value:number}>;const speeds=m1.values.v as {value:number}|Array<{value:number}>;check(!Array.isArray(times),'dropped stone discards the negative-time branch');check(Math.abs((Array.isArray(times)?times[0]:times).value-t)<1e-8,'dropped stone positive time');check(Math.abs((Array.isArray(speeds)?speeds[0]:speeds).value-Math.sqrt(2*9.80665*20))<1e-8,'dropped stone positive speed');}
 const brake=motion({u:q(20,'m/s'),v:q(0,'m/s'),a:q(-4,'m/s²')});check(brake.ok,'braking case');if(brake.ok){check(Math.abs((brake.values.t as {value:number}).value-5)<1e-8,'braking time');check(Math.abs((brake.values.s as {value:number}).value-50)<1e-8,'braking distance');}
 const triples:Array<[Record<string,{value:number;unit:string}>,string,number]>=[
  [{u:q(2,'m/s'),v:q(8,'m/s'),a:q(3,'m/s²')},'t',2],
@@ -28,7 +30,7 @@ check(!motion({u:q(1,'m/s'),v:q(2,'m/s'),t:q(-1,'s')}).ok,'negative time rejecte
 check(!motion({u:q(NaN,'m/s'),v:q(2,'m/s'),a:q(1,'m/s²')}).ok,'NaN rejected');
 check(!motion({u:q(1,'m'),v:q(2,'m/s'),a:q(1,'m/s²')}).ok,'wrong unit rejected');
 check(!motion({u:q(1e13,'m/s'),v:q(2,'m/s'),a:q(1,'m/s²')}).ok,'over-limit input rejected');
-const energy=forceAndEnergy({mass:q(2,'kg'),acceleration:q(3,'m/s²'),velocity:q(4,'m/s'),height:q(5,'m'),force:q(10,'N'),displacement:q(3,'m'),angleDegrees:60,time:q(2,'s')});check(energy.ok,'force and energy computes');if(energy.ok){check((energy.values.force as {value:number}).value===6,'F=ma');check(Math.abs((energy.values.work as {value:number}).value-15)<1e-9,'work includes cosine');check((energy.values.weight as {value:number}).value===2*STANDARD_GRAVITY,'standard gravity used');check((energy.values.kineticEnergy as {value:number}).value===16,'kinetic energy');}
+const energy=forceAndEnergy({mass:q(2,'kg'),acceleration:q(3,'m/s²'),velocity:q(4,'m/s'),height:q(5,'m'),force:q(10,'N'),displacement:q(3,'m'),angleDegrees:60,time:q(2,'s')});check(energy.ok,'force and energy computes');if(energy.ok){check((energy.values.force as {value:number}).value===6,'F=ma');check(Math.abs((energy.values.work as {value:number}).value-15)<1e-9,'work includes cosine');check((energy.values.weight as {value:number}).value===2*9.80665,'standard gravity remains independently correct at 9.80665 m/s²');check((energy.values.kineticEnergy as {value:number}).value===16,'kinetic energy');}
 const wrongWork=forceAndEnergy({force:q(10,'N'),displacement:q(3,'m'),angleDegrees:60});check(wrongWork.ok,'angled work input accepted');if(wrongWork.ok)check(Math.abs((wrongWork.values.work as {value:number}).value-15)<1e-9,'cosine mutation guard');
 const p=projectile({launchSpeed:q(20,'m/s'),angleDegrees:45,launchHeight:q(1.5,'m')});check(p.ok,'45-degree projectile');if(p.ok){const vals=p.values;const t=(20*Math.sin(Math.PI/4)+Math.sqrt((20*Math.sin(Math.PI/4))**2+2*STANDARD_GRAVITY*1.5))/STANDARD_GRAVITY;check(Math.abs((vals.timeOfFlight as {value:number}).value-t)<1e-9,'projectile time independent');check(p.label==='ESTIMATE'&&p.assumptions.length===4,'projectile assumptions labelled');const landV=(vals.landingSpeed as {value:number}).value;const launchE=.5*20*20+STANDARD_GRAVITY*1.5;const landE=.5*landV*landV;check(Math.abs(launchE-landE)/launchE<1e-9,'projectile energy conservation');}
 const dropped=projectile({launchSpeed:q(0,'m/s'),angleDegrees:0,launchHeight:q(20,'m')});check(dropped.ok,'dropped projectile');if(dropped.ok){const v=(dropped.values.landingSpeed as {value:number}).value;check(Math.abs(v-Math.sqrt(2*STANDARD_GRAVITY*20))<1e-8,'dropped projectile landing speed');}
@@ -51,4 +53,42 @@ for(const [v,ang,h,t,rng,hm,vl] of [[15, 30, 0, 1.5295743194668923, 19.869753264
   if(r.ok){ const x=(k:string)=>(r.values[k] as {value:number}).value;
     check(Math.abs(x('timeOfFlight')-t!)<1e-9*Math.max(1,t!)&&Math.abs(x('range')-rng!)<1e-9*Math.max(1,rng!)&&Math.abs(x('maximumHeight')-hm!)<1e-9*Math.max(1,hm!)&&Math.abs(x('landingSpeed')-vl!)<1e-9*Math.max(1,vl!),`director projectile ${v} m/s at ${ang} degrees`); }
 }
+
+// C29-FIX: shared physics units, missing-input messages, and non-negative solved time.
+const ftMotion=motion({u:q(0,'m/s'),a:q(10,'ft/s²'),t:q(3,'s')});
+check(ftMotion.ok,'motion accepts foot-per-second-squared acceleration');
+if(ftMotion.ok)check(Math.abs((ftMotion.values.s as {value:number}).value-(0.5*(10*0.3048)*9))<1e-10,'ft/s² motion displacement independently equals 13.716 m');
+const forceSI=forceAndEnergy({mass:q(2,'kg'),acceleration:q(3,'m/s²')});
+check(forceSI.ok,'force accepts shared SI acceleration');
+if(forceSI.ok)check((forceSI.values.force as {value:number}).value===6,'mass 2 kg and acceleration 3 m/s² produce 6 N');
+const forceLbf=convertForceForTest(6,'N','lbf');
+check(forceLbf!==null&&Number(forceLbf.toPrecision(12))===Number((6/(0.45359237*9.80665)).toPrecision(12)),'6 N expressed in lbf uses independently derived pound-force factor');
+const hpPower=forceAndEnergy({power:q(1,'hp')});
+const kwPower=forceAndEnergy({power:q(0.7456998715822702,'kW')});
+check(hpPower.ok&&kwPower.ok,'power accepts horsepower and kilowatts');
+if(hpPower.ok&&kwPower.ok)check(Math.abs((hpPower.values.power as {value:number}).value-(kwPower.values.power as {value:number}).value)<1e-9,'equivalent hp and kW inputs produce the same watt result');
+const forcePounds=forceAndEnergy({force:q(1,'lbf'),displacement:q(1,'m')});
+check(forcePounds.ok&&Math.abs((forcePounds.values.work as {value:number}).value-4.4482216152605)<1e-11,'force-and-energy accepts pound-force through the shared engine');
+const accelerationFeet=forceAndEnergy({mass:q(2,'kg'),acceleration:q(10,'ft/s²')});
+check(accelerationFeet.ok&&Math.abs((accelerationFeet.values.force as {value:number}).value-6.096)<1e-12,'force-and-energy accepts acceleration in ft/s²');
+const energyInput=forceAndEnergy({energy:q(1,'kWh')});
+check(energyInput.ok&&(energyInput.values.energy as {value:number}).value===3600000,'energy input accepts kilowatt-hours and normalizes to joules');
+const momentumInput=forceAndEnergy({momentum:q(1,'lb·ft/s')});
+check(momentumInput.ok&&Math.abs((momentumInput.values.momentum as {value:number}).value-0.138254954376)<1e-12,'momentum input accepts pound-foot per second and normalizes to SI');
+const missingMotion=motion({u:q(1,'m/s'),t:q(2,'s')});
+check(!missingMotion.ok&&missingMotion.error==='missing-input'&&missingMotion.message==='You gave 2 of the 3 quantities needed (u, t). Add one more of v, a, s.','missing motion input lists supplied and remaining quantities exactly');
+const missingFE=forceAndEnergy({velocity:q(1,'m/s')});
+check(!missingFE.ok&&missingFE.error==='missing-input'&&missingFE.message.includes('mass'),'force-and-energy missing-input message names missing fields');
+const missingProjectile=projectile({launchSpeed:q(1,'m/s'),angleDegrees:30} as never);
+check(!missingProjectile.ok&&missingProjectile.error==='missing-input'&&missingProjectile.message.includes('launchHeight'),'projectile missing-input message names launchHeight');
+const oneNegative=motion({u:q(20,'m/s'),a:q(-9.80665,'m/s²'),s:q(-10,'m')});
+check(oneNegative.ok,'motion keeps the non-negative root when its paired root is negative');
+if(oneNegative.ok){
+ const times=oneNegative.values.t as {value:number}[];
+ check((Array.isArray(times)?times:[times]).length===1&&(Array.isArray(times)?times[0]:times).value>=0,'negative solved time is never returned beside a valid root');
+ check(oneNegative.assumptions.some(x=>x.startsWith('Discarded a negative-time solution (t = ')&&x.endsWith(' s, before the start).')),'discarded negative-time root is labelled in assumptions');
+}
+const allNegative=motion({u:q(20,'m/s'),a:q(9.80665,'m/s²'),s:q(-10,'m')});
+check(!allNegative.ok&&allNegative.error==='no-real-solution'&&allNegative.message.includes('before the start'),'all-negative-time roots return no-real-solution with before-start message');
+
 console.log(`C29 physics tests: ${checks} checks passed.`);
