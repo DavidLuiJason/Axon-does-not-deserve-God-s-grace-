@@ -19,7 +19,7 @@ const AXON_TOOLS_CAPABILITY = {
 } as const;
 
 /**
- * Text Tools: the text actions that run on the execution kernel (today: Text Counter).
+ * Text Tools: the text actions that run on the execution kernel (today: Text Counter and Case Converter).
  * Matches the kernel capability id "text-tools". Stores no user data.
  */
 const TEXT_TOOLS_CAPABILITY = {
@@ -38,6 +38,16 @@ const TEXT_TOOLS_CAPABILITY = {
     ],
     status: 'available',
     link: { commandId: 'text-count', actionId: 'text.count' },
+  }, {
+    id: 'act.case-converter',
+    purpose: 'Convert the case of text',
+    examples: [
+      'convert "hello world" to uppercase',
+      'make "Hello World" lowercase',
+      'turn "my var name" into snake case',
+    ],
+    status: 'available',
+    link: { actionId: 'text.case' },
   }] as ChatAction[],
 } as const;
 

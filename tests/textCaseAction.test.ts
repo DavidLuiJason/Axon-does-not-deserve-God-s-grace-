@@ -26,6 +26,6 @@ const big = await run({ text: 'a'.repeat(200_001), mode: 'UPPER' });
 check(big.submitted && big.task.state === 'FAILED', 'text over the engine limit ends FAILED');
 const empty = await run({ text: '', mode: 'UPPER' });
 check(empty.submitted ? empty.task.state === 'COMPLETED' && (empty.task.output as { text: string }).text === '' : true, 'empty text is handled, never throws');
-check(getAxonEngine().getAction('text.case') === undefined, 'PIN: text.case is not in the shared engine until LIVE8-3 (no chat claim before the switch)');
+check(getAxonEngine().getAction('text.case') === TEXT_CASE_ACTION, 'text.case is registered in the shared engine since LIVE8-3 (with its available chat action and its switch)');
 check(getAxonEngine().getAction('text.count') !== undefined, 'Text Counter is still registered');
 console.log('textCaseAction: ' + n + ' checks passed');

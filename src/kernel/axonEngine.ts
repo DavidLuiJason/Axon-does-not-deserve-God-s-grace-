@@ -9,10 +9,12 @@
 import { readDeviceProfile } from './deviceProfile';
 import { createTaskEngine, type TaskEngine, type TaskEngineOptions } from './taskEngine';
 import { TEXT_COUNT_ACTION } from './textCount';
+import { TEXT_CASE_ACTION } from '../tools/textCaseAction';
 
 export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   const engine = createTaskEngine({ readProfile: () => readDeviceProfile(), ...options });
   engine.registerAction(TEXT_COUNT_ACTION);
+  engine.registerAction(TEXT_CASE_ACTION);
   return engine;
 }
 
