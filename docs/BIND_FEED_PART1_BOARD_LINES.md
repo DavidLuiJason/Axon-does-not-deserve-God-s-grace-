@@ -1,0 +1,12 @@
+# BIND-FEED part 1 board lines (append to docs/JOB_BOARD.md; Director, twenty-third account, third turn, 2026-10-31)
+
+**BF1 + BF2 DONE (built and checked by the Director only).** `src/brain/mind/bind/bindFeed.ts` (pure; knows no tool; names and choices injected) turns `ctx` output (Meaning structure, segments, values, Resolution matches) into `BindInput`; only a `match` of a piece that may run alone yields an item. `tests/bindFeed.test.ts`: 24 checks, 9 mutants (marker kept, references empty, mayRunAlone ignored, non-match fed, values or materials of other pieces kept, earlier pointer not widened, "one" not covered, pointer words removed) ALL caught; added to `test:kernel`.
+
+**MEASURED, the 50 text requests, real stages + dictionary (`docs/director/bindFeedMeasure.ts.txt`; copy to `.ts`, run `npx tsx docs/director/bindFeedMeasure.ts x detail`):**
+- BEFORE the pointer fix: feed ran 36; identical to the old handler 34; **2 ran where the old handler asks** ("the above", "the following" counted as text: wrong confident answers); 5 asked where the old handler ran.
+- AFTER: feed ran 34, **identical to the old handler 34 of 34, wrong text 0, ran where the old handler asks 0**; 5 asked where the old handler ran (safe): 4 unquoted-text requests (the real parts do not expose text after `in`, `of` or a colon) and "count chars" (repair kind R4). Identical to the pilot's stand-in: 45 of 50.
+- Related tests run (exit 0): argumentBinder, brainBoundary, meaningNoPhrases (67 files, 139 checks), partsReference, textCounterPilot, howMuchSecondReading, quantityPolitenessCompound, resolveRunner, refReference (44 checks; it failed ONCE when 9 tests ran in parallel on the 70k-word timing check, passed twice alone: load flake, not the change). Full suite, cloud build, owner machine check: NOT RUN.
+
+**Director choices (owner may overrule):** (1) `above` and `following` added to the `earlier` pointer group (closed set, FL13; proposed for approval like the rest of the group). (2) NEXT moved: LIVE0 before REP0/REP1, because FIRST SCREEN 1 says finish the open job first and the text family cannot go live until something calls a runner after Resolution.
+
+**NEXT (own parts):** LIVE0 [design: who calls a runner after Resolution (Planning and Execution, 7L 2), the per-tool switch, and where the 4 unquoted-text requests are fixed (Meaning side)] with a look at the existing loop skeleton (`src/brain/mind/loop`); then REP0 + REP1; then the converter schema split before numbers. Roadmap NOT changed.

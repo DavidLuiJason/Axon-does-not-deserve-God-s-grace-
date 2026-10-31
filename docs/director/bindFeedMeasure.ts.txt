@@ -1,0 +1,102 @@
+import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+const R = process.cwd();
+const { Dictionary } = await import('../../src/brain/dictionary');
+const { createDictionarySlot } = await import('../../src/brain/knowledge/dictionarySlot');
+const { createStages } = await import('../../src/brain/mind/stages');
+const sha = (t: string) => createHash('sha256').update(t, 'utf8').digest('hex');
+const executor = { run: async () => ({ content: 'x', source: 'test' }) } as never;
+const { buildBindInputs } = await import('../../src/brain/mind/bind/bindFeed');
+const { bindArguments } = await import('../../src/brain/mind/bind/argumentBinder');
+const { extractValues } = await import('../../src/brain/mind/meaning/values');
+const { TEXT_COUNTER_RUNNER, TEXT_COUNTER_UNITS } = await import('../../src/tools/runners/textCounterRunner');
+const { TEXT_COUNT_COMMAND } = await import('../../src/brain/textCountCommand');
+const { countText } = await import('../../src/kernel/textCount');
+type BindInput = import('../../src/brain/mind/bind/argumentBinder').BindInput;
+const deps = { now: 0, randomBelow: () => 0, random01: () => 0 };
+const REQUESTS: string[] = [
+  'count words in "hello brave new world"', 'count the words in "one"', 'count characters in "good morning"', 'count the characters of "a b c"',
+  'count letters in "abc 123"', 'count lines in "a\nb\nc"', 'how many words are in "the quick brown fox"', 'how many characters are in "good morning"',
+  'how many letters in "hello"', 'how many lines in "x\ny"', 'how many word in "hi"', 'word count of "hello there world"',
+  'character count of "hello"', 'letter count "abc"', 'line count of "a\nb"', 'please count words in "thanks a lot"',
+  'can you count words in "it is fine"', 'could you count the letters in "kind"', 'count words: "colon form here"', 'count chars in "abcd"',
+  'count words in hello brave new world', 'count characters in good morning', 'how many words are in the quick brown fox', 'how many lines in one two',
+  'count the words in this is plain text', 'count letters of abcdef', 'word count: plain words follow', 'count lines in alpha beta',
+  'count words in "  spaced   out  "', 'count characters in "émigré naïve"', 'count words in "😀 😀 ok"', 'count words in ""',
+  'count words in "tab\tseparated\tparts"', 'count lines in "last line\n"', 'how many characters in "x"', 'count letters in "ab-cd ef"',
+  'count words in "one, two; three."', 'how many words are there in "a b"', 'count the lines of "only one"', 'count words in "日本語 テキスト"',
+  'count words', 'count the characters', 'how many lines', 'count letters in this text', 'count words in the following', 'word count',
+  'count lines in that', 'how many characters are in it', 'count words in the above', 'please count letters',
+];
+const dictionary = await Dictionary.open({ read: async (p: string) => readFile(join(R, 'public/dictionary/en', p), 'utf8'), hash: sha });
+const stages = createStages(executor, () => Date.UTC(2026, 0, 1, 12, 30), () => 'test', createDictionarySlot(async () => dictionary));
+const POINTERS = ['this text', 'this', 'that', 'the text', 'the following', 'the following text', 'it', 'the above', 'above', 'this sentence', 'that text'];
+const UNIT_WORDS = ['words', 'word', 'characters', 'character', 'chars', 'char', 'letters', 'letter', 'lines', 'line'];
+
+/** What the Meaning stage would hand over for a request: the unit word, the quoted material, or the detail span after "in/of/:". */
+function bindInputFor(message: string): BindInput {
+  const lower = message.toLowerCase();
+  const words = [] as { norm: string; start: number; end: number }[];
+  let best: { norm: string; start: number; end: number } | null = null;
+  for (const u of UNIT_WORDS) { const at = lower.search(new RegExp(`\\b${u}\\b`)); if (at >= 0 && (best === null || at < best.start)) best = { norm: u, start: at, end: at + u.length }; }
+  if (best) words.push(best);
+  const materials = [] as { start: number; end: number }[];
+  const q = /"[^"]*"/.exec(message);
+  if (q) materials.push({ start: q.index, end: q.index + q[0].length });
+  const details = [] as { start: number; end: number }[];
+  if (!q) { const d = /(?:\bin\b|\bof\b|:)\s*(\S[\s\S]*)$/.exec(message); if (d) details.push({ start: message.length - d[1].length, end: message.length }); }
+  // STAND-IN for the references stage (B03B2c): the test marks the pointer words itself. Wiring the real stage output is go-live work, NOT RUN.
+  const references = [] as { start: number; end: number }[];
+  for (const d of details) { const body = message.slice(d.start, d.end).toLowerCase().replace(/[?.!]+$/, ''); if (POINTERS.includes(body)) references.push(d); }
+  return { tool: 'text-counter', toolName: 'Text Counter', message, values: [], materials, details, references, words, choices: { unit: TEXT_COUNTER_UNITS }, evidence: 'concept' };
+}
+
+async function legacyReply(message: string): Promise<string | null> {
+  const m = TEXT_COUNT_COMMAND.match(message);
+  if (!m || m.ask) return null;
+  const out = countText(String(m.input.text));
+  return TEXT_COUNT_COMMAND.describe(out, m.input);
+}
+const stripNote = (s: string): string => s.split('\n\nNote:')[0];
+
+async function runnerReply(message: string): Promise<string | null> {
+  const b = bindArguments(bindInputFor(message));
+  if (b.decision !== 'run') return null;
+  const r = await TEXT_COUNTER_RUNNER.run(b.args, deps);
+  return r.ok ? r.reply : 'FAILURE: ' + r.message;
+}
+
+
+async function replyOf(input: BindInput): Promise<string | null> {
+  const b = bindArguments(input);
+  if (b.decision !== 'run') return null;
+  const r = await TEXT_COUNTER_RUNNER.run(b.args, deps);
+  return r.ok ? stripNote(r.reply) : 'FAILURE: ' + r.message;
+}
+const mode = process.argv[3] ?? 'summary';
+const T: Record<string, number> = { requests: 0, noTextCounterMatch: 0, realRan: 0, realAsked: 0, sameAsStandIn: 0, diffFromStandIn: 0, legacyRan: 0, realSameAsLegacy: 0, realRanLegacyAsked: 0, realWrongText: 0, realAskedLegacyRan: 0 };
+const clock = { year: 2026, month: 1, day: 1, hour: 12, minute: 30 };
+for (const text of REQUESTS) {
+  T.requests++;
+  let ctx: any = { utterance: { id: 't', text, place: 'chat', at: 0 }, entries: [] };
+  for (const st of stages) ctx = await st.run(ctx);
+  const ex = extractValues(text, ctx.analysis.segments, clock);
+  const items = ctx.meaning?.structure ? buildBindInputs({ message: text, segments: ctx.analysis.segments, structure: ctx.meaning.structure, values: ex.ok ? ex.values : [], resolutions: ctx.resolutions ?? [], choicesFor: () => ({ unit: TEXT_COUNTER_UNITS }), toolNameFor: () => 'Text Counter' }) : [];
+  const item = items.find((i) => i.input.tool === 'text-counter');
+  if (process.argv[4] && text.includes(process.argv[4])) console.log(JSON.stringify(text), JSON.stringify({ d: item?.input.details, r: item?.input.references, m: item?.input.materials, w: item?.input.words.map((w) => w.norm), pieces: ctx.meaning.structure.pieces.map((p: any) => ({ from: p.from, to: p.to, details: p.parts.details, object: p.parts.object, ptr: p.refs.pointers })), sw: ctx.meaning.structure.words.map((w: any) => w.norm) }), JSON.stringify(item ? bindArguments(item.input) : null).slice(0, 300));
+  const legacy = stripNoteOrNull(await legacyReply(text));
+  const stand = await replyOf(bindInputFor(text));
+  if (legacy !== null) T.legacyRan++;
+  let label = 'no-match';
+  if (!item) { T.noTextCounterMatch++; if (legacy !== null) T.realAskedLegacyRan++; }
+  else {
+    const real = await replyOf(item.input);
+    if (real === null) { T.realAsked++; label = 'asked'; if (legacy !== null) T.realAskedLegacyRan++; }
+    else { T.realRan++; label = 'ran'; if (legacy === null) { T.realRanLegacyAsked++; label = 'RAN-LEGACY-ASKED'; } else if (real === legacy) T.realSameAsLegacy++; else { T.realWrongText++; label = 'WRONG'; } }
+    if (real === stand) T.sameAsStandIn++; else { T.diffFromStandIn++; if (label === 'ran') label = 'ran-differs-from-standin'; }
+  }
+  if (mode === 'detail' && label !== 'ran') console.log(JSON.stringify(text).slice(0, 48).padEnd(50), label.padEnd(26), 'legacy:', legacy === null ? 'asks' : 'runs');
+}
+console.log(JSON.stringify(T));
+function stripNoteOrNull(s: string | null): string | null { return s === null ? null : stripNote(s); }

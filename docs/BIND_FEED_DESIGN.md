@@ -14,8 +14,9 @@ After 5 RESOLUTION, before 7 PLANNING / 8 EXECUTION. It does not run a tool (FL1
 - `details` = the piece's `parts.details` converted from word ranges to character ranges, WITHOUT the marker word. OPEN FACT: whether `Detail.from` already excludes the marker is NOT yet read; BF1 checks it in `clauseParts.ts` first and a test pins it.
 - `references` = each pointer of `piece.refs.pointers` (word index `at`) as a character range.
 
-## 3. Known risk (HYPOTHESIS, to be measured in BF2)
-A pointer names ONE word (`at`), but a detail like "the above" has two words, so it is not fully inside a one-word reference span and the binder (rule: a detail fully inside a reference span is a pointer) would use "the above" as text. Candidate fixes, choose by measurement: (a) widen the reference span over an adjacent determiner; (b) treat a detail whose words are all pointers or determiners as a pointer. Not decided now; no phrase list either way (FL13).
+## 3. What the real run showed (MEASURED, 50 text requests, real stages and dictionary, 2026-10-31)
+- The doubt was real, in a different place: the real references stage did NOT read `above` or `following` as pointer words, so "count words in the above" ran on the text "the above" (2 wrong confident answers). Fix (Director choice, owner may overrule): both words join the `earlier` group in `refWords.ts`; an `earlier` pointer is by the references rule preceded by a determiner, so the feed makes its span the whole phrase ("the above", "the last one"), no word list in the feed.
+- Unquoted text after `in`, `of` or a colon is NOT exposed by the real parts (the text sits inside the object or nowhere), so 4 requests ask where the old handler ran ("how many words are in the quick brown fox", "count letters of abcdef", "count the words in this is plain text", "word count: plain words follow"). Safe (asks), not wrong. Needs a Meaning-side design (not a feed fix).
 
 ## 4. Proof (FL4)
 - BF2 measures on the 50 text requests with the real stages and dictionary (`cp docs/director/resolveTcMeasure.ts.txt` style script; top-level await, so the script lives inside the repo). Report, derived never targeted: same args as the pilot's stand-in; different args; asked instead; run with WRONG text (must be 0); legacy handler agreement.
