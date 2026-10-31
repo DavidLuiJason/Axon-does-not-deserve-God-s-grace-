@@ -1,4 +1,4 @@
-import { getSchema } from '../../brain/mind/schema/actionSchemas';
+import { getSchema } from './runnerSchema';
 import {
   LEGACY_ENGINE_DESCRIPTORS,
 } from '../engines/legacyDescriptors';

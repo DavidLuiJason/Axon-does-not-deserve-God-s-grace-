@@ -17,6 +17,8 @@ const ALLOWED_BRAIN_IMPORTERS = [
   // My Dictionary engine adapter: implements the brain's KnowledgeBackend contract (src/brain/knowledge/slot.ts) so the owner's own words can sit in a second knowledge slot; it reads and implements that contract only, it never touches the chat pipeline. Required by job C18; proposed by the Director 2026-10-22, the owner approves by merging.
   'src/tools/engines/dictionary/userDictionaryBackend.ts',
   'src/services/axonBrainInterface.ts',
+  // Runner gateway: re-exports ONLY the read-only tool schemas so the 18 runners can check their typed arguments; no chat pipeline. Proposed by the Director 2026-10-31 (C1 part 2); owner to confirm.
+  'src/tools/runners/runnerSchema.ts',
 ] as const;
 
 const SRC = resolve('src');

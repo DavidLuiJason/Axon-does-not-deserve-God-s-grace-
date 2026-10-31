@@ -1,4 +1,4 @@
-import { getSchema } from '../../brain/mind/schema/actionSchemas';
+import { getSchema } from './runnerSchema';
 import {
   FIND_REPLACE_DESCRIPTOR,
   CASE_CONVERTER_DESCRIPTOR,
