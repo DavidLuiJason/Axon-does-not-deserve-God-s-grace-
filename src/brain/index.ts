@@ -21,7 +21,7 @@ import { LEFT_OUT_TOOL_IDS } from '../tools/leftOutTools';
 import { ABILITY_SOURCES, CHAT_ACTION_LINKS } from '../tools/toolFactSources';
 import { listCapabilities } from '../capabilities';
 import { execute } from '../tools/runners/runnerRegistry';
-import { LIVE_CHOICES, LIVE_SWITCHES, STATE_TOOL_IDS } from '../tools/runners/liveSwitches';
+import { LIVE_CHOICES, LIVE_SWITCHES, LIVE_TASKS, STATE_TOOL_IDS } from '../tools/runners/liveSwitches';
 import type { RunnerSwitches } from '../tools/runners/runnerRegistry';
 import { LANE_GUARDS } from './mind/laneGuards';
 import type { LaneConfig } from './mind/directLane';
@@ -55,6 +55,19 @@ export function buildLaneConfig(switches: RunnerSwitches = LIVE_SWITCHES): LaneC
     needsState: (toolId) => STATE_TOOL_IDS.includes(toolId),
     guards: LANE_GUARDS,
     run: (toolId, args, deps) => execute(toolId, args, deps, switches),
+    record: async (toolId, args) => {
+      const link = LIVE_TASKS[toolId];
+      if (!link) return null;
+      try {
+        const engine = getAxonEngine();
+        const submitted = await engine.submit(link.actionId, link.input(args));
+        if (!submitted.ok) return null;
+        const done = await engine.whenDone(submitted.task.id);
+        if (done.state !== 'COMPLETED') return null;
+        const ms = done.startedAt !== undefined && done.endedAt !== undefined ? Math.max(0, done.endedAt - done.startedAt) : 0;
+        return { taskId: done.id, line: `Ran as task ${done.id}: ${done.state} in ${ms} ms, from your exact input.` };
+      } catch { return null; }
+    },
     choicesFor: (toolId) => LIVE_CHOICES[toolId] ?? {},
     toolNameFor: (toolId) => CATALOG_TOOLS.find((tool) => tool.id === toolId)?.name ?? toolId,
     deps: () => ({ now: Date.now(), randomBelow: () => 0, random01: () => 0 }),

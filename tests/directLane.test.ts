@@ -20,7 +20,7 @@ const read = async (text: string): Promise<LaneInput> => {
 const DEPS = { now: 0, randomBelow: () => 0, random01: () => 0 };
 const config = (over: Partial<LaneConfig> = {}): LaneConfig => ({
   isOn: (t) => t === 'text-counter', needsState: (t) => STATE_TOOL_IDS.includes(t), guards: LANE_GUARDS,
-  run: (t, a, d) => execute(t, a, d, { 'text-counter': 'runner' }), choicesFor: () => ({ unit: TEXT_COUNTER_UNITS }), toolNameFor: () => 'Text Counter', deps: () => DEPS, ...over,
+  run: (t, a, d) => execute(t, a, d, { 'text-counter': 'runner' }), record: async () => ({ taskId: 'task-0', line: 'Ran as task task-0: COMPLETED in 0 ms, from your exact input.' }), choicesFor: () => ({ unit: TEXT_COUNTER_UNITS }), toolNameFor: () => 'Text Counter', deps: () => DEPS, ...over,
 });
 const GOOD = 'count words in "hello brave new world"';
 const good = await read(GOOD);
@@ -70,6 +70,10 @@ check((await runDirectLane(good, config({ run: async () => ({ route: 'runner', o
 check((await runDirectLane(good, config({ run: async () => { throw new Error('boom'); } }))).kind === 'yield', 'YIELD 8b: runner throws');
 check((await runDirectLane(good, config({ run: async () => ({ route: 'legacy' }) }))).kind === 'yield', 'YIELD 8c: route legacy');
 check((await runDirectLane(good, config({ choicesFor: () => { throw new Error('boom'); } }))).kind === 'yield', 'YIELD 8d: a throwing helper never escapes');
+// 10 the task record: no record means no answer; a record puts its line and id into the reply
+check((await runDirectLane(good, config({ record: async () => null }))).kind === 'yield', 'YIELD 10: the task could not be recorded');
+check((await runDirectLane(good, config({ record: async () => { throw new Error('boom'); } }))).kind === 'yield', 'YIELD 10b: a throwing record never escapes');
+check(ran.kind === 'answer' && ran.reply.taskId === 'task-0' && ran.reply.content.endsWith('Ran as task task-0: COMPLETED in 0 ms, from your exact input.'), 'RUN 10: the reply carries the task line and the task id');
 // 9 defaults: the lane yields unless the owner allowed said-aloud answers
 const andForm = await read('count words in "a b" and count lines in "c"');
 check((await runDirectLane(andForm, config())).kind === 'yield', 'YIELD 9: the binder assumed something, lane yields by default');

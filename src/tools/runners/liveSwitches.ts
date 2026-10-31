@@ -6,12 +6,18 @@
 import { DEFAULT_SWITCHES, type RunnerSwitches } from './runnerRegistry';
 import { TIME_RUNNERS } from './timeRunners';
 import { TEXT_COUNTER_UNITS } from './textCounterRunner';
+import { TEXT_COUNT_ACTION } from '../../kernel/textCount';
 
-/** Everything is OFF. LIVE2 (2026-10-31) measured the real brain and found the lane drops the task record the old path writes (no task line, no task id), so Text Counter stays OFF until LIVE2a fixes that. Going live = one line here plus the pin in tests/liveSwitches.test.ts. */
-export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES });
+/** LIVE2 go-live (2026-10-31, after LIVE2a): Text Counter is the first tool ON. SWITCH BACK = delete the 'text-counter' entry below and set PINNED_ON to [] in tests/liveSwitches.test.ts. */
+export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES, 'text-counter': 'runner' as const });
 
 /** The choice words each live tool's binder may fill, per slot (one source: the runner's own closed set). */
 export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }) });
 
 /** Tools whose runner keeps an engine state (timer, stopwatch, tally counter, ...): the lane never runs them until a STATE design says who stores it. */
 export const STATE_TOOL_IDS: readonly string[] = Object.freeze(TIME_RUNNERS.map((runner) => runner.toolId));
+
+/** LIVE2a: the task-engine action that records each live tool's run, exactly as the old chat path did (same action, same input keys). A tool with no entry here never answers through the lane. */
+export const LIVE_TASKS: Readonly<Record<string, { readonly actionId: string; readonly input: (args: Readonly<Record<string, unknown>>) => Record<string, unknown> }>> = Object.freeze({
+  'text-counter': Object.freeze({ actionId: TEXT_COUNT_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ text: args.text, ...(args.unit !== undefined ? { unit: args.unit } : {}) }) }),
+});

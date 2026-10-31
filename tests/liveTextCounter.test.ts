@@ -11,7 +11,7 @@ const slot = createDictionarySlot(async () => dictionary);
 const off = createAxonBrain({ lane: false, slot });
 // the measurement switches Text Counter ON for this test only; the shipped switches are pinned OFF (liveSwitches.test.ts)
 const on = createAxonBrain({ lane: true, slot, switches: { 'text-counter': 'runner' } });
-check(buildLaneConfig().isOn('text-counter') === false, 'the shipped lane wiring has Text Counter OFF');
+check(buildLaneConfig().isOn('text-counter') === true && buildLaneConfig().isOn('timer') === false && buildLaneConfig().isOn('calculator') === false, 'the shipped lane wiring has Text Counter ON and the others OFF');
 const shipped = createAxonBrain({ lane: true, slot });
 const REQUESTS: string[] = [
   'count words in "hello brave new world"', 'count the words in "one"', 'count characters in "good morning"', 'count the characters of "a b c"',
@@ -32,27 +32,33 @@ const EXTRAS: string[] = [
   'count words in "a b" and count lines in "c"', 'do not count words in "x y"', 'count words in ```js\nconst a = 1;\n```', 'count the characters in the following: const a = 1;',
   'tell me a joke', 'count words in "one two three" please', 'count LETTERS in "AbC"', 'what is the capital of France',
 ];
-let laneAnswered = 0, sameCore = 0, taskLost = 0; const coreDiffs: string[] = []; const otherDiffs: string[] = [];
-const core = (content: string): string => content.split('\n\nRan as task')[0]!;
+let laneAnswered = 0, taskLost = 0, sameAll = 0; const diffs: string[] = []; const otherDiffs: string[] = [];
+// only what legitimately varies is normalised: the task number and the milliseconds
+const norm = (content: string): string => content.replace(/task-\d+/g, 'task-N').replace(/in \d+ ms/g, 'in N ms');
 const compare = async (text: string): Promise<void> => {
   const a = await off.askWithTrace({ text, place: 'chat' });
   const b = await on.askWithTrace({ text, place: 'chat' });
   const viaLane = b.reply.source.startsWith('runner:');
-  if (viaLane) { laneAnswered++; if (a.reply.taskId !== undefined && b.reply.taskId === undefined) taskLost++; }
-  if (core(a.reply.content) === core(b.reply.content) && a.reply.source === (viaLane ? 'local-rules' : b.reply.source)) sameCore++;
-  else if (viaLane) coreDiffs.push(`${JSON.stringify(text)}\n  old =${JSON.stringify(core(a.reply.content))}\n  lane=${JSON.stringify(core(b.reply.content))}`);
+  if (viaLane) { laneAnswered++; if ((a.reply.taskId === undefined) !== (b.reply.taskId === undefined)) taskLost++; }
+  const sameSource = viaLane ? a.reply.source === 'local-rules' : a.reply.source === b.reply.source;
+  if (norm(a.reply.content) === norm(b.reply.content) && sameSource && (a.reply.taskId === undefined) === (b.reply.taskId === undefined)) sameAll++;
+  else if (viaLane) diffs.push(`${JSON.stringify(text)}\n  old =${JSON.stringify(norm(a.reply.content))}\n  lane=${JSON.stringify(norm(b.reply.content))}`);
   else otherDiffs.push(`${JSON.stringify(text)} off=${JSON.stringify(a.reply).slice(0, 160)} on=${JSON.stringify(b.reply).slice(0, 160)}`);
 };
 for (const text of [...REQUESTS, ...EXTRAS]) await compare(text);
 const total = REQUESTS.length + EXTRAS.length;
-console.log(`MEASURED real brain, ${total} messages: answered by the lane ${laneAnswered}; counts identical to the old reply (task line ignored) ${sameCore}; lane answers whose task record is lost ${taskLost}; lane answers with a different count ${coreDiffs.length}; non-lane replies that differ ${otherDiffs.length}`);
-if (coreDiffs.length) console.log('DIFFERENT COUNTS:\n' + coreDiffs.join('\n'));
+console.log(`MEASURED real brain, ${total} messages: answered by the lane ${laneAnswered}; reply identical to the old one apart from task number and milliseconds ${sameAll}; lane answers with a task record missing or extra ${taskLost}; lane answers that differ ${diffs.length}; non-lane replies that differ ${otherDiffs.length}`);
+if (diffs.length) console.log('LANE ANSWERS THAT DIFFER:\n' + diffs.join('\n'));
 if (otherDiffs.length) console.log('OTHER DIFFS:\n' + otherDiffs.join('\n'));
+// the ONE accepted difference (owner, 'go' on the Director's recommendation): the old handler counts the polite word 'please' as part of the text; the lane does not
+const ACCEPTED = JSON.stringify('count words in "one two three" please');
+check(diffs.every((d) => d.startsWith(ACCEPTED)), 'the only lane answer that differs is the accepted please case');
 check(otherDiffs.length === 0, 'a message the lane does not answer gets exactly the old reply');
+check(taskLost === 0, 'every lane answer carries a task record, like the old path');
 // the SHIPPED brain (switches as merged) answers exactly like the old one, task line and id included
 for (const text of ['count words in "hello brave new world"', 'hello', 'how many lines in "x\ny"']) {
   const a = await off.ask({ text, place: 'chat' }); const b = await shipped.ask({ text, place: 'chat' });
-  check(a.source === b.source && core(a.content) === core(b.content) && (a.taskId === undefined) === (b.taskId === undefined), 'shipped brain, lane wired but OFF: same reply and task record as the old brain: ' + text);
+  check((a.source === b.source || b.source === 'runner:text-counter') && norm(a.content) === norm(b.content) && (a.taskId === undefined) === (b.taskId === undefined), 'shipped brain (Text Counter live): same words and task record as the old brain: ' + text);
 }
 // a taught meaning in the owner's own lexicon is never bypassed
 getUserLexicon();
@@ -60,6 +66,6 @@ const taught = await off.ask({ text: 'when I say tally I mean count', place: 'ch
 console.log('teach reply: ' + JSON.stringify(taught).slice(0, 160));
 for (const text of ['tally the words in "a b c"', 'tally words in "x y"']) {
   const a = await off.ask({ text, place: 'chat' }); const b = await on.ask({ text, place: 'chat' });
-  check(core(a.content) === core(b.content), 'taught word: same words with and without the lane: ' + text);
+  check(norm(a.content) === norm(b.content), 'taught word: same words with and without the lane: ' + text);
 }
 console.log('liveTextCounter: ' + n + ' checks passed');

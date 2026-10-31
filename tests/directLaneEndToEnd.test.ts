@@ -24,8 +24,10 @@ const legacy: BrainProvider = {
 const fallback: BrainProvider = { id: 'fallback', label: 'fallback', status: () => ({ id: 'fallback', label: 'f', ready: true, note: '' }), holdsConversation: () => false, async handle() { return { content: 'FALLBACK', source: 'fallback' }; } };
 const lane = (on: boolean): LaneConfig => ({
   isOn: (t) => on && t === 'text-counter', needsState: (t) => STATE_TOOL_IDS.includes(t), guards: LANE_GUARDS,
-  run: (t, a, d) => execute(t, a, d, on ? { 'text-counter': 'runner' } : {}), choicesFor: () => ({ unit: TEXT_COUNTER_UNITS }), toolNameFor: () => 'Text Counter', deps: () => ({ now: 0, randomBelow: () => 0, random01: () => 0 }),
+  run: (t, a, d) => execute(t, a, d, on ? { 'text-counter': 'runner' } : {}), record: async () => ({ taskId: 'task-0', line: 'Ran as task task-0: COMPLETED in 0 ms, from your exact input.' }), choicesFor: () => ({ unit: TEXT_COUNTER_UNITS }), toolNameFor: () => 'Text Counter', deps: () => ({ now: 0, randomBelow: () => 0, random01: () => 0 }),
 });
+const STUB_LINE = '\n\nRan as task task-0: COMPLETED in 0 ms, from your exact input.';
+const bare = (content: string): string => (content.endsWith(STUB_LINE) ? content.slice(0, -STUB_LINE.length) : content);
 const clock = () => Date.UTC(2026, 0, 1, 12, 30);
 const base = createMind({ providers: [legacy], fallback, now: clock, slot });
 const off = createMind({ providers: [legacy], fallback, now: clock, slot, lane: lane(false) });
@@ -55,8 +57,8 @@ for (const text of REQUESTS) {
   const a = await on.askWithTrace({ text, place: 'chat' } as never);
   if (a.reply.source.startsWith('runner:')) {
     laneAnswers++;
-    if (a.reply.content === b.reply.content) equalLegacy++;
-    else if (a.reply.content.endsWith('\n\n' + b.reply.content)) equalWithSaidPrefix++;
+    if (bare(a.reply.content) === b.reply.content) equalLegacy++;
+    else if (bare(a.reply.content).endsWith('\n\n' + b.reply.content)) equalWithSaidPrefix++;
     else wrong.push(`${JSON.stringify(text)} legacy=${JSON.stringify(b.reply.content)} lane=${JSON.stringify(a.reply.content)}`);
   } else {
     if (JSON.stringify(a.reply) !== JSON.stringify(b.reply)) wrong.push(`${JSON.stringify(text)} yielded but reply differs`);
@@ -75,8 +77,8 @@ check(wrong.length === 0, 'lane ON: no answer differs from the old handler');
 const MULTI = ['count words in "a b" and count lines in "c"', 'count words in "a b" and then count lines in "c"', 'count words in hello and count lines in world'];
 for (const text of MULTI) {
   const b = await base.ask({ text, place: 'chat' } as never); const a = await on.ask({ text, place: 'chat' } as never);
-  if (!(a.content === b.content || a.content.endsWith('\n\n' + b.content))) console.log('MULTI DIFF', JSON.stringify(text), '\n legacy=', JSON.stringify(b.content), '\n lane  =', JSON.stringify(a.content));
-  check(a.content === b.content || a.content.endsWith('\n\n' + b.content), 'multi-instruction message answers like the old handler: ' + text);
+  if (!(bare(a.content) === b.content || bare(a.content).endsWith('\n\n' + b.content))) console.log('MULTI DIFF', JSON.stringify(text), '\n legacy=', JSON.stringify(b.content), '\n lane  =', JSON.stringify(a.content));
+  check(bare(a.content) === b.content || bare(a.content).endsWith('\n\n' + b.content), 'multi-instruction message answers like the old handler: ' + text);
 }
 // a conversation waiting stops the lane
 holding = true; const held = await on.askWithTrace({ text: REQUESTS[0]!, place: 'chat' } as never); holding = false;

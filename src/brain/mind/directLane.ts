@@ -18,11 +18,14 @@ import type { RunnerArgs, RunnerDeps, RunnerOutcome } from '../../tools/runners/
 export type LaneRun = (toolId: string, args: RunnerArgs, deps: RunnerDeps) => Promise<{ readonly route: 'legacy' | 'runner'; readonly outcome?: RunnerOutcome }>;
 /** A tool's own safe-guard: returns a plain reason to YIELD, or null when the lane may answer. */
 export type LaneGuard = (args: Readonly<Record<string, unknown>>, message: string) => string | null;
+/** LIVE2a: the old path runs every command as a TASK on the task engine and adds its evidence line and id to the reply. The lane must do the same: `record` returns that line and id, or null (then the lane yields). */
+export type LaneRecord = (toolId: string, args: Readonly<Record<string, unknown>>) => Promise<{ readonly taskId: string; readonly line: string } | null>;
 export interface LaneConfig {
   readonly isOn: (toolId: string) => boolean;
   readonly needsState: (toolId: string) => boolean;
   readonly guards: Readonly<Record<string, LaneGuard>>;
   readonly run: LaneRun;
+  readonly record: LaneRecord;
   readonly choicesFor: (toolId: string) => Readonly<Record<string, readonly string[]>>;
   readonly toolNameFor: (toolId: string) => string;
   readonly deps: () => RunnerDeps;
@@ -77,9 +80,12 @@ export async function runDirectLane(input: LaneInput, config: LaneConfig): Promi
     const executed = await config.run(tool, bound.args, config.deps());
     if (executed.route !== 'runner' || !executed.outcome) return yields(`the runner for ${tool} did not answer`);
     if (!executed.outcome.ok) return yields(`the runner for ${tool} refused: ${executed.outcome.message}`);
+    const recorded = await config.record(tool, bound.args);
+    if (recorded === null) return yields(`no task could be recorded for ${tool}`);
     const said = bound.assumptions.length > 0;
-    const content = said ? `${bound.understood}\n\n${executed.outcome.reply}` : executed.outcome.reply;
-    return { kind: 'answer', reply: { content, source: `runner:${tool}` }, note: said ? `direct lane answered with ${tool}; defaults said aloud` : `direct lane answered with ${tool}` };
+    const body = `${executed.outcome.reply}\n\n${recorded.line}`;
+    const content = said ? `${bound.understood}\n\n${body}` : body;
+    return { kind: 'answer', reply: { content, source: `runner:${tool}`, taskId: recorded.taskId }, note: said ? `direct lane answered with ${tool}; defaults said aloud` : `direct lane answered with ${tool}` };
   } catch (error) {
     return yields(`the lane failed: ${error instanceof Error ? error.message : String(error)}`);
   }
