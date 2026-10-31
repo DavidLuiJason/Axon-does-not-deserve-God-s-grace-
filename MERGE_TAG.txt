@@ -1,2 +1,3 @@
+2026-10-31 | roadmap v20.5 | C2E [create-tool runners: qr-maker, password-generator, random-picker, encoder-decoder, hash-tool] | runner file, 707-check test (in test:kernel), report | cumulative with C2D: merge only this one
 2026-10-31 | roadmap v20.5 | C2D [time runners: timer, stopwatch, date-calculator, tally-counter] | runner file, 551-check test (now in test:kernel), report | delta on top of the C29-FIX/C2AB/C2C package
 2026-10-31 | roadmap v20.5 | C29-FIX [physics repair] + C2AB [text runners] + C2C [number runners: calculator, number-to-words, percentage-helper, converter] + runner contract + wish R-W20 | cumulative: merge only this one
