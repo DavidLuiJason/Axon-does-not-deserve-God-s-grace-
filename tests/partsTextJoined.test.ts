@@ -37,5 +37,7 @@ const d = await bound('count lines in that');
 check(d !== null && d.decision !== 'run', '"that" alone is a pointer: ask');
 const e = await bound('count words in "hello brave new world"');
 check(e?.decision === 'run' && e.args.text === 'hello brave new world', 'quoted text unchanged');
+const f = await bound('how many words are in the quick brown fox');
+check(f?.decision === 'run' && f.args.text === 'the quick brown fox' && f.args.unit === 'words', '"brown" inside the detail is not the main verb');
 if (fails.length) { console.error(fails.join('\n')); throw new Error(`partsTextJoined: ${fails.length} failed`); }
-console.log('partsTextJoined: 5 checks passed');
+console.log('partsTextJoined: 6 checks passed');

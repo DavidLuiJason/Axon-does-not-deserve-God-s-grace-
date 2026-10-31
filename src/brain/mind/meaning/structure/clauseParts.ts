@@ -93,6 +93,8 @@ export const readClauseParts: ReadClauseParts = (words, ranges) => {
         const word = words[i]!;
         if (isPoliteness(word.norm)) continue; // RESOLVE-TC part 4 (owner-approved closed set): "please" and "kindly" never carry the verb
         if (quantity !== null && i >= quantity.from && i < quantity.to) continue;
+        // PARTS-TEXT part 3: once the clause has its auxiliary, a marker word (except the infinitive "to") opens the detail; a verb-capable word inside it ("in the quick brown fox") is never the main verb.
+        if (firstAux !== null && word.norm !== 'to' && MARKERS.has(word.norm)) break;
         if (word.aux && firstAux === null) firstAux = i;
         if (word.verb && !word.aux && (i === from || !words[i - 1]!.determiner)) {
           mainVerb = i;
