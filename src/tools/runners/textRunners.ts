@@ -8,6 +8,7 @@ import {
 } from '../engines/legacyDescriptors';
 import { findReplace } from '../engines/text/findReplace';
 import { caseConvert } from '../engines/text/caseConvert';
+import { foldCaseMode } from './caseModeWords';
 import { textCleaner } from '../engines/text/textCleaner';
 import { sortLines } from '../engines/text/sortLines';
 import { textCompare } from '../engines/text/textCompare';
@@ -94,11 +95,17 @@ const findReplaceRunner = makeRunner('find-replace', FIND_REPLACE_DESCRIPTOR, (a
   return success('find-replace', result, `${result.matchCount} matches replaced.\n${result.text}`);
 });
 
-const caseConverterRunner = makeRunner('case-converter', CASE_CONVERTER_DESCRIPTOR, (args) => {
+const caseConverterCore = makeRunner('case-converter', CASE_CONVERTER_DESCRIPTOR, (args) => {
   const result = caseConvert(args.text as string, args.mode as Parameters<typeof caseConvert>[1]);
   if (!result.ok) return engineFailure('case-converter', result.error);
   return success('case-converter', result, result.text);
 });
+
+/** LIVE8-2: a mode word from the closed set (docs/LIVE8_DESIGN.md) is folded to the engine mode first; the screen's engine modes pass through unchanged. */
+const caseConverterRunner: ToolRunner = {
+  toolId: 'case-converter',
+  run: (args: RunnerArgs, deps: RunnerDeps) => caseConverterCore.run(record(args) && args.mode !== undefined ? { ...args, mode: foldCaseMode(args.mode) } : args, deps),
+};
 
 const textCleanerRunner = makeRunner('text-cleaner', TEXT_CLEANER_DESCRIPTOR, (args) => {
   const options: Parameters<typeof textCleaner>[1] = {};

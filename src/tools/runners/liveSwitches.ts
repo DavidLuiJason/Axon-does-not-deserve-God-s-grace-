@@ -7,12 +7,13 @@ import { DEFAULT_SWITCHES, type RunnerSwitches } from './runnerRegistry';
 import { TIME_RUNNERS } from './timeRunners';
 import { TEXT_COUNTER_UNITS } from './textCounterRunner';
 import { TEXT_COUNT_ACTION } from '../../kernel/textCount';
+import { CASE_MODE_CHOICES } from './caseModeWords';
 
 /** LIVE2 go-live (2026-10-31, after LIVE2a): Text Counter is the first tool ON. SWITCH BACK = delete the 'text-counter' entry below and set PINNED_ON to [] in tests/liveSwitches.test.ts. */
 export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES, 'text-counter': 'runner' as const });
 
 /** The choice words each live tool's binder may fill, per slot (one source: the runner's own closed set). */
-export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }) });
+export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }), 'case-converter': Object.freeze({ mode: CASE_MODE_CHOICES }) });
 
 /** Tools whose runner keeps an engine state (timer, stopwatch, tally counter, ...): the lane never runs them until a STATE design says who stores it. */
 export const STATE_TOOL_IDS: readonly string[] = Object.freeze(TIME_RUNNERS.map((runner) => runner.toolId));
