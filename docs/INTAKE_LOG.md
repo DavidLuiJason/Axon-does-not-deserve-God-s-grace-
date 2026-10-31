@@ -49,3 +49,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-10-30 (Director, nineteenth account, jobs 1 to 5): roadmap v20.2; main zips "main 4" and "main 5" (identical: 4,082 files, same sizes; C27–C31 present, their board lines missing); `C0dB_PART1_FINDINGS.md`; owner dictated wishes and process complaints; delivered Part 2, Part 2b, C0d-D prototype findings (all NO-GO), board catch-up and roadmap v20.3.
 2026-10-31 (Director, twentieth account): roadmap v20.5, main zip (C29-FIX, C2AB, C2C merged) and builder return C2D-time-runners.zip (ChatGPT); C2D inspected, ACCEPTED, merge delta built.
 2026-10-31 (Director, twentieth account, second job): builder return C2E-create-runners.zip (ChatGPT); inspected, ACCEPTED, cumulative merge package with C2D built.
+2026-10-31 (Director, twentieth account, third job): dictated message only (give me C1); C1 sized into three parts; part 1 (registry and switch) built.
