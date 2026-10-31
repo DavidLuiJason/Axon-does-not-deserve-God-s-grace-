@@ -1,3 +1,5 @@
+import { DETAIL_WORDS } from '../meaning/structure/detailWords';
+const DETAIL_MARKERS = new Set(DETAIL_WORDS.split(' '));
 import { lemmaCandidates } from '../../dictionary/morphology';
 import type { KnowledgeLookupResult, KnowledgeSlot, SenseHint } from '../../knowledge/slot';
 import type { Segment, Token } from '../types';
@@ -176,6 +178,8 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
       const phraseAt = new Map<number, { endToken: number; surface: string; lemma: string; pos?: string[]; synsetIds?: string[]; senseHints?: SenseHint[] }>();
       for (let i = 0; i < lexemes.length; i += 1) {
         if (tokens[i]?.knowledge !== 'known') continue;
+        // PARTS-TEXT part 2c: a phrase never starts with a detail marker word (closed set `detailWords.ts`): joining "in this" hid both the marker and the pointer word from the later stages. Structure only (FL13).
+        if (DETAIL_MARKERS.has((lexemes[i]?.surface ?? '').toLowerCase())) continue;
         const max = Math.min(maxPhraseWords, lexemes.length - i);
         for (let count = max; count >= 2; count -= 1) {
           let contiguous = true;

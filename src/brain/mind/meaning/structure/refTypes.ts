@@ -24,6 +24,8 @@ export interface Relay {
   readonly content: Span;                // from the infinitive marker to the end of the clause: REPORTED words, never an order for AXON
 }
 export interface ClauseRefs {
+  /** PARTS-TEXT part 2b: a pointer word plus ONE noun that ends the clause ("this text"): read by the binder only; `pointers` is unchanged ("convert that file" stays no pointer). */
+  readonly deictic?: readonly { readonly at: number; readonly last: number }[];
   readonly pointers: Pointer[];          // in word order
   readonly relay: Relay | null;
   readonly needsPrevious: boolean;       // the clause has no main verb and holds a pointer: it only makes sense with the clause before it

@@ -75,6 +75,7 @@ export const readReferences: ReadReferences = (words, ranges, parts) => {
       const verb = partsValue.verb === null ? -1 : partsValue.verb;
       const infinitive = partsValue.infinitive;
       const pointers: Pointer[] = [];
+      const deictic: { at: number; last: number }[] = [];
 
       for (let i = from; i < to; i += 1) {
         const word = words[i]!;
@@ -87,6 +88,7 @@ export const readReferences: ReadReferences = (words, ranges, parts) => {
         }
 
         if (i > verb || verb === -1) {
+          if (THING_WORDS.has(word.norm) && next !== null && next.noun && i + 2 === to && !ONE_WORDS.has(next.norm)) deictic.push({ at: i, last: i + 1 });
           if (THING_WORDS.has(word.norm)
             && (next === null || ONE_WORDS.has(next.norm)
               || (!next.noun && !next.subject && !next.verb && !next.determiner))) {
@@ -117,7 +119,7 @@ export const readReferences: ReadReferences = (words, ranges, parts) => {
         };
       }
 
-      output.push({ pointers, relay, needsPrevious: verb === -1 && pointers.length > 0 });
+      output.push({ pointers, relay, needsPrevious: verb === -1 && pointers.length > 0, ...(deictic.length > 0 ? { deictic } : {}) });
     }
     return output;
   } catch {

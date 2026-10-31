@@ -80,6 +80,9 @@ export function buildBindInputs(input: FeedInput): FeedItem[] {
         const close = p.kind === 'earlier' && p.at + 1 < piece.to && ONE_WORDS.has(words[p.at + 1]!.norm) ? p.at + 1 : p.at;
         references.push({ start: words[open]!.start, end: words[close]!.end });
       }
+      for (const d of piece.refs.deictic ?? []) {
+        if (isInt(d.at) && isInt(d.last) && d.at >= piece.from && d.last < piece.to && d.last > d.at) references.push({ start: words[d.at]!.start, end: words[d.last]!.end });
+      }
       const materials: BindSpan[] = segments
         .filter((s) => s.kind === 'material' && isInt(s.start) && isInt(s.end) && s.start >= start && s.end <= reachEnd)
         .map((s) => ({ start: s.start, end: s.end }));
