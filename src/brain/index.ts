@@ -20,6 +20,12 @@ import { CATALOG_TOOLS } from '../tools/toolCatalog';
 import { LEFT_OUT_TOOL_IDS } from '../tools/leftOutTools';
 import { ABILITY_SOURCES, CHAT_ACTION_LINKS } from '../tools/toolFactSources';
 import { listCapabilities } from '../capabilities';
+import { execute } from '../tools/runners/runnerRegistry';
+import { LIVE_CHOICES, LIVE_SWITCHES, STATE_TOOL_IDS } from '../tools/runners/liveSwitches';
+import type { RunnerSwitches } from '../tools/runners/runnerRegistry';
+import { LANE_GUARDS } from './mind/laneGuards';
+import type { LaneConfig } from './mind/directLane';
+import type { KnowledgeSlot } from './knowledge/slot';
 
 export const BRAIN_COMMANDS = [TEXT_COUNT_COMMAND];
 const BRAIN_PROVIDERS = [createDictionaryProvider()];
@@ -42,19 +48,35 @@ export function getUserLexicon(): UserLexicon {
   return sharedLexicon;
 }
 
+/** LIVE2: the direct lane's wiring (docs/LIVE0_DESIGN.md). Switches come from the one pinned file; the lane yields to the old handler in every case it is not sure about. */
+export function buildLaneConfig(switches: RunnerSwitches = LIVE_SWITCHES): LaneConfig {
+  return {
+    isOn: (toolId) => switches[toolId] === 'runner',
+    needsState: (toolId) => STATE_TOOL_IDS.includes(toolId),
+    guards: LANE_GUARDS,
+    run: (toolId, args, deps) => execute(toolId, args, deps, switches),
+    choicesFor: (toolId) => LIVE_CHOICES[toolId] ?? {},
+    toolNameFor: (toolId) => CATALOG_TOOLS.find((tool) => tool.id === toolId)?.name ?? toolId,
+    deps: () => ({ now: Date.now(), randomBelow: () => 0, random01: () => 0 }),
+  };
+}
+
+/** The one Brain, built fresh. `lane: false` is exactly the brain as it was before LIVE2 (used by the proof test); the app uses `getAxonBrain`. */
+export function createAxonBrain(options: { lane: boolean; slot?: KnowledgeSlot; switches?: RunnerSwitches } = { lane: true }): Mind {
+  const localRules = createLocalRules({
+    commands: BRAIN_COMMANDS,
+    engine: getAxonEngine(),
+    planned: PLANNED_SOURCES,
+    lexicon: getUserLexicon(),
+    abilities: {
+      describe: () => describeAbilities({ lexiconExists: true }),
+      answer: answerAbilityQuestion,
+    },
+  });
+  return createMind({ providers: [localRules, ...BRAIN_PROVIDERS], fallback: createFoundation({ abilities: { answerRequestFallback } }), planned: PLANNED_SOURCES, ...(options.slot ? { slot: options.slot } : {}), ...(options.lane ? { lane: buildLaneConfig(options.switches) } : {}), liveFacts: () => buildLiveFacts({ catalog: CATALOG_TOOLS, capabilities: listCapabilities(), abilities: ABILITY_SOURCES, leftOut: LEFT_OUT_TOOL_IDS, chatLinks: CHAT_ACTION_LINKS }) });
+}
+
 export function getAxonBrain(): Mind {
-  if (!shared) {
-    const localRules = createLocalRules({
-      commands: BRAIN_COMMANDS,
-      engine: getAxonEngine(),
-      planned: PLANNED_SOURCES,
-      lexicon: getUserLexicon(),
-      abilities: {
-        describe: () => describeAbilities({ lexiconExists: true }),
-        answer: answerAbilityQuestion,
-      },
-    });
-    shared = createMind({ providers: [localRules, ...BRAIN_PROVIDERS], fallback: createFoundation({ abilities: { answerRequestFallback } }), planned: PLANNED_SOURCES, liveFacts: () => buildLiveFacts({ catalog: CATALOG_TOOLS, capabilities: listCapabilities(), abilities: ABILITY_SOURCES, leftOut: LEFT_OUT_TOOL_IDS, chatLinks: CHAT_ACTION_LINKS }) });
-  }
+  if (!shared) shared = createAxonBrain({ lane: true });
   return shared;
 }
