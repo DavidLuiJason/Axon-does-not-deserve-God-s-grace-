@@ -917,6 +917,7 @@ export default function VideoFramesScreen({
 
               {/* Individual field for the chosen mode */}
               {mode === 'everyNSeconds' && (
+                <div className="space-y-1">
                 <NumberField
                   label="Interval in seconds"
                   value={everySeconds}
@@ -925,11 +926,15 @@ export default function VideoFramesScreen({
                   step={0.5}
                   numeric="decimal"
                   placeholder="e.g. 2"
-                  hint="Takes a picture every N seconds throughout the video or selected range"
                 />
+                <p className="text-[12px] text-[#8E9094] leading-normal pl-0.5">
+                  Takes a picture every N seconds throughout the video or selected range
+                </p>
+                </div>
               )}
 
               {mode === 'everyNFrames' && (
+                <div className="space-y-1">
                 <NumberField
                   label="Interval in frames"
                   value={everyFrames}
@@ -938,11 +943,15 @@ export default function VideoFramesScreen({
                   step={1}
                   numeric="integer"
                   placeholder="e.g. 30"
-                  hint="Takes every Nth video frame"
                 />
+                <p className="text-[12px] text-[#8E9094] leading-normal pl-0.5">
+                  Takes every Nth video frame
+                </p>
+                </div>
               )}
 
               {mode === 'count' && (
+                <div className="space-y-1">
                 <NumberField
                   label="Number of pictures"
                   value={totalCount}
@@ -951,8 +960,11 @@ export default function VideoFramesScreen({
                   step={1}
                   numeric="integer"
                   placeholder="e.g. 10"
-                  hint="Takes evenly spaced pictures across the video"
                 />
+                <p className="text-[12px] text-[#8E9094] leading-normal pl-0.5">
+                  Takes evenly spaced pictures across the video
+                </p>
+                </div>
               )}
 
               {mode === 'specific' && (
