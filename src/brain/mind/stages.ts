@@ -21,6 +21,9 @@ import { resolveMessage } from './resolve/clauseInputs';
 import type { AdapterInput } from './resolve/clauseInputsTypes';
 import { runDirectLane, type LaneConfig } from './directLane';
 import { readsAsRequest, stepDialogue, type DialogueHost } from './dialogue/dialogueDriver';
+import { routeMessage, routerNote, type RouterResult } from './router/routerShadow';
+import { binderDecisions } from './router/routerBinder';
+import { getSchema } from './schema/actionSchemas';
 
 function withEntry(context: MindContext, stage: StageId, state: StageState, note: string, patch: Partial<MindContext> = {}): MindContext {
   return { ...context, ...patch, entries: [...context.entries, { stage, state, note }] };
@@ -137,7 +140,11 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         else if (item.resolution.kind === 'none') counts.none += 1;
       }
       const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}${statusNote}`;
-      return withEntry(context, 'resolution', 'ran', note, { resolutions, values: values as never });
+      // ROUTER (shadow): reads the resolutions, writes one trace line, changes nothing else. A router failure is said in the note and never touches the resolutions.
+      let routes: RouterResult | undefined;
+      let routerLine = '';
+      try { const decisions = binderDecisions({ message: context.utterance.text, segments: context.analysis.segments, structure, values: values as never, resolutions, ...(lane ? { choicesFor: lane.choicesFor, toolNameFor: lane.toolNameFor } : {}) }); routes = routeMessage(resolutions, context.meaning, getSchema, (piece) => decisions.get(piece)); routerLine = `; ${routerNote(routes)}`; } catch (error) { routerLine = `; router failed: ${error instanceof Error ? error.message : String(error)}`; }
+      return withEntry(context, 'resolution', 'ran', note + routerLine, routes ? { resolutions, routes, values: values as never } : { resolutions, values: values as never });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return withEntry(context, 'resolution', 'not-built', `resolution failed: ${message}`);

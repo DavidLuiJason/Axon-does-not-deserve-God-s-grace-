@@ -4,6 +4,7 @@
  *
  * AXON Mind B1: typed structure for the staged brain pipeline.
  */
+import type { RouterResult } from './router/routerShadow';
 import type { BrainReply, Place } from '../types';
 import type { SenseHint } from '../knowledge/slot';
 import type { SenseReading } from './meaning/sense/senseTypes';
@@ -54,5 +55,5 @@ export interface ClauseFrame { clause: Clause; act: SpeechAct; polarity: 'positi
 export interface Meaning { clauses: ClauseFrame[]; onlyMaterial: boolean; structure?: MeaningStructure; language?: LanguageReading; teaching?: TeachingReading[]; tone?: ToneReading; senses?: SenseReading[] }
 export interface TraceEntry { stage: StageId; state: StageState; note: string }
 export interface MindTrace { utterance: Utterance; entries: TraceEntry[] }
-export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; resolutions?: PieceResolution[]; values?: FeedValue[]; reply?: BrainReply; entries: TraceEntry[] }
+export interface MindContext { utterance: Utterance; analysis?: Analysis; frame?: Frame; meaning?: Meaning; resolutions?: PieceResolution[]; routes?: RouterResult; values?: FeedValue[]; reply?: BrainReply; entries: TraceEntry[] }
 export interface MindStage { id: StageId; run(context: MindContext): Promise<MindContext> }
