@@ -14,7 +14,7 @@ for (const style of COLLAGE_STYLES.split(' ')) for (let t = 0; t < 120; t++) {
   assert.equal(r.cells.length, n, tag); assert.deepEqual(r.cells.map(c => c.id), images.map(i => i.id), tag);
   if (H !== undefined) assert.equal(r.canvasHeight, H, tag);
   for (let a = 0; a < n; a++) {
-    const c = r.cells[a], im = images[a];
+    const c: any = r.cells[a], im = images[a];
     assert.ok(c.w >= 1 && c.h >= 1 && c.x >= margin && c.y >= margin && c.x + c.w <= W - margin && c.y + c.h <= r.canvasHeight - margin, 'bounds ' + tag);
     if (style !== 'tiles') { assert.deepEqual(c.crop, { sx: 0, sy: 0, sw: im.width, sh: im.height }, 'crop ' + tag); if (Math.min(c.w, c.h) >= 24) assert.ok(Math.abs(c.w * im.height - c.h * im.width) <= Math.max(im.width, im.height) * 1.0001, 'aspect ' + tag); }
     for (let b = a + 1; b < n; b++) assert.equal(overlap(c, r.cells[b]), false, 'overlap ' + tag);
@@ -31,7 +31,7 @@ const g = planCollage({ canvasWidth: 1000, images: mk(12), style: 'grid' }); ass
 for (const sh of SHAPE_PRESETS.split(' ')) for (const n of [1, 12, 100]) {
   const images = mk(n), r = planShapeCollage({ canvasWidth: 1200, canvasHeight: 1200, images, shape: { preset: sh }, gap: 6, margin: 10 }); assert.equal(r.ok, true, sh + ' ' + n); if (!r.ok) continue;
   assert.equal(r.cells.length, n);
-  for (let a = 0; a < n; a++) { const c = r.cells[a]; assert.ok(c.x >= 10 && c.y >= 10 && c.x + c.w <= 1190 && c.y + c.h <= 1190, 'shape bounds'); assert.deepEqual(c.crop, { sx: 0, sy: 0, sw: images[a].width, sh: images[a].height }); for (let b = a + 1; b < n; b++) assert.equal(overlap(c, r.cells[b]), false, `shape overlap ${sh} ${n}`); }
+  for (let a = 0; a < n; a++) { const c: any = r.cells[a]; assert.ok(c.x >= 10 && c.y >= 10 && c.x + c.w <= 1190 && c.y + c.h <= 1190, 'shape bounds'); assert.deepEqual(c.crop, { sx: 0, sy: 0, sw: images[a].width, sh: images[a].height }); for (let b = a + 1; b < n; b++) assert.equal(overlap(c, r.cells[b]), false, `shape overlap ${sh} ${n}`); }
   const o = r.outline, inside = (px: number, py: number) => { let k = false; for (let i = 0, j = o.length - 1; i < o.length; j = i++) { const p = o[i], q = o[j]; if ((p.y > py) !== (q.y > py) && px < (q.x - p.x) * (py - p.y) / (q.y - p.y) + p.x) k = !k; } return k; };
   for (const c of r.cells) for (const [px, py] of [[c.x + .01, c.y + .01], [c.x + c.w - .01, c.y + .01], [c.x + .01, c.y + c.h - .01], [c.x + c.w - .01, c.y + c.h - .01]]) assert.ok(inside(px, py), `outside outline ${sh} ${n}`);
   checks += 3;

@@ -546,7 +546,7 @@
   "description": "Change text to upper, lower, title or sentence case.",
   "group": "text-writing",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Convert text between supported letter-case and identifier styles."

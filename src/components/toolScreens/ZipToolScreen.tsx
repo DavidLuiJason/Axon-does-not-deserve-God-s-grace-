@@ -169,7 +169,7 @@ export const ZipToolScreen: React.FC<ZipToolScreenProps> = ({
   const handleSaveCreatedZip = async () => {
     if (!createdZipBytes) return;
     const name = archiveName.trim() ? (archiveName.endsWith('.zip') ? archiveName : `${archiveName}.zip`) : 'archive.zip';
-    const blob = new Blob([createdZipBytes], { type: 'application/zip' });
+    const blob = new Blob([createdZipBytes as unknown as BlobPart], { type: 'application/zip' });
     const res = await saveFile(name, blob, 'application/zip');
     if (res.success) {
       setMakeStatus(res.message || `Saved ${name}`);
@@ -181,7 +181,7 @@ export const ZipToolScreen: React.FC<ZipToolScreenProps> = ({
   const handleShareCreatedZip = async () => {
     if (!createdZipBytes) return;
     const name = archiveName.trim() ? (archiveName.endsWith('.zip') ? archiveName : `${archiveName}.zip`) : 'archive.zip';
-    const blob = new Blob([createdZipBytes], { type: 'application/zip' });
+    const blob = new Blob([createdZipBytes as unknown as BlobPart], { type: 'application/zip' });
     const file = new File([blob], name, { type: 'application/zip' });
 
     if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -295,7 +295,7 @@ export const ZipToolScreen: React.FC<ZipToolScreenProps> = ({
         }
 
         const safeFileName = name.split('/').pop() || name;
-        const blob = new Blob([res.value], { type: 'application/octet-stream' });
+        const blob = new Blob([res.value as unknown as BlobPart], { type: 'application/octet-stream' });
         await saveFile(safeFileName, blob);
         extractedCount++;
       }

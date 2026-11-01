@@ -38,7 +38,7 @@ function main(): void {
     assert(matches[0]?.action.note === 'Opens from the Tools menu once its screen exists; chat control arrives with the brain.', `engine action ${toolId} has the required honest note`);
   }
   // Only actions whose own test files prove chat can run them may be 'available'; engine actions never are.
-  const PROVEN_AVAILABLE = new Set(['act.text-counter', 'act.english-dictionary.lookup']);
+  const PROVEN_AVAILABLE = new Set(['act.text-counter', 'act.case-converter', 'act.english-dictionary.lookup']);
   for (const { action } of actions) {
     assert(action.status !== 'available' || PROVEN_AVAILABLE.has(action.id), `only proven actions are available: ${action.id}`);
   }
