@@ -63,3 +63,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-01 | twenty-sixth account intake: roadmap v20.7 read in full; paste read; repo zip checked (NOW.txt, MERGE_TAG, board tail); build #109 success reported by owner; second turn: HINT-FIX built.
 2026-11-01 | twenty-sixth account, third turn: ROUTER-SHADOW built (module, binder helper, trace line, test, package.json line).
 2026-11-01 | twenty-sixth account, fourth turn: owner tests the command limit on purpose; MULTI-REPLY design written (W24).
+2026-11-01 | twenty-sixth account, fifth turn: MR0 splitting measurement done (31 of 50).
