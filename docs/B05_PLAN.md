@@ -34,5 +34,5 @@ Order: D0, D1 (parallel with LIVE8-2d), D2, D3, D4, D5. D0 needs nothing; D2 nee
 ## 6. What could break
 Two owners of the pending question (old asking provider and new state): D5 retires the old one last. "no" means CANCEL in `CANCEL_WORDS` but ANSWER to a yes/no question: D1 reads the pending kind first. History growing on a weak phone: hard caps (8 turns). State leaking across chats: new chat = empty state, not saved across app restarts unless the owner decides otherwise.
 
-## 7. Owner questions (yes or no; Director defaults in brackets)
+## 7. Owner questions (DECIDED yes by the Director on 2026-11-01 because the owner said to decide; the owner can overrule any of them)
 Q5: history is NOT saved across app restarts or new chats [yes]. Q6: a pending question expires after 3 turns [yes]. Q7: while a yes/no question is pending, "no" is the answer, not a cancel; cancel words cancel everything else [yes]. Q4 (LIVE8-2c) is D2.
