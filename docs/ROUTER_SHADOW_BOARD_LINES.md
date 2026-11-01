@@ -15,3 +15,6 @@ NEXT (Director picks): B05 D2b, or the Router go-live design (the Router choosin
 - R9: greetings and thanks are FAST; every other non-request (chat, a stated need) is DEEP.
 - A compound's second reading (the 'word count' rule) stays FAST because it is decided by a guarded rule, not a doubt.
 - The Router is on in the shadow with no switch: it is read-only and failure-safe. A switch comes with go-live.
+
+## MULTI-REPLY design defaults treated as approved because the owner did not answer
+- Q1 answers in the order asked; Q2 other parts answer before the question; Q3 one question at a time; Q4 echo before each part when there are two or more parts. Details: docs/MULTI_REPLY_DESIGN.md section 5.
