@@ -1,0 +1,1574 @@
+{
+ "note": "B05 D1 scripted transcripts: pending question set after turn 1, then `gap` unrelated turns, then `message`. newRequest = the pipeline read it as a whole new request. Written by the Director; NOT held-out.",
+ "cases": [
+  {
+   "id": "pick01",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "number",
+    "index": 0
+   }
+  },
+  {
+   "id": "pick02",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "2",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick03",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "3",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "QR Maker",
+    "via": "number",
+    "index": 2
+   }
+  },
+  {
+   "id": "pick04",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": " 2 ",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick05",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "2.",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick06",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "2!",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick07",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "01",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "number",
+    "index": 0
+   }
+  },
+  {
+   "id": "pick08",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "text counter",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "name",
+    "index": 0
+   }
+  },
+  {
+   "id": "pick09",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "Text Counter",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "name",
+    "index": 0
+   }
+  },
+  {
+   "id": "pick10",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "TEXT COUNTER.",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "name",
+    "index": 0
+   }
+  },
+  {
+   "id": "pick11",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "case converter",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "name",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick12",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "qr maker!",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "QR Maker",
+    "via": "name",
+    "index": 2
+   }
+  },
+  {
+   "id": "pick13",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "0",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick14",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "4",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick15",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "04",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick16",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "-1",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick17",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1.5",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick18",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1 2",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick19",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "counter",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick20",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "the first one",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick21",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "text counter please",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick22",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick23",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick24",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": " ",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick25",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter"
+    ]
+   },
+   "message": "3",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "pick26",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter"
+    ]
+   },
+   "message": "2",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "pick27",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "convert \"hello\" to uppercase",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "new-topic"
+   }
+  },
+  {
+   "id": "pick28",
+   "group": "pick",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "2",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "Case Converter",
+    "via": "number",
+    "index": 1
+   }
+  },
+  {
+   "id": "cancel01",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "cancel",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel02",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "never mind",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel03",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "no",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel04",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "Stop.",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel05",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "forget it",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel06",
+   "group": "cancel",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "nevermind",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "yesno01",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno02",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "Yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno03",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "y",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno04",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "Y",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno05",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "YES!",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno06",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yes.",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno07",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "no",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno08",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "No",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno09",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "n",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno10",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "N",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno11",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "No.",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "yesno12",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yeah",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno13",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "ok",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno14",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yep",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno15",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "maybe",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno16",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno17",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "no thanks",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "yesno18",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "cancel07",
+   "group": "cancel",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "cancel",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel08",
+   "group": "cancel",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "stop",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel09",
+   "group": "cancel",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "never mind",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel10",
+   "group": "cancel",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "forget it",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "yesno19",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "count the words in \"a b\"",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "new-topic"
+   }
+  },
+  {
+   "id": "yesno20",
+   "group": "yesno",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yes",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "confirm01",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "confirm02",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "y",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": true,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "confirm03",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "no",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "confirm04",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "n",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": false,
+    "via": "yes-no",
+    "index": null
+   }
+  },
+  {
+   "id": "confirm05",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "cancel",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "confirm06",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "stop",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "confirm07",
+   "group": "confirm",
+   "pending": {
+    "kind": "confirm",
+    "question": "q"
+   },
+   "message": "delete it",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "slot01",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "hello world",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "hello world",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot02",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "\"hello world\"",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "hello world",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot03",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "“hello world”",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "hello world",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot04",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "'hello'",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "'hello'",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot05",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "  spaced  ",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "spaced",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot06",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "yes",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot07",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "1",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot08",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "\"unterminated",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "answers",
+    "value": "\"unterminated",
+    "via": "text",
+    "index": null
+   }
+  },
+  {
+   "id": "slot09",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "\"\"",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "slot10",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "unclear"
+   }
+  },
+  {
+   "id": "slot11",
+   "group": "slot",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "convert \"hi\" to uppercase",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "new-topic"
+   }
+  },
+  {
+   "id": "cancel11",
+   "group": "cancel",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "no",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel12",
+   "group": "cancel",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "cancel",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel13",
+   "group": "cancel",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "stop",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel14",
+   "group": "cancel",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "never mind",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "cancel15",
+   "group": "cancel",
+   "pending": {
+    "kind": "text-slot",
+    "question": "q",
+    "slot": "text",
+    "tool": "act.case-converter"
+   },
+   "message": "cancel",
+   "newRequest": true,
+   "gap": 0,
+   "expect": {
+    "kind": "cancels"
+   }
+  },
+  {
+   "id": "none01",
+   "group": "none",
+   "pending": null,
+   "message": "hello",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "none"
+   }
+  },
+  {
+   "id": "none02",
+   "group": "none",
+   "pending": null,
+   "message": "1",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "none"
+   }
+  },
+  {
+   "id": "none03",
+   "group": "none",
+   "pending": null,
+   "message": "yes",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "none"
+   }
+  },
+  {
+   "id": "none04",
+   "group": "none",
+   "pending": null,
+   "message": "convert \"a\" to uppercase",
+   "newRequest": false,
+   "gap": 0,
+   "expect": {
+    "kind": "none"
+   }
+  },
+  {
+   "id": "expiry01",
+   "group": "expiry",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 1,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "number",
+    "index": 0
+   }
+  },
+  {
+   "id": "expiry02",
+   "group": "expiry",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 2,
+   "expect": {
+    "kind": "answers",
+    "value": "Text Counter",
+    "via": "number",
+    "index": 0
+   }
+  },
+  {
+   "id": "expiry03",
+   "group": "expiry",
+   "pending": {
+    "kind": "choice",
+    "question": "q",
+    "options": [
+     "Text Counter",
+     "Case Converter",
+     "QR Maker"
+    ]
+   },
+   "message": "1",
+   "newRequest": false,
+   "gap": 3,
+   "expect": {
+    "kind": "none"
+   }
+  },
+  {
+   "id": "expiry04",
+   "group": "expiry",
+   "pending": {
+    "kind": "yes-no",
+    "question": "q"
+   },
+   "message": "yes",
+   "newRequest": false,
+   "gap": 3,
+   "expect": {
+    "kind": "none"
+   }
+  }
+ ]
+}
