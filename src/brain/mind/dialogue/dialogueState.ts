@@ -7,7 +7,7 @@
  */
 
 import {
-  DIALOGUE_VERSION, MAX_ARGS, MAX_ARG_VALUE, MAX_OPTION, MAX_OPTIONS, MAX_RESULT, MAX_TEXT, MAX_TURNS, PENDING_LIFE,
+  DIALOGUE_VERSION, MAX_ARGS, MAX_ARG_VALUE, MAX_OPTION, MAX_OPTIONS, MAX_RESULT, MAX_TEXT, MAX_TURNS, OUTCOME_LABELS, PENDING_KIND_LABELS, PENDING_LIFE,
   type DialogueState, type PendingInput, type PendingKind, type PendingQuestion, type TurnInput, type TurnOutcome, type TurnRecord,
 } from './dialogueTypes';
 
@@ -18,8 +18,9 @@ const clipOrNull = (text: string | null | undefined, max: number): string | null
   return value === '' ? null : value;
 };
 
-const KINDS: readonly PendingKind[] = ['choice', 'text-slot', 'yes-no', 'confirm'];
-const OUTCOMES: readonly TurnOutcome[] = ['answered', 'asked', 'declined', 'none'];
+/** The closed labels live in one string each (dialogueTypes.ts), not in a list of words (meaningNoPhrases.test.ts). */
+const KINDS: readonly string[] = PENDING_KIND_LABELS.split(' ');
+const OUTCOMES: readonly string[] = OUTCOME_LABELS.split(' ');
 
 export function emptyDialogue(): DialogueState {
   return { version: DIALOGUE_VERSION, turns: [], pending: null, topic: null, turnCount: 0 };

@@ -33,7 +33,19 @@ const YES = new Set(['yes', 'y']);
 const NO = new Set(['no', 'n']);
 const QUOTE_PAIRS: readonly (readonly [string, string])[] = [['"', '"'], ['\u201C', '\u201D']];
 
-const normalize = (text: string): string => text.trim().toLowerCase().replace(/[.!?]+$/, '').trim();
+/** Lower case, trimmed, without the closing . ! or ? marks. (No regular expressions in the mind folder: tests/mindPipeline.test.ts.) */
+function normalize(text: string): string {
+  let out = text.trim().toLowerCase();
+  while (out.length > 0 && '.!?'.includes(out.charAt(out.length - 1))) out = out.slice(0, -1);
+  return out.trim();
+}
+
+/** True for a non-empty run of the digits 0 to 9. */
+function isDigits(text: string): boolean {
+  if (text === '') return false;
+  for (const ch of text) if (ch < '0' || ch > '9') return false;
+  return true;
+}
 
 function unwrapQuotes(text: string): string {
   for (const [open, close] of QUOTE_PAIRS) {
@@ -63,7 +75,7 @@ export function readAnswer(state: DialogueState, text: string, context: AnswerCo
   if (CANCEL_WORDS.has(norm)) return { kind: 'cancels' };
 
   if (pending.kind === 'choice') {
-    if (/^\d+$/.test(norm)) {
+    if (isDigits(norm)) {
       const chosen = pending.options[Number(norm) - 1];
       if (chosen !== undefined) return { kind: 'answers', value: chosen, via: 'number', index: Number(norm) - 1 };
     } else {
