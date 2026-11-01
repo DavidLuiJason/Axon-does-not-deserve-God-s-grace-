@@ -1,3 +1,5 @@
+UPDATE (part 1b, same day): the owner chose Q1 = A and Q2 = not now; part 1b MEASURED that A cannot ship as specified and recommends B instead: see `docs/LIVE8_2B_PART1B_MEASURE.md`.
+
 # LIVE8-2b part 1a: WHY the five shapes stop (Director, twenty-fourth account, 2026-11-01). Docs only, no code.
 MEASURED on the repository zip as it is now (real brain, real dictionary, shipped switches). A temporary print inside the Resolution stage was used in a scratch copy only; the repository files are unchanged.
 

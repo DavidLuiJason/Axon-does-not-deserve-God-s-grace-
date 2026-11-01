@@ -1,0 +1,20 @@
+# LIVE8-2b part 1b: option A measured in a scratch copy; it cannot ship as specified (Director, twenty-fourth account, 2026-11-01). Docs only, no code shipped.
+OWNER DECISIONS RECORDED 2026-11-01 (owner: "I go with your choice, only two questions"): Q1 = A (the Director's pick), Q2 = not now. Q1 is reopened below because the measurement contradicts the pick; nothing changes without the owner's yes.
+
+## MEASURED (real brain, real dictionary, shipped switches; 64 requests; the repository files were not changed)
+- **A with seven words** (`kebab snake title camel pascal sentence constant` as schema concepts): fixes 8 bare-mode requests but gives **5 wrong answers**: `change the title of my document` gave "My Document"; `convert the sentence "hello" to french` gave "Hello"; `find the title in "abc"` gave "Abc"; `convert pascal to bar` gave "Bar"; `convert 3 pascal to kpa` gave "Kpa". NOT shippable.
+- **A narrowed to `kebab snake camel`**: fixes 3 bare-mode requests (`convert "x y" to kebab` gives x-y, `... to snake` gives x_y, `make "hello world" camel` gives helloWorld) but gives 2 wrong answers on unquoted text: `convert the camel image to png` gave "png"; `convert a snake to a string` gave "a_string" (the binder takes the leftover words as the text).
+- **A quote guard** (the lane answers Case Converter only when its text sits inside quote marks) closed both in a scratch build: 36 new checks passed, and caseConverterReading 43, caseModeWords 46, liveSwitches 10, directLane 33, directLaneEndToEnd 9, brainGolden 79 messages, mindPipeline 162, textCounterPilot 17 (50 of 50), quantityPolitenessCompound 43, resolveRunner 1581, resolveOptionsRunner 769, runnerRegistry 34, brainBoundary, argumentBinder 58, valuesGuard 137, textCaseAction 19, brain 81, kernel 92 all passed.
+- **BLOCKER (MEASURED):** `actionSchemasRunner` fails: a schema may have 1 to 6 object words and Case Converter already has 6 (`case letter upper lower lowercase uppercase`). Nine do not fit; after dropping `letter` only one new word fits. Raising the cap loosens a guard test, so it needs the owner's decision (guards never shrink themselves).
+- **A does NOT fix `kebab-case` or `snake-case`** (the technical-names column was tried: no effect). My Q1 listed `kebab-case` next to A; that was a mistake of presentation, A never covered the hyphen.
+- Bare mode words are rare: people write `kebab case`, `snake_case`, `camelCase`, which already work. `kebab-case` is the natural spelling and is the shape that matters.
+
+## WHERE THE HYPHEN IS LOST (MEASURED + one HYPOTHESIS)
+The symbol layer already marks a hyphen between two letters as `hyphen_in_word` (`src/brain/symbols/symbolRoles.ts` line 34). MEASURED earlier: `kebab case` (space) answers, `kebab-case` does not, so once the two parts are separate words the existing reading works. HYPOTHESIS: Analysis keeps `kebab-case` as one token with no dictionary meaning. Precedent: plural words already keep their noun base as a SECOND reading (RESOLVE-TC part 2), and the compound design already has two readings. The golden transcript has 0 hyphenated messages, so B needs its own right/wrong corpus.
+
+## Q3 for the owner (replaces Q1; yes or no)
+**B: a hyphenated word that has no meaning as a whole ALSO offers its parts as a second reading** (`kebab-case` read as `kebab` + `case`; `snake-case` likewise). Case Converter then needs NO new words and no cap change; the quote guard is not needed. Director builds it in its own turn AFTER the owner gate: change on the Analysis side, a corpus of about 30 hyphen messages (right and wrong, including `well-known`, `e-mail`, `twenty-one`, `x-ray`, a minus sign), brainGolden and the Resolution scoreboard unchanged, mutants. My estimate (HYPOTHESIS): 80% that one second reading fixes `kebab-case` and `snake-case`, because the separate-word form is MEASURED to work. Risk: other hyphen words change reading, so the corpus must show 0 differences outside the case shapes.
+Q2 stays: not now. `Title` alone, `uppercase "abc def"` and unquoted text stay open.
+
+## Gate
+Unchanged: cloud build result plus the phone messages (NOW.txt) come before any code.
