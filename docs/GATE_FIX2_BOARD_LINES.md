@@ -1,0 +1,3 @@
+# GATE-FIX2 board lines (2026-11-01)
+
+2026-11-01 (Director, twenty-fifth account): GATE-FIX2 DONE. The cloud build showed 2 errors: VideoFramesScreen.tsx line 1212 passed `loading` to PrimaryButton, line 1041 passed `hint` to NumberField. Neither prop exists in `src/components/tools/ToolParts.tsx` (MEASURED by reading). Fix is in the screen only: `loading` removed (`disabled` already includes isSavingZip), hint shown as a small grey line under the fps field in the style SingleLineField uses. ToolParts.tsx is locked and untouched. NOT RUN: type check, tests, cloud build. The D2a parking rule from the previous account was never delivered and is not built. NEXT: owner runs the cloud build; then B05 D2a.

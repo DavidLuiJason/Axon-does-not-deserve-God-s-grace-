@@ -1038,8 +1038,10 @@ export default function VideoFramesScreen({
                   max={240}
                   step={1}
                   numeric="decimal"
-                  hint="Adjust if the automatic estimate does not match the video"
                 />
+                <p className="text-[12px] text-[#8E9094] leading-normal pl-0.5">
+                  Adjust if the automatic estimate does not match the video
+                </p>
               </div>
             </OptionsDisclosure>
 
@@ -1209,7 +1211,6 @@ export default function VideoFramesScreen({
                   <PrimaryButton
                     onClick={handleSaveAllZip}
                     disabled={completedItems.length === 0 || isSavingZip}
-                    loading={isSavingZip}
                     className="w-full"
                     icon={<Download size={16} />}
                   >
