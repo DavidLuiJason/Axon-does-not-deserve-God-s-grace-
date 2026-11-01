@@ -123,6 +123,17 @@ export function buildResolveInputs(input: AdapterInput): PieceInput[] {
             }
           }
         }
+        // LIVE8-2b part 1c: the known parts of a hyphenated word the dictionary does not know ("kebab-case") are a second reading: each part adds its own concept keys.
+        if (token) {
+          for (const part of array<{ lemma?: unknown; partsOfSpeech?: unknown }>(token.hyphenParts)) {
+            const partLemma = part && typeof part.lemma === 'string' ? part.lemma.toLowerCase() : '';
+            if (partLemma === '') continue;
+            for (const pos of array<string>(part.partsOfSpeech).map((p) => typeof p === 'string' ? p.toLowerCase() : '')) {
+              const key = pos.startsWith('n') ? `${partLemma}:n` : (pos.startsWith('adj') || pos === 'a' || pos === 's') ? `${partLemma}:a` : '';
+              if (key && !seenObjects.has(key)) { seenObjects.add(key); objects.push(key); }
+            }
+          }
+        }
         for (const name of [word.norm.toLowerCase(), ...(token && typeof token.lemma === 'string' ? [token.lemma.toLowerCase()] : [])]) {
           if (plainName(name) && !seenNames.has(name)) { seenNames.add(name); names.push(name); }
         }

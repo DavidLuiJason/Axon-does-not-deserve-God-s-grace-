@@ -34,7 +34,7 @@
  */
 import type { ProvidedSlot, ResolveInput, ResolveOptions, Resolution } from './resolveTypes';
 
-export interface TokenLike { readonly lemma: string; readonly alternativeNounLemmas?: readonly string[]; readonly partsOfSpeech?: readonly string[]; readonly start: number; readonly end: number }
+export interface TokenLike { readonly lemma: string; readonly alternativeNounLemmas?: readonly string[]; readonly hyphenParts?: readonly { readonly lemma: string; readonly partsOfSpeech?: readonly string[] }[]; readonly partsOfSpeech?: readonly string[]; readonly start: number; readonly end: number }
 export interface SegmentLike { readonly kind: 'language' | 'material'; readonly start: number; readonly end: number }
 export interface WordLike { readonly norm: string; readonly start: number; readonly end: number }
 export interface SpanLike { readonly from: number; readonly to: number }

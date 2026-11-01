@@ -173,6 +173,26 @@ export function createAnalyzer(slot: KnowledgeSlot, options: AnalysisOptions = {
         }
       }
 
+      // LIVE8-2b part 1c: a hyphenated word the dictionary does not know ("kebab-case") keeps the known parts as a SECOND reading (same pattern as
+      // alternativeNounLemmas). The token stays unknown and its lemma is unchanged: nothing is invented. Parts shorter than two characters skip the word.
+      for (let i = 0; i < lexemes.length; i += 1) {
+        const item = lexemes[i];
+        const token = tokens[i];
+        if (!item || !token || token.knowledge !== 'unknown' || !item.surface.includes('-')) continue;
+        const pieces = item.surface.split('-');
+        if (pieces.length < 2 || pieces.length > 4 || pieces.some((piece) => piece.length < 2)) continue;
+        const readings: { lemma: string; partsOfSpeech: string[] }[] = [];
+        for (const piece of pieces) {
+          const part = await lookup(piece);
+          if (part === null) break;
+          if (part.status === 'error') return { ok: false, error: 'knowledge-error' };
+          if (part.status !== 'found') continue;
+          const pos = posOf(part);
+          if (pos.length) readings.push({ lemma: part.word, partsOfSpeech: pos });
+        }
+        if (readings.length > 0) token.hyphenParts = readings;
+      }
+
       // Pass 3: phrases only after every surface word and its morphology have
       // had priority. Only attempt windows beginning with a known word.
       const phraseAt = new Map<number, { endToken: number; surface: string; lemma: string; pos?: string[]; synsetIds?: string[]; senseHints?: SenseHint[] }>();

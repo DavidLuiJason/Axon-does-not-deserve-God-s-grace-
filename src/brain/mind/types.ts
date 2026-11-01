@@ -24,6 +24,8 @@ export interface Token {
   alternativeLemmas?: string[];
   /** RESOLVE-TC: the part of alternativeLemmas that is a NOUN base of this surface (e.g. 'words' is itself a headword, its noun base is 'word'). Present only when there is one. */
   alternativeNounLemmas?: string[];
+  /** LIVE8-2b part 1c: a hyphenated word the dictionary does not know ("kebab-case") keeps its known parts as a SECOND reading; the token itself stays unknown. */
+  hyphenParts?: { lemma: string; partsOfSpeech: string[] }[];
   start: number;
   end: number;
   knowledge?: 'known' | 'unknown' | 'not-checked';

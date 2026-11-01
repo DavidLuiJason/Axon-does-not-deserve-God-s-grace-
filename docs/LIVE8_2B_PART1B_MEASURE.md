@@ -1,3 +1,5 @@
+UPDATE (part 1c, same day): Q3 was left to the Director by the owner ("decide that yourself"); the Director chose B and built it: see `docs/LIVE8_2B_PART1C_BOARD_LINES.md`.
+
 # LIVE8-2b part 1b: option A measured in a scratch copy; it cannot ship as specified (Director, twenty-fourth account, 2026-11-01). Docs only, no code shipped.
 OWNER DECISIONS RECORDED 2026-11-01 (owner: "I go with your choice, only two questions"): Q1 = A (the Director's pick), Q2 = not now. Q1 is reopened below because the measurement contradicts the pick; nothing changes without the owner's yes.
 

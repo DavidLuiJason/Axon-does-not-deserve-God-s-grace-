@@ -18,6 +18,7 @@ const ANSWERS: ReadonlyArray<readonly [string, string]> = [
   ['make "HELLO" lower case', 'hello'], ['turn "my var name" into camel case', 'myVarName'], ['turn "my var name" into snake case', 'my_var_name'],
   ['please convert "hello" to uppercase', 'HELLO'], ['can you make "hello world" uppercase', 'HELLO WORLD'], ['turn "hello world" into upper', 'HELLO WORLD'],
   ['make "ab" UPPER', 'AB'], ['convert "x y" to Snake_Case', 'x_y'], ['convert "hello" to uppercase please', 'HELLO'],
+  ['turn "hello there" into kebab-case', 'hello-there'], ['convert "x y" to KEBAB-CASE', 'x-y'], // LIVE8-2b part 1c: a hyphenated word keeps its parts as a second reading
 ];
 for (const [text, want] of ANSWERS) {
   const r = await brain.ask({ text, place: 'chat' });
@@ -31,6 +32,6 @@ for (const text of [...MUST_NOT_ANSWER, 'tell me a joke', 'what is 12 times 3', 
   if (b.source !== 'runner:case-converter' && b.source !== 'runner:text-counter') check(norm(a.content) === norm(b.content) && a.source === b.source, 'unchanged reply: ' + text);
 }
 // KNOWN NOT YET READ (LIVE8-2b, causes NOT measured): the lane yields to the old handler, which says it has no way; nothing wrong is ever answered
-const KNOWN_MISSES = ['uppercase "abc def"', 'lowercase "ABC DEF"', 'turn "hello there" into kebab-case', 'convert "x y" to KEBAB-CASE', 'change "hello world" to Title'];
+const KNOWN_MISSES = ['uppercase "abc def"', 'lowercase "ABC DEF"', 'change "hello world" to Title'];
 for (const text of KNOWN_MISSES) { const r = await brain.ask({ text, place: 'chat' }); check(r.source !== 'runner:case-converter', 'known miss still yields (no wrong answer): ' + text); }
 console.log('caseConverterReading: ' + n + ' checks passed');
