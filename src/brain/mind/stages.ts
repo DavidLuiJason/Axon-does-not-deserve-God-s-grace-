@@ -20,6 +20,7 @@ import { relationLookupFromTokens } from './resolve/tokenRelations';
 import { resolveMessage } from './resolve/clauseInputs';
 import type { AdapterInput } from './resolve/clauseInputsTypes';
 import { runDirectLane, type LaneConfig } from './directLane';
+import { readsAsRequest, stepDialogue, type DialogueHost } from './dialogue/dialogueDriver';
 
 function withEntry(context: MindContext, stage: StageId, state: StageState, note: string, patch: Partial<MindContext> = {}): MindContext {
   return { ...context, ...patch, entries: [...context.entries, { stage, state, note }] };
@@ -68,7 +69,7 @@ function makeSegments(text: string): { segments: Segment[]; note: string } {
   }
 }
 
-export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot, liveFacts?: () => readonly ToolFact[], lane?: LaneConfig): MindStage[] {
+export function createStages(executor: ReturnType<typeof createLegacyExecutor>, now: () => number, nextId: () => string, slot: KnowledgeSlot = dictionarySlot, liveFacts?: () => readonly ToolFact[], lane?: LaneConfig, dialogueHost?: DialogueHost): MindStage[] {
   function intake(context: MindContext): MindContext {
     const utterance = { id: nextId(), text: context.utterance.text, place: context.utterance.place, at: now() };
     return withEntry(context, 'intake', 'ran', 'request captured', { utterance });
@@ -143,7 +144,11 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
     }
   }
   function dialogue(context: MindContext): MindContext {
-    return withEntry(context, 'dialogue', 'not-built', 'not built: dialogue state arrives in B5');
+    // B05 D2a (shadow): with a dialogue host the stage runs and traces; without one it behaves exactly as before.
+    if (!dialogueHost) return withEntry(context, 'dialogue', 'not-built', 'not built: dialogue state arrives in B5');
+    const step = stepDialogue(dialogueHost.get(), context.utterance.text, readsAsRequest(context.resolutions));
+    dialogueHost.set(step.state);
+    return withEntry(context, 'dialogue', 'ran', step.note);
   }
   function planning(context: MindContext): MindContext {
     return withEntry(context, 'planning', 'not-built', 'not built: planning arrives in B6');

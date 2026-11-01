@@ -19,3 +19,6 @@
 Bound args that are not strings (numbers, quantities) lose their type when stored as strings: D2b starts with tools whose args are strings (Case Converter, Text Counter) and re-binds the ORIGINAL message with the slot filled for any other tool (HYPOTHESIS: the re-bind is the safer route; measure first). A turn that both answers the question and is a request (`convert "hi" to uppercase`) is read as new-topic by design. The shared Brain means two screens would share one state: today there is one chat screen.
 ## Owner questions (Director defaults in brackets; the owner can overrule)
 Q9 the wording above [yes]. Q10 an unquoted answer to a direct question is accepted [yes]. Q11 the switch is off until the phone check [yes].
+
+## Owner rule added 2026-11-01: PARKING (supersedes "new-topic: clear" in design point 2)
+When the owner changes topic while a question is open, AXON follows the NEW topic and keeps the open question PARKED: it stays pending until it expires after 3 turns, and AXON may mention it afterwards (the mention is D2b). Only an answer or a cancel clears it. Built as a shadow in D2a (`dialogueDriver.ts`, `stepDialogue`); proven by `tests/dialogueShadow.test.ts`.

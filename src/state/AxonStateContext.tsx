@@ -26,6 +26,7 @@ import {
   type AxonScreen,
 } from './axonState';
 import type { ChatMessage, RecentChat } from '../types';
+import { resetAxonDialogue } from '../services/axonBrainInterface';
 import {
   loadPersistedGlobal,
   savePersistedGlobal,
@@ -235,6 +236,7 @@ export function useChatSession() {
   const selectRecent = (chatId: string) => {
     const found = recents.find((r) => r.id === chatId);
     if (!found) return;
+    resetAxonDialogue();
     dispatch({
       type: 'OPEN_CHAT',
       payload: {
@@ -247,6 +249,7 @@ export function useChatSession() {
 
   /** Clears active session only (composer clear stays UI-local in App). */
   const newChat = () => {
+    resetAxonDialogue();
     dispatch({ type: 'CLEAR_CHAT' });
   };
 

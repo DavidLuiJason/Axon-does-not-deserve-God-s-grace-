@@ -52,3 +52,12 @@ export async function sendQueryToAxonBoundary(
     timestamp: at,
   };
 }
+
+/** B05 D2a: a new chat, or another chat, starts with an empty dialogue. It can never break the screen. */
+export function resetAxonDialogue(): void {
+  try {
+    getAxonBrain().resetDialogue();
+  } catch {
+    /* the reset is a convenience; the chat must keep working */
+  }
+}
