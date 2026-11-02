@@ -29,8 +29,8 @@ export interface LaneConfig {
   readonly choicesFor: (toolId: string) => Readonly<Record<string, readonly string[]>>;
   readonly toolNameFor: (toolId: string) => string;
   readonly deps: () => RunnerDeps;
-  /** OWNER DECISION (LIVE2): false (the default) means the lane yields whenever the binder had to assume something, because the old handler would then answer differently; true answers and says the assumption aloud (the owner-approved 2026-10-28 rule). */
-  readonly allowDefaults?: boolean;
+  /** OWNER DECISION (LIVE2): false (the default) means the lane yields whenever the binder had to assume something, because the old handler would then answer differently; true answers and says the assumption aloud (the owner-approved 2026-10-28 rule). LIVE9-2b: a function decides per tool (a tool with no old handler may answer and say its default aloud). */
+  readonly allowDefaults?: boolean | ((toolId: string) => boolean);
 }
 export interface LaneInput {
   readonly message: string;
@@ -73,7 +73,7 @@ export async function runDirectLane(input: LaneInput, config: LaneConfig): Promi
     if (items.length !== 1) return yields('the arguments could not be built');
     const bound = bindArguments(items[0]!.input);
     if (bound.decision !== 'run') return yields(`the binder says ${bound.decision}`);
-    if (bound.assumptions.length > 0 && config.allowDefaults !== true) return yields('the binder had to assume something, so the old handler may answer differently');
+    if (bound.assumptions.length > 0 && !(typeof config.allowDefaults === 'function' ? config.allowDefaults(tool) : config.allowDefaults === true)) return yields('the binder had to assume something, so the old handler may answer differently');
     const guard = config.guards[tool];
     const refusal = guard ? guard(bound.args, input.message) : null;
     if (refusal !== null) return yields(refusal);

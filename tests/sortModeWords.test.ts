@@ -2,7 +2,9 @@
 import { SORT_MODE_WORDS, SORT_MODE_CHOICES, foldSortMode } from '../src/tools/runners/sortModeWords';
 import { SORT_LINE_MODES } from '../src/tools/engines/text/sortLines';
 import { findRunner } from '../src/tools/runners/runnerRegistry';
-import { LIVE_CHOICES, LIVE_SWITCHES } from '../src/tools/runners/liveSwitches';
+import { LIVE_CHOICES, LIVE_SWITCHES, LIVE_SAY_DEFAULTS } from '../src/tools/runners/liveSwitches';
+import { buildLaneConfig } from '../src/brain/index';
+import { SLOT_DEFAULTS } from '../src/brain/mind/bind/bindDefaults';
 let n = 0; const check = (ok: boolean, name: string): void => { n++; if (!ok) throw new Error('FAILED: ' + name); };
 const PROPOSED: Record<string, string> = { ascending: 'ascending', alphabetical: 'ascending', alphabetically: 'ascending', descending: 'descending', length: 'by-length', natural: 'natural', reverse: 'reverse', shuffle: 'shuffle', random: 'shuffle', randomize: 'shuffle' };
 check(JSON.stringify(SORT_MODE_WORDS) === JSON.stringify(PROPOSED), 'the closed set is exactly the proposed set (a new word must change this test on purpose)');
@@ -24,4 +26,8 @@ const WANT: Record<string, string> = { alphabetically: 'apple\nfig\npear', ascen
 for (const [mode, want] of Object.entries(WANT)) { const o = await ask(mode); check(o.ok && o.reply.startsWith(want + '\n'), 'runner answers for ' + mode); }
 check((await ask('sideways')).ok === false, 'the runner still refuses an unknown mode');
 const noMode = await runner.run({ text: 'b\na' } as never, deps); check(noMode.ok && noMode.reply.startsWith('a\nb\n'), 'no mode still sorts ascending (engine default)');
+check(JSON.stringify(LIVE_SAY_DEFAULTS) === JSON.stringify(['sort-lines']), 'only Sort Lines may answer with a declared default (said aloud)');
+const allow = buildLaneConfig().allowDefaults as (id: string) => boolean;
+check(allow('sort-lines') === true && allow('text-counter') === false && allow('case-converter') === false, 'the lane lets only Sort Lines use a default; Text Counter keeps the LIVE2 rule');
+check(SLOT_DEFAULTS['sort-lines']?.mode?.value === 'ascending' && (SORT_LINE_MODES as readonly string[]).includes(String(SLOT_DEFAULTS['sort-lines']!.mode!.value)), 'the declared default for mode is ascending, a real engine mode');
 console.log('sortModeWords: ' + n + ' checks passed');

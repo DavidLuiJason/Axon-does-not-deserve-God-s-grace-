@@ -26,3 +26,6 @@ export const LIVE_TASKS: Readonly<Record<string, { readonly actionId: string; re
   'case-converter': Object.freeze({ actionId: TEXT_CASE_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ text: args.text, mode: foldCaseMode(args.mode) }) }),
   'text-counter': Object.freeze({ actionId: TEXT_COUNT_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ text: args.text, ...(args.unit !== undefined ? { unit: args.unit } : {}) }) }),
 });
+
+/** LIVE9-2b: tools whose lane answer may use a declared default and SAY it aloud (owner rule 2026-10-28): only tools with NO old chat handler, so no old answer can differ. Text Counter keeps the LIVE2 rule (it yields when a default was needed). PROPOSED for Sort Lines (default ascending): the owner's yes is waiting. */
+export const LIVE_SAY_DEFAULTS: readonly string[] = Object.freeze(['sort-lines']);

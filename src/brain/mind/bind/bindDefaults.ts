@@ -10,4 +10,5 @@ export const SLOT_DEFAULTS: Readonly<Record<string, Readonly<Record<string, Slot
   'qr-maker': Object.freeze({ level: { value: 'M', note: 'using medium error correction' } }),
   'random-picker': Object.freeze({ count: { value: 1, note: 'picking one' } }),
   calculator: Object.freeze({ angle: { value: 'rad', note: 'using radians for angles' } }),
+  'sort-lines': Object.freeze({ mode: { value: 'ascending', note: 'sorting in ascending order, from a to z' } }),
 });

@@ -34,7 +34,7 @@ converter | c a | convert calculate | unit:n quantity:n |  | text:text:r delimit
 find-replace | c a | find replace | text:n replacement:n occurrence:n |  | text:text:r pattern:text:r replacement:text:o caseSensitive:yes-no:o wholeWord:yes-no:o regex:yes-no:o replaceAll:yes-no:o | shows-result |  | quick low | not-needed
 case-converter | c a | convert change | case:n letter:n upper:a lower:a lowercase:a uppercase:a | camelcase pascalcase | text:text:r mode:choice:r | shows-result |  | quick low | not-needed
 text-cleaner | c a | clean remove | text:n space:n line:n blank:a duplicate:a |  | text:text:r trimEachLine:yes-no:o collapseRepeatedSpaces:yes-no:o removeBlankLines:yes-no:o collapseBlankLines:yes-no:o straightenQuotesAndDashes:yes-no:o removeZeroWidth:yes-no:o normalizeLineEndings:yes-no:o | shows-result |  | quick low | not-needed
-sort-lines | c a | sort remove | line:n order:n |  | text:text:r mode:choice:r ignoreCase:yes-no:o removeDuplicates:yes-no:o ignoreBlankLines:yes-no:o | shows-result |  | quick low | not-needed
+sort-lines | c a | sort remove alphabetize arrange reverse shuffle | line:n order:n length:n |  | text:text:r mode:choice:r ignoreCase:yes-no:o removeDuplicates:yes-no:o ignoreBlankLines:yes-no:o | shows-result |  | quick low | not-needed
 text-compare | c a | compare detect | text:n passage:n difference:n |  | original:text:r revised:text:r mode:choice:r | shows-result |  | quick low | not-needed
 rephraser | c a | rephrase change | sentence:n wording:n version:n |  |  | shows-result |  | quick low | not-needed
 grammar-helper | c a | explain detect | grammar:n sentence:n mistake:n |  |  | shows-result |  | quick low | not-needed
