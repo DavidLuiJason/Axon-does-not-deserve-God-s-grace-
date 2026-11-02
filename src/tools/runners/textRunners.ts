@@ -9,6 +9,7 @@ import {
 import { findReplace } from '../engines/text/findReplace';
 import { caseConvert } from '../engines/text/caseConvert';
 import { foldCaseMode } from './caseModeWords';
+import { foldSortMode } from './sortModeWords';
 import { textCleaner } from '../engines/text/textCleaner';
 import { sortLines } from '../engines/text/sortLines';
 import { textCompare } from '../engines/text/textCompare';
@@ -127,7 +128,7 @@ const textCleanerRunner = makeRunner('text-cleaner', TEXT_CLEANER_DESCRIPTOR, (a
   return success('text-cleaner', result, `${result.text}\nChanges: ${changed || 'none'}.`);
 });
 
-const sortLinesRunner = makeRunner('sort-lines', SORT_LINES_DESCRIPTOR, (args, deps) => {
+const sortLinesCore = makeRunner('sort-lines', SORT_LINES_DESCRIPTOR, (args, deps) => {
   const options: Parameters<typeof sortLines>[1] = {};
   for (const key of ['mode', 'ignoreCase', 'removeDuplicates', 'ignoreBlankLines'] as const) {
     if (args[key] !== undefined) options[key] = args[key] as never;
@@ -137,6 +138,12 @@ const sortLinesRunner = makeRunner('sort-lines', SORT_LINES_DESCRIPTOR, (args, d
   if (!result.ok) return engineFailure('sort-lines', result.error);
   return success('sort-lines', result, `${result.text}\nLine count: ${result.lineCount}.`);
 });
+
+/** LIVE9-2: a mode word from the closed set (docs/LIVE9_DESIGN.md) is folded to the engine mode first; the screen's engine modes pass through unchanged. */
+const sortLinesRunner: ToolRunner = {
+  toolId: 'sort-lines',
+  run: (args: RunnerArgs, deps: RunnerDeps) => sortLinesCore.run(record(args) && args.mode !== undefined ? { ...args, mode: foldSortMode(args.mode) } : args, deps),
+};
 
 const textCompareRunner = makeRunner('text-compare', TEXT_COMPARE_DESCRIPTOR, (args) => {
   const result = textCompare(args.original as string, args.revised as string, args.mode as Parameters<typeof textCompare>[2]);

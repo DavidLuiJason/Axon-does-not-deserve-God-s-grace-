@@ -8,6 +8,7 @@ import { TIME_RUNNERS } from './timeRunners';
 import { TEXT_COUNTER_UNITS } from './textCounterRunner';
 import { TEXT_COUNT_ACTION } from '../../kernel/textCount';
 import { CASE_MODE_CHOICES, foldCaseMode } from './caseModeWords';
+import { SORT_MODE_CHOICES } from './sortModeWords';
 import { TEXT_CASE_ACTION } from '../textCaseAction';
 
 /** LIVE8-3 go-live (2026-10-31): Case Converter is the second tool ON. SWITCH BACK = delete the 'case-converter' entry below, delete its `act.case-converter` chat action in registerAxonTools.ts (chat must not claim it, FL10) and set PINNED_ON in tests/liveSwitches.test.ts to ['text-counter'].
@@ -15,7 +16,7 @@ import { TEXT_CASE_ACTION } from '../textCaseAction';
 export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES, 'text-counter': 'runner' as const, 'case-converter': 'runner' as const });
 
 /** The choice words each live tool's binder may fill, per slot (one source: the runner's own closed set). */
-export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }), 'case-converter': Object.freeze({ mode: CASE_MODE_CHOICES }) });
+export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }), 'case-converter': Object.freeze({ mode: CASE_MODE_CHOICES }), 'sort-lines': Object.freeze({ mode: SORT_MODE_CHOICES }) });
 
 /** Tools whose runner keeps an engine state (timer, stopwatch, tally counter, ...): the lane never runs them until a STATE design says who stores it. */
 export const STATE_TOOL_IDS: readonly string[] = Object.freeze(TIME_RUNNERS.map((runner) => runner.toolId));
