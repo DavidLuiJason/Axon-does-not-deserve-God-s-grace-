@@ -3,3 +3,4 @@
 2026-11-01 | twenty-fifth account intake: roadmap v20.7, paste, NOW.txt, merge tag and board tail read; build screenshot (2 type errors in VideoFramesScreen.tsx) diagnosed; GATE-FIX2 package made
 2026-11-01 | twenty-fifth account, second turn: B05 D2a built (shadow dialogue state, trace, reset, parking rule) and tested; GATE-FIX2 included
 2026-11-02 | new Director account intake (after the account that wrote the replan plan): v20.9 draft roadmap, previous chat (Untitled_19), plan, handover prompt and main zip read; owner raised the cap to 58,000 (target 50,000, warn 45,000); roadmap v21.0 written whole, build-order file made, merge package made
+2026-11-02 | new Director account intake: roadmap v21.0 and main zip (NOW.txt, merge tag, board tail) read; owner asked for the next job; N07 diagnosed and MEANING-N07-FIX package made

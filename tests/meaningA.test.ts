@@ -227,7 +227,7 @@ async function main(): Promise<void> {
     return createMind({ providers: [localRules, createDictionaryProvider(createDictionarySlot(async () => dictionary))], fallback: createFoundation({ abilities: { answerRequestFallback } }), planned: PLANNED_SOURCES, now: fixedNow, slot });
   };
   const golden = load<Array<{ message: string; reply: Record<string, unknown> }>>('brainGolden.json');
-  const expectedStates = 'intake:ran,reading:ran,analysis:ran,resolution:not-built,dialogue:not-built,planning:not-built,execution:ran,verification:not-built,response:passed-through';
+  const expectedStates = 'intake:ran,reading:ran,analysis:ran,resolution:not-built,dialogue:ran,planning:not-built,execution:ran,verification:not-built,response:passed-through';
   let meaningRan = 0;
   for (const item of golden) {
     const { reply, trace } = await freshBrain().askWithTrace({ text: item.message, place: 'chat' });
