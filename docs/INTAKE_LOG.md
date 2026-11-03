@@ -65,3 +65,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-01 | twenty-sixth account, fourth turn: owner tests the command limit on purpose; MULTI-REPLY design written (W24).
 2026-11-01 | twenty-sixth account, fifth turn: MR0 splitting measurement done (31 of 50).
 2026-11-03 | new Director account intake: roadmap v21.0 read in full (repo copy identical to the upload); paste read (previous account ended mid LIVE9-3, never delivered); repo zip checked (NOW.txt, MERGE_TAG, board tail, router and runner files); owner's long message answered; V22-PLAN built.
+2026-11-03 | second intake turn of the new Director account: roadmap v21.0, the paste (Untitled 20) and the repo files read; cloud build text read (type errors and two test failures noted); owner's naming pattern, cap 63,000, target 58,000, deadline, Router approval and new wishes recorded; roadmap v21.1 written (62,924 characters).

@@ -2,16 +2,16 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  *
- * The roadmap size law (owner, 2026-11-02): docs/ROADMAP.md never exceeds 58,000 characters
- * (target 50,000, warning 45,000). Compression must never drop a law, a rule, an EXAMPLE or the
+ * The roadmap size law (owner, 2026-11-02): docs/ROADMAP.md never exceeds 63,000 characters
+ * (target 58,000, warning 50,000; owner 2026-11-03). Compression must never drop a law, a rule, an EXAMPLE or the
  * Standard Prompt Preamble (which lives in section 5.3a of the roadmap itself; the annex is stale).
- * Earlier caps: 40,000 (2026-10-16), 45,000 (2026-11-01).
+ * Earlier caps: 40,000 (2026-10-16), 45,000 (2026-11-01), 50,000 and 58,000 (2026-11-02).
  */
 import { readFileSync, existsSync } from 'node:fs';
 
-const CAP = 58000;
-const TARGET = 50000;
-const WARN = 45000;
+const CAP = 63000;
+const TARGET = 58000;
+const WARN = 50000;
 const text = readFileSync('docs/ROADMAP.md', 'utf8');
 let checks = 0;
 
@@ -24,7 +24,7 @@ assert(text.length <= CAP, `the roadmap holds ${text.length} characters; the cap
 if (text.length > WARN) console.log(`NOTE: the roadmap is above ${WARN} characters (${text.length}); measure before every edit, compress before adding.`);
 if (text.length > TARGET) console.log(`NOTE: the roadmap is above the ${TARGET} target (${text.length}).`);
 assert(!text.includes('\r'), 'the roadmap uses LF line endings');
-assert(text.includes('hard cap 58,000'), 'section 0 states the same cap as this test (58,000)');
+assert(text.includes('hard cap 63,000'), 'section 0 states the same cap as this test (63,000)');
 
 for (let n = 1; n <= 15; n += 1) {
   assert(text.includes(`**FL${n} `), `Foundation Law FL${n} is present`);
@@ -51,6 +51,9 @@ const required = [
   '**EXAMPLE (owner):**', 'I made that work', '**EXAMPLE, size to the carrier:**', '**EXAMPLE, no structure:**',
   '**EXAMPLE, unmeasured base:**', '**EXAMPLE, display limit is not data limit:**', '**EXAMPLE, proof:**',
   '**EXAMPLE, stacked wishes:**',
+  // v21.1 additions
+  'VERSION NAMES', 'STALE-ROADMAP RULE', 'PLAN A / PLAN B', 'FLEXIBLE SPEECH', 'ROUTER DEFAULTS', 'KNOWLEDGE DRIVE',
+  'DERIVED KNOWLEDGE', 'BACKGROUND WORK', '**EXAMPLE, wrong version name', '**EXAMPLE, one message contradicts itself',
 ];
 for (const phrase of required) assert(text.includes(phrase), `the roadmap still contains: ${phrase}`);
 // The Standard Prompt Preamble lives in 5.3a of the roadmap itself and must never be dropped.
