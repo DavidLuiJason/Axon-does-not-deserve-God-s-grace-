@@ -29,6 +29,6 @@ const big = await run({ text: 'a'.repeat(200_001) });
 check(big.submitted && big.task.state === 'FAILED', 'text over the engine limit ends FAILED');
 const empty = await run({ text: '' });
 check(empty.submitted ? empty.task.state === 'COMPLETED' && out(empty)?.text === '' : true, 'empty text is handled, never throws');
-check(getAxonEngine().getAction('text.sort') === undefined, 'text.sort is NOT registered in the shared engine yet (pin: LIVE9-3 changes it on purpose)');
-check(getAxonEngine().getAction('text.case') !== undefined && getAxonEngine().getAction('text.count') !== undefined, 'the two live tools stay registered');
+check(getAxonEngine().getAction('text.sort') === TEXT_SORT_ACTION, 'text.sort is registered in the shared engine since LIVE9-3 (with its available chat action and its switch)');
+check(getAxonEngine().getAction('text.case') !== undefined && getAxonEngine().getAction('text.count') !== undefined, 'the other two live tools stay registered');
 console.log('textSortAction: ' + n + ' checks passed');

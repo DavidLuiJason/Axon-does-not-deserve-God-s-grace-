@@ -18,7 +18,7 @@ for (const mode of SORT_LINE_MODES) check(foldSortMode(mode) === mode, 'engine m
 check(foldSortMode('sideways') === 'sideways' && foldSortMode('toString') === 'toString' && foldSortMode('__proto__') === '__proto__', 'unknown words (even object names) come back unchanged');
 check(foldSortMode(5) === 5 && foldSortMode(undefined) === undefined, 'non-text comes back unchanged');
 check(JSON.stringify(LIVE_CHOICES['sort-lines']?.mode) === JSON.stringify(SORT_MODE_CHOICES), 'the lane would supply exactly this set to the binder');
-check(LIVE_SWITCHES['sort-lines'] !== 'runner', 'the Sort Lines switch is still OFF (LIVE9-3 turns it on)');
+check(LIVE_SWITCHES['sort-lines'] === 'runner', 'the Sort Lines switch is ON since LIVE9-3');
 const runner = findRunner('sort-lines')!;
 const deps = { now: 0, randomBelow: () => 0, random01: () => 0 };
 const ask = async (mode: unknown) => runner.run({ text: 'pear\napple\nfig', mode } as never, deps);

@@ -48,6 +48,16 @@ const TEXT_TOOLS_CAPABILITY = {
     ],
     status: 'available',
     link: { actionId: 'text.case' },
+  }, {
+    id: 'act.sort-lines',
+    purpose: 'Sort lines of text',
+    examples: [
+      'sort the lines "pear\napple\nfig"',
+      'sort "b\na\nc" descending',
+      'sort "ccc\na\nbb" by length',
+    ],
+    status: 'available',
+    link: { actionId: 'text.sort' },
   }] as ChatAction[],
 } as const;
 

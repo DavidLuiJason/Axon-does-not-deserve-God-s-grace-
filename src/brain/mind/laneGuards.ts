@@ -7,6 +7,8 @@
  */
 import { detectCodeRegions } from '../symbols/codeRegions';
 import type { LaneGuard } from './directLane';
+import { SORT_MODE_WORDS } from '../../tools/runners/sortModeWords';
+import { SORT_OPTION_WORDS, sortWordsOf } from '../../tools/runners/sortOptionWords';
 
 /** Text Counter: the old handler adds a note when the text holds code (or may); the runner does not, so the lane yields. */
 const textCounterGuard: LaneGuard = (args, message) => {
@@ -40,4 +42,24 @@ const caseConverterGuard: LaneGuard = (args, message) => {
   return 'the text is not inside quote marks, so the old handler decides';
 };
 
-export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard });
+/**
+ * LIVE9-3, Sort Lines: two measured WRONG answers (LIVE9-2b) are stopped here. The words of the message OUTSIDE the person's own text are read:
+ * (1) two mode words that name DIFFERENT engine modes (\"reverse alphabetical\" = reverse + ascending, which would sort A to Z) yield;
+ * (2) a word for an option or an order the lane does not do (duplicates, blank lines, ignoring case, z to a, backwards, numerically, naturally) yields;
+ * (3) the text must sit inside quote marks, as for Case Converter (measured with the switch ON: \"sort the files in my folder\" sorted \"my folder\" and \"how do I sort a list in python\" sorted \"python\"). Both read the closed sets in the runners folder (FL13), never a phrase list.
+ * A yield means no answer from the lane, so the old path or an ask replies: never a wrong sort.
+ */
+const sortLinesGuard: LaneGuard = (args, message) => {
+  const unquoted = caseConverterGuard(args, message);
+  if (unquoted !== null) return unquoted;
+  const text = typeof args.text === 'string' ? args.text : '';
+  const outside = text === '' ? message : message.split(text).join(' ');
+  const words = sortWordsOf(outside);
+  const modes = new Set<string>();
+  for (const word of words) if (Object.prototype.hasOwnProperty.call(SORT_MODE_WORDS, word)) modes.add(SORT_MODE_WORDS[word]!);
+  if (modes.size > 1) return 'the message names two different sort orders, so it asks instead of guessing';
+  for (const word of words) if (Object.prototype.hasOwnProperty.call(SORT_OPTION_WORDS, word)) return 'the message asks for an option or an order this answer does not do, so it asks instead of ignoring it';
+  return null;
+};
+
+export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard });
