@@ -64,3 +64,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-01 | twenty-sixth account, third turn: ROUTER-SHADOW built (module, binder helper, trace line, test, package.json line).
 2026-11-01 | twenty-sixth account, fourth turn: owner tests the command limit on purpose; MULTI-REPLY design written (W24).
 2026-11-01 | twenty-sixth account, fifth turn: MR0 splitting measurement done (31 of 50).
+2026-11-03 | new Director account intake: roadmap v21.0 read in full (repo copy identical to the upload); paste read (previous account ended mid LIVE9-3, never delivered); repo zip checked (NOW.txt, MERGE_TAG, board tail, router and runner files); owner's long message answered; V22-PLAN built.
