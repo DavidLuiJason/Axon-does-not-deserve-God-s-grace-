@@ -3,6 +3,7 @@ One row per Claude (Director) account and per LIMIT TEST. All sizes are ESTIMATE
 
 | Date | Account | Job | Size 1-10 | Chars read (est.) | Chars written (est.) | Files | Commands | Turns | Roadmap edit? | Produced | Where it stopped / limit message | Suspects present |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-11-03 | new Director account (12th job) | DOWNSCALE engine | 3 | ~110,000 (roadmap read in 3 parts, pasted chat, 4 repo files) | ~28,000 | 7 touched, 2 new code files | ~24 | 1 (plus a round-one intake turn) | NO | engine + test + docs + merge zip | not stopped | commands, big tool output (roadmap read), long chat |
 
 ## Rows carried over from `AI_CAPACITY.md` (OWNER-REPORTED or Director estimates; no character counts exist)
 | Date | Job | Commands | Roadmap edit? | Result |
