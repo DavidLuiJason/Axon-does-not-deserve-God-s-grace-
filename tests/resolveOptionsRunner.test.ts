@@ -86,7 +86,7 @@ ok(map['constructor' as string] === undefined && map['toString' as string] === u
 ok(Object.keys(map).length === facts.length, `one entry per fact (${Object.keys(map).length} of ${facts.length})`);
 for (const f of facts) ok(map[f.id] === deriveStatus(f), `status of ${f.id} equals deriveStatus`);
 const count = (s: string): number => Object.values(map).filter((v) => v === s).length;
-ok(count('ready') === 3 && count('built') === 37 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 3 / 37 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
+ok(count('ready') === 5 && count('built') === 35 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 5 / 35 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
 ok(map['text-counter'] === 'ready', 'text-counter is ready');
 ok(api.statusMapFrom(facts) !== map, 'each call returns a NEW object');
 const mk = (p: Record<string, unknown>): ToolFact => ({ kind: 'tool', id: 'x', name: 'X', description: 'd', group: 'g', screen: true, chat: 'not-built', leftOut: false, ...p }) as ToolFact;

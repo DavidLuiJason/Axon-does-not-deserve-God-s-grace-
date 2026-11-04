@@ -635,7 +635,7 @@
   "description": "Sort lines of text and remove duplicates.",
   "group": "text-writing",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Sort, reverse, deduplicate or filter lines; shuffle requires injected randomness."
