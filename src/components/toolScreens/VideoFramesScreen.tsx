@@ -579,7 +579,7 @@ export default function VideoFramesScreen({
       if (!zipRes.ok) return;
 
       const partFileName = `${baseName}_part${partIndex}.zip`;
-      const blob = new Blob([zipRes.value], { type: 'application/zip' });
+      const blob = new Blob([zipRes.value as BlobPart], { type: 'application/zip' });
       await saveFile(partFileName, blob);
       setPartZipsNotice((prev) => [
         ...prev,
@@ -783,7 +783,7 @@ export default function VideoFramesScreen({
       }
 
       const zipFileName = `${baseName}_frames.zip`;
-      const blob = new Blob([zipRes.value], { type: 'application/zip' });
+      const blob = new Blob([zipRes.value as BlobPart], { type: 'application/zip' });
       const result = await saveFile(zipFileName, blob);
       setSaveResult(result);
       if (!result.success) {

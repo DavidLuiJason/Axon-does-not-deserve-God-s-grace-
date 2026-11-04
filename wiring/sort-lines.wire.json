@@ -1,0 +1,22 @@
+{
+  "wireVersion": 1,
+  "toolId": "sort-lines",
+  "displayName": "Sort Lines",
+  "catalog": { "description": "Sort lines of text and remove duplicates.", "groupId": "text-writing", "status": "available", "opens": "tool-screen" },
+  "chat": { "actionId": "act.sort-lines", "purpose": "Sort lines of text", "examples": ["sort the lines \"pear\napple\nfig\"", "sort \"b\na\nc\" descending", "sort \"ccc\na\nbb\" by length"], "status": "available", "linkActionId": "text.sort" },
+  "descriptor": {
+    "const": "SORT_LINES_DESCRIPTOR",
+    "purpose": "Sort, reverse, deduplicate or filter lines; shuffle requires injected randomness.",
+    "examples": ["Sort these lines alphabetically.", "Sort lines by length and remove duplicates.", "Reverse the line order."],
+    "inputs": [
+      { "name": "text", "kind": "text" },
+      { "name": "mode", "kind": "choice", "choices": ["ascending", "descending", "by-length", "natural", "reverse", "shuffle"] },
+      { "name": "ignoreCase", "kind": "yes-no" },
+      { "name": "removeDuplicates", "kind": "yes-no" },
+      { "name": "ignoreBlankLines", "kind": "yes-no" }
+    ]
+  },
+  "schemaRow": ["sort-lines", "c a", "sort remove alphabetize arrange reverse shuffle", "line:n order:n length:n", "", "text:text:r mode:choice:r ignoreCase:yes-no:o removeDuplicates:yes-no:o ignoreBlankLines:yes-no:o", "shows-result", "", "quick low", "not-needed"],
+  "bindDefaults": { "mode": { "value": "ascending", "note": "sorting in ascending order, from a to z" } },
+  "live": { "switch": "runner", "choicesConst": "SORT_MODE_CHOICES", "choiceSlot": "mode", "actionConst": "TEXT_SORT_ACTION", "foldSlot": "mode", "foldFn": "foldSortMode" }
+}

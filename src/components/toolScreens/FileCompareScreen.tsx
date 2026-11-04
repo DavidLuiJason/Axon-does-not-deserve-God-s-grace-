@@ -79,7 +79,7 @@ export const FileCompareScreen: React.FC<FileCompareScreenProps> = ({
 
   // Results
   const [byteResult, setByteResult] = useState<ByteCompareResult | null>(null);
-  const [textResult, setTextResult] = useState<TextCompareExtended | null>(null);
+  const [textResult, setTextResult] = useState<Extract<TextCompareExtended, { ok: true }> | null>(null);
   const [pixelResult, setPixelResult] = useState<PixelCompareResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
