@@ -132,8 +132,8 @@ export const AxonToolsScreen: React.FC<AxonToolsScreenProps> = ({
     : '';
 
   const openTarget = (target: ToolTarget, tool?: CatalogTool) => {
-    if (target === 'tool-screen' && tool) {
-      setCurrentScreen(`tool:${tool.id}`);
+    if (target === 'tool-screen') {
+      if (tool) setCurrentScreen(`tool:${tool.id}`);
     } else if (target === 'text-counter') {
       setOpenTool('text-counter');
     } else {

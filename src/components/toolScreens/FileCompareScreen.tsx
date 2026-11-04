@@ -242,7 +242,7 @@ export const FileCompareScreen: React.FC<FileCompareScreenProps> = ({
                 if (ctx) {
                   const over = overlay(imA, pRes.diffMask);
                   if (over instanceof Uint8ClampedArray) {
-                    const idata = new ImageData(over, w, h);
+                    const idata = new ImageData(over as Uint8ClampedArray<ArrayBuffer>, w, h);
                     ctx.putImageData(idata, 0, 0);
                   }
                 }
