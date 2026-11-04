@@ -1,4 +1,5 @@
 /** LIVE9-2: the closed set of Sort Lines mode words (PROPOSED, the owner's yes waiting). Known answers are hand-written. */
+import { readSortReverse } from '../src/tools/runners/sortModeWords';
 import { SORT_MODE_WORDS, SORT_MODE_CHOICES, foldSortMode } from '../src/tools/runners/sortModeWords';
 import { SORT_LINE_MODES } from '../src/tools/engines/text/sortLines';
 import { findRunner } from '../src/tools/runners/runnerRegistry';
@@ -30,4 +31,16 @@ check(JSON.stringify(LIVE_SAY_DEFAULTS) === JSON.stringify(['sort-lines']), 'onl
 const allow = buildLaneConfig().allowDefaults as (id: string) => boolean;
 check(allow('sort-lines') === true && allow('text-counter') === false && allow('case-converter') === false, 'the lane lets only Sort Lines use a default; Text Counter keeps the LIVE2 rule');
 check(SLOT_DEFAULTS['sort-lines']?.mode?.value === 'ascending' && (SORT_LINE_MODES as readonly string[]).includes(String(SLOT_DEFAULTS['sort-lines']!.mode!.value)), 'the declared default for mode is ascending, a real engine mode');
+// Director (2026-11-04): 'sort in reverse' means descending; 'reverse the lines' still flips.
+{
+  const ok = (c: boolean, m: string): void => { if (!c) throw new Error('readSortReverse: ' + m); };
+  ok(readSortReverse({ text: 'b\na', mode: 'reverse' }, 'sort "b\na" in reverse').mode === 'descending', 'sort + reverse is descending');
+  ok(readSortReverse({ text: 'b\na', mode: 'reverse' }, 'arrange "b\na" in reverse').mode === 'descending', 'arrange + reverse is descending');
+  ok(readSortReverse({ text: 'b\na', mode: 'Reverse' }, 'Alphabetize "b\na" Reverse').mode === 'descending', 'capitals do not matter');
+  ok(readSortReverse({ text: 'b\na', mode: 'reverse' }, 'reverse the lines "b\na"').mode === 'reverse', 'no sorting verb: the lines are flipped');
+  ok(readSortReverse({ text: 'sort\nfoo', mode: 'reverse' }, 'reverse the lines "sort\nfoo"').mode === 'reverse', 'a sorting word INSIDE the person\'s text never counts');
+  ok(readSortReverse({ text: 'b\na', mode: 'ascending' }, 'sort "b\na"').mode === 'ascending', 'other modes pass through');
+  const same = { text: 'x' };
+  ok(readSortReverse(same, 'sort "x"') === same, 'no mode: the same object comes back');
+}
 console.log('sortModeWords: ' + n + ' checks passed');

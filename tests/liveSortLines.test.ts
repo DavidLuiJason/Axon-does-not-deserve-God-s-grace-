@@ -22,6 +22,7 @@ const ANSWERS: ReadonlyArray<readonly [string, string, number]> = [
   ['sort "b\na" ascending', 'a\nb', 2], ['sort "b\na" alphabetically', 'a\nb', 2], ['alphabetize "b\na"', 'a\nb', 2], ['reverse the lines "a\nb\nc"', 'c\nb\na', 3],
   ['can you sort "z\ny\nx"', 'x\ny\nz', 3], ['could you please sort the lines "q\np"', 'p\nq', 2], ['sort these lines: "b\na"', 'a\nb', 2],
   ['arrange "b\na\nc" in descending order', 'c\nb\na', 3], ['sort "3\n20\n100"', '100\n20\n3', 3], ['sort "apple\nBanana\ncherry"', 'Banana\napple\ncherry', 3],
+  ['sort "b\na" in reverse', 'b\na', 2], ['sort "a\nb\nc" in reverse', 'c\nb\na', 3], ['reverse the lines "b\na"', 'a\nb', 2], ['reverse the lines "sort\nfoo"', 'foo\nsort', 2],
   ['sort "é\na\nz"', 'a\nz\né', 3], ['sort the lines "only one"', 'only one', 1], ['sort "b\na" please', 'a\nb', 2], ['sort "dd\nc\nbbb" by length', 'c\ndd\nbbb', 3],
 ];
 // MUST NOT be answered by the lane (each would have been a WRONG answer, measured): second order word, option the lane does not fill, order outside the mode words, text not in quotes

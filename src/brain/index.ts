@@ -24,6 +24,7 @@ import { execute } from '../tools/runners/runnerRegistry';
 import { LIVE_CHOICES, LIVE_SAY_DEFAULTS, LIVE_SWITCHES, LIVE_TASKS, STATE_TOOL_IDS } from '../tools/runners/liveSwitches';
 import type { RunnerSwitches } from '../tools/runners/runnerRegistry';
 import { LANE_GUARDS } from './mind/laneGuards';
+import { readSortReverse } from '../tools/runners/sortModeWords';
 import type { LaneConfig } from './mind/directLane';
 import type { KnowledgeSlot } from './knowledge/slot';
 
@@ -54,6 +55,7 @@ export function buildLaneConfig(switches: RunnerSwitches = LIVE_SWITCHES): LaneC
     isOn: (toolId) => switches[toolId] === 'runner',
     needsState: (toolId) => STATE_TOOL_IDS.includes(toolId),
     guards: LANE_GUARDS,
+    adjust: (toolId, args, message) => (toolId === 'sort-lines' ? readSortReverse(args, message) : args),
     allowDefaults: (toolId) => LIVE_SAY_DEFAULTS.includes(toolId),
     run: (toolId, args, deps) => execute(toolId, args, deps, switches),
     record: async (toolId, args) => {

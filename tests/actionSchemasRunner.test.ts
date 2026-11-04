@@ -73,7 +73,7 @@ function check(schemas: unknown, factList: ToolFact[], dict: Map<string, string>
       }
       return list;
     };
-    const actions = chk(s.actions, 'actions', 1, 4, ['v']);
+    const actions = chk(s.actions, 'actions', 1, 8, ['v']);
     const objects = chk(s.objects, 'objects', 1, 6, OBJ_POS);
     let names: string[] = [];
     if (!isStrList(s.names) || s.names.length > 4 || !uniq(s.names)) bad('names must be 0 to 4 different strings');
@@ -197,7 +197,7 @@ const mutants: Mutant[] = [
   { name: 'an act that is not a label', apply: (a) => { a[2]!.acts = ['shout']; return true; } },
   { name: 'a phrase as an action', apply: (a) => { a[2]!.actions = ['count words:v']; return true; } },
   { name: 'an action that is a noun', apply: (a) => { a[2]!.actions = ['count:n']; return true; } },
-  { name: 'five actions', apply: (a) => { a[2]!.actions = L('count:v tally:v total:v add:v sum:v'); return true; } },
+  { name: 'nine actions', apply: (a) => { a[2]!.actions = L('count:v tally:v total:v add:v sum:v measure:v compute:v calculate:v figure:v'); return true; } },
   { name: 'an object in capitals', apply: (a) => { a[2]!.objects = ['Word:n']; return true; } },
   { name: 'an object that is not in the dictionary', needsLemmas: true, apply: (a) => { a[2]!.objects = ['zzyzx:n']; return true; } },
   { name: 'a name that is a dictionary word', needsLemmas: true, apply: (a) => { a[2]!.names = ['word']; return true; } },

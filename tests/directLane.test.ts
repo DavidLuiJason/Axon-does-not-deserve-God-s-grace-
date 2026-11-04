@@ -85,4 +85,14 @@ const m2 = good.meaning as any;
 check((await runDirectLane({ ...good, meaning: { ...m2, structure: { ...m2.structure, pieces: [m2.structure.pieces[0], m2.structure.pieces[0]] } } }, config(always('X')))).kind === 'yield', 'YIELD 3c: two pieces with one clause and one resolution');
 // input untouched
 const frozen = JSON.stringify(good); await runDirectLane(good, config()); check(JSON.stringify(good) === frozen, 'the input is not changed');
+// Director (2026-11-04): the arguments a tool's `adjust` returns are the ones the lane RUNS and RECORDS (one reading, never two).
+{
+  let ranWith: unknown = null; let recordedWith: unknown = null;
+  const seen = await runDirectLane(good, config({
+    adjust: (_t, a) => ({ ...a, adjustedBy: 'director' }),
+    run: (t, a, d) => { ranWith = a; const { adjustedBy: _dropped, ...plain } = a as Record<string, unknown>; return execute(t, plain, d, { 'text-counter': 'runner' }); },
+    record: async (_t, a) => { recordedWith = a; return { taskId: 'task-0', line: 'Ran as task task-0: COMPLETED in 0 ms, from your exact input.' }; },
+  }));
+  check(seen.kind === 'answer' && (ranWith as Record<string, unknown>)?.adjustedBy === 'director' && (recordedWith as Record<string, unknown>)?.adjustedBy === 'director', 'ADJUST: the lane runs and records the adjusted arguments');
+}
 console.log('directLane: ' + n + ' checks passed');

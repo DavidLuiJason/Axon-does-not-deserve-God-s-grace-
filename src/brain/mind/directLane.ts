@@ -31,6 +31,8 @@ export interface LaneConfig {
   readonly deps: () => RunnerDeps;
   /** OWNER DECISION (LIVE2): false (the default) means the lane yields whenever the binder had to assume something, because the old handler would then answer differently; true answers and says the assumption aloud (the owner-approved 2026-10-28 rule). LIVE9-2b: a function decides per tool (a tool with no old handler may answer and say its default aloud). */
   readonly allowDefaults?: boolean | ((toolId: string) => boolean);
+  /** Optional: a tool may read its bound arguments in the light of the message (e.g. Sort Lines: "sort in reverse" means descending). Returns the arguments the lane runs AND records. */
+  readonly adjust?: (toolId: string, args: Readonly<Record<string, unknown>>, message: string) => Readonly<Record<string, unknown>>;
 }
 export interface LaneInput {
   readonly message: string;
@@ -77,10 +79,11 @@ export async function runDirectLane(input: LaneInput, config: LaneConfig): Promi
     const guard = config.guards[tool];
     const refusal = guard ? guard(bound.args, input.message) : null;
     if (refusal !== null) return yields(refusal);
-    const executed = await config.run(tool, bound.args, config.deps());
+    const finalArgs = config.adjust ? config.adjust(tool, bound.args, input.message) : bound.args;
+    const executed = await config.run(tool, finalArgs, config.deps());
     if (executed.route !== 'runner' || !executed.outcome) return yields(`the runner for ${tool} did not answer`);
     if (!executed.outcome.ok) return yields(`the runner for ${tool} refused: ${executed.outcome.message}`);
-    const recorded = await config.record(tool, bound.args);
+    const recorded = await config.record(tool, finalArgs);
     if (recorded === null) return yields(`no task could be recorded for ${tool}`);
     const said = bound.assumptions.length > 0;
     const body = `${executed.outcome.reply}\n\n${recorded.line}`;
