@@ -1,0 +1,17 @@
+DIRECTOR NAP (Director Notification About the Project)
+WHAT THIS IS: short notes for the Director from the owner and earlier Directors. Read it right after NOW.txt every time a zip arrives. It holds what the roadmap does not say yet.
+
+LAWS OF THIS FILE (owner 2026-11-04):
+1. Maximum 5,000 characters. A test checks it.
+2. Every note is short, plain and explains itself.
+3. Newest note first. Near the limit, remove notes that reached the roadmap or went stale, never one still needed.
+4. The roadmap outranks this file for laws. This file covers what the roadmap lacks: new ideas, choices, progress.
+5. Only the Director edits this file.
+
+NOTES:
+N1 (2026-11-04) The roadmap is not edited for now (owner): make progress first, update it after. This file carries what the roadmap lacks.
+N2 (2026-11-04) AUTO-REGISTER AND AUTO-WIRE (owner idea; PROPOSED, NOT BUILT; needs its own design turn after Batch 4 is accepted). A step inside unpack and cloud build finds parts that carry a wiring tag and registers and wires them in the right places, so one zip is enough. Planned safety: fail closed, add only, never overwrite or delete, dry-run report first, a part stays not-live until its own tests and the golden transcript pass. Plumbing can be automatic; what a tool MEANS (what it understands) still comes from a written card and a test corpus. Measured today: Sort Lines touches 14 source files and 11 tests. Open question: the generated result must land in the repo so the source export still equals the repository (FL8).
+N3 (2026-11-04) The owner's pace is 20 to 30 batches a day (OWNER-REPORTED). The Director's earlier 2 to 3 was a misreading. The limits now are Director checking (about 17 commands per batch) and the supply of independent work.
+N4 (2026-11-04) Batch 4: ChatGPT stopped on roadmap 7L 21 (correct, no files). A second prompt with a placement note was written. Nothing from Batch 4 is merged.
+N5 (2026-11-04) Build gate: no test may fail. The type errors in FileCompareScreen.tsx and VideoFramesScreen.tsx are older and still open.
+N6 Cleanup stays Stage Z (roadmap 11). Auto-wiring must never delete: removal stays with the owner (node tools/guard.mjs --forget PATH).
