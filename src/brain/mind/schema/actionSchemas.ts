@@ -4,6 +4,8 @@
  */
 import { VALUE_KIND_LABELS } from './schemaTypes';
 import type { ActionSchema, Act, SlotKind, Effect, Precondition, CostTime, CostMemory, UndoKind, ValueKind } from './schemaTypes';
+import { addOnlyRows } from '../../../generated/mergeGenerated';
+import { GENERATED_SCHEMA_ROWS } from '../../../generated/wiredSchemaRows';
 
 const DATA = `
 text-counter | c a | count measure | word:n line:n character:n letter:n |  | text:text:r unit:choice:o | shows-result |  | quick low | not-needed
@@ -116,7 +118,7 @@ function make(row: string): ActionSchema {
 }
 
 export const ACTION_SCHEMAS: readonly ActionSchema[] = deepFreeze(
-  DATA.split('\n').filter((row) => row.trim() !== '').map(make)
+  addOnlyRows(DATA, GENERATED_SCHEMA_ROWS, 'schema row').split('\n').filter((row) => row.trim() !== '').map(make)
 );
 
 const byTool = new Map<string, ActionSchema>();

@@ -140,7 +140,9 @@ ok(schemas.length === facts.length, `one schema per fact (${schemas.length} of $
 const source = readFileSync('src/brain/mind/schema/actionSchemas.ts', 'utf8');
 ok(source.length <= 30000, `actionSchemas.ts is ${source.length} characters (the limit is 30,000)`);
 const importLines = source.split('\n').filter((l) => l.trimStart().startsWith('import '));
-ok(importLines.every((l) => l.includes("'./schemaTypes'")), 'the only import is ./schemaTypes');
+// AUTO-WIRE part 2 (2026-11-04, on purpose): the file may also read the two generated-data modules; it still imports nothing else.
+const allowedImports = ["'./schemaTypes'", "'../../../generated/mergeGenerated'", "'../../../generated/wiredSchemaRows'"];
+ok(importLines.length === 4 && importLines.every((l) => allowedImports.some((a) => l.includes(a))), 'the only imports are ./schemaTypes and the two generated-data modules');
 for (const bannedWord of L('Math.random require( fetch( eval( localStorage setTimeout')) ok(!source.includes(bannedWord), `actionSchemas.ts must not use ${bannedWord}`);
 for (const bannedWord of L('Date process performance')) ok(!new RegExp(`\\b${bannedWord}\\b`).test(source), `actionSchemas.ts must not use ${bannedWord}`);
 for (const f of facts) for (const ex of f.examples ?? []) ok(!source.includes(ex), `an example phrase from the registry was copied into the schemas: ${ex}`);

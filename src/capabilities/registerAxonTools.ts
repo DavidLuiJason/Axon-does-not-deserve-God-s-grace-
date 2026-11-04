@@ -9,6 +9,8 @@
 
 import { registerCapability, getCapability } from './registry';
 import type { ChatAction } from './types';
+import { addOnlyList } from '../generated/mergeGenerated';
+import { GENERATED_CHAT_ACTIONS } from '../generated/wiredChatActions';
 
 const AXON_TOOLS_CAPABILITY = {
   id: 'cap.axon-tools',
@@ -28,7 +30,7 @@ const TEXT_TOOLS_CAPABILITY = {
   contractVersion: '1.0.0',
   implementationVersion: '1.0.0',
   dataProvider: 'noUserData',
-  chatActions: [{
+  chatActions: addOnlyList([{
     id: 'act.text-counter',
     purpose: 'Count text',
     examples: [
@@ -58,7 +60,7 @@ const TEXT_TOOLS_CAPABILITY = {
     ],
     status: 'available',
     link: { actionId: 'text.sort' },
-  }] as ChatAction[],
+  }] as ChatAction[], GENERATED_CHAT_ACTIONS, (a) => a.id, 'chat action'),
 } as const;
 
 /**

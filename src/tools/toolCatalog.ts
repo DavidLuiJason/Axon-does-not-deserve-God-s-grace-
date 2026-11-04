@@ -1,3 +1,6 @@
+import { addOnlyList } from '../generated/mergeGenerated';
+import { GENERATED_CATALOG_TOOLS } from '../generated/wiredCatalog';
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -69,7 +72,7 @@ export const TOOL_GROUPS: readonly ToolGroup[] = [
   { id: 'device-system', name: 'Device and System' },
 ];
 
-export const CATALOG_TOOLS: readonly CatalogTool[] = [
+const HAND_CATALOG_TOOLS: readonly CatalogTool[] = [
   {
     id: 'text-counter',
     name: 'Text Counter',
@@ -525,6 +528,9 @@ export const CATALOG_TOOLS: readonly CatalogTool[] = [
     status: 'coming-soon',
   },
 ];
+
+/** AUTO-WIRE part 2: hand entries plus generated ones (src/generated/wiredCatalog.ts); a hand entry always wins. */
+export const CATALOG_TOOLS: readonly CatalogTool[] = addOnlyList(HAND_CATALOG_TOOLS, GENERATED_CATALOG_TOOLS, (t) => t.id, 'catalog entry');
 
 export interface GroupView {
   group: ToolGroup;
