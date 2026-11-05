@@ -1,0 +1,27 @@
+// DIRECTOR REFERENCE for FEED1 (makeActOrAskInput). Independent of any builder code.
+export type Res = {kind:string;tool?:string;missingSlots?:string[];evidence?:string;choices?:string[]};
+export type Sch = {tool:string;effects:string[];preconditions:string[];undo:string;slots:{name:string;required:boolean}[]};
+export type Args = {resolution:Res;schemas:Sch[];slotDefaults:{tool:string;slot:string}[];extraReadingTools:string[];contextFills:string[];safeStepFills:string[];charter:{never:string[];ask:string[]};costly:boolean};
+const PURE=['shows-result','reads-file','uses-camera','uses-microphone','uses-network'];
+export function ref(a:Args):any{
+  const r=a.resolution;
+  if(r.kind==='not-a-request'||r.kind==='negated'||r.kind==='unavailable') return {err:'not-for-j6'};
+  const by=(t:string)=>a.schemas.find(s=>s.tool===t);
+  let tools:string[]=[];
+  if(r.kind==='match') tools=[r.tool!,...a.extraReadingTools]; if(r.kind==='ask') tools=[...r.choices!,...a.extraReadingTools];
+  const distinct=tools.filter((t,i)=>tools.indexOf(t)===i);
+  for(const t of (r.kind==='match'?[r.tool!,...a.extraReadingTools]:r.kind==='ask'?[...r.choices!,...a.extraReadingTools]:[])) if(!by(t)) return {err:'unknown-tool'};
+  if(r.kind==='match'){const s=by(r.tool!)!; for(const m of r.missingSlots!){const sl=s.slots.find(x=>x.name===m); if(!sl||!sl.required) return {err:'bad-missing-slot'};}}
+  if(r.kind==='none') return {permission:'ALLOW',undo:'READ-ONLY',outward:'NONE',costly:a.costly,readings:'NO-READING',missing:'NONE',readingChangesResult:false,inputChangesResult:false};
+  let perm=0,undo=0,out=0; // perm 0 ALLOW 1 ASK 2 NEVER; undo 0 RO 1 UNDOABLE 2 NOT; out 0 NONE 1 SEND 2 DELETE 3 MONEY
+  for(const t of distinct){const s=by(t)!;
+    let p=0; if(a.charter.never.includes(t))p=2; else if(a.charter.ask.includes(t)||s.preconditions.includes('owner-approval')||s.effects.some(e=>['sends','spends','deletes'].includes(e)))p=1;
+    const nonPure=s.effects.some(e=>!PURE.includes(e));
+    let u= s.undo==='irreversible'?2: (s.undo==='not-needed'? (nonPure?2:0):1);
+    let o=0; if(s.effects.includes('sends'))o=Math.max(o,1); if(s.effects.includes('deletes'))o=Math.max(o,2); if(s.effects.includes('spends'))o=Math.max(o,3);
+    perm=Math.max(perm,p);undo=Math.max(undo,u);out=Math.max(out,o);}
+  const two=distinct.length>1||(r.kind==='match'&&r.evidence==='value');
+  let missing=0,ic=false; // 0 NONE 1 CONTEXT 2 SAFE 3 OWNER
+  if(r.kind==='match'){for(const m of r.missingSlots!){let k=a.contextFills.includes(m)?1:a.safeStepFills.includes(m)?2:3; missing=Math.max(missing,k); if(k===3&&!a.slotDefaults.some(d=>d.tool===r.tool&&d.slot===m))ic=true;}}
+  return {permission:['ALLOW','ASK','NEVER'][perm],undo:['READ-ONLY','UNDOABLE','NOT-UNDOABLE'][undo],outward:['NONE','SEND','DELETE','MONEY'][out],costly:a.costly,readings:two?'TWO-CLOSE':'ONE-CLEAR',missing:['NONE','CONTEXT-ANSWERS','SAFE-STEP-ANSWERS','OWNER-ONLY'][missing],readingChangesResult:two,inputChangesResult:ic};
+}

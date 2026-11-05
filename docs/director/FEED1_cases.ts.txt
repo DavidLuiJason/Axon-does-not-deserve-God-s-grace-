@@ -1,0 +1,70 @@
+// DIRECTOR ORACLE for FEED1: 32 hand-worked rows typed from the rules (not from the reference), error rows, and a sweep that J6 accepts every output. Copy both files without .txt into a scratch folder next to src/ to run with tsx.
+declare const console:{log:(v:string)=>void};
+import { ref, Args } from './FEED1_reference';
+import { decideActOrAsk } from '../../src/decision/actOrAsk';
+const S:any=[
+ {tool:'counter',effects:['shows-result'],preconditions:[],undo:'not-needed',slots:[{name:'text',required:true}]},
+ {tool:'converter',effects:['shows-result'],preconditions:[],undo:'not-needed',slots:[{name:'value',required:true},{name:'unit',required:true}]},
+ {tool:'scanner',effects:['uses-camera','shows-result'],preconditions:['permission'],undo:'not-needed',slots:[]},
+ {tool:'noter',effects:['stores-note'],preconditions:[],undo:'by-removal',slots:[{name:'text',required:true},{name:'title',required:false}]},
+ {tool:'mailer',effects:['sends'],preconditions:['owner-approval'],undo:'irreversible',slots:[{name:'to',required:true},{name:'body',required:true}]},
+ {tool:'remover',effects:['deletes'],preconditions:['owner-approval'],undo:'by-tool',slots:[{name:'file',required:true}]},
+ {tool:'payer',effects:['spends','sends'],preconditions:['owner-approval'],undo:'irreversible',slots:[]},
+ {tool:'oddpure',effects:['shows-result','writes-file'],preconditions:[],undo:'not-needed',slots:[]},
+ {tool:'backup',effects:['sends'],preconditions:[],undo:'by-tool',slots:[]},
+ {tool:'weird',effects:['deletes'],preconditions:[],undo:'not-needed',slots:[]},
+];
+const BASE:Args={resolution:{kind:'none'},schemas:S,slotDefaults:[{tool:'converter',slot:'unit'}],extraReadingTools:[],contextFills:[],safeStepFills:[],charter:{never:[],ask:[]},costly:false};
+const m=(tool:string,missingSlots:string[]=[],evidence?:string)=>({kind:'match',tool,missingSlots,...(evidence?{evidence}:{})});
+// id, changes, expected "perm|undo|outward|costly|readings|missing|rc|ic"  (HAND-WORKED, typed from the rules, not from ref)
+const rows:[number,any,string][]=[
+[1,{resolution:m('counter')},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|NONE|false|false'],
+[2,{resolution:m('noter')},'ALLOW|UNDOABLE|NONE|false|ONE-CLEAR|NONE|false|false'],
+[3,{resolution:m('mailer')},'ASK|NOT-UNDOABLE|SEND|false|ONE-CLEAR|NONE|false|false'],
+[4,{resolution:m('remover')},'ASK|UNDOABLE|DELETE|false|ONE-CLEAR|NONE|false|false'],
+[5,{resolution:m('payer')},'ASK|NOT-UNDOABLE|MONEY|false|ONE-CLEAR|NONE|false|false'],
+[6,{resolution:m('oddpure')},'ALLOW|NOT-UNDOABLE|NONE|false|ONE-CLEAR|NONE|false|false'],
+[7,{resolution:m('weird')},'ASK|NOT-UNDOABLE|DELETE|false|ONE-CLEAR|NONE|false|false'],
+[8,{resolution:m('backup')},'ASK|UNDOABLE|SEND|false|ONE-CLEAR|NONE|false|false'],
+[9,{resolution:m('scanner')},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|NONE|false|false'],
+[10,{resolution:m('counter',['text'])},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|OWNER-ONLY|false|true'],
+[11,{resolution:m('converter',['unit'])},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|OWNER-ONLY|false|false'],
+[12,{resolution:m('converter',['value','unit'])},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|OWNER-ONLY|false|true'],
+[13,{resolution:m('counter',['text']),contextFills:['text']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|CONTEXT-ANSWERS|false|false'],
+[14,{resolution:m('counter',['text']),safeStepFills:['text']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|SAFE-STEP-ANSWERS|false|false'],
+[15,{resolution:m('counter',['text']),contextFills:['text'],safeStepFills:['text']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|CONTEXT-ANSWERS|false|false'],
+[16,{resolution:m('converter',['value','unit']),contextFills:['value']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|OWNER-ONLY|false|false'],
+[17,{resolution:m('converter',['value','unit']),contextFills:['unit'],safeStepFills:['value']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|SAFE-STEP-ANSWERS|false|false'],
+[18,{resolution:{kind:'ask',choices:['counter','converter']}},'ALLOW|READ-ONLY|NONE|false|TWO-CLOSE|NONE|true|false'],
+[19,{resolution:{kind:'ask',choices:['counter','mailer']}},'ASK|NOT-UNDOABLE|SEND|false|TWO-CLOSE|NONE|true|false'],
+[20,{resolution:{kind:'ask',choices:['counter','noter']}},'ALLOW|UNDOABLE|NONE|false|TWO-CLOSE|NONE|true|false'],
+[21,{resolution:m('counter'),extraReadingTools:['converter']},'ALLOW|READ-ONLY|NONE|false|TWO-CLOSE|NONE|true|false'],
+[22,{resolution:m('counter'),extraReadingTools:['counter','counter']},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|NONE|false|false'],
+[23,{resolution:m('counter',[],'value')},'ALLOW|READ-ONLY|NONE|false|TWO-CLOSE|NONE|true|false'],
+[24,{resolution:m('counter',[],'both')},'ALLOW|READ-ONLY|NONE|false|ONE-CLEAR|NONE|false|false'],
+[25,{resolution:{kind:'none'}},'ALLOW|READ-ONLY|NONE|false|NO-READING|NONE|false|false'],
+[26,{resolution:m('mailer'),charter:{never:['mailer'],ask:[]}},'NEVER|NOT-UNDOABLE|SEND|false|ONE-CLEAR|NONE|false|false'],
+[27,{resolution:{kind:'ask',choices:['counter','mailer']},charter:{never:['mailer'],ask:[]}},'NEVER|NOT-UNDOABLE|SEND|false|TWO-CLOSE|NONE|true|false'],
+[28,{resolution:m('counter'),charter:{never:[],ask:['counter']}},'ASK|READ-ONLY|NONE|false|ONE-CLEAR|NONE|false|false'],
+[29,{resolution:m('counter'),costly:true},'ALLOW|READ-ONLY|NONE|true|ONE-CLEAR|NONE|false|false'],
+[30,{resolution:m('counter',['text']),extraReadingTools:['noter']},'ALLOW|UNDOABLE|NONE|false|TWO-CLOSE|OWNER-ONLY|true|true'],
+[31,{resolution:{kind:'ask',choices:['counter','payer']}},'ASK|NOT-UNDOABLE|MONEY|false|TWO-CLOSE|NONE|true|false'],
+[32,{resolution:m('noter',['text']),contextFills:['title']},'ALLOW|UNDOABLE|NONE|false|ONE-CLEAR|OWNER-ONLY|false|true'],
+];
+let bad=0;
+for(const [i,ch,exp] of rows){const a={...BASE,...ch} as Args; const r=ref(a); const got=r.err?r.err:[r.permission,r.undo,r.outward,r.costly,r.readings,r.missing,r.readingChangesResult,r.inputChangesResult].join('|'); if(got!==exp){bad++;console.log('ROW '+i+' MISMATCH exp '+exp+' got '+got);}
+  if(!r.err){const j:any=decideActOrAsk(r); if(!j.ok){bad++;console.log('ROW '+i+' J6 rejects '+j.error);}}}
+// error rows
+const errs:[string,any,string][]=[
+['neg',{resolution:{kind:'negated'}},'not-for-j6'],['nar',{resolution:{kind:'not-a-request'}},'not-for-j6'],['una',{resolution:{kind:'unavailable'}},'not-for-j6'],
+['unk',{resolution:m('ghost')},'unknown-tool'],['unkc',{resolution:{kind:'ask',choices:['counter','ghost']}},'unknown-tool'],['unke',{resolution:m('counter'),extraReadingTools:['ghost']},'unknown-tool'],
+['optslot',{resolution:m('noter',['title'])},'bad-missing-slot'],['undeclared',{resolution:m('counter',['nope'])},'bad-missing-slot']];
+for(const [n,ch,e] of errs){const r=ref({...BASE,...ch} as Args); if(r.err!==e){bad++;console.log('ERR '+n+' exp '+e+' got '+(r.err||'ok'));}}
+// sweep: every single/pair reading with every missing subset, fills, charters -> J6 never errors
+let sw=0;const names=S.map((s:any)=>s.tool);
+const subsets=(arr:string[])=>arr.reduce((acc:string[][],x)=>acc.concat(acc.map(y=>[...y,x])),[[]]);
+for(const t of names){const req=S.find((s:any)=>s.tool===t).slots.filter((x:any)=>x.required).map((x:any)=>x.name);
+ for(const ms of subsets(req))for(const cf of [[],req])for(const ev of [undefined,'value','concept'])for(const ex of [[],...names.map((x:string)=>[x])])for(const ch of [{never:[],ask:[]},{never:[t],ask:[]},{never:[],ask:names}]){
+  const r=ref({...BASE,resolution:m(t,ms,ev),contextFills:cf,extraReadingTools:ex,charter:ch} as Args); const j:any=decideActOrAsk(r); sw++; if(!j.ok){bad++;console.log('SWEEP J6 rejects '+j.error+' '+t);}}}
+for(const a of names)for(const b of names)if(a!==b){const r=ref({...BASE,resolution:{kind:'ask',choices:[a,b]}} as Args); const j:any=decideActOrAsk(r); sw++; if(!j.ok){bad++;console.log('PAIR rejects '+a+b);}}
+console.log('rows '+rows.length+' sweep '+sw+' bad '+bad);
