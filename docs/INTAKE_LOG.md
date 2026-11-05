@@ -81,3 +81,5 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-04 | cloud log top of AXON-WIRE-PROOF-merge.zip (pasted in chat) | read; 2 lint type errors diagnosed and fixed (TYPE-FIX-2) | AXON-TYPEFIX2-merge.zip made
 2026-11-04 | v21.2, the paste, NOW.txt, NAP, board tail and Sort Lines wiring read; TYPE-FIX-2 confirmed merged (owner saw the build clean) | owner asked for auto-wire part 2 and the plan after it | AXON-WIRE-PART2-merge.zip made
 2026-11-04 | AXON-BATCH5-RETURN.zip (ChatGPT, six engine cards; cards not supplied) | read, hash-checked, tested, mutated | AXON-BATCH5-merge.zip made
+2026-11-05 | AXON-BATCH6-RETURN.zip (first try, six cards, invented APIs) | read, hash-checked, tested | NOT ACCEPTED
+2026-11-05 | AXON_BATCH6_DIRECTOR_REVIEW.zip (ChatGPT, three cards J1 J3 J5) | read, hash-checked, tested, mutated | AXON-BATCH6-merge.zip made

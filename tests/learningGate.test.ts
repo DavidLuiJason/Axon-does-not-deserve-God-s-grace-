@@ -1,0 +1,19 @@
+declare const console:{log:(s:string)=>void};
+let checks=0;function check(v:boolean,n:string):void{if(!v)throw new Error('FAIL: '+n);checks++;}
+const ev=(a=false,b=false,c=false,d=false,repeats=0):Evidence=>({sourceRecorded:a,independentlyConfirmed:b,knownAnswerTest:c,ownerApprovedSource:d,repeats});
+import {moveItem,type Item,type Evidence,type Stage} from '../src/learning/learningGate';
+const item=(stage:Stage,e=ev(),id='x'):Item=>({id,stage,evidence:e});
+function good(i:Item,to:Stage,by:'axon'|'owner',stage:Stage,label:string):void{const copy=JSON.stringify(i),r=moveItem({item:i,to,by});check(r.ok,'valid '+i.stage+' to '+to);if(r.ok){check(r.value.from===i.stage,'from '+to);check(r.value.stage===stage,'stage '+to);check(r.value.label===label,'label '+label);check(r.value.id===i.id,'id '+i.id);check(Object.isFrozen(r)&&Object.isFrozen(r.value),'frozen '+to);}check(JSON.stringify(i)===copy,'unchanged '+to);}
+function bad(i:unknown,to:unknown,by:unknown,code:string):void{const r=moveItem({item:i,to,by} as never);check(!r.ok,'reject '+code);if(!r.ok){check(r.error===code,'exact '+code);check(typeof r.message==='string'&&r.message.length>0,'message '+code);check(Object.isFrozen(r),'frozen error '+code);}}
+good(item('CANDIDATE',ev(true,true,true,false)),'CHECKED','axon','CHECKED','CHECKED');good(item('CANDIDATE',ev(true,true,true,true)),'CHECKED','owner','CHECKED','CHECKED');
+bad(item('CANDIDATE',ev(false,true,true)),'CHECKED','axon','missing-evidence');bad(item('CANDIDATE',ev(true,false,true)),'CHECKED','axon','missing-evidence');bad(item('CANDIDATE',ev(true,true,false)),'CHECKED','axon','missing-evidence');bad(item('CANDIDATE',ev(false,false,false,false,1000000)),'CHECKED','axon','missing-evidence');
+good(item('CHECKED',ev(false,false,false,true)),'ADMITTED','owner','ADMITTED','ADMITTED');bad(item('CHECKED',ev(true,true,true,false)),'ADMITTED','owner','missing-evidence');bad(item('CHECKED',ev(true,true,true,true)),'ADMITTED','axon','owner-only');bad(item('CHECKED',ev()),'ADMITTED','axon','owner-only');
+bad(item('CANDIDATE'),'ADMITTED','owner','not-adjacent');bad(item('CANDIDATE'),'CANDIDATE','owner','not-adjacent');bad(item('CHECKED'),'CHECKED','owner','not-adjacent');bad(item('ADMITTED'),'ADMITTED','owner','not-adjacent');bad(item('ADMITTED'),'CHECKED','owner','not-adjacent');
+good(item('CHECKED'),'CANDIDATE','axon','CANDIDATE','NOT-VERIFIED');good(item('ADMITTED'),'CANDIDATE','owner','CANDIDATE','NOT-VERIFIED');bad(item('ADMITTED'),'CANDIDATE','axon','owner-only');
+bad(item('CANDIDATE',ev(),''),'CHECKED','axon','bad-item');bad(item('CANDIDATE',ev(), 'has space'),'CHECKED','axon','bad-item');bad(item('CANDIDATE',ev(),'x'.repeat(61)),'CHECKED','axon','bad-item');good(item('CANDIDATE',ev(true,true,true),'x'.repeat(60)),'CHECKED','axon','CHECKED','CHECKED');
+bad(item('OBSERVATION' as Stage),'CHECKED','owner','bad-item');bad(item('DONE' as Stage),'CHECKED','owner','bad-item');bad(item('CANDIDATE',{...ev(),repeats:-1}),'CHECKED','owner','bad-item');bad(item('CANDIDATE',{...ev(),repeats:1000001}),'CHECKED','owner','bad-item');
+bad({id:'x',stage:'CANDIDATE',evidence:{sourceRecorded:true,independentlyConfirmed:true,knownAnswerTest:true,repeats:0}},'CHECKED','owner','bad-item');
+const extra={...ev(true,true,true),extra:true};good(item('CANDIDATE',extra as Evidence),'CHECKED','axon','CHECKED','CHECKED');
+bad(item('CANDIDATE',ev()),'DONE','owner','bad-target');bad(item('CANDIDATE',ev()),'OBSERVATION','owner','bad-target');bad(item('CANDIDATE',ev()),'CHECKED','robot','bad-move');bad(null,'CHECKED','axon','bad-move');
+check(moveItem({item:item('CANDIDATE',{...ev(true,true,true),repeats:0}),to:'CHECKED',by:'axon'}).ok,'repeat zero accepted');check(moveItem({item:item('CANDIDATE',{...ev(true,true,true),repeats:1000000}),to:'CHECKED',by:'axon'}).ok,'repeat max accepted');
+console.log('LEARNING_GATE OK: '+checks+' checks');
