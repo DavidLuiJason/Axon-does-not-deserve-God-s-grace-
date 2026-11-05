@@ -83,3 +83,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-04 | AXON-BATCH5-RETURN.zip (ChatGPT, six engine cards; cards not supplied) | read, hash-checked, tested, mutated | AXON-BATCH5-merge.zip made
 2026-11-05 | AXON-BATCH6-RETURN.zip (first try, six cards, invented APIs) | read, hash-checked, tested | NOT ACCEPTED
 2026-11-05 | AXON_BATCH6_DIRECTOR_REVIEW.zip (ChatGPT, three cards J1 J3 J5) | read, hash-checked, tested, mutated | AXON-BATCH6-merge.zip made
+2026-11-05 | AXON-BATCH6B-RETURN.zip (ChatGPT, J2 only, restored with placement note) | read, hash-checked, tested, mutated | AXON-BATCH6B-merge.zip made
