@@ -59,8 +59,9 @@ yes(Object.isFrozen(un),'L17 unreadable frozen'); yes(Object.isFrozen(bi),'L17 b
 check(serializeCharter(mk({})),{ok:true,text:'{"createdAt":"","fences":{"maxSpendPerAction":0,"maxSpendPerDay":0,"neverTouch":[]},"lanes":{},"revision":1,"signature":null,"signedAt":null,"version":1}'},'S01');
 check(serializeCharter(mk({tools:{'tools.x':'ask'}})),{ok:true,text:'{"createdAt":"","fences":{"maxSpendPerAction":0,"maxSpendPerDay":0,"neverTouch":[]},"lanes":{"tools":{"actions":{"tools.x":{"level":"ask","reason":"r"}},"id":"tools","name":"tools"}},"revision":1,"signature":null,"signedAt":null,"version":1}'},'S02');
 check(serializeCharter(42),{ok:false,error:'invalid-charter',message:'Charter must be a plain object.'},'S03');
-const circular:any=mk({});circular.self=circular;check(serializeCharter(circular).error,'circular-input','S04');
-check(serializeCharter(maybe).error,'unknown-level','S05');
+const errOf=(r:ReturnType<typeof serializeCharter>)=>r.ok?undefined:r.error;
+const circular:any=mk({});circular.self=circular;check(errOf(serializeCharter(circular)),'circular-input','S04');
+check(errOf(serializeCharter(maybe)),'unknown-level','S05');
 const reverse={...A,lanes:Object.fromEntries(Object.entries(A.lanes).reverse())};
 check(ser(reverse),ser(A),'S06 sorted lanes');
 const defaultText=ser(defaultCharter());
