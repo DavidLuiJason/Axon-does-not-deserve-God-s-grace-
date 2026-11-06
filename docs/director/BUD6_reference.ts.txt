@@ -1,0 +1,117 @@
+// BUD6 DIRECTOR REFERENCE (2026-11-06). The Director's own engine: the oracle the builder's file is checked against.
+// Copy to src/budget/batchPlan.ts to run. Not for builders.
+import { BUDGET_VIEW_TABLE } from './budgetView';
+import { BUILDER_RESOURCES } from './resources/builderResources';
+type Ok<T> = { readonly ok: true; readonly value: T };
+type Bad = { readonly ok: false; readonly error: string; readonly message: string };
+type Res<T> = Ok<T> | Bad;
+export const BATCH_PLAN_TABLE = Object.freeze({ masterChars: 16000, minCards: 3, startCards: 6, ceilingCards: 10, raiseStep: 2, maxDirectorTurns: 2 });
+const VMSG = 'Builder vector input is invalid.';
+const PMSG = 'Batch plan input is invalid.';
+const bad = <T>(error: string, message: string): Res<T> => Object.freeze({ ok: false as const, error, message });
+const obj = (v: unknown): v is Record<PropertyKey, unknown> => v !== null && typeof v === 'object' && !Array.isArray(v);
+const int = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v > 0;
+const nint = (v: unknown): v is number | null => v === null || int(v);
+const str = (v: unknown): v is string => typeof v === 'string' && v.length > 0;
+function exact(o: object, keys: string[]): boolean {
+  const own = Reflect.ownKeys(o);
+  if (own.length !== keys.length) return false;
+  for (const k of own) if (typeof k !== 'string' || keys.indexOf(k) < 0) return false;
+  return true;
+}
+function dateShape(v: unknown): boolean {
+  if (typeof v !== 'string' || v.length !== 10) return false;
+  for (let i = 0; i < 10; i++) {
+    const c = v.charCodeAt(i);
+    if (i === 4 || i === 7) { if (c !== 45) return false; } else if (c < 48 || c > 57) return false;
+  }
+  return true;
+}
+const ROW_KEYS = ['id', 'date', 'builder', 'mode', 'cards', 'accepted', 'promptChars', 'miniBaseFiles', 'filesReturned', 'directorCommands', 'directorTurns', 'outcome', 'source'];
+type Row = { id: string; builder: string; cards: number; outcome: string; promptChars: number | null; miniBaseFiles: number | null; filesReturned: number | null; directorCommands: number | null };
+function rowOk(r: unknown): r is Row {
+  if (!obj(r) || !exact(r, ROW_KEYS)) return false;
+  if (!str(r.id) || !dateShape(r.date) || !str(r.builder)) return false;
+  if (r.mode !== 'A' && r.mode !== 'B' && r.mode !== 'D') return false;
+  if (!int(r.cards)) return false;
+  if (r.accepted !== null && !(typeof r.accepted === 'number' && Number.isInteger(r.accepted) && r.accepted >= 0 && r.accepted <= r.cards)) return false;
+  if (!nint(r.promptChars) || !nint(r.miniBaseFiles) || !nint(r.filesReturned) || !nint(r.directorCommands) || !nint(r.directorTurns)) return false;
+  if (r.outcome !== 'OK' && r.outcome !== 'PARTIAL' && r.outcome !== 'FAILED') return false;
+  if (r.source !== 'MEASURED' && r.source !== 'REPORTED') return false;
+  if (r.outcome === 'OK' && r.accepted !== null && r.accepted !== r.cards) return false;
+  if (r.outcome === 'PARTIAL' && r.accepted !== null && r.accepted >= r.cards) return false;
+  if (r.outcome === 'FAILED' && r.accepted !== null && r.accepted !== 0) return false;
+  return true;
+}
+type Fig = { figure: number | null; reason: 'ok' | 'no-ok-rows' | 'conflict'; okRows: number; badRows: number; basis: 'ESTIMATE' | 'OBSERVED' | null };
+function figure(rows: Row[], field: 'promptChars' | 'miniBaseFiles' | 'filesReturned' | 'directorCommands'): Fig {
+  const okV: number[] = []; const badV: number[] = [];
+  for (const r of rows) { const v = r[field]; if (v === null) continue; if (r.outcome === 'OK') okV.push(v); else badV.push(v); }
+  if (okV.length === 0) return Object.freeze({ figure: null, reason: 'no-ok-rows' as const, okRows: 0, badRows: badV.length, basis: null });
+  const safe = Math.max(...okV);
+  if (badV.length > 0 && Math.min(...badV) <= safe) return Object.freeze({ figure: null, reason: 'conflict' as const, okRows: okV.length, badRows: badV.length, basis: null });
+  return Object.freeze({ figure: safe, reason: 'ok' as const, okRows: okV.length, badRows: badV.length, basis: okV.length >= BUDGET_VIEW_TABLE.sampleMinimum ? 'OBSERVED' as const : 'ESTIMATE' as const });
+}
+export function builderVector(input: unknown): Res<unknown> {
+  try {
+    if (!obj(input)) return bad('bad-input', VMSG);
+    if (!exact(input, ['rows', 'builder'])) return bad('unknown-key', VMSG);
+    if (!str(input.builder)) return bad('bad-builder', VMSG);
+    if (!Array.isArray(input.rows)) return bad('bad-rows', VMSG);
+    const seen: string[] = [];
+    for (const r of input.rows) { if (!rowOk(r)) return bad('bad-row', VMSG); }
+    for (const r of input.rows as Row[]) { if (seen.indexOf(r.id) >= 0) return bad('duplicate-row-id', VMSG); seen.push(r.id); }
+    const mine = (input.rows as Row[]).filter(r => r.builder === input.builder);
+    const figures = Object.freeze({ promptChars: figure(mine, 'promptChars'), miniBaseFiles: figure(mine, 'miniBaseFiles'), filesReturned: figure(mine, 'filesReturned'), directorCommands: figure(mine, 'directorCommands') });
+    const capacity: Record<string, number> = {};
+    const unknown: { resource: string; reason: string }[] = [];
+    for (const res of BUILDER_RESOURCES) {
+      const f = res.name === 'repoFiles' ? figures.filesReturned : res.name === 'reviewCommands' ? figures.directorCommands : null;
+      if (f === null) unknown.push(Object.freeze({ resource: res.name, reason: 'no-log-field' }));
+      else if (f.figure === null) unknown.push(Object.freeze({ resource: res.name, reason: f.reason }));
+      else capacity[res.name] = f.figure;
+    }
+    return Object.freeze({ ok: true as const, value: Object.freeze({ builder: input.builder, runs: mine.length, figures, capacity: Object.freeze(capacity), unknown: Object.freeze(unknown) }) });
+  } catch { return bad('bad-input', VMSG); }
+}
+export function packBatch(input: unknown): Res<unknown> {
+  try {
+    if (!obj(input)) return bad('bad-input', PMSG);
+    if (!exact(input, ['cards', 'overheadChars', 'history'])) return bad('unknown-key', PMSG);
+    const cards = input.cards;
+    if (!Array.isArray(cards) || cards.length === 0) return bad('bad-cards', PMSG);
+    const ids: string[] = [];
+    for (const c of cards) {
+      if (!obj(c) || !exact(c, ['id', 'chars']) || !str(c.id) || !int(c.chars) || ids.indexOf(c.id) >= 0) return bad('bad-cards', PMSG);
+      ids.push(c.id);
+    }
+    const oh = input.overheadChars;
+    if (typeof oh !== 'number' || !Number.isInteger(oh) || oh < 0) return bad('bad-overhead', PMSG);
+    const hist = input.history;
+    if (!Array.isArray(hist)) return bad('bad-history', PMSG);
+    for (const h of hist) {
+      if (!obj(h) || !exact(h, ['cards', 'accepted', 'directorTurns']) || !int(h.cards) || !(typeof h.accepted === 'number' && Number.isInteger(h.accepted) && h.accepted >= 0 && h.accepted <= h.cards) || !nint(h.directorTurns)) return bad('bad-history', PMSG);
+    }
+    const T = BATCH_PLAN_TABLE;
+    const clamp = (n: number) => Math.min(T.ceilingCards, Math.max(T.minCards, n));
+    let target: number; let targetReason: string;
+    if (hist.length === 0) { target = T.startCards; targetReason = 'start'; }
+    else {
+      const last = hist[hist.length - 1] as { cards: number; accepted: number; directorTurns: number | null };
+      if (last.accepted < last.cards || (last.directorTurns !== null && last.directorTurns > T.maxDirectorTurns)) { target = clamp(last.cards - 1); targetReason = 'shrink'; }
+      else if (last.directorTurns === null) { target = clamp(last.cards); targetReason = 'turns-unknown'; }
+      else { target = clamp(last.cards + T.raiseStep); targetReason = 'raise'; }
+    }
+    const usable = T.masterChars - oh;
+    const inMaster: string[] = []; const inMini: { id: string; reason: string }[] = []; let used = 0;
+    for (const c of cards as { id: string; chars: number }[]) {
+      if (usable <= 0) inMini.push(Object.freeze({ id: c.id, reason: 'no-room' }));
+      else if (inMaster.length >= target) inMini.push(Object.freeze({ id: c.id, reason: 'target-reached' }));
+      else if (c.chars > usable) inMini.push(Object.freeze({ id: c.id, reason: 'over-limit' }));
+      else if (used + c.chars > usable) inMini.push(Object.freeze({ id: c.id, reason: 'no-room' }));
+      else { inMaster.push(c.id); used += c.chars; }
+    }
+    const outcome = inMaster.length === 0 ? 'NOTHING' : inMaster.length < T.minCards ? 'TOO-FEW' : 'PACKED';
+    return Object.freeze({ ok: true as const, value: Object.freeze({ outcome, target, targetReason, inMaster: Object.freeze(inMaster), inMiniBase: Object.freeze(inMini), usedChars: used }) });
+  } catch { return bad('bad-input', PMSG); }
+}
