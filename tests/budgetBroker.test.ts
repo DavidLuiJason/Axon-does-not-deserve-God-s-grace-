@@ -70,4 +70,21 @@ if(xe.ok){const r1=reserve(xe.value,'t',{a:5},'work');if(r1.ok){const st=settle(
 const xf=newBudget({a:10});
 if(xf.ok){const r1=reserve(xf.value,'t',{a:6},'work');if(r1.ok){const st=settle(r1.value,'t',{a:6});if(st.ok){const r2=reserve(st.value.state,'u',{a:5},'work');check(!r2.ok&&xerr(r2).error==='over-budget'&&(xerr(r2).message??'').includes('1'),'settled usage counts against later reservations');}else check(false,'xf settle');}else check(false,'xf reserve');}else check(false,'xf');
 check(xerr(newBudget({})).error==='bad-capacity','empty capacity is rejected');
+// BUD2 Director addition: a settled run counts one sample per resource in its actual vector (B4).
+{
+ const b=newBudget({steps:100,tokens:1000},{steps:10});
+ check(b.ok&&JSON.stringify(b.value.samples)==='{}','new budget starts with no samples');
+ let st=b.ok?b.value:null;
+ for(let i=1;i<=3;i++){
+  if(!st)break;
+  const r=reserve(st,'run'+i,{steps:2},'work');
+  const x=r.ok?settle(r.value,'run'+i,{steps:2}):null;
+  st=x&&x.ok?x.value.state:null;
+ }
+ check(!!st&&st.samples.steps===3&&st.samples.tokens===undefined,'three settled runs give steps 3 samples, tokens none');
+ const rel=st?reserve(st,'keep',{steps:1},'work'):null;
+ const rl=rel&&rel.ok?release(rel.value,'keep'):null;
+ check(!!rl&&rl.ok&&rl.value.samples.steps===3,'reserve and release keep the sample count');
+ check(!!st&&Object.isFrozen(st.samples),'samples object is frozen');
+}
 console.log('BUDGET_BROKER OK: '+checks+' checks');

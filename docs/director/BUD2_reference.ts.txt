@@ -1,0 +1,44 @@
+import { budgetView, BUDGET_VIEW_TABLE } from '/home/claude/work/src/budget/budgetView';
+import { newBudget, reserve, settle } from '/home/claude/work/src/budget/budgetBroker';
+const SETS:any={DEVICE:[['ramMb',0],['cpuMs',0],['storageMb',0],['batteryPct',0],['networkMb',1]],TASK:[['steps',0],['toolCalls',0],['files',0],['outputKb',0],['tests',0]],ACCOUNT:[['aiCalls',1],['turns',1],['contextChars',1],['attachments',1]],BUILDER:[['builderMemoryMb',0],['archiveExpandMb',0],['repoFiles',0],['testMinutes',0],['reviewCommands',0]]};
+let seed=12345;const rnd=(n:number)=>{seed=(seed+0x6D2B79F5)|0;let t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return (((t^(t>>>14))>>>0)%n);};
+// independent reference: own arithmetic, no engine calls
+function ref(domain:string,s:any,req:any){
+ const names=Object.keys(req).filter(k=>req[k]>0).sort();
+ const reasons:any[]=[],basis:any[]=[];let oc=false;
+ for(const n of names){
+  const a=req[n];if(SETS[domain].find((e:any)=>e[0]===n)[1])oc=true;
+  if(!(n in s.capacity)){reasons.push([ 'no-figure',n]);continue;}
+  const cap=s.capacity[n];const smp=s.samples[n]??0;
+  let held=0;for(const r of s.reservations)held+=r.amounts[n]??0;
+  const used=s.used[n]??0;const rem=cap-used-held;
+  basis.push([n,smp>=5?'OBSERVED':'ESTIMATE',smp]);
+  const ceil=cap-(s.verificationReserve[n]??0);
+  const over=(used+held+a)>ceil;
+  if(rem<0)reasons.push(['overrun',n]);
+  if(over)reasons.push(['over-budget',n]);
+  if(smp<5&&a*100>cap*10)reasons.push(['estimate-only',n]);
+  if(!over){const after=rem-a;if(after*100<cap*20)reasons.push(['margin',n]);const vr=s.verificationReserve[n]??0;if(vr>0&&after===vr)reasons.push(['reserve-only',n]);}
+ }
+ const has=(...c:string[])=>reasons.some(r=>c.includes(r[0]));
+ const outcome=has('overrun','over-budget')?'BLOCKED':has('no-figure','estimate-only')?'UNKNOWN':reasons.length?'CONSTRAINED':'AVAILABLE';
+ return JSON.stringify({outcome,reasons,basis,oc});
+}
+let diffs=0,calls=0;const seen:any={};
+for(let i=0;i<20000;i++){
+ const domain=['DEVICE','TASK','ACCOUNT','BUILDER'][rnd(4)];const names=SETS[domain].map((e:any)=>e[0]);
+ const capacity:any={},vr:any={},used:any={},samples:any={};
+ for(const n of names){if(rnd(5)){capacity[n]=rnd(120)+1;if(rnd(2))vr[n]=rnd(capacity[n]+1);if(rnd(2))used[n]=rnd(160);if(rnd(3))samples[n]=rnd(8);}}
+ const reservations:any[]=[];if(rnd(3)){const n=names[rnd(names.length)];if(n in capacity)reservations.push({id:'x',kind:'work',amounts:{[n]:rnd(60)}});}
+ const s:any={capacity,verificationReserve:vr,used,observed:Object.keys(used),samples,reservations};
+ const req:any={};for(const n of names)if(rnd(2))req[n]=rnd(4)===0?0:rnd(130);
+ if(!Object.values(req).some((v:any)=>v>0))continue;
+ const before=JSON.stringify([s,req]);
+ const r:any=budgetView({domain,state:s,request:req});calls++;
+ if(JSON.stringify([s,req])!==before){console.log('MUTATED INPUT');diffs++;}
+ if(!r.ok){console.log('UNEXPECTED FAIL',r.error,JSON.stringify(s),JSON.stringify(req));diffs++;continue;}
+ const got=JSON.stringify({outcome:r.value.outcome,reasons:r.value.reasons.map((x:any)=>[x.code,x.resource]),basis:r.value.basis.map((x:any)=>[x.resource,x.basis,x.samples]),oc:r.value.ownerCost});
+ seen[r.value.outcome]=(seen[r.value.outcome]??0)+1;
+ if(got!==ref(domain,s,req)){diffs++;if(diffs<5)console.log('DIFF',got,ref(domain,s,req));}
+}
+console.log('calls',calls,'diffs',diffs,JSON.stringify(seen));

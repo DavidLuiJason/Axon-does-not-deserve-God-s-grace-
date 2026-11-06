@@ -1,13 +1,13 @@
 type EngineSuccess<T>={readonly ok:true;readonly value:T}; type EngineFailure={readonly ok:false;readonly error:string;readonly message:string}; type EngineResult<T>=EngineSuccess<T>|EngineFailure;
 export type Vec=Readonly<Record<string,number>>;
 export type Reservation={id:string;kind:'work'|'verification';amounts:Readonly<Record<string,number>>};
-export type BudgetState={readonly capacity:Readonly<Record<string,number>>;readonly verificationReserve:Readonly<Record<string,number>>;readonly used:Readonly<Record<string,number>>;readonly observed:readonly string[];readonly reservations:readonly Reservation[]};
+export type BudgetState={readonly capacity:Readonly<Record<string,number>>;readonly verificationReserve:Readonly<Record<string,number>>;readonly used:Readonly<Record<string,number>>;readonly observed:readonly string[];readonly samples:Readonly<Record<string,number>>;readonly reservations:readonly Reservation[]};
 export type RemainingItem={resource:string;remaining:number;basis:'ESTIMATE'|'OBSERVED'};
 export type Settlement={state:BudgetState;overruns:readonly string[]};
 const bbFail=<T>(error:string,message:string):EngineResult<T>=>Object.freeze({ok:false,error,message});
 const bbOk=<T>(value:T):EngineResult<T>=>Object.freeze({ok:true,value});
-function freezeState(capacity:Record<string,number>,verificationReserve:Record<string,number>,used:Record<string,number>,observed:string[],reservations:Reservation[]):BudgetState{
- return Object.freeze({capacity:Object.freeze({...capacity}),verificationReserve:Object.freeze({...verificationReserve}),used:Object.freeze({...used}),observed:Object.freeze([...observed]),reservations:Object.freeze(reservations.map(r=>Object.freeze({id:r.id,kind:r.kind,amounts:Object.freeze({...r.amounts})})))});
+function freezeState(capacity:Record<string,number>,verificationReserve:Record<string,number>,used:Record<string,number>,observed:string[],reservations:Reservation[],samples:Record<string,number>={}):BudgetState{
+ return Object.freeze({capacity:Object.freeze({...capacity}),verificationReserve:Object.freeze({...verificationReserve}),used:Object.freeze({...used}),observed:Object.freeze([...observed]),samples:Object.freeze({...samples}),reservations:Object.freeze(reservations.map(r=>Object.freeze({id:r.id,kind:r.kind,amounts:Object.freeze({...r.amounts})})))});
 }
 function validVector(v:unknown):v is Vec{return !!v&&typeof v==='object'&&!Array.isArray(v);}
 function checkAmounts(v:Vec,capacity:Readonly<Record<string,number>>):EngineFailure|null{
@@ -44,7 +44,7 @@ export function reserve(s:BudgetState,id:string,v:Vec,kind:'work'|'verification'
   if(short>0)return bbFail('over-budget',`${k} is over budget by ${short}`);
  }
  const reservations=[...s.reservations,{id,kind,amounts:Object.freeze({...v})}];
- return bbOk(freezeState({...s.capacity},{...s.verificationReserve},{...s.used},[...s.observed],reservations));
+ return bbOk(freezeState({...s.capacity},{...s.verificationReserve},{...s.used},[...s.observed],reservations,{...(s.samples??{})}));
 }
 export function settle(s:BudgetState,id:string,actual:Vec):EngineResult<Settlement>{
  if(!s||!Array.isArray(s.reservations)||!validVector(actual))return bbFail('bad-capacity','invalid budget state or actual vector');
@@ -53,15 +53,16 @@ export function settle(s:BudgetState,id:string,actual:Vec):EngineResult<Settleme
  const used:Record<string,number>={...s.used};
  for(const k of Object.keys(actual))used[k]=(used[k]??0)+actual[k];
  const observed=new Set(s.observed);for(const k of Object.keys(actual))observed.add(k);
+ const samples:Record<string,number>={...(s.samples??{})};for(const k of Object.keys(actual))samples[k]=(samples[k]??0)+1;
  const reservations=s.reservations.filter((_,i)=>i!==index);
  const overruns=Object.keys(s.capacity).filter(k=>(used[k]??0)>s.capacity[k]).sort();
- const state=freezeState({...s.capacity},{...s.verificationReserve},used,[...observed].sort(),[...reservations]);
+ const state=freezeState({...s.capacity},{...s.verificationReserve},used,[...observed].sort(),[...reservations],samples);
  return bbOk(Object.freeze({state,overruns:Object.freeze(overruns)}));
 }
 export function release(s:BudgetState,id:string):EngineResult<BudgetState>{
  if(!s||!Array.isArray(s.reservations))return bbFail('bad-capacity','invalid budget state');
  const index=s.reservations.findIndex(r=>r.id===id);if(index<0)return bbFail('no-reservation',`no reservation: ${id}`);
- return bbOk(freezeState({...s.capacity},{...s.verificationReserve},{...s.used},[...s.observed],s.reservations.filter((_,i)=>i!==index)));
+ return bbOk(freezeState({...s.capacity},{...s.verificationReserve},{...s.used},[...s.observed],s.reservations.filter((_,i)=>i!==index),{...(s.samples??{})}));
 }
 export function remaining(s:BudgetState):readonly RemainingItem[]{
  const rows:RemainingItem[]=[];
