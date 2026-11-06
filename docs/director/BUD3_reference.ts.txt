@@ -1,0 +1,82 @@
+// DIRECTOR REFERENCES for BUD3 (probePlan). Independent of any builder code. Part 1: second reference (TypeScript) over rows.json; part 2 below: differential fuzz against the engine (30,000 calls).
+import * as fs from 'fs';
+const NAMES:any={DEVICE:'ramMb cpuMs storageMb batteryPct networkMb'.split(' '),TASK:'steps toolCalls files outputKb tests'.split(' '),ACCOUNT:'aiCalls turns contextChars attachments'.split(' '),BUILDER:'builderMemoryMb archiveExpandMb repoFiles testMinutes reviewCommands'.split(' ')};
+const OWN:any={networkMb:1,aiCalls:1,turns:1,contextChars:1,attachments:1};
+const own=(o:any,k:string)=>Object.prototype.hasOwnProperty.call(o,k);
+const isO=(x:any)=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+const F=(c:string)=>({ok:false,error:c});
+const lab=(x:any)=>typeof x==='string'&&x.length>0&&x.length<=64&&x.trim()===x;
+const sint=(x:any,min:number)=>typeof x==='number'&&Number.isSafeInteger(x)&&x>=min&&x<=1e12;
+function date(x:any){if(typeof x!=='string'||x.length!==10)return false;const dig='0123456789';for(let i=0;i<10;i++){if(i===4||i===7){if(x[i]!=='-')return false}else if(!dig.includes(x[i]))return false}const m=Number(x.slice(5,7)),d=Number(x.slice(8,10));return m>=1&&m<=12&&d>=1&&d<=31}
+function rec(r:any){
+ if(!isO(r))return false; if(typeof r.domain!=='string'||!own(NAMES,r.domain))return false;
+ if(typeof r.resource!=='string'||!NAMES[r.domain].includes(r.resource))return false;
+ for(const k of ['provider','model','account','taskClass','workloadShape'])if(!lab(r[k]))return false;
+ for(const k of ['measured','reported','limitEvents'])if(!sint(r[k],0))return false;
+ for(const k of ['safeHigh','limitLow'])if(!(r[k]===null||sint(r[k],1)))return false;
+ if(!(r.lastDate===null||date(r.lastDate)))return false;
+ const ran=r.measured+r.reported;
+ if((r.safeHigh===null)!==(ran===0))return false; if((r.limitLow===null)!==(r.limitEvents===0))return false; if((r.lastDate===null)!==(ran+r.limitEvents===0))return false;
+ return true;
+}
+const K=['domain','resource','provider','model','account','taskClass','workloadShape','measured','reported','limitEvents','safeHigh','limitLow','lastDate'];
+const cp=(r:any)=>{const o:any={};for(const k of K)o[k]=r[k];return o;};
+function nw(i:any):any{
+ if(!isO(i))return F('bad-input'); if(typeof i.domain!=='string'||!own(NAMES,i.domain))return F('bad-domain');
+ if(typeof i.resource!=='string'||!NAMES[i.domain].includes(i.resource))return F('bad-resource');
+ for(const k of ['provider','model','account','taskClass','workloadShape'])if(!lab(i[k]))return F('bad-label');
+ const o:any={};for(const k of K.slice(0,7))o[k]=i[k];Object.assign(o,{measured:0,reported:0,limitEvents:0,safeHigh:null,limitLow:null,lastDate:null});return {ok:true,value:cp(o)};
+}
+function rs(i:any):any{
+ if(!isO(i))return F('bad-input'); if(!rec(i.record))return F('bad-record');
+ const s=i.sample; if(!isO(s))return F('bad-sample');
+ if(!(s.kind==='ran'||s.kind==='limit'))return F('bad-sample');
+ if(!(s.source==='MEASURED'||s.source==='REPORTED'))return F('bad-sample');
+ if(!sint(s.amount,1))return F('bad-sample'); if(!date(s.date))return F('bad-sample');
+ if(s.kind==='limit'&&s.source==='MEASURED')return F('bad-sample');
+ const o=cp(i.record);
+ if(s.kind==='ran'){if(s.source==='MEASURED')o.measured++;else o.reported++;o.safeHigh=o.safeHigh===null?s.amount:Math.max(o.safeHigh,s.amount);}
+ else{o.limitEvents++;o.limitLow=o.limitLow===null?s.amount:Math.min(o.limitLow,s.amount);}
+ if(o.lastDate===null||s.date>o.lastDate)o.lastDate=s.date;
+ return {ok:true,value:o};
+}
+function pl(i:any):any{
+ if(!isO(i))return F('bad-input'); if(!rec(i.record))return F('bad-record'); if(typeof i.ownerYes!=='boolean')return F('bad-owner-yes');
+ const r=i.record, oc=own(OWN,r.resource);
+ let out:string,mx:number|null=null;
+ const conflict=r.limitLow!==null&&r.safeHigh!==null&&r.limitLow<=r.safeHigh;
+ if(conflict)out='CONFLICT';
+ else if(r.measured>=5)out='NOT-NEEDED';
+ else if(oc&&!i.ownerYes)out='NEEDS-OWNER-YES';
+ else{const m=r.safeHigh===null?0:Math.floor(r.safeHigh*10/100);if(m<1)out='NO-RANGE';else{out='PROBE';mx=m;}}
+ return {ok:true,value:{outcome:out,maxAmount:mx,measured:r.measured,reported:r.reported,ownerCost:oc}};
+}
+const rows=JSON.parse(fs.readFileSync('rows.json','utf8'));let bad=0;
+for(const [k,kind,inp,exp] of rows){const got=kind==='new'?nw(inp):kind==='sample'?rs(inp):pl(inp);if(JSON.stringify(got)!==JSON.stringify(exp)){bad++;console.log('DIFF',k,JSON.stringify(got),JSON.stringify(exp));}}
+// sweep and property
+let sw=0;for(let h=1;h<=2500;h++){const r:any={domain:'TASK',resource:'steps',provider:'a',model:'b',account:'c',taskClass:'d',workloadShape:'e',measured:2,reported:0,limitEvents:0,safeHigh:h,limitLow:null,lastDate:'2026-11-01'};const v=pl({record:r,ownerYes:false});if(v.value.outcome==='PROBE'){if(!(v.value.maxAmount*100<=h*10&&(v.value.maxAmount+1)*100>h*10))bad++;}else if(h>=10)bad++;sw++}
+console.log('rows',rows.length,'diffs',bad,'sweep',sw);
+
+// ---- fuzz (imports the engine; path adjusted when rerun) ----
+import { newProbeRecord, recordSample, planProbe } from '/home/claude/w3/src/budget/probePlan';
+let seed=777;const rnd=(n:number)=>{seed=(seed+0x6D2B79F5)|0;let t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return (((t^(t>>>14))>>>0)%n);};
+const pick=(a:any[])=>a[rnd(a.length)];
+const doms=['DEVICE','TASK','ACCOUNT','BUILDER'];
+const dates=['2026-11-01','2026-11-06','2026-10-30','2026-12-31','2026-13-01','2026-02-31','bad',''];
+const amts:any[]=[1,2,9,10,11,50,99,100,1e12,1e12+1,0,-1,1.5,'5',NaN,Infinity,null,undefined,true];
+function goodRec(){const d=pick(doms);const ran=rnd(8);const lim=rnd(3);const m=rnd(ran+1);
+ return {domain:d,resource:pick(NAMES[d]),provider:'p',model:'m',account:'a',taskClass:'t',workloadShape:'w',measured:m,reported:ran-m,limitEvents:lim,safeHigh:ran?rnd(200)+1:null,limitLow:lim?rnd(200)+1:null,lastDate:ran+lim?'2026-11-01':null};}
+function corrupt(r:any){const c={...r};const k=pick(Object.keys(c));const t=rnd(8);if(t===0)delete c[k];else if(t===1)c[k]=pick(amts);else if(t===2)c[k]=pick(['',' x','x ','y'.repeat(65),5,null]);else if(t===3)c[k]=pick(dates);else if(t===4)c.lastDate=pick([null,'2026-11-01']);else if(t===5)c.safeHigh=pick([null,5,0]);else if(t===6)c.limitLow=pick([null,5]);else c.extra=1;return c;}
+let calls=0,diffs=0,seen:any={};
+const chk=(a:any,b:any,tag:string,inp:any)=>{calls++;const x=JSON.stringify(a),y=JSON.stringify(b);if(x!==y){diffs++;if(diffs<6)console.log('DIFF',tag,x,y,JSON.stringify(inp));}};
+const strip=(e:any)=>e.ok?e:{ok:false,error:e.error};
+for(let i=0;i<30000;i++){
+ let r:any=goodRec();if(rnd(3)===0)r=corrupt(r);
+ const kind=rnd(3);
+ if(kind===0){const inp:any={domain:pick([...doms,'task','constructor',5,undefined]),resource:pick([...NAMES.TASK,...NAMES.ACCOUNT,'nope','constructor']),provider:pick(['p','',' p','p'.repeat(64),'p'.repeat(65),5]),model:'m',account:'a',taskClass:'t',workloadShape:pick(['w',undefined])};
+  const g:any=newProbeRecord(inp);chk(g.ok?g:{ok:false,error:g.error},nw(inp),'new',inp);}
+ else if(kind===1){const s:any={kind:pick(['ran','limit','x']),amount:pick(amts),date:pick(dates),source:pick(['MEASURED','REPORTED','m'])};const inp={record:r,sample:rnd(10)?s:pick([null,5,[]])};
+  const before=JSON.stringify(inp);const g:any=recordSample(inp);if(JSON.stringify(inp)!==before){console.log('MUTATED');diffs++;}chk(g.ok?g:{ok:false,error:g.error},rs(inp),'sample',inp);seen[g.ok?'ok':g.error]=(seen[g.ok?'ok':g.error]||0)+1;}
+ else{const inp={record:r,ownerYes:pick([true,false,true,false,'true',1,undefined,null])};const before=JSON.stringify(inp);const g:any=planProbe(inp);if(JSON.stringify(inp)!==before){console.log('MUTATED');diffs++;}chk(g.ok?g:{ok:false,error:g.error},pl(inp),'plan',inp);const k=g.ok?g.value.outcome:g.error;seen[k]=(seen[k]||0)+1;}
+}
+console.log('calls',calls,'diffs',diffs,JSON.stringify(seen));

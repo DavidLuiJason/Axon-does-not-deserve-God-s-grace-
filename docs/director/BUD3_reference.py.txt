@@ -1,0 +1,80 @@
+import json
+SETS={'DEVICE':[('ramMb',0),('cpuMs',0),('storageMb',0),('batteryPct',0),('networkMb',1)],
+'TASK':[('steps',0),('toolCalls',0),('files',0),('outputKb',0),('tests',0)],
+'ACCOUNT':[('aiCalls',1),('turns',1),('contextChars',1),('attachments',1)],
+'BUILDER':[('builderMemoryMb',0),('archiveExpandMb',0),('repoFiles',0),('testMinutes',0),('reviewCommands',0)]}
+MAXA=10**12; PCT=10; MINS=5; LAB=64
+MSG='Probe input is invalid.'
+def err(c): return {'ok':False,'error':c}
+def ok(v): return {'ok':True,'value':v}
+def isobj(x): return isinstance(x,dict)
+def label(x): return isinstance(x,str) and 1<=len(x)<=LAB and x.strip()==x and x!=''
+def posint(x): return isinstance(x,int) and not isinstance(x,bool) and 1<=x<=MAXA
+def nonneg(x): return isinstance(x,int) and not isinstance(x,bool) and 0<=x<=MAXA
+def date(x):
+    if not isinstance(x,str) or len(x)!=10: return False
+    for i,c in enumerate(x):
+        if i in (4,7):
+            if c!='-': return False
+        elif c not in '0123456789': return False
+    m=int(x[5:7]); d=int(x[8:10]); return 1<=m<=12 and 1<=d<=31
+KEYS=['domain','resource','provider','model','account','taskClass','workloadShape','measured','reported','limitEvents','safeHigh','limitLow','lastDate']
+def valid_record(r):
+    if not isobj(r): return False
+    if r.get('domain') not in SETS: return False
+    if r.get('resource') not in [n for n,_ in SETS[r['domain']]]: return False
+    for k in ['provider','model','account','taskClass','workloadShape']:
+        if k not in r or not label(r[k]): return False
+    for k in ['measured','reported','limitEvents']:
+        if k not in r or not nonneg(r[k]): return False
+    for k in ['safeHigh','limitLow']:
+        if k not in r or not (r[k] is None or posint(r[k])): return False
+    if 'lastDate' not in r or not (r['lastDate'] is None or date(r['lastDate'])): return False
+    ran=r['measured']+r['reported']
+    if (ran==0)!=(r['safeHigh'] is None): return False
+    if (r['limitEvents']==0)!=(r['limitLow'] is None): return False
+    if (ran+r['limitEvents']==0)!=(r['lastDate'] is None): return False
+    return True
+def norm(r): return {k:r[k] for k in KEYS}
+def new_record(i):
+    if not isobj(i): return err('bad-input')
+    if i.get('domain') not in SETS: return err('bad-domain')
+    if i.get('resource') not in [n for n,_ in SETS[i['domain']]]: return err('bad-resource')
+    for k in ['provider','model','account','taskClass','workloadShape']:
+        if k not in i or not label(i[k]): return err('bad-label')
+    r={k:i[k] for k in KEYS[:7]}; r.update(measured=0,reported=0,limitEvents=0,safeHigh=None,limitLow=None,lastDate=None)
+    return ok(norm(r))
+def record_sample(i):
+    if not isobj(i): return err('bad-input')
+    r=i.get('record')
+    if not valid_record(r): return err('bad-record')
+    s=i.get('sample')
+    if not isobj(s): return err('bad-sample')
+    if s.get('kind') not in ('ran','limit'): return err('bad-sample')
+    if s.get('source') not in ('MEASURED','REPORTED'): return err('bad-sample')
+    if 'amount' not in s or not posint(s['amount']): return err('bad-sample')
+    if 'date' not in s or not date(s['date']): return err('bad-sample')
+    if s['kind']=='limit' and s['source']=='MEASURED': return err('bad-sample')
+    n=norm(r)
+    if s['kind']=='ran':
+        n['measured' if s['source']=='MEASURED' else 'reported']+=1
+        n['safeHigh']=s['amount'] if n['safeHigh'] is None else max(n['safeHigh'],s['amount'])
+    else:
+        n['limitEvents']+=1
+        n['limitLow']=s['amount'] if n['limitLow'] is None else min(n['limitLow'],s['amount'])
+    n['lastDate']=s['date'] if n['lastDate'] is None or s['date']>n['lastDate'] else n['lastDate']
+    return ok(n)
+def plan(i):
+    if not isobj(i): return err('bad-input')
+    r=i.get('record')
+    if not valid_record(r): return err('bad-record')
+    if not isinstance(i.get('ownerYes'),bool): return err('bad-owner-yes')
+    oc=dict(SETS[r['domain']])[r['resource']]==1
+    conflict=r['limitLow'] is not None and r['safeHigh'] is not None and r['limitLow']<=r['safeHigh']
+    mx=None;
+    if conflict: out='CONFLICT'
+    elif r['measured']>=MINS: out='NOT-NEEDED'
+    elif oc and not i['ownerYes']: out='NEEDS-OWNER-YES'
+    elif r['safeHigh'] is None or (r['safeHigh']*PCT)//100<1: out='NO-RANGE'
+    else: out='PROBE'; mx=(r['safeHigh']*PCT)//100
+    return ok({'outcome':out,'maxAmount':mx,'measured':r['measured'],'reported':r['reported'],'ownerCost':oc})
