@@ -1,0 +1,159 @@
+// CHR2 DIRECTOR REFERENCE (Director only; never given to a builder). Keep as docs/director/CHR2_reference.ts.txt.
+// PART 1: engine (save as src/mind/charter/charterView.ts in a scratch copy). PART 2: verify script (61 checks, all pass 2026-11-06).
+// ===== PART 1 =====
+import { validateCharter, defaultCharter, CHARTER_LIMITS } from './charter.ts';
+import type { Charter, Sha256, CharterError } from './charter.ts';
+import { verifyCharter } from './change.ts';
+
+export const CHARTER_UNTRUSTED_NOTICE = 'Your Charter could not be checked, so I ask before every action.';
+const VIEW_MESSAGE = 'Charter view input is invalid.';
+export type StoredCharterRead = { readonly kind: 'absent' } | { readonly kind: 'unreadable' } | { readonly kind: 'text'; readonly text: string };
+export type UntrustedReason = CharterError | 'unreadable' | 'not-json' | 'unsigned' | 'signature-mismatch';
+export type CharterLoad =
+  | { readonly status: 'built-in'; readonly reason: 'no-stored-charter'; readonly charter: Charter }
+  | { readonly status: 'signed'; readonly reason: 'trusted'; readonly charter: Charter }
+  | { readonly status: 'untrusted'; readonly reason: UntrustedReason; readonly charter: null };
+export type CharterLink = { readonly tool: string; readonly actions: readonly string[] };
+export type CharterViewArgs = { readonly load: CharterLoad; readonly toolIds: readonly string[]; readonly links: readonly CharterLink[] };
+export type CharterFeedView = { readonly never: readonly string[]; readonly ask: readonly string[]; readonly status: 'built-in' | 'signed' | 'charter-untrusted'; readonly notice: string };
+type Fail<E extends string> = { readonly ok: false; readonly error: E; readonly message: string };
+export type ViewResult = { readonly ok: true; readonly value: CharterFeedView } | Fail<'bad-input' | 'unknown-key' | 'bad-load' | 'bad-tool-ids' | 'bad-links' | 'unknown-link-tool'>;
+export type SerializeResult = { readonly ok: true; readonly text: string } | Fail<CharterError>;
+
+const isObj = (v: unknown): v is Record<PropertyKey, unknown> => v !== null && typeof v === 'object' && !Array.isArray(v);
+const hasOwn = (o: object, k: PropertyKey): boolean => Object.prototype.hasOwnProperty.call(o, k);
+const exact = (v: Record<PropertyKey, unknown>, keys: readonly string[]): boolean => { const own = Reflect.ownKeys(v); return own.length === keys.length && keys.every((k) => own.includes(k)); };
+const strings = (v: unknown, distinct: boolean): v is string[] => Array.isArray(v) && v.every((s) => typeof s === 'string' && s.length > 0) && (!distinct || new Set(v).size === v.length);
+const untrusted = (reason: UntrustedReason): CharterLoad => Object.freeze({ status: 'untrusted', reason, charter: null });
+
+export function loadCharterText(stored: StoredCharterRead, sha256: Sha256): CharterLoad {
+  try {
+    if (typeof sha256 !== 'function' || !isObj(stored)) return untrusted('unreadable');
+    if (stored.kind === 'absent' && exact(stored, ['kind'])) return Object.freeze({ status: 'built-in', reason: 'no-stored-charter', charter: defaultCharter() });
+    if (stored.kind === 'text' && exact(stored, ['kind', 'text']) && typeof stored.text === 'string') {
+      if (stored.text.length > CHARTER_LIMITS.inputCharacters) return untrusted('input-too-large');
+      let parsed: unknown;
+      try { parsed = JSON.parse(stored.text); } catch { return untrusted('not-json'); }
+      const checked = validateCharter(parsed);
+      if (!checked.ok) return untrusted(checked.error);
+      const proof = verifyCharter(checked.value, sha256);
+      if (!proof.ok) return untrusted(proof.reason as UntrustedReason);
+      return Object.freeze({ status: 'signed', reason: 'trusted', charter: checked.value });
+    }
+    return untrusted('unreadable');
+  } catch { return untrusted('unreadable'); }
+}
+
+export function serializeCharter(charter: unknown): SerializeResult {
+  const checked = validateCharter(charter);
+  if (!checked.ok) return Object.freeze({ ok: false, error: checked.error, message: checked.message });
+  const text = JSON.stringify(checked.value, (_k, v) => (isObj(v) ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, v[k]])) : v));
+  return Object.freeze({ ok: true, text });
+}
+
+const RANK = { allowed: 0, ask: 1, never: 2 } as const;
+type Lvl = keyof typeof RANK;
+
+export function charterToFeedView(args: CharterViewArgs): ViewResult {
+  const fail = (error: Exclude<ViewResult, { ok: true }>['error']): ViewResult => Object.freeze({ ok: false, error, message: VIEW_MESSAGE });
+  if (!isObj(args)) return fail('bad-input');
+  if (!exact(args, ['load', 'toolIds', 'links'])) return fail('unknown-key');
+  const load = args.load as unknown;
+  const loadOk = isObj(load) && ((load.status === 'built-in' && exact(load, ['status', 'reason', 'charter']) && load.reason === 'no-stored-charter') ||
+    (load.status === 'signed' && exact(load, ['status', 'reason', 'charter']) && load.reason === 'trusted') ||
+    (load.status === 'untrusted' && exact(load, ['status', 'reason', 'charter']) && typeof load.reason === 'string' && load.reason.length > 0 && load.charter === null));
+  if (!loadOk) return fail('bad-load');
+  if (!strings(args.toolIds, true)) return fail('bad-tool-ids');
+  const links = args.links as unknown;
+  if (!Array.isArray(links) || !links.every((l) => isObj(l) && exact(l, ['tool', 'actions']) && typeof l.tool === 'string' && l.tool.length > 0 && strings(l.actions, true)) ||
+    new Set(links.map((l) => (l as CharterLink).tool)).size !== links.length) return fail('bad-links');
+  if (!links.every((l) => args.toolIds.includes((l as CharterLink).tool))) return fail('unknown-link-tool');
+
+  const l = load as CharterLoad;
+  const closed = (): ViewResult => Object.freeze({ ok: true, value: Object.freeze({ never: Object.freeze([]), ask: Object.freeze([...args.toolIds]), status: 'charter-untrusted', notice: CHARTER_UNTRUSTED_NOTICE }) as CharterFeedView });
+  if (l.status === 'untrusted') return closed();
+  const checked = validateCharter(l.charter);
+  if (!checked.ok) return closed();
+  const lanes = checked.value.lanes;
+  const laneIds = Object.keys(lanes);
+  const levelsOf = (actionId: string): Lvl[] => laneIds.filter((id) => hasOwn(lanes[id].actions, actionId)).map((id) => lanes[id].actions[actionId].level as Lvl);
+  const never: string[] = []; const ask: string[] = [];
+  for (const tool of args.toolIds) {
+    let worst = 0;
+    for (const lv of levelsOf(`tools.${tool}`)) worst = Math.max(worst, RANK[lv]);
+    const link = (links as CharterLink[]).find((x) => x.tool === tool);
+    for (const action of link ? link.actions : []) {
+      const found = levelsOf(action);
+      if (found.length === 0) worst = Math.max(worst, RANK.ask);
+      for (const lv of found) worst = Math.max(worst, RANK[lv]);
+    }
+    if (worst === RANK.never) never.push(tool); else if (worst === RANK.ask) ask.push(tool);
+  }
+  const status = l.status === 'signed' ? 'signed' : 'built-in';
+  return Object.freeze({ ok: true, value: Object.freeze({ never: Object.freeze(never), ask: Object.freeze(ask), status, notice: '' }) as CharterFeedView });
+}
+
+// ===== PART 2 =====
+import { defaultCharter, charterHash } from '../src/mind/charter/charter.ts';
+import type { Charter } from '../src/mind/charter/charter.ts';
+import { charterToFeedView as view, loadCharterText as load, serializeCharter as ser0 } from '../src/mind/charter/charterView.ts';
+import assert from 'node:assert/strict';
+const sha=(s:string)=>{let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return (h>>>0).toString(16)};
+const mk=(lanes:any):Charter=>{const o:any={};for(const [id,acts] of Object.entries<any>(lanes)){const a:any={};for(const [k,l] of Object.entries<any>(acts))a[k]={level:l,reason:'r'};o[id]={id,name:id,actions:a};}return {version:1,revision:1,lanes:o,fences:{neverTouch:[],maxSpendPerAction:0,maxSpendPerDay:0},createdAt:'',signedAt:null,signature:null};};
+const sign=(c:Charter):Charter=>{const d={...c,signedAt:'2026-11-06T00:00:00Z'};return {...d,signature:`${charterHash(d,sha)}:owner`};};
+const ser=(c:any)=>(ser0(c) as any).text as string;
+const A=sign(mk({tools:{'tools.sort-lines':'never','tools.counter':'ask','tools.noter':'allowed'}}));
+const T=['a','b'];const bi=load({kind:'absent'},sha);
+let n=0;const ck=(v:any,e:any)=>{assert.deepEqual(v,e);n++};
+const L=(s:any,f:any=sha)=>{const r:any=load(s,f);return [r.status,r.reason,r.charter===null?null:'charter'];};
+ck(L({kind:'absent'}),['built-in','no-stored-charter','charter']);ck((load({kind:'absent'},sha) as any).charter,defaultCharter());
+ck(L({kind:'unreadable'}),['untrusted','unreadable',null]);
+ck(L({kind:'text',text:ser(A)}),['signed','trusted','charter']);ck((load({kind:'text',text:ser(A)},sha) as any).charter,A);
+ck(L({kind:'text',text:ser(mk({tools:{'tools.x':'ask'}}))}),['untrusted','unsigned',null]);
+const tam:any=structuredClone(A);tam.lanes.tools.actions['tools.counter'].level='never';ck(L({kind:'text',text:JSON.stringify(tam)}),['untrusted','signature-mismatch',null]);
+ck(L({kind:'text',text:''}),['untrusted','not-json',null]);ck(L({kind:'text',text:'{'}),['untrusted','not-json',null]);
+ck(L({kind:'text',text:'null'}),['untrusted','invalid-charter',null]);
+const bad:any=structuredClone(A);bad.lanes.tools.actions['tools.counter'].level='maybe';ck(L({kind:'text',text:JSON.stringify(bad)}),['untrusted','unknown-level',null]);
+ck(L({kind:'text',text:'x'.repeat(1000001)}),['untrusted','input-too-large',null]);
+ck(L({kind:'text',text:'{'+' '.repeat(999998)+'}'}),['untrusted','invalid-charter',null]); // exactly 1,000,000 chars: not too large, parses, not a charter
+ck(L({kind:'text'} as any),['untrusted','unreadable',null]);ck(L({kind:'text',text:5} as any),['untrusted','unreadable',null]);
+ck(L({kind:'absent',extra:1} as any),['untrusted','unreadable',null]);ck(L({kind:'other'} as any),['untrusted','unreadable',null]);
+ck(L(null as any),['untrusted','unreadable',null]);ck(L({kind:'absent'},'nope' as any),['untrusted','unreadable',null]);
+ck(L({kind:'absent',[Symbol('s')]:1} as any),['untrusted','unreadable',null]);
+ck(L({kind:'text',text:ser(A)},()=>{throw new Error('x')}),['untrusted','signature-mismatch',null]);
+const lm:any=structuredClone(A);lm.lanes.tools.id='other';ck(L({kind:'text',text:JSON.stringify(lm)}),['untrusted','lane-id-mismatch',null]);
+ck(L({kind:'text',text:ser(A)},(s:string)=>sha(s)+'x'),['untrusted','signature-mismatch',null]);
+// frozen
+assert(Object.isFrozen(load({kind:'unreadable'},sha)));assert(Object.isFrozen(bi));n+=2;
+// serialize
+ck(ser0(42),{ok:false,error:'invalid-charter',message:'Charter must be a plain object.'});
+const circ:any=mk({});circ.self=circ;ck((ser0(circ) as any).error,'circular-input');
+const bl:any=structuredClone(A);bl.lanes.tools.actions['tools.counter'].level='maybe';ck((ser0(bl) as any).error,'unknown-level');
+const rev:any={...A,lanes:Object.fromEntries(Object.entries(A.lanes).reverse())};ck(ser(rev),ser(A));
+const dflt=defaultCharter();ck((load({kind:'text',text:ser(dflt)},sha) as any).reason,'unsigned');
+ck(ser(JSON.parse(ser(dflt))),ser(dflt));ck(typeof ser(dflt),'string');
+// view errors
+const V=(a:any)=>{const r:any=view(a);return r.ok?'ok':r.error+'|'+r.message;};
+const M='Charter view input is invalid.';
+const ok={load:bi,toolIds:T,links:[]};
+ck(V(null),'bad-input|'+M);ck(V([]),'bad-input|'+M);ck(V(7),'bad-input|'+M);
+ck(V({...ok,x:1}),'unknown-key|'+M);ck(V({...ok,[Symbol('s')]:1}),'unknown-key|'+M);ck(V({load:bi,toolIds:T}),'unknown-key|'+M);
+ck(V({...ok,load:{status:'x',reason:'y',charter:null}}),'bad-load|'+M);
+ck(V({...ok,load:{status:'untrusted',reason:'unreadable',charter:defaultCharter()}}),'bad-load|'+M);
+ck(V({...ok,load:{status:'signed',reason:'x',charter:defaultCharter()}}),'bad-load|'+M);
+ck(V({...ok,load:{status:'built-in',reason:'no-stored-charter'}}),'bad-load|'+M);
+ck(V({...ok,load:{status:'untrusted',reason:'',charter:null}}),'bad-load|'+M);
+ck(V({...ok,toolIds:['a','a']}),'bad-tool-ids|'+M);ck(V({...ok,toolIds:['']}),'bad-tool-ids|'+M);ck(V({...ok,toolIds:'a'}),'bad-tool-ids|'+M);ck(V({...ok,toolIds:[1]}),'bad-tool-ids|'+M);
+ck(V({...ok,links:[{tool:'a',actions:[],x:1}]}),'bad-links|'+M);ck(V({...ok,links:[{tool:'a',actions:['m.n']},{tool:'a',actions:[]}]}),'bad-links|'+M);
+ck(V({...ok,links:[{tool:'a',actions:['m.n','m.n']}]}),'bad-links|'+M);ck(V({...ok,links:{}}),'bad-links|'+M);ck(V({...ok,links:[{tool:'a',actions:['']}]}),'bad-links|'+M);
+ck(V({...ok,links:[{tool:'zz',actions:[]}]}),'unknown-link-tool|'+M);
+ck(V({load:{status:'x'},toolIds:['a','a'],links:7}),'bad-load|'+M);ck(V({...ok,toolIds:['a','a'],links:7}),'bad-tool-ids|'+M);ck(V({...ok,links:[{tool:'zz',actions:[1]}]}),'bad-links|'+M);
+ck(V({load:{status:'untrusted',reason:'unreadable',charter:null},toolIds:T,links:[{tool:'zz',actions:[]}]}),'unknown-link-tool|'+M);
+ck(V(ok),'ok');
+// frozen + input unchanged
+const inp={load:load({kind:'text',text:ser(A)},sha),toolIds:['sort-lines','counter'],links:[{tool:'counter',actions:['email.send']}]};const before=JSON.stringify(inp);const r:any=view(inp);
+assert(Object.isFrozen(r)&&Object.isFrozen(r.value)&&Object.isFrozen(r.value.never)&&Object.isFrozen(r.value.ask));assert.equal(JSON.stringify(inp),before);n+=2;
+const e:any=view(null as any);assert(Object.isFrozen(e));n++;
+// default pin
+console.log('DEFAULT_HASH',charterHash(defaultCharter(),sha));
+console.log('VERIFY OK',n);
