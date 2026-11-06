@@ -84,3 +84,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-05 | AXON-BATCH6-RETURN.zip (first try, six cards, invented APIs) | read, hash-checked, tested | NOT ACCEPTED
 2026-11-05 | AXON_BATCH6_DIRECTOR_REVIEW.zip (ChatGPT, three cards J1 J3 J5) | read, hash-checked, tested, mutated | AXON-BATCH6-merge.zip made
 2026-11-05 | AXON-BATCH6B-RETURN.zip (ChatGPT, J2 only, restored with placement note) | read, hash-checked, tested, mutated | AXON-BATCH6B-merge.zip made
+2026-11-06 | new account intake: roadmap v21.3 read in full (four parts) and the paste; repo zip read only for NOW.txt, MERGE_TAG.txt, DIRECTOR_NAP.txt, board tail, intake log, the two feed and Charter design files and the J2, J6 and feed sources | owner named DLG1 and asked for the result in the FIRST round (the previous account hit its limit) | AXON-DLG1-merge.zip made
