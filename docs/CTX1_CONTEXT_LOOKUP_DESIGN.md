@@ -1,0 +1,37 @@
+# CTX1 CONTEXT LOOKUP: DESIGN (roadmap 7A CONTEXT store, 7D new chat = fresh start, 7K ACT-OR-ASK; layer 3 feed input). DESIGN ONLY, nothing built here. Director, 2026-11-07. Owner may overrule any line.
+
+**What this settles:** the Act-or-Ask feed (`src/decision/actOrAskFeed.ts`, built, no caller) takes two lists, `contextFills` and `safeStepFills` (slot names). ACT_OR_ASK_FEED_DESIGN D2 says they come from CONTEXT only and are EMPTY until a lookup exists (AXON then asks more and never guesses). This file decides what the CONTEXT store holds, which rules fill a slot from it, and the contract of the one pure engine that does it (job CTX1). Roadmap pointer is needed at the next roadmap edit (ROADMAP UPDATE LAW: no roadmap edit for this alone).
+**Rival/gap (rule 9):** assistants fill a missing input by guessing from anything they remember. Here a slot is filled only from a typed item of the right kind that the owner put in front of AXON in THIS task, exactly one candidate, else AXON asks.
+
+## 1. Where it sits (FL1, FL3)
+Layer 3, beside the feed. Order per clause (D1): Resolution -> CTX1 (for the matched tool's missing slots) -> feed -> J6 -> Dialogue wording -> J2 records. CTX1 never sees the message text, never reads `confidence`, never decides whether to ask (J6), never sets route, depth, permission or cost, has no Date, random, storage or IO (FL13). Callers: FEED3 only (shadow, D1). UNDECIDED, not built toward: where the store lives in memory, who writes items (Intake for attached and selected objects, Meaning plus the reference reader for `previous-reference`, Dialogue for answers), how the owner sees what was used.
+
+## 2. The CONTEXT store (shape only)
+Per task, in memory, cleared when a new chat or task starts (7D). It holds typed ITEMS from a CLOSED set of four sources; there is NO source for long-term memory notes (7D: notes only when the owner refers to them), so an item from any other source is invalid input and a test proves it.
+- `selected`: an object the owner selected on screen now. Cap 4.
+- `attached`: an object he attached now (a file, an image, text). Cap 8.
+- `previous-reference`: a typed value from his PREVIOUS message in this chat, passed ONLY when a reference in the new message points at it (the reference reader decides; CTX1 trusts the source tag). A previous message that nothing points at never fills anything. Cap 8.
+- `answer`: his earlier answer to a question in this task, tagged with the slot it answered. Cap 8.
+An item is `{id, source, kind, slot?, readable?}`: `id` non-empty string, distinct across all items (traceability, never shown); `kind` one of the eight slot kinds (MEASURED: text, choice, file, number, yes-no, duration, time, date); `slot` is required for `answer` and forbidden otherwise; `readable` (boolean) is required for `attached` items of kind `file` and forbidden otherwise (set upstream: can a read-only step turn this file into text).
+
+## 3. The rules (fixed order per missing slot; the FIRST rule that finds candidates decides)
+The input is the matched tool's missing slots, `[{slot, kind}]` (names distinct, kind one of the eight).
+- **R0 decision slots.** Kind `choice` or `yes-no`: only R1 may fill it. A choice is a decision, never guessed from an object or an old value. No R1 candidate: not filled, reason `decision-slot`.
+- **R1 answer.** `answer` items with the same `slot` name AND the same kind. One: filled (context). Two or more: `ambiguous`, stop (an unsure case goes UP, never to a later rule).
+- **R2 selected.** `selected` items of the slot's kind. One: filled. Two or more: `ambiguous`, stop. None: next rule.
+- **R3 attached.** `attached` items of the slot's kind. One: filled. Two or more: `ambiguous`, stop.
+- **R4 previous reference.** `previous-reference` items of the slot's kind. One: filled. Two or more: `ambiguous`, stop.
+- **R5 safe step.** Only a slot of kind `text` with no candidate in R1 to R4: if exactly one `attached` item of kind `file` has `readable` true, the slot goes to `safeStepFills` (a registered read-only step, pure effects, cost instant or quick, undo not-needed, reads that file: D2). Two or more readable files: `ambiguous`. None: `no-candidate`.
+A slot found by R1 to R4 is in `contextFills`; by R5 in `safeStepFills`; never both. Lists keep the input order of the missing slots.
+
+## 4. Result
+`{contextFills, safeStepFills, trace}` frozen, deep. `trace` has one entry per missing slot in order: `{slot, outcome: 'context'|'safe-step'|'not-filled', rule: 'R0'|'R1'|'R2'|'R3'|'R4'|'R5'|'none', itemId: string|null, reason: 'ok'|'ambiguous'|'no-candidate'|'decision-slot'}`. `itemId` is the filling item (null when not filled). The feed gets the two lists; the trace feeds the later "how did you understand" view (7E). Errors, first failure wins: `bad-input`, `unknown-key`, `bad-missing`, `bad-items`, `too-many-items`; all with the one message 'Context lookup input is invalid.'; any exception is `bad-input`; never throws.
+
+## 5. Why these rules (decisions, overrulable)
+D1 One candidate or ask: with two candidates of the same kind AXON cannot know which, and a wrong guess runs the wrong thing; ask is cheap. D2 `choice` and `yes-no` are never filled from objects or values (the owner must decide; defaults are the bind-default rule, not CONTEXT). D3 Order answer, selected, attached, previous reference goes from most specific to least. D4 A `previous-reference` fills only when the reference reader tags it: no tag, no fill (this is the riskiest source, so it is gated by the stage that actually understands "it" and "that"). D5 Caps keep the store small on the weakest phone (rule 8); too many items is an error, not a silent drop. D6 The safe step is only ever a read: the slot is fetched, nothing is written, nothing is sent.
+
+## 6. Findings (MEASURED 2026-11-07 from `actionSchemas.ts`, 63 tools)
+F1 required slots are 70: text 26, choice 22, file 10, number 9, duration 2, date 1 (matches DLG1's 70). Optional slots: 53 (yes-no 20, text 10, number 10, choice 9, file 1, time 2, date 1). So 22 of 70 required slots are decision slots that R0 never fills from objects, and 10 are file slots. F2 the feed design table says CTX1 depends on a "Context store design": this file is that design at the shape level; the store itself is UNPLANNED (needs FEED3 and the callers). F3 `previous-reference` depends on the reference reader (B03B2) being able to hand over typed values: NOT measured, the caller job FEED3 checks it. F4 nothing here touches `package.json`, `files.lock` or any existing file.
+
+## 7. Job (layer 3; builder ChatGPT after a Director card, Plan B member; proof by the Director)
+CTX1 card: ONE isolated pure engine `src/decision/contextLookup.ts` (export `lookupContext`), test `tests/contextLookup.test.ts`, report `docs/reports/CTX1_CONTEXT_LOOKUP_REPORT.md` (names checked against the repository 2026-11-07: free). Card carries a DIRECTOR PLACEMENT NOTE, 30 or more hand-worked rows (every rule, every tie, every decision-slot case, caps, error order), a seeded sweep (invariants: each missing slot appears once in the trace; a slot is in at most one list; lists keep order; a filled slot's item has the slot's kind; no `choice` or `yes-no` slot is ever filled except by R1), a link test (the output goes into `makeActOrAskFeed` and the feed accepts it), 10 or more mutants, and the TYPE RULE (narrow results before reading `.error` or `.value`; run `tsc --noEmit --strict`). Director reference and checks are written before the card leaves (same as BUD6).
