@@ -36,6 +36,13 @@ const schemaOf = (tool: string) => getSchema(tool);
   eq(r(match('taught-meanings')).route, 'deep', 'R3: a deleting tool goes deep with the real schema');
   eq(r(match('taught-meanings')).rule, 'R3', 'R3 rule id');
   eq(r(match('taught-meanings', { missingSlots: ['x'] }), undefined, 'ask').rule, 'R3', 'R3 beats R4 (unsure goes up)');
+  // F1 (FEED2 finding): the owner-approval PRECONDITION alone (no approval effect, not irreversible) also sends a tool deep.
+  for (const tool of ['voice-cloner', 'my-dictionary', 'backup-restore']) {
+    eq([r(match(tool)).route, r(match(tool)).rule], ['deep', 'R3'], `R3: ${tool} needs the owner's approval, so it goes deep`);
+    eq(r(match(tool), undefined, 'run').rule, 'R3', `R3: ${tool} stays deep even when the binder says run`);
+    eq(r(match(tool, { missingSlots: ['x'] })).rule, 'R3', `R3 beats R4 for ${tool}`);
+  }
+  ok((getSchema('voice-cloner')?.effects ?? []).every((effect) => !['sends', 'spends', 'deletes'].includes(effect)) && getSchema('voice-cloner')?.undo !== 'irreversible', 'voice-cloner reaches R3 through the precondition alone');
   eq(r(match('text-counter'), undefined, 'ask').route, 'ask', 'R4: binder ask -> ask');
   eq(r(match('text-counter'), undefined, 'confirm-first').route, 'deep', 'R4: binder confirm-first -> deep');
   eq(r(match('text-counter', { missingSlots: ['text'] }), undefined, 'run').route, 'fast', 'R4: the binder (it sees quoted text) overrides Resolution\'s missing list');
@@ -68,7 +75,8 @@ const routerDir = join(process.cwd(), 'src/brain/mind/router');
 const source = await readFile(join(routerDir, 'routerShadow.ts'), 'utf8');
 const MUTANTS: Array<[string, string, string]> = [
   ['R1 dropped', "if (!item.mayRunAlone) return make('deep'", "if (false) return make('deep'"],
-  ['R3 dropped', "if (schema.undo === 'irreversible' || schema.effects.some((effect) => isApprovalEffect(effect))) return", 'if (false) return'],
+  ['R3 dropped', "if (schema.undo === 'irreversible' || schema.effects.some((effect) => isApprovalEffect(effect)) || schema.preconditions.includes('owner-approval')) return", 'if (false) return'],
+  ['owner-approval precondition ignored', "|| schema.preconditions.includes('owner-approval')", '|| false'],
   ['plain request sent deep', "make('fast', 'R6'", "make('deep', 'R6'"],
   ['no-fit goes fast (unsure goes DOWN)', "make('deep', 'R8'", "make('fast', 'R8'"],
   ['unknown talk goes fast', "make('deep', 'R10'", "make('fast', 'R10'"],
@@ -86,7 +94,7 @@ for (const [name, from, to] of MUTANTS) {
   try {
     const m = await import(file);
     const probe = (): string => JSON.stringify([
-      m.routePiece(match('text-counter'), undefined, schemaOf).route, m.routePiece(match('taught-meanings'), undefined, schemaOf).route,
+      m.routePiece(match('text-counter'), undefined, schemaOf).route, m.routePiece(match('taught-meanings'), undefined, schemaOf).route, m.routePiece(match('voice-cloner'), undefined, schemaOf).route,
       m.routePiece(piece({ kind: 'match', tool: 'text-counter', missingSlots: [] }, { mayRunAlone: false }), undefined, schemaOf).route,
       m.routePiece(piece({ kind: 'none' }), undefined, schemaOf).route, m.routePiece(piece({ kind: 'not-a-request' }), 'chat', schemaOf).route,
       m.routePiece(match('text-counter'), undefined, schemaOf, 'ask').route, m.routePiece(piece({ kind: 'ask', choices: ['a', 'b'] }), undefined, schemaOf).route,
@@ -94,7 +102,7 @@ for (const [name, from, to] of MUTANTS) {
       m.routeMessage([piece({ kind: 'none' }, {}, 0), match('text-counter', { piece: 1, clause: 1 })], undefined, schemaOf).order,
     ]);
     const good = JSON.stringify([
-      'fast', 'deep', 'deep', 'deep', 'deep', 'ask', 'ask', 'deep', 'deep', [1, 0],
+      'fast', 'deep', 'deep', 'deep', 'deep', 'deep', 'ask', 'ask', 'deep', 'deep', [1, 0],
     ]);
     caught = probe() !== good;
   } finally { await unlink(file).catch(() => undefined); }

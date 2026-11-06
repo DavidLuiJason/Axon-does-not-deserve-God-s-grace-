@@ -11,7 +11,7 @@
  * THE RULES (first match wins, in this order):
  *   R1 a clause that may not run alone (conditional or linked)         -> DEEP
  *   R2 match, tool has no schema                                       -> DEEP (cannot judge the effect)
- *   R3 match, irreversible undo or an approval effect (sends/spends/deletes) -> DEEP
+ *   R3 match, irreversible undo, an approval effect (sends/spends/deletes) or the owner-approval precondition -> DEEP
  *   R4 match, the argument binder says the input is missing (it sees quoted and detail text, which Resolution's slot list does not; without a
  *      binder answer Resolution's own missing list is used) -> ASK; the binder says confirm-first -> DEEP
  *   R5 match found only by the value the message carries               -> DEEP (the stage that runs it must confirm first)
@@ -45,7 +45,7 @@ export function routePiece(item: PieceResolution, act: string | undefined, schem
   if (resolution.kind === 'match') {
     const schema = schemaOf(resolution.tool);
     if (!schema) return make('deep', 'R2', `no schema is known for ${resolution.tool}, so its effect cannot be judged`);
-    if (schema.undo === 'irreversible' || schema.effects.some((effect) => isApprovalEffect(effect))) return make('deep', 'R3', `${resolution.tool} cannot be undone or needs approval`);
+    if (schema.undo === 'irreversible' || schema.effects.some((effect) => isApprovalEffect(effect)) || schema.preconditions.includes('owner-approval')) return make('deep', 'R3', `${resolution.tool} cannot be undone or needs approval`);
     if (decision === 'ask') return make('ask', 'R4', `${resolution.tool}: the binder says something needed was not said`);
     if (decision === 'confirm-first') return make('deep', 'R4', `${resolution.tool}: the binder says confirm first`);
     if (decision === undefined && resolution.missingSlots.length > 0) return make('ask', 'R4', `${resolution.tool} is missing: ${resolution.missingSlots.join(', ')}`);
