@@ -91,3 +91,4 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-07 | new account intake: roadmap v21.3 read in full (round 1), main zip read only for NOW.txt, MERGE_TAG.txt, DIRECTOR_NAP.txt, board tail, the CTX1 design and the feed; round 2: CTX1 card written | owner said give it | AXON-CTX1CARD-merge.zip + AXON-CTX1-MINIBASE.zip made
 2026-11-07 | CTX1 return (CTX1_CONTEXT_LOOKUP_DELTA.zip) checked; main zip not re-read | owner asked whether to add it as it is or take a merge zip | AXON-CTX1-merge.zip made
 2026-11-07 | owner asked what is next and who builds it | MR2 card written for ChatGPT | AXON-MR2CARD-merge.zip + AXON-MR2-MINIBASE.zip made
+2026-11-07 | MR2 return (MR2-composeReply.zip) checked; main zip not re-read | owner asked good enough or merge zip | AXON-MR2-merge.zip made
