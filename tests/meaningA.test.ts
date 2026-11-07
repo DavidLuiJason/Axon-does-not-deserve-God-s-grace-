@@ -287,11 +287,11 @@ async function main(): Promise<void> {
   const root = resolve('.');
   const mutations: Array<{ name: string; file: string; from: string; to: string }> = [
     { name: 'question words forgotten', file: 'src/brain/mind/meaning/closedSets.ts', from: "'what', 'who', 'whom'", to: "'who', 'whom'" },
-    { name: 'and and then never start a clause', file: 'src/brain/mind/meaning/clauses.ts', from: 'if (startsClause(units, after)) { ranges.push({ from, to: k }); from = k; }', to: 'if (false) { ranges.push({ from, to: k }); from = k; }' },
+    { name: 'and and then never start a clause', file: 'src/brain/mind/meaning/clauses.ts', from: 'if (startsClause(units, after, loose)) { ranges.push({ from, to: k }); from = k; }', to: 'if (false) { ranges.push({ from, to: k }); from = k; }' },
     { name: 'negation ignored', file: 'src/brain/mind/meaning/acts.ts', from: "units.some((unit) => unit.neg) ? 'negative' : 'positive'", to: "'positive'" },
     { name: 'thanks anchors removed', file: 'src/brain/mind/meaning/concepts.ts', from: "['oewn-07243631-n', 'oewn-07243905-n']", to: '[]' },
     { name: 'material attaches to nothing', file: 'src/brain/mind/meaning/build.ts', from: 'frames[target]!.clause.materialIds.push(segmentIndex);', to: '' },
-    { name: 'a conjunction between nouns splits the clause', file: 'src/brain/mind/meaning/clauses.ts', from: 'if (hasVerb(unit) && !unit.grammar && strongObjectCue(unit, next)) return true;\n  return false;', to: 'if (!unit.grammar) return true;\n  return false;' },
+    { name: 'a conjunction between nouns splits the clause', file: 'src/brain/mind/meaning/clauses.ts', from: 'if (hasVerb(unit) && !unit.grammar && strongObjectCue(unit, next)) return true;', to: 'if (!unit.grammar) return true;' },
     { name: 'statements read as commands', file: 'src/brain/mind/meaning/acts.ts', from: "if (auxAt >= 0) readings.push({ act: 'chat'", to: "if (false) readings.push({ act: 'chat'" },
   ];
   let killed = 0;

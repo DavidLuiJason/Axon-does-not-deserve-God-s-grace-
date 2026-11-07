@@ -75,10 +75,13 @@ check((await runDirectLane(good, config({ record: async () => null }))).kind ===
 check((await runDirectLane(good, config({ record: async () => { throw new Error('boom'); } }))).kind === 'yield', 'YIELD 10b: a throwing record never escapes');
 check(ran.kind === 'answer' && ran.reply.taskId === 'task-0' && ran.reply.content.endsWith('Ran as task task-0: COMPLETED in 0 ms, from your exact input.'), 'RUN 10: the reply carries the task line and the task id');
 // 9 defaults: the lane yields unless the owner allowed said-aloud answers
-const andForm = await read('count words in "a b" and count lines in "c"');
+const andForm = await read('count words in "a b" and "c"');
 check((await runDirectLane(andForm, config())).kind === 'yield', 'YIELD 9: the binder assumed something, lane yields by default');
 const said = await runDirectLane(andForm, config({ allowDefaults: true }));
 check(said.kind === 'answer' && said.reply.content.startsWith('I read this as') && said.note.includes('said aloud'), 'RUN 9: allowed, the assumption is said aloud first');
+// MR1: two real requests joined by "and" are now read as TWO pieces; the lane yields instead of running them as one
+const twoRequests = await read('count words in "a b" and count lines in "c"');
+check(twoRequests.resolutions?.length === 2 && (await runDirectLane(twoRequests, config({ allowDefaults: true }))).kind === 'yield', 'YIELD MR1: two requests joined by and are two pieces, the lane yields');
 const always = (reply: string) => ({ run: async () => ({ route: 'runner' as const, outcome: { ok: true as const, toolId: 'text-counter', result: {}, reply } }) });
 check((await runDirectLane(ask, config(always('X')))).kind === 'yield', 'YIELD 5b: the binder asks, so even a runner that would answer is not asked');
 const m2 = good.meaning as any;

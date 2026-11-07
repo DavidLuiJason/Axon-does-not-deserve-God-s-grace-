@@ -7,7 +7,7 @@
 import type { BrainProvider, BrainRequest } from '../types';
 import { maskCodeRegions } from '../symbols/protect';
 import { classifySymbolRoles } from '../symbols/symbolRoles';
-import type { MindContext, MindStage, Segment, StageId, StageState } from './types';
+import type { Meaning, MindContext, MindStage, Segment, StageId, StageState } from './types';
 import { createLegacyExecutor } from './legacy';
 import { dictionarySlot } from '../knowledge/dictionarySlot';
 import type { KnowledgeSlot } from '../knowledge/slot';
@@ -100,7 +100,17 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
         ? (outcome.meaning.onlyMaterial ? '0 clauses: only quoted or code material, nothing is interpreted' : '0 clauses: no words')
         : `${clauses.length} clause${clauses.length === 1 ? '' : 's'}: ${clauses.map((frame) => frame.polarity === 'negative' ? `${frame.act} (negative)` : frame.act).join(', ')}`;
       const first = clauses[0];
-      return withEntry(context, 'meaning', 'ran', note, { meaning: outcome.meaning, frame: first ? { act: first.act, confidence: first.confidence } : unreadable });
+      // MR1: a second, looser split of the same message, kept only as an ALTERNATIVE (never replaces the first reading here). It exists only when it finds MORE pieces.
+      let splitMeaning: Meaning | undefined;
+      let splitNote = '';
+      try {
+        const loose = buildMeaning(context.analysis, context.utterance.text, true);
+        if (loose.ok && loose.meaning.structure && loose.meaning.clauses.length > clauses.length) {
+          splitMeaning = loose.meaning;
+          splitNote = `; a second reading finds ${loose.meaning.clauses.length} clauses`;
+        }
+      } catch { splitMeaning = undefined; }
+      return withEntry(context, 'meaning', 'ran', note + splitNote, { meaning: outcome.meaning, ...(splitMeaning ? { splitMeaning } : {}), frame: first ? { act: first.act, confidence: first.confidence } : unreadable });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return withEntry(context, 'meaning', 'not-built', `meaning failed: ${message}`, { frame: unreadable });
@@ -113,15 +123,6 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
       const extracted = extractValues(context.utterance.text, context.analysis.segments, utcClock(now()));
       const values = extracted.ok ? extracted.values : [];
       const valueNote = extracted.ok ? '' : `; values unavailable: ${extracted.message}`;
-      const structure = context.meaning.structure;
-      const adapterInput: AdapterInput = {
-        tokens: context.analysis.tokens,
-        segments: context.analysis.segments,
-        clauses: context.meaning.clauses,
-        words: structure.words,
-        pieces: structure.pieces,
-        values,
-      };
       // B04B3: concept closeness from the dictionary synonyms of the message's own words.
       // B04B4P2: options.status comes from the live tool facts (catalog + registry + left-out list), read at message time because the
       // registry fills at app start. No facts source, or a source that fails, means no status (a tool is then treated as built), said in the note.
@@ -131,20 +132,49 @@ export function createStages(executor: ReturnType<typeof createLegacyExecutor>, 
       if (liveFacts) {
         try { status = statusMapFrom(liveFacts()); } catch (error) { statusNote = `; live tool facts unavailable: ${error instanceof Error ? error.message : String(error)}`; }
       }
-      const resolutions = resolveMessage(adapterInput, status ? { related, status } : { related });
-      const counts = { match: 0, ask: 0, unavailable: 0, none: 0 };
-      for (const item of resolutions) {
-        if (item.resolution.kind === 'match') counts.match += 1;
-        else if (item.resolution.kind === 'ask') counts.ask += 1;
-        else if (item.resolution.kind === 'unavailable') counts.unavailable += 1;
-        else if (item.resolution.kind === 'none') counts.none += 1;
+      const analysisNow = context.analysis;
+      // One reading -> its resolutions, its route record and its trace words (ROUTER in shadow).
+      const resolveReading = (reading: Meaning) => {
+        const structure = reading.structure!;
+        const adapterInput: AdapterInput = {
+          tokens: analysisNow.tokens,
+          segments: analysisNow.segments,
+          clauses: reading.clauses,
+          words: structure.words,
+          pieces: structure.pieces,
+          values,
+        };
+        const resolutions = resolveMessage(adapterInput, status ? { related, status } : { related });
+        const counts = { match: 0, ask: 0, unavailable: 0, none: 0 };
+        for (const item of resolutions) {
+          if (item.resolution.kind === 'match') counts.match += 1;
+          else if (item.resolution.kind === 'ask') counts.ask += 1;
+          else if (item.resolution.kind === 'unavailable') counts.unavailable += 1;
+          else if (item.resolution.kind === 'none') counts.none += 1;
+        }
+        const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}${statusNote}`;
+        // ROUTER (shadow): reads the resolutions, writes one trace line, changes nothing else. A router failure is said in the note and never touches the resolutions.
+        let routes: RouterResult | undefined;
+        let routerLine = '';
+        try { const decisions = binderDecisions({ message: context.utterance.text, segments: analysisNow.segments, structure, values: values as never, resolutions, ...(lane ? { choicesFor: lane.choicesFor, toolNameFor: lane.toolNameFor } : {}) }); routes = routeMessage(resolutions, reading, getSchema, (piece) => decisions.get(piece)); routerLine = `; ${routerNote(routes)}`; } catch (error) { routerLine = `; router failed: ${error instanceof Error ? error.message : String(error)}`; }
+        return { resolutions, routed: routes, note: note + routerLine };
+      };
+      let chosen = resolveReading(context.meaning);
+      let adoptedMeaning: Meaning | undefined;
+      // MR1 adoption gate: the second reading wins ONLY when every piece of it is a sure tool match or a greeting/thanks AND at least one is a tool match. Questions, none, unavailable and negated pieces never qualify; any failure keeps the first reading.
+      if (context.splitMeaning?.structure) {
+        try {
+          const second = resolveReading(context.splitMeaning);
+          const kinds = second.resolutions.map((item) => item.resolution.kind);
+          if (kinds.length > 0 && kinds.every((kind) => kind === 'match' || kind === 'not-a-request') && kinds.includes('match')) {
+            chosen = { ...second, note: `${second.note}; second reading adopted (${kinds.length} requests, the first reading found ${context.meaning.clauses.length})` };
+            adoptedMeaning = context.splitMeaning;
+          }
+        } catch { adoptedMeaning = undefined; }
       }
-      const note = `${structure.pieces.length} pieces; ${counts.match} matches, ${counts.ask} questions, ${counts.unavailable} unavailable, ${counts.none} none${valueNote}${statusNote}`;
-      // ROUTER (shadow): reads the resolutions, writes one trace line, changes nothing else. A router failure is said in the note and never touches the resolutions.
-      let routes: RouterResult | undefined;
-      let routerLine = '';
-      try { const decisions = binderDecisions({ message: context.utterance.text, segments: context.analysis.segments, structure, values: values as never, resolutions, ...(lane ? { choicesFor: lane.choicesFor, toolNameFor: lane.toolNameFor } : {}) }); routes = routeMessage(resolutions, context.meaning, getSchema, (piece) => decisions.get(piece)); routerLine = `; ${routerNote(routes)}`; } catch (error) { routerLine = `; router failed: ${error instanceof Error ? error.message : String(error)}`; }
-      return withEntry(context, 'resolution', 'ran', note + routerLine, routes ? { resolutions, routes, values: values as never } : { resolutions, values: values as never });
+      const resolutions = chosen.resolutions;
+      const routes = chosen.routed;
+      return withEntry(context, 'resolution', 'ran', chosen.note, { ...(adoptedMeaning ? { meaning: adoptedMeaning } : {}), ...(routes ? { resolutions, routes, values: values as never } : { resolutions, values: values as never }) });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return withEntry(context, 'resolution', 'not-built', `resolution failed: ${message}`);

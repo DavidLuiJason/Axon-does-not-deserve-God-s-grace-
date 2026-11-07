@@ -43,7 +43,7 @@ function trimEnd(text: string, start: number, end: number): number {
   return e;
 }
 
-export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
+export function buildMeaning(analysis: Analysis, text: string, loose = false): MeaningOutcome {
   if (!analysis || !Array.isArray(analysis.segments) || !Array.isArray(analysis.tokens) || typeof text !== 'string') {
     return { ok: false, error: 'invalid-input', message: 'The Meaning stage needs the message text and its analysis.' };
   }
@@ -57,7 +57,7 @@ export function buildMeaning(analysis: Analysis, text: string): MeaningOutcome {
   const hasLanguage = languageText.trim().length > 0;
 
   let ranges: UnitRange[] = [];
-  if (units.length > 0) ranges = splitClauses(units, (k) => classifyGap(gapText(k)));
+  if (units.length > 0) ranges = splitClauses(units, (k) => classifyGap(gapText(k)), loose);
   if (ranges.length > MEANING_LIMITS.maxClauses) {
     return { ok: false, error: 'too-long', message: `The message has more than ${MEANING_LIMITS.maxClauses} instructions; it is not read for meaning.` };
   }

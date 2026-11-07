@@ -49,7 +49,7 @@ export function strongObjectCue(verb: Lex, next: Lex | undefined): boolean {
 }
 
 /** True when the words from position j on begin a clause of their own. */
-export function startsClause(units: Lex[], j: number): boolean {
+export function startsClause(units: Lex[], j: number, loose = false): boolean {
   let k = j;
   while (k < units.length && isLead(units[k]!)) k += 1;
   const unit = units[k];
@@ -61,11 +61,13 @@ export function startsClause(units: Lex[], j: number): boolean {
   if (unit.subject && next !== undefined && (next.aux || next.neg || hasVerb(next))) return true;
   if (unit.neg && !unit.aux && next !== undefined && hasVerb(next) && strongObjectCue(next, units[k + 2])) return true;
   if (hasVerb(unit) && !unit.grammar && strongObjectCue(unit, next)) return true;
+  // MR1 (second, looser reading; never the first reading): a verb that starts the words and has a content word (or quoted material) right after it may begin its own request even with a bare noun there; a lone last word never does.
+  if (loose && hasVerb(unit) && !unit.grammar && (unit.materialAfter || (next !== undefined && !isLead(next)))) return true;
   return false;
 }
 
 /** The clause ranges (over unit indices) of one message. `gapBefore(k)` is the classified gap between unit k-1 and k. */
-export function splitClauses(units: Lex[], gapBefore: (k: number) => Gap): UnitRange[] {
+export function splitClauses(units: Lex[], gapBefore: (k: number) => Gap, loose = false): UnitRange[] {
   const ranges: UnitRange[] = [];
   let from = 0;
   const hasContent = (a: number, b: number): boolean => { for (let k = a; k < b; k += 1) if (!isLead(units[k]!)) return true; return false; };
@@ -78,14 +80,14 @@ export function splitClauses(units: Lex[], gapBefore: (k: number) => Gap): UnitR
       let after = k;
       while (after < units.length && isLead(units[after]!)) after += 1;
       if (unit.coordinator || unit.sequencer) {
-        if (startsClause(units, after)) { ranges.push({ from, to: k }); from = k; }
+        if (startsClause(units, after, loose)) { ranges.push({ from, to: k }); from = k; }
         continue;
       }
     }
-    if (gap === 'weak' && startsClause(units, k)) { ranges.push({ from, to: k }); from = k; continue; }
+    if (gap === 'weak' && startsClause(units, k, loose)) { ranges.push({ from, to: k }); from = k; continue; }
     // A greeting or thanks at the start of a clause, followed by words that begin another clause.
     const head = units[from]!;
-    if (k === from + 1 && head.anchor && head.anchor.full && startsClause(units, k)) { ranges.push({ from, to: k }); from = k; continue; }
+    if (k === from + 1 && head.anchor && head.anchor.full && startsClause(units, k, loose)) { ranges.push({ from, to: k }); from = k; continue; }
   }
   ranges.push({ from, to: units.length });
   return ranges.filter((range) => range.to > range.from);

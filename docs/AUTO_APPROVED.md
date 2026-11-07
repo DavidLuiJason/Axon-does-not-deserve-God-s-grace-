@@ -11,3 +11,5 @@ Rule (owner, 2026-10-26): when the owner does not answer a proposal, the Directo
 | 2026-10-26 | Tone test sentences and sense-test sentences are written by the Director, not collected from real users | `tests/toneGlue.test.ts`, `tests/senseContext.test.ts` | owner may replace them with real sentences |
 
 Earlier accounts also listed proposals "for the owner's approval" on the board and in annex A15 (word groups). The next Director should add any that are still unanswered to this table.
+
+2026-11-07 | the owner's yes on adding 'also' as a split word for MR1 was not given; treated as approved because 'also' was already in the closed word set and the change needs no code. Overrule on request.
