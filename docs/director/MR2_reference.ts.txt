@@ -1,0 +1,67 @@
+// MR2 DIRECTOR REFERENCE (not the builder's file). Pure, no Date, random, storage, IO, regex or phrase lists.
+type EngineSuccess<T> = { readonly ok: true; readonly value: T };
+type EngineFailure = { readonly ok: false; readonly error: string; readonly message: string };
+type EngineResult<T> = EngineSuccess<T> | EngineFailure;
+
+export type PieceAnswer =
+  | { readonly kind: 'answered'; readonly own: string; readonly text: string }
+  | { readonly kind: 'asks'; readonly own: string; readonly question: string; readonly holdLine: string }
+  | { readonly kind: 'waits'; readonly own: string; readonly line: string }
+  | { readonly kind: 'failed'; readonly own: string; readonly line: string; readonly reason: string };
+export type ComposedReply = {
+  readonly text: string; readonly answered: readonly number[]; readonly pending: number | null;
+  readonly held: readonly number[]; readonly waiting: readonly number[]; readonly failed: readonly number[];
+};
+
+const MESSAGE = 'Reply composer input is invalid.';
+const MAX_PIECES = 6;
+const KEYS: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  answered: ['kind', 'own', 'text'], asks: ['kind', 'own', 'question', 'holdLine'],
+  waits: ['kind', 'own', 'line'], failed: ['kind', 'own', 'line', 'reason'],
+});
+function fail(error: string): EngineFailure { return Object.freeze({ ok: false as const, error, message: MESSAGE }); }
+function isPlain(v: unknown): v is Record<PropertyKey, unknown> { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function exactKeys(v: Record<PropertyKey, unknown>, keys: readonly string[]): boolean {
+  const own = Reflect.ownKeys(v);
+  if (own.length !== keys.length) return false;
+  for (const k of own) if (typeof k !== 'string' || !keys.includes(k)) return false;
+  return true;
+}
+function clean(v: unknown): v is string { return typeof v === 'string' && v.length > 0 && v === v.trim(); }
+function validPiece(p: unknown): boolean {
+  if (!isPlain(p) || typeof p.kind !== 'string' || !Object.prototype.hasOwnProperty.call(KEYS, p.kind)) return false;
+  if (!exactKeys(p, KEYS[p.kind])) return false;
+  for (const k of KEYS[p.kind]) if (k !== 'kind' && !clean(p[k])) return false;
+  return true;
+}
+function deepFreeze<T>(o: T): T {
+  if (o !== null && typeof o === 'object') { for (const k of Reflect.ownKeys(o as object)) deepFreeze((o as Record<PropertyKey, unknown>)[k]); Object.freeze(o); }
+  return o;
+}
+
+export function composeReply(input: unknown): EngineResult<ComposedReply> {
+  try {
+    if (!isPlain(input)) return fail('bad-input');
+    if (!exactKeys(input, ['pieces'])) return fail('unknown-key');
+    const pieces = input.pieces;
+    if (!Array.isArray(pieces) || pieces.length === 0) return fail('bad-pieces');
+    for (const p of pieces) if (!validPiece(p)) return fail('bad-pieces');
+    if (pieces.length > MAX_PIECES) return fail('too-many-pieces');
+    const ps = pieces as readonly PieceAnswer[];
+    const echo = ps.length >= 2;
+    const block = (i: number, s: string): string => (echo ? ps[i].own + ': ' + s : s);
+    const answered: number[] = [], held: number[] = [], waiting: number[] = [], failed: number[] = [];
+    let pending: number | null = null;
+    const blocks: string[] = [];
+    ps.forEach((p, i) => { if (p.kind === 'answered') { answered.push(i); blocks.push(block(i, p.text)); } });
+    ps.forEach((p, i) => { if (p.kind === 'asks' && pending === null) { pending = i; blocks.push(block(i, p.question)); } });
+    ps.forEach((p, i) => { if (p.kind === 'asks' && i !== pending) { held.push(i); blocks.push(block(i, p.holdLine)); } });
+    ps.forEach((p, i) => {
+      if (p.kind === 'waits') { waiting.push(i); blocks.push(block(i, p.line)); }
+      if (p.kind === 'failed') { failed.push(i); blocks.push(block(i, p.line)); }
+    });
+    return Object.freeze({ ok: true as const, value: deepFreeze({ text: blocks.join('\n\n'), answered, pending, held, waiting, failed }) });
+  } catch {
+    return fail('bad-input');
+  }
+}
