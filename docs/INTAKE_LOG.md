@@ -99,3 +99,5 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-07 | owner said YES to A5 and the Charter notice line, reported no errors in the MR1 cloud log (DIRECTOR4 build still running), asked for the findings to be fixed and a batch of small Director jobs | CHR5 + STATE4-F1 done | AXON-DIRECTOR5-merge.zip made
 
 2026-11-07 | owner handed the main zip and asked for a merge zip that connects all remaining built tools to the brain, an explanation of how connection works, and a system that stops wrong things entering the brain | the connection system already exists (wire cards, runners, switches, guards); 3 of 60 tools are ON, 16 have a runner, 41 have none; a blanket switch would repeat the measured Sort Lines wrong answers | CONNECT0 built (admission gate and ledger); the tool waves follow | AXON-CONNECT0-merge.zip made
+
+2026-11-07 | CONNECT1A-return.zip (ChatGPT report: 20 new files, 126 checks) | builder return, batch of six | CONNECT1-A verified by script, probes and strict tsc | AXON-CONNECT1A-merge.zip made
