@@ -1,0 +1,108 @@
+// CTX1 DIRECTOR REFERENCE (not the builder's file). Pure, no Date, random, storage, IO, regex or phrase lists.
+type EngineSuccess<T> = { readonly ok: true; readonly value: T };
+type EngineFailure = { readonly ok: false; readonly error: string; readonly message: string };
+type EngineResult<T> = EngineSuccess<T> | EngineFailure;
+
+export type ContextKind = 'text' | 'choice' | 'file' | 'number' | 'yes-no' | 'duration' | 'time' | 'date';
+export type ContextSource = 'selected' | 'attached' | 'previous-reference' | 'answer';
+export type ContextItem = { readonly id: string; readonly source: ContextSource; readonly kind: ContextKind; readonly slot?: string; readonly readable?: boolean };
+export type MissingSlot = { readonly slot: string; readonly kind: ContextKind };
+export type ContextTraceEntry = {
+  readonly slot: string; readonly outcome: 'context' | 'safe-step' | 'not-filled';
+  readonly rule: 'R0' | 'R1' | 'R2' | 'R3' | 'R4' | 'R5' | 'none'; readonly itemId: string | null;
+  readonly reason: 'ok' | 'ambiguous' | 'no-candidate' | 'decision-slot';
+};
+export type ContextLookupValue = { readonly contextFills: readonly string[]; readonly safeStepFills: readonly string[]; readonly trace: readonly ContextTraceEntry[] };
+
+const MESSAGE = 'Context lookup input is invalid.';
+const KINDS: readonly string[] = ['text', 'choice', 'file', 'number', 'yes-no', 'duration', 'time', 'date'];
+const SOURCES: readonly string[] = ['selected', 'attached', 'previous-reference', 'answer'];
+const CAPS: Readonly<Record<string, number>> = Object.freeze({ selected: 4, attached: 8, 'previous-reference': 8, answer: 8 });
+
+function fail(error: string): EngineFailure { return Object.freeze({ ok: false as const, error, message: MESSAGE }); }
+function isPlain(v: unknown): v is Record<PropertyKey, unknown> { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function exactKeys(v: Record<PropertyKey, unknown>, keys: readonly string[]): boolean {
+  const own = Reflect.ownKeys(v);
+  if (own.length !== keys.length) return false;
+  for (const k of own) if (typeof k !== 'string' || !keys.includes(k)) return false;
+  return true;
+}
+function nonEmpty(v: unknown): v is string { return typeof v === 'string' && v.length > 0; }
+
+function validMissing(v: unknown): boolean {
+  if (!Array.isArray(v)) return false;
+  const seen: string[] = [];
+  for (const m of v) {
+    if (!isPlain(m) || !exactKeys(m, ['slot', 'kind']) || !nonEmpty(m.slot) || typeof m.kind !== 'string' || !KINDS.includes(m.kind)) return false;
+    if (seen.includes(m.slot)) return false;
+    seen.push(m.slot);
+  }
+  return true;
+}
+function validItems(v: unknown): boolean {
+  if (!Array.isArray(v)) return false;
+  const ids: string[] = [];
+  for (const it of v) {
+    if (!isPlain(it)) return false;
+    const base = ['id', 'source', 'kind'];
+    if (typeof it.source !== 'string' || !SOURCES.includes(it.source)) return false;
+    if (typeof it.kind !== 'string' || !KINDS.includes(it.kind)) return false;
+    const keys = base.slice();
+    if (it.source === 'answer') keys.push('slot');
+    if (it.source === 'attached' && it.kind === 'file') keys.push('readable');
+    if (!exactKeys(it, keys)) return false;
+    if (!nonEmpty(it.id) || ids.includes(it.id)) return false;
+    ids.push(it.id);
+    if (it.source === 'answer' && !nonEmpty(it.slot)) return false;
+    if (it.source === 'attached' && it.kind === 'file' && typeof it.readable !== 'boolean') return false;
+  }
+  return true;
+}
+function deepFreeze<T>(o: T): T {
+  if (o !== null && typeof o === 'object') { for (const k of Reflect.ownKeys(o as object)) deepFreeze((o as Record<PropertyKey, unknown>)[k]); Object.freeze(o); }
+  return o;
+}
+
+export function lookupContext(input: unknown): EngineResult<ContextLookupValue> {
+  try {
+    if (!isPlain(input)) return fail('bad-input');
+    if (!exactKeys(input, ['missing', 'items'])) return fail('unknown-key');
+    if (!validMissing(input.missing)) return fail('bad-missing');
+    if (!validItems(input.items)) return fail('bad-items');
+    const missing = input.missing as readonly MissingSlot[];
+    const items = input.items as readonly ContextItem[];
+    for (const s of SOURCES) if (items.filter(i => i.source === s).length > CAPS[s]) return fail('too-many-items');
+
+    const contextFills: string[] = [];
+    const safeStepFills: string[] = [];
+    const trace: ContextTraceEntry[] = [];
+    const put = (slot: string, outcome: ContextTraceEntry['outcome'], rule: ContextTraceEntry['rule'], itemId: string | null, reason: ContextTraceEntry['reason']) => {
+      trace.push({ slot, outcome, rule, itemId, reason });
+      if (outcome === 'context') contextFills.push(slot);
+      if (outcome === 'safe-step') safeStepFills.push(slot);
+    };
+    for (const m of missing) {
+      const answers = items.filter(i => i.source === 'answer' && i.slot === m.slot && i.kind === m.kind);
+      if (answers.length === 1) { put(m.slot, 'context', 'R1', answers[0].id, 'ok'); continue; }
+      if (answers.length > 1) { put(m.slot, 'not-filled', 'R1', null, 'ambiguous'); continue; }
+      if (m.kind === 'choice' || m.kind === 'yes-no') { put(m.slot, 'not-filled', 'R0', null, 'decision-slot'); continue; }
+      const ladder: [ContextSource, 'R2' | 'R3' | 'R4'][] = [['selected', 'R2'], ['attached', 'R3'], ['previous-reference', 'R4']];
+      let done = false;
+      for (const [src, rule] of ladder) {
+        const c = items.filter(i => i.source === src && i.kind === m.kind);
+        if (c.length === 1) { put(m.slot, 'context', rule, c[0].id, 'ok'); done = true; break; }
+        if (c.length > 1) { put(m.slot, 'not-filled', rule, null, 'ambiguous'); done = true; break; }
+      }
+      if (done) continue;
+      if (m.kind === 'text') {
+        const r = items.filter(i => i.source === 'attached' && i.kind === 'file' && i.readable === true);
+        if (r.length === 1) { put(m.slot, 'safe-step', 'R5', r[0].id, 'ok'); continue; }
+        if (r.length > 1) { put(m.slot, 'not-filled', 'R5', null, 'ambiguous'); continue; }
+      }
+      put(m.slot, 'not-filled', 'none', null, 'no-candidate');
+    }
+    return Object.freeze({ ok: true as const, value: deepFreeze({ contextFills, safeStepFills, trace }) });
+  } catch {
+    return fail('bad-input');
+  }
+}
