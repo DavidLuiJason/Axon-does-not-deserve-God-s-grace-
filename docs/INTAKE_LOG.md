@@ -95,3 +95,5 @@ Read only if a past file is unclear. Newest at the bottom. Columns: date, accoun
 2026-11-07 | owner asked for MR0, said SLB1 approved, asked for the next one; main zip read for MR0 report, actionSchemas, guard | MR0 already done 2026-11-01 (rerun 31 of 50); SLB1 written | AXON-SLB1-merge.zip made
 
 2026-11-07 | owner pasted the previous account's lost chat (it hit its limit before delivering CHR4, SETCHR2, STATE2), roadmap v21.3, the fast plan and the main zip; asked to continue and give the merge zip in the first round | the three pieces rebuilt from the repo files (the lost scratch work was not available) | AXON-DIRECTOR4-merge.zip made
+
+2026-11-07 | owner said YES to A5 and the Charter notice line, reported no errors in the MR1 cloud log (DIRECTOR4 build still running), asked for the findings to be fixed and a batch of small Director jobs | CHR5 + STATE4-F1 done | AXON-DIRECTOR5-merge.zip made

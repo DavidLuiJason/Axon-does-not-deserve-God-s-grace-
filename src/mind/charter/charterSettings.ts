@@ -14,7 +14,7 @@ import type { RecoveryError, RecoveryProblem } from './charterRecovery.ts';
 export type { CharterStorage } from './charterStore.ts';
 export { CHARTER_UNTRUSTED_NOTICE } from './charterView.ts';
 export const APPROVAL_MS = 120000;
-// PROPOSED screen text (SETCHR1 V3); the owner's yes on the fixed notice line is still WAITING.
+// Screen text (SETCHR1 V3); the owner said yes to the fixed notice line on 2026-11-07.
 export const CHARTER_BUILT_IN_LINE = 'Built-in rules, not yet changed by you';
 export const charterChangedLine = (date: string) => `Your rules, last changed ${date}`;
 export const CHARTER_WIDENS_LINE = 'This lets AXON do more than before.';
@@ -62,18 +62,39 @@ export function toolRulePatch(charter: Charter, toolId: string, choice: ToolChoi
 
 export type Seen = { readonly changeHash: string; readonly resultHash: string };
 export type ChangePreview = { readonly ok: true; readonly lines: readonly string[]; readonly widens: boolean; readonly seen: Seen } | Failure;
-/** The confirm sheet's content: the summary lines, plus the bold line when the change widens. Writes nothing. */
+const WORDS_OF_LEVEL: Readonly<Record<string, ToolChoice>> = Object.freeze({ allowed: 'none', ask: 'ask', never: 'never' });
+/** CHR5: a patch that only sets rules in lane `tools` where no rule existed, or that tightens one, gives AXON no new freedom (CHR1 C2: no rule equals allowed). change.ts still calls a first rule a widening, so the writer still gets the extra approval, but the sheet must not claim it. */
+function toolsOnlyNoNewFreedom(charter: Charter, patch: CharterPatch): boolean {
+  if (patch.fences !== undefined || patch.lanes === undefined) return false;
+  const ids = Object.keys(patch.lanes); if (ids.length !== 1 || ids[0] !== 'tools') return false;
+  const next = patch.lanes.tools.actions; const old = charter.lanes.tools ? charter.lanes.tools.actions : {};
+  const rank = (l: string) => (l === 'allowed' ? 2 : l === 'ask' ? 1 : 0);
+  for (const id of Object.keys(old)) if (!(id in next)) return false;
+  for (const [id, r] of Object.entries(next)) { if (!id.startsWith('tools.')) return false; const prior = old[id]; if (prior !== undefined && rank(r.level) > rank(prior.level)) return false; }
+  return true;
+}
+/** One plain line per changed tool rule instead of "New lane tools is proposed." */
+function toolLines(charter: Charter, patch: CharterPatch): string[] {
+  const old = charter.lanes.tools ? charter.lanes.tools.actions : {}; const out: string[] = [];
+  for (const [id, r] of Object.entries(patch.lanes!.tools.actions)) { const prior = old[id]; if (prior === undefined ? r.level !== 'allowed' : prior.level !== r.level) out.push(toolRuleLine(id.slice('tools.'.length), WORDS_OF_LEVEL[r.level] ?? 'none')); }
+  return out.length ? out : ['No effective Charter change is proposed.'];
+}
+/** The confirm sheet's content: the summary lines, plus the bold line when the change gives AXON more freedom. Writes nothing. */
 export function previewChange(storage: CharterStorage, patch: CharterPatch, sha256: Sha256): ChangePreview {
   const p = previewCharterChange(storage, patch, sha256);
   if (!p.ok) return no(p.error, p.message);
-  const lines = p.widens ? [...p.summary, CHARTER_WIDENS_LINE] : [...p.summary];
-  return Object.freeze({ ok: true as const, lines: Object.freeze(lines), widens: p.widens, seen: Object.freeze({ changeHash: p.changeHash, resultHash: p.resultHash }) });
+  const load = readCharter(storage, sha256);
+  const plain = load.status !== 'untrusted' && toolsOnlyNoNewFreedom(load.charter, patch);
+  const shownWidens = p.widens && !plain;
+  const base = plain && load.charter !== null ? toolLines(load.charter, patch) : [...p.summary];
+  const lines = shownWidens ? [...base, CHARTER_WIDENS_LINE] : base;
+  return Object.freeze({ ok: true as const, lines: Object.freeze(lines), widens: shownWidens, seen: Object.freeze({ changeHash: p.changeHash, resultHash: p.resultHash }) });
 }
 /** V6: a change AXON proposes is shown in the same sheet and waits for the owner's tap. A widening is refused here, as in change.ts. */
 export function previewAxonProposal(storage: CharterStorage, patch: CharterPatch, sha256: Sha256): ChangePreview {
   const load = readCharter(storage, sha256);
   if (load.status === 'untrusted') return no('store-untrusted', 'The stored Charter could not be checked.');
-  if (proposeChange(load.charter, patch, 'axon').widens) return no('axon-cannot-widen', 'Only the owner may widen the Charter.');
+  if (proposeChange(load.charter, patch, 'axon').widens && !toolsOnlyNoNewFreedom(load.charter, patch)) return no('axon-cannot-widen', 'Only the owner may widen the Charter.');
   return previewChange(storage, patch, sha256);
 }
 

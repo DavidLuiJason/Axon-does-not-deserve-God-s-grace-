@@ -22,3 +22,8 @@ WHY REBUILT: the previous account hit its usage limit after writing them in a sc
 - strict tsc over the new files and the four test files: no output. `node tools/guard.mjs`: OK.
 - 14 mutants (stale-preview check, token guards, AXON widening, recovery hash, expiry, replay, key removal, text kept, unreadable-store guard, write cap, read-back, wrong-tool gate, swallowed set failure) all failed a test.
 - NOT RUN: `test:all` over the whole repo, the cloud build.
+
+## Addendum (same day, AXON-DIRECTOR5-merge.zip, goes in AFTER AXON-DIRECTOR4-merge.zip)
+- CHR5 (finding F4) fixed in `charterSettings.ts` only, `change.ts` untouched: a patch that touches only lane `tools` and only adds rules or tightens them shows no bold line, because no rule equals allowed (CHR1 C2). The sheet shows one plain line per tool ("timer: Ask me first"). The writer still receives both approvals (change.ts still calls a first rule a widening). Removing or loosening an existing rule, and any change outside lane `tools`, still shows the bold line. AXON may now propose a tightening tool rule, even a first one; real widenings stay refused.
+- STATE4 F1 fixed: `STATE_TOOL_IDS` in `src/tools/runners/liveSwitches.ts` is now timer, stopwatch, tally-counter; `tests/liveSwitches.test.ts` pinned check changed on purpose, plus a check that date-calculator is not a state tool. The date calculator is still OFF (no live switch, no wire card): this only removes the wrong "needs stored state" block.
+- Owner decisions 2026-11-07: YES to the closed wording pieces (A5) and YES to the fixed Charter notice line.

@@ -32,17 +32,18 @@ const bad = new Mem(); bad.m.set(CHARTER_KEY, 'junk'); const rb = readCharterScr
 // 2 a narrowing rule from the built-in Charter: one tap, written, signed, history kept
 const src0 = (() => { const h = createHash('sha256'); const walk = (d: string): string[] => readdirSync(d).flatMap((e) => { const q = join(d, e); return statSync(q).isDirectory() ? walk(q) : [q]; }); for (const f of walk('src').sort()) { h.update(f); h.update(readFileSync(f)); } return h.digest('hex'); })();
 const s1 = new Mem(); const a1 = save(s1, 'sort-lines', 'never', ['a', 'b']);
-ck([a1.pv.widens, a1.pv.lines], [false, ['New lane tools is proposed.']], 'a narrowing change shows no bold line');
+ck([a1.pv.widens, a1.pv.lines], [false, ['sort-lines: Never']], 'a narrowing change shows one plain line and no bold line');
 ck([a1.res.ok, a1.res.revision, [...a1.res.usedTokens]], [true, 2, ['b']], 'saved as revision 2; only the signing token is used');
 const r1 = readCharterScreen(s1, sha); ck([r1.status, r1.statusLine, r1.history], ['signed', charterChangedLine('2026-11-07'), [{ replacedAt: NOW }]], 'the screen reads signed, with the date, and one history entry');
 ck((r1.charter!.lanes.tools.actions['tools.sort-lines'] as any).level, 'never', 'the rule is there');
 // 3 a widening shows the bold line and needs both approvals (change and signature); both tokens are used
 const a2 = save(s1, 'sort-lines', 'none', ['c', 'd'], ['b']);
-ck([a2.pv.widens, a2.pv.lines.includes(CHARTER_WIDENS_LINE), a2.pv.lines[a2.pv.lines.length - 1]], [true, true, CHARTER_WIDENS_LINE], 'a widening ends with the bold line');
+ck([a2.pv.widens, a2.pv.lines], [true, ['tools.sort-lines changes from NEVER to ALLOWED.', CHARTER_WIDENS_LINE]], 'removing an existing Never rule is a real widening: the change line and the bold line');
 ck([a2.res.ok, a2.res.revision, [...a2.res.usedTokens].sort()], [true, 3, ['b', 'c', 'd']], 'the widening saved with two fresh tokens, old tokens kept');
 ck(readCharterScreen(s1, sha).history!.length, 2, 'two history entries, newest first');
-// "Ask me first" on a tool with no rule counts as a widening in change.ts today (unlisted to ask): FINDING F4, the sheet then shows the bold line
-const a3 = save(s1, 'timer', 'ask', ['e', 'f']); ck([a3.pv.widens, a3.res.ok], [true, true], 'F4: a first "ask" rule is reported as a widening by the existing change rule');
+// CHR5: "Ask me first" on a tool with no rule gives AXON no new freedom, so the sheet shows no bold line; the writer still takes both approvals (change.ts calls it a widening)
+const a3 = save(s1, 'timer', 'ask', ['e', 'f']); ck([a3.pv.widens, a3.pv.lines, a3.res.ok, [...a3.res.usedTokens].sort()], [false, ['timer: Ask me first'], true, ['e', 'f']], 'CHR5: a first "ask" rule shows no bold line and still saves with two approvals');
+const a5 = save(new Mem(), 'timer', 'none', ['i', 'j']); ck([a5.pv.widens, a5.pv.lines, a5.res.ok], [false, ['No effective Charter change is proposed.'], true], 'CHR5: "No extra rule" on a tool with no rule changes nothing and says so');
 const a4 = save(s1, 'timer', 'never', ['g', 'h']); ck([a4.pv.widens, a4.res.ok], [false, true], 'ask to never narrows: no bold line');
 // 4 the Charter changed after the owner looked: refused, nothing written
 const s2 = new Mem(); const patch2 = patchOf(s2, 'sort-lines', 'never'); const seen2: any = previewChange(s2, patch2, sha); save(s2, 'timer', 'never', ['p', 'q']); const snap2 = s2.snap();
@@ -59,7 +60,9 @@ ck(approvalFor('h', NOW, 't'), { by: 'owner', actionHash: 'h', issuedAt: NOW, ex
 ck(E(go({})), 'ok', 'and the same request works when everything is right');
 // 6 AXON can propose but never widen (V6); the proposal writes nothing
 const s4 = new Mem(); const s4s = s4.snap(); const c4 = readCharterScreen(s4, sha).charter!;
-ck(E(previewAxonProposal(s4, toolRulePatch(c4, 'timer', 'ask') as any, sha)), 'axon-cannot-widen', 'AXON cannot propose a widening');
+const emailWide = { lanes: { email: { ...c4.lanes.email, actions: { ...c4.lanes.email.actions, 'email.send': { level: 'allowed' as const, reason: 'r' } } } } };
+ck(E(previewAxonProposal(s4, emailWide, sha)), 'axon-cannot-widen', 'AXON cannot propose a widening'); ck(E(previewAxonProposal(s4, toolRulePatch(c4, 'timer', 'ask') as any, sha)), 'ok', 'AXON may propose a tool rule that only tightens, even a first one');
+const wideShown: any = previewChange(s4, emailWide, sha); ck([wideShown.widens, wideShown.lines[wideShown.lines.length - 1]], [true, CHARTER_WIDENS_LINE], 'a real widening in another lane still shows the bold line');
 const ap: any = previewAxonProposal(s4, toolRulePatch(c4, 'timer', 'never') as any, sha); ck([ap.ok, ap.widens, s4.snap()], [true, false, s4s], 'AXON can propose a narrowing; it waits for the owner and writes nothing');
 ck(E(previewAxonProposal(bad, toolRulePatch(c4, 'timer', 'never') as any, sha)), 'store-untrusted', 'no proposal on an untrusted Charter');
 // 7 untrusted: no change, recovery needed, one tap, text kept

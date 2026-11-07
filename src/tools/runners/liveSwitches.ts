@@ -4,7 +4,6 @@
  * `tests/liveSwitches.test.ts` PINS this list, so turning a tool on changes that test on purpose. Switching back is one line.
  */
 import { DEFAULT_SWITCHES, type RunnerSwitches } from './runnerRegistry';
-import { TIME_RUNNERS } from './timeRunners';
 import { TEXT_COUNTER_UNITS } from './textCounterRunner';
 import { TEXT_COUNT_ACTION } from '../../kernel/textCount';
 import { CASE_MODE_CHOICES, foldCaseMode } from './caseModeWords';
@@ -24,8 +23,8 @@ export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES
 const HAND_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze({ 'text-counter': Object.freeze({ unit: TEXT_COUNTER_UNITS }), 'case-converter': Object.freeze({ mode: CASE_MODE_CHOICES }), 'sort-lines': Object.freeze({ mode: SORT_MODE_CHOICES }) });
 export const LIVE_CHOICES: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>> = Object.freeze(addOnlyRecord(HAND_CHOICES, GENERATED_LIVE_CHOICES, 'live choices'));
 
-/** Tools whose runner keeps an engine state (timer, stopwatch, tally counter, ...): the lane never runs them until a STATE design says who stores it. */
-export const STATE_TOOL_IDS: readonly string[] = Object.freeze(TIME_RUNNERS.map((runner) => runner.toolId));
+/** Tools whose runner keeps an engine state: the lane never runs them until the state keeper is wired (STATE3). The date calculator is stateless, so it is NOT here (STATE1 F1, fixed in STATE4). */
+export const STATE_TOOL_IDS: readonly string[] = Object.freeze(['timer', 'stopwatch', 'tally-counter']);
 
 /** LIVE2a: the task-engine action that records each live tool's run, exactly as the old chat path did (same action, same input keys). A tool with no entry here never answers through the lane. */
 const HAND_TASKS: Readonly<Record<string, { readonly actionId: string; readonly input: (args: Readonly<Record<string, unknown>>) => Record<string, unknown> }>> = Object.freeze({
