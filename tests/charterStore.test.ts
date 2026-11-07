@@ -71,7 +71,7 @@ const hc: any = readCharterHistory(cap); ck([hc.entries.length, CHARTER_HISTORY_
 const files = (dir: string): string[] => readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? files(p) : [p]; });
 const digest = () => { const h = createHash('sha256'); for (const f of files('src').sort()) { h.update(f); h.update(readFileSync(f)); } return h.digest('hex'); };
 const d0 = digest(); const z = new Mem(); writeCharter(z, req(z, { 'tools.q': 'never' }, 'z'), sha); writeCharter(z, req(z, wide, 'zz'), sha); ck(digest(), d0, 'src tree byte-identical after Charter writes (N3)');
-const ALLOWED_WRITER_IMPORTERS: string[] = [];   // adding a file is a deliberate decision: the owner-confirmed Settings action (SET-CHR) only
+const ALLOWED_WRITER_IMPORTERS: string[] = ['src/mind/charter/charterRecovery.ts', 'src/mind/charter/charterSettings.ts'];   // deliberate (CHR4, SETCHR2): the owner-confirmed recovery and Settings adapter only; the screen imports charterSettings.ts, never charterStore.ts
 const MARKS = ['writeCharter', 'CHARTER_KEY', 'CHARTER_HISTORY_KEY', 'axon.charter', 'charterStore'];
 const offenders = (texts: Record<string, string>) => Object.entries(texts).filter(([f, t]) => f !== 'src/mind/charter/charterStore.ts' && !ALLOWED_WRITER_IMPORTERS.includes(f) && MARKS.some((m) => t.includes(m))).map(([f]) => f);
 const real: Record<string, string> = {}; for (const f of files('src').filter((p) => p.endsWith('.ts') || p.endsWith('.tsx'))) real[f.split('\\').join('/')] = readFileSync(f, 'utf8');
