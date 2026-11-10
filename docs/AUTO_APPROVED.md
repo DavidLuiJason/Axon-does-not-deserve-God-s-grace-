@@ -13,3 +13,4 @@ Rule (owner, 2026-10-26): when the owner does not answer a proposal, the Directo
 Earlier accounts also listed proposals "for the owner's approval" on the board and in annex A15 (word groups). The next Director should add any that are still unanswered to this table.
 
 2026-11-07 | the owner's yes on adding 'also' as a split word for MR1 was not given; treated as approved because 'also' was already in the closed word set and the change needs no code. Overrule on request.
+2026-11-10 | the owner delegated the closed choice words ("decide yourself"): YES to all prepared words except QR single letters l, m, q, h | src/tools/runners/*Words.ts | decided by the Director; overrule on request.
