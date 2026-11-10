@@ -195,9 +195,12 @@ const hostile: string[] = ['', ' ', '???', '😀', 'مرحبا 5', '1'.repeat(40
 for (const text of hostile) {
   const t0 = Date.now(); let r; let threw = false;
   try { r = run(text); } catch { threw = true; }
+  let took = Date.now() - t0;
+  // A shared build machine can be slow for one run (the 18,000-character case sits near the limit); real slowness stays slow, so a slow first run is timed again, twice at most, and the fastest time counts. Director, 2026-11-09 (cloud build failed once at 1538 ms).
+  for (let again = 0; again < 2 && took >= 1500 && !threw; again++) { const t1 = Date.now(); try { run(text); } catch { threw = true; } took = Math.min(took, Date.now() - t1); }
   check(!threw, `HOSTILE no throw for ${JSON.stringify(text.slice(0, 20))} (${text.length} chars)`);
   if (threw || !r) continue;
-  check(Date.now() - t0 < 1500, `HOSTILE under 1.5 s for ${JSON.stringify(text.slice(0, 20))} (${text.length} chars, took ${Date.now() - t0} ms)`);
+  check(took < 1500, `HOSTILE under 1.5 s for ${JSON.stringify(text.slice(0, 20))} (${text.length} chars, took ${took} ms)`);
   if (r.ok) { const inv = invariants(text, r.values); check(inv === null, `HOSTILE invariants for ${JSON.stringify(text.slice(0, 20))}: ${inv}`); }
 }
 const tooLong = extractValues('1'.repeat(VALUES_LIMITS.maxCharacters + 1), [], CLOCK);

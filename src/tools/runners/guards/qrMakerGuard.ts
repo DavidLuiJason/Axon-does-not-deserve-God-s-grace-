@@ -1,4 +1,5 @@
-import type { LaneGuard } from '../../../brain/mind/directLane';
+// The brain boundary (FL12) forbids importing src/brain here, so the guard type is declared locally; it must stay the same shape as LaneGuard in src/brain/mind/directLane.ts.
+type LaneGuard = (args: Readonly<Record<string, unknown>>, message: string) => string | null;
 
 const MAKE: Readonly<Record<string, true>> = Object.freeze({ make: true, create: true, generate: true, encode: true });
 const READ: Readonly<Record<string, true>> = Object.freeze({ read: true, scan: true, decode: true, recognize: true, extract: true });
