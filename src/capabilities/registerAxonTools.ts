@@ -63,6 +63,17 @@ const TEXT_TOOLS_CAPABILITY = {
   }] as ChatAction[], GENERATED_CHAT_ACTIONS, (a) => a.id, 'chat action'),
 } as const;
 
+const CREATION_TOOLS_CAPABILITY = {
+  id: 'cap.creation-tools',
+  displayName: 'Creation Tools',
+  contractVersion: '1.0.0',
+  implementationVersion: '1.0.0',
+  dataProvider: 'noUserData',
+  chatActions: [{
+    id: 'act.encoder-decoder', purpose: 'Encode or decode text', examples: ['encode \"hello\" as base64', 'decode \"aGVsbG8=\" from base64'], status: 'available', link: { actionId: 'create.encode' },
+  }, { id: 'act.hash-tool', purpose: 'Calculate a hash or checksum', examples: ['calculate checksum of \"123456789\" using CRC32'], status: 'available', link: { actionId: 'create.hash' } }] as ChatAction[],
+} as const;
+
 const NUMBER_TOOLS_CAPABILITY = {
   id: 'cap.number-tools',
   displayName: 'Number Tools',
@@ -87,6 +98,7 @@ export function registerAxonToolsCapability(): void {
   registerCapability({ ...AXON_TOOLS_CAPABILITY });
   registerCapability({ ...TEXT_TOOLS_CAPABILITY });
   registerCapability({ ...NUMBER_TOOLS_CAPABILITY });
+  registerCapability({ ...CREATION_TOOLS_CAPABILITY });
   console.log(
     '[AXON capability registry] AXON Tools registered:',
     getCapability('cap.axon-tools')
@@ -96,4 +108,5 @@ export function registerAxonToolsCapability(): void {
     getCapability('cap.text-tools')
   );
   console.log('[AXON capability registry] Number Tools registered:', getCapability('cap.number-tools'));
+  console.log('[AXON capability registry] Creation Tools registered:', getCapability('cap.creation-tools'));
 }

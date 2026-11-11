@@ -39,8 +39,8 @@ check(LEGACY_ENGINE_DESCRIPTORS.some((d) => d.toolId === 'sort-lines'), 'the han
 check(ACTION_SCHEMAS.some((s) => s.tool === 'sort-lines'), 'the hand schema row for Sort Lines is still there');
 check(SLOT_DEFAULTS['sort-lines']?.mode?.value === 'ascending', 'the hand bind default for Sort Lines is still there');
 check(LIVE_SWITCHES['sort-lines'] === 'runner' && LIVE_SWITCHES['text-counter'] === 'runner' && LIVE_SWITCHES['case-converter'] === 'runner', 'the three live switches are unchanged');
-check(Object.keys(LIVE_CHOICES).sort().join() === 'case-converter,sort-lines,text-counter', 'the three live choice sets are unchanged');
-check(Object.keys(LIVE_TASKS).sort().join() === 'case-converter,number-to-words,sort-lines,text-counter', 'the live tasks are the three earlier ones plus number-to-words (CONNECT2 W1)');
+check(Object.keys(LIVE_CHOICES).sort().join() === 'case-converter,encoder-decoder,hash-tool,sort-lines,text-counter', 'the live choice sets are the three earlier ones plus encoder-decoder and hash-tool (CONNECT2)');
+check(Object.keys(LIVE_TASKS).sort().join() === 'case-converter,encoder-decoder,hash-tool,number-to-words,sort-lines,text-counter', 'the live tasks are the three earlier ones plus number-to-words, encoder-decoder and hash-tool (CONNECT2)');
 
 // 3. Merge rules (own sink, so the global list stays clean): add new, hand wins, clash is recorded.
 {

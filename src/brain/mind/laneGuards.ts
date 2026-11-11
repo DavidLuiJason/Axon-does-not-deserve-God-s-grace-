@@ -10,6 +10,8 @@ import type { LaneGuard } from './directLane';
 import { SORT_MODE_WORDS } from '../../tools/runners/sortModeWords';
 import { SORT_OPTION_WORDS, sortWordsOf } from '../../tools/runners/sortOptionWords';
 import { numberToWordsGuard } from '../../tools/runners/guards/numberToWordsGuard';
+import { encoderDecoderGuard } from '../../tools/runners/guards/encoderDecoderGuard';
+import { hashToolGuard } from '../../tools/runners/guards/hashToolGuard';
 
 /** Text Counter: the old handler adds a note when the text holds code (or may); the runner does not, so the lane yields. */
 const textCounterGuard: LaneGuard = (args, message) => {
@@ -63,4 +65,4 @@ const sortLinesGuard: LaneGuard = (args, message) => {
   return null;
 };
 
-export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard });
+export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard, 'encoder-decoder': encoderDecoderGuard, 'hash-tool': hashToolGuard });
