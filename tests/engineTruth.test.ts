@@ -50,6 +50,7 @@ function main(): void {
     'act.number-to-words': 'tests/liveBrainNumberToWords.test.ts',
     'act.encoder-decoder': 'tests/liveBrainEncoderDecoder.test.ts',
     'act.hash-tool': 'tests/liveBrainHashTool.test.ts',
+    'act.qr-maker': 'tests/liveBrainQrMaker.test.ts',
   };
   for (const { action } of actions) {
     if (action.status !== 'available') continue;

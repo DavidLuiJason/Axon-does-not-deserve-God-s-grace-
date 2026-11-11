@@ -27,9 +27,9 @@ const WANT: Record<string, string> = { alphabetically: 'apple\nfig\npear', ascen
 for (const [mode, want] of Object.entries(WANT)) { const o = await ask(mode); check(o.ok && o.reply.startsWith(want + '\n'), 'runner answers for ' + mode); }
 check((await ask('sideways')).ok === false, 'the runner still refuses an unknown mode');
 const noMode = await runner.run({ text: 'b\na' } as never, deps); check(noMode.ok && noMode.reply.startsWith('a\nb\n'), 'no mode still sorts ascending (engine default)');
-check(JSON.stringify(LIVE_SAY_DEFAULTS) === JSON.stringify(['sort-lines']), 'only Sort Lines may answer with a declared default (said aloud)');
+check(JSON.stringify(LIVE_SAY_DEFAULTS) === JSON.stringify(['sort-lines', 'qr-maker']), 'only Sort Lines and QR Maker may answer with a declared default (said aloud)');
 const allow = buildLaneConfig().allowDefaults as (id: string) => boolean;
-check(allow('sort-lines') === true && allow('text-counter') === false && allow('case-converter') === false, 'the lane lets only Sort Lines use a default; Text Counter keeps the LIVE2 rule');
+check(allow('sort-lines') === true && allow('qr-maker') === true && allow('text-counter') === false && allow('case-converter') === false, 'the lane lets only Sort Lines and QR Maker use a default; Text Counter keeps the LIVE2 rule');
 check(SLOT_DEFAULTS['sort-lines']?.mode?.value === 'ascending' && (SORT_LINE_MODES as readonly string[]).includes(String(SLOT_DEFAULTS['sort-lines']!.mode!.value)), 'the declared default for mode is ascending, a real engine mode');
 // Director (2026-11-04): 'sort in reverse' means descending; 'reverse the lines' still flips.
 {

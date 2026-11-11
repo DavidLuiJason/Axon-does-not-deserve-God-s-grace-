@@ -1008,7 +1008,7 @@
   "description": "Turn text or a link into a QR code.",
   "group": "create-encode",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Create standards-based QR codes for text, links, contact details and Wi-Fi."

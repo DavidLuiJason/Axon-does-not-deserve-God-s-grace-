@@ -12,9 +12,11 @@ LAWS OF THIS FILE (owner 2026-11-04, 2026-11-11):
 
 DIRECTORS BOARD:
 D471 (2026-11-11): verifying and merging ChatGPT's tool-connection waves (CONNECT2: 7 tools live). Next: the lane's random source, then slot filling for tools the brain cannot bind yet. Not touching AXON Code or Market Scope.
+D321 (2026-11-11): OVERSEER, not a higher rank: checks every Director's return against its lane, fixes breaks that hit all cloud builds, uses ChatGPT as eyes for big checks. Now: red build fix D321-FIX1. Leaves AXON Code, Market Scope and tool wiring alone.
 OTHER DIRECTORS: add your line here (number, work, what you leave alone) the next time you add anything.
 
 NOTES:
+N18 (2026-11-11, D321) RED BUILD CAUSES. Switching a tool on needs 3 test edits or the cloud fails: PROVEN_AVAILABLE in tests/engineTruth.test.ts, the tool's chat field in tests/fixtures/toolFacts.json, LIVE_SAY_DEFAULTS in tests/sortModeWords.test.ts. The cloud runs TypeScript 7, strict by default: check types with tsc --strict. Fixed in D321-FIX1.
 N17 (2026-11-11, D471) CONNECT2 LESSONS. A builder with no test runner proves nothing: send axon-toolchain.zip with every prompt. A chat action's purpose and examples feed the fallback matcher: always run tests/brainGolden.test.ts (a generic verb made unrelated requests answer "Yes: ..."). A chat example must be a message the brain really answers. Tools that match but whose required slots are never filled are BINDER GAPS (Find Replace, Password, Text Cleaner flags, Converter, Calculator, Percentage Helper, Random Picker, Date Calculator); Text Compare is a RESOLVER GAP. The lane's random source is a constant zero (src/brain/index.ts line 76): fix before Password or Random Picker. Details: docs/CONNECT2_W1_BOARD_LINES.md to W4.
 N16 (2026-11-10) OWNER DECISIONS. (1) Cloud build was GREEN (owner-reported). (2) The Director decides the closed choice words (docs/AUTO_APPROVED.md), overrulable. (3) AXON CODE is built in a SEPARATE Claude account: this one never starts it. (4) Auto-wiring (wire cards, tools/wire-write.mjs, src/generated) exists but no tool uses it yet; parts 5 to 8 are made by hand.
 N15 (2026-11-07) STATE_TOOL_IDS = timer, stopwatch, tally-counter (the lane refuses them until STATE3 wires the state keeper src/tools/state/toolStateStore.ts); the date calculator is not a state tool.

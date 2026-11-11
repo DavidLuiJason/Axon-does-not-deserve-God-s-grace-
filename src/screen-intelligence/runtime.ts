@@ -34,7 +34,7 @@ export function createScreenIntelligenceRuntime(options: { maxStoreBytes?: numbe
       return createCaptureConsentReceipt({ accepted, scope: 'screen-capture' });
     },
     async startFromUserAction(consentReceipt: Record<string, unknown>, options: Record<string, unknown> = {}) {
-      return coordinator.startSession({ adapter, userInitiated: true, consent: consentReceipt, options });
+      return coordinator.startSession({ adapter: adapter as never, userInitiated: true, consent: consentReceipt, options });
     },
     async stop(reason = 'user-stop') { return coordinator.stopSession(reason); },
     async getStatus() {
