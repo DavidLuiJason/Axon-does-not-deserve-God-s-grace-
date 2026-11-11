@@ -11,12 +11,14 @@ import { createTaskEngine, type TaskEngine, type TaskEngineOptions } from './tas
 import { TEXT_COUNT_ACTION } from './textCount';
 import { TEXT_CASE_ACTION } from '../tools/textCaseAction';
 import { TEXT_SORT_ACTION } from '../tools/textSortAction';
+import { NUMBER_WORDS_ACTION } from '../tools/numberWordsAction';
 
 export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   const engine = createTaskEngine({ readProfile: () => readDeviceProfile(), ...options });
   engine.registerAction(TEXT_COUNT_ACTION);
   engine.registerAction(TEXT_CASE_ACTION);
   engine.registerAction(TEXT_SORT_ACTION);
+  engine.registerAction(NUMBER_WORDS_ACTION);
   return engine;
 }
 

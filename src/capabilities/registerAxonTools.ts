@@ -17,11 +17,11 @@ const AXON_TOOLS_CAPABILITY = {
   displayName: 'AXON Tools',
   contractVersion: '1.0.0',
   implementationVersion: '1.0.0',
-  noChatAction: 'The Text Tools child capability owns the registered chat action.',
+  noChatAction: 'The child tool capabilities own their registered chat actions.',
 } as const;
 
 /**
- * Text Tools: the text actions that run on the execution kernel (today: Text Counter and Case Converter).
+ * Text Tools: the text actions that run on the execution kernel (Text Counter, Case Converter and Sort Lines).
  * Matches the kernel capability id "text-tools". Stores no user data.
  */
 const TEXT_TOOLS_CAPABILITY = {
@@ -63,6 +63,21 @@ const TEXT_TOOLS_CAPABILITY = {
   }] as ChatAction[], GENERATED_CHAT_ACTIONS, (a) => a.id, 'chat action'),
 } as const;
 
+const NUMBER_TOOLS_CAPABILITY = {
+  id: 'cap.number-tools',
+  displayName: 'Number Tools',
+  contractVersion: '1.0.0',
+  implementationVersion: '1.0.0',
+  dataProvider: 'noUserData',
+  chatActions: [{
+    id: 'act.number-to-words',
+    purpose: 'Spell out a number',
+    examples: ['spell the number 12', 'spell out 42', 'spell 100'],
+    status: 'available',
+    link: { actionId: 'number.words' },
+  }] as ChatAction[],
+} as const;
+
 /**
  * Register the AXON Tools capability, and the Text Tools capability that lives
  * inside it, at app startup.
@@ -71,6 +86,7 @@ const TEXT_TOOLS_CAPABILITY = {
 export function registerAxonToolsCapability(): void {
   registerCapability({ ...AXON_TOOLS_CAPABILITY });
   registerCapability({ ...TEXT_TOOLS_CAPABILITY });
+  registerCapability({ ...NUMBER_TOOLS_CAPABILITY });
   console.log(
     '[AXON capability registry] AXON Tools registered:',
     getCapability('cap.axon-tools')
@@ -79,4 +95,5 @@ export function registerAxonToolsCapability(): void {
     '[AXON capability registry] Text Tools registered:',
     getCapability('cap.text-tools')
   );
+  console.log('[AXON capability registry] Number Tools registered:', getCapability('cap.number-tools'));
 }
