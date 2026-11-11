@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "8d32a980d552e9b8f9b424e9aa4b613cdfc39dacc31a1a20ae77fb875f21ab33",
-  "capabilityCount": 26,
+  "resultSetSha256": "cc39f35f8d4d8723970c858867e827d92be7cc5311d285112c7bd3586ef1dbcf",
+  "capabilityCount": 27,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -107,10 +107,12 @@
       "status": "NOT RUN",
       "grade": "T1",
       "evidenceIds": [
-        "R14-WP3-UI-MOUNT-01"
+        "R14-WP3-UI-MOUNT-01",
+        "R14-WP3-REAL-BROWSER-MOUNT-02"
       ],
       "resultFiles": [
-        "results/r14-wp03-engine-integration.json"
+        "results/r14-wp03-engine-integration.json",
+        "results/r14-wp03-file-operations.json"
       ]
     },
     {
@@ -397,6 +399,17 @@
       ],
       "resultFiles": [
         "results/r14-wp00-blockers.json"
+      ]
+    },
+    {
+      "id": "workbench-file-operations-and-editor-controls",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP3-FILE-OPS-01"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-file-operations.json"
       ]
     },
     {

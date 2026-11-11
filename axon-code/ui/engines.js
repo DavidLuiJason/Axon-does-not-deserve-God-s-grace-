@@ -42,6 +42,7 @@ export function mountCodeMirror({parent, initialText='', onChange=()=>{}}) {
     setValue(value){ editorView.dispatch({changes:{from:0,to:editorView.state.doc.length,insert:String(value)}}); },
     focus(){ editorView.focus(); },
     selectAll(){ editorView.dispatch({selection:{anchor:0,head:editorView.state.doc.length}}); },
+    clear(){ editorView.dispatch({changes:{from:0,to:editorView.state.doc.length,insert:''}}); },
     replaceSelection(value){ editorView.dispatch(editorView.state.replaceSelection(value)); },
     getSelection(){ const s=editorView.state.selection.main; return editorView.state.doc.sliceString(s.from,s.to); },
     destroy(){ editorView.destroy(); editorView=null; }

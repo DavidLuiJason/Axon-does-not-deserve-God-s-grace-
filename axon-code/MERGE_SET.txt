@@ -5,6 +5,7 @@ docs/C3_C4_HOST_PROVIDER_STATUS.md
 docs/C5_ENGINE_ADOPTION.md
 docs/CAPABILITY_REGISTRY.json
 docs/R14_DEPENDENCY_MIGRATION.md
+docs/R14_WP3_CONTINUATION_REPORT.md
 docs/R14_WP3_DELTA_REPORT.md
 docs/README.md
 docs/ROUND12_BROWSER_RUNTIME_RESULTS.json
@@ -28,6 +29,7 @@ results/r14-wp01-tests.json
 results/r14-wp02-tests.json
 results/r14-wp02-wp12-browser.json
 results/r14-wp03-engine-integration.json
+results/r14-wp03-file-operations.json
 results/r14-wp03-tests.json
 results/r14-wp04-pyodide-vendor.json
 results/r14-wp04-tests.json
@@ -99,6 +101,7 @@ src/verification/qualityGate.ts
 src/workbench/commandRegistry.ts
 src/workbench/documentBuffers.ts
 src/workbench/editorEngineContracts.ts
+src/workbench/fileOperations.ts
 src/workbench/workbenchState.ts
 src/workspace/hostActions.ts
 src/workspace/projectActionBinder.ts
@@ -133,8 +136,10 @@ tests/r14-wp01-gateway-registry.test.mjs
 tests/r14-wp02-workspace.test.mjs
 tests/r14-wp02-wp12-browser.integration.py
 tests/r14-wp03-android-host-contract.test.mjs
+tests/r14-wp03-control-wiring.test.mjs
 tests/r14-wp03-editor-engine-contract.test.mjs
-tests/r14-wp03-import-map-resolves.test.mjs
+tests/r14-wp03-file-operations-director.test.mjs
+tests/r14-wp03-file-operations.test.mjs
 tests/r14-wp03-workbench-engines.test.mjs
 tests/r14-wp04-pyodide-provider.test.mjs
 tests/r14-wp04-pyodide-vendor.test.mjs

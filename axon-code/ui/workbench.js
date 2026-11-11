@@ -1,3 +1,4 @@
+import {planFileOperation} from '../dist/workbench/fileOperations.js';
 const DB_NAME = 'axon-code-direct-workbench';
 const DB_VERSION = 1;
 const MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024;
@@ -205,7 +206,8 @@ function closeTab(path) {
 function updateButtons() {
   const hasProject = Boolean(activeProject); const hasFile = Boolean(activePath);
   $('newFileButton').disabled = !hasProject; $('saveButton').disabled = !hasFile; $('saveAllButton').disabled = !hasProject;
-  $('deleteButton').disabled = !hasFile; $('undoDeleteButton').disabled = !deletedFile; $('previewButton').disabled = !hasProject; $('exportButton').disabled = !hasProject;
+  $('deleteButton').disabled = !hasFile; $('renameButton').disabled = !hasFile; $('moveButton').disabled = !hasFile; $('undoDeleteButton').disabled = !deletedFile; $('previewButton').disabled = !hasProject; $('exportButton').disabled = !hasProject;
+  for (const id of ['clearEditorButton','selectAllButton','copyButton','cutButton','pasteButton','downloadButton','shareButton']) $(id).disabled = !hasFile;
 }
 function updateLanguage(path) {
   const ext = path.split('.').pop()?.toLowerCase() ?? '';
@@ -259,6 +261,67 @@ async function undoDelete() {
   if (current && !current.deleted) throw new Error('Cannot restore: another file now occupies this path.');
   await storePut('files', { ...deletedFile, deleted: false, revision: (current?.revision ?? 0) + 1, updatedAt: Date.now() });
   const restored = deletedFile.path; deletedFile = null; await openFile(restored); updateButtons(); toast(`Restored ${restored}`);
+}
+async function relocateActive(operation) {
+  if (!activeProject || !activePath) throw new Error('Open a file first.');
+  const currentBuffer = buffers.get(activePath);
+  if (currentBuffer?.dirty) await saveActive();
+  const destination = prompt(operation === 'rename' ? 'New filename in the same directory:' : 'New project-relative path:');
+  if (destination === null) return;
+  const paths = (await listFiles()).map(file => file.path);
+  const plan = planFileOperation(operation, activePath, destination.trim(), paths);
+  const sourceFile = await readFile(activeProject.id, plan.source);
+  if (!sourceFile || sourceFile.deleted) throw new Error('Source file no longer exists.');
+  const tx = db.transaction('files', 'readwrite'); const store = tx.objectStore('files');
+  const destinationRequest = store.get([activeProject.id, plan.destination]);
+  await new Promise((resolve, reject) => {
+    destinationRequest.onsuccess = () => {
+      const occupied = destinationRequest.result;
+      if (occupied && !occupied.deleted) { tx.abort(); reject(new Error('Destination already exists.')); return; }
+      const now = Date.now();
+      store.put({...sourceFile, path:plan.destination, updatedAt:now, revision:(occupied?.revision ?? 0)+1, deleted:false});
+      store.put({...sourceFile, deleted:true, deletedAt:now});
+    };
+    destinationRequest.onerror = () => reject(destinationRequest.error);
+    tx.oncomplete = resolve; tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error ?? new Error('File operation aborted.'));
+  });
+  const oldBuffer = buffers.get(plan.source);
+  buffers.delete(plan.source);
+  if (oldBuffer) buffers.set(plan.destination, {...oldBuffer, revision:(oldBuffer.revision ?? 0)+1});
+  openTabs = openTabs.map(path => path === plan.source ? plan.destination : path);
+  activePath = plan.destination;
+  await openFile(plan.destination); await renderExplorer(); updateButtons();
+  toast(`${operation === 'rename' ? 'Renamed' : 'Moved'} ${plan.source} → ${plan.destination}`);
+}
+async function copySelection() {
+  const selected = codeEditor.getSelection();
+  if (!selected) throw new Error('Select text before copying.');
+  if (!navigator.clipboard?.writeText) throw new Error('Clipboard write access is unavailable in this browser context.');
+  await navigator.clipboard.writeText(selected); toast('Selection copied.');
+}
+async function cutSelection() {
+  const selected = codeEditor.getSelection();
+  if (!selected) throw new Error('Select text before cutting.');
+  if (!navigator.clipboard?.writeText) throw new Error('Clipboard write access is unavailable in this browser context.');
+  await navigator.clipboard.writeText(selected); codeEditor.replaceSelection(''); codeEditor.focus();
+}
+async function pasteClipboard() {
+  if (!navigator.clipboard?.readText) throw new Error('Clipboard read access is unavailable in this browser context.');
+  const text = await navigator.clipboard.readText(); codeEditor.replaceSelection(text); codeEditor.focus();
+}
+function downloadActive() {
+  if (!activePath) throw new Error('Open a file first.');
+  const blob = new Blob([codeEditor.value], {type:'text/plain;charset=utf-8'}); const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a'); anchor.href=url; anchor.download=activePath.split('/').at(-1); document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  updateOutput(`Downloaded ${activePath}.`);
+}
+async function shareProject() {
+  if (!activeProject) throw new Error('Open a project first.');
+  const files = await listFiles();
+  if (!navigator.share || typeof File === 'undefined') { await exportProject('zip'); toast('Native sharing is unavailable; project ZIP download started.'); return; }
+  const file = new File([makeStoredZip(files)], `${activeProject.name}.zip`, {type:'application/zip'});
+  if (navigator.canShare && !navigator.canShare({files:[file]})) throw new Error('This browser cannot share project files. Use Export instead.');
+  await navigator.share({title:`AXON Code: ${activeProject.name}`, files:[file]});
 }
 async function importFiles(fileList) {
   if (!activeProject) throw new Error('Create or open a project first.');
@@ -369,9 +432,9 @@ async function loadCapabilities() {
 function allCommands() {
   return [
     ['New project', () => $('newProjectButton').click()], ['Open / import files', () => $('openProjectButton').click()], ['Create file', () => $('newFileButton').click()],
-    ['Save current file', () => saveActive()], ['Save all open files', () => saveAll()], ['Preview web project', () => previewProject()], ['Export project', () => $('exportButton').click()],
+    ['Save current file', () => saveActive()], ['Save all open files', () => saveAll()], ['Rename active file', () => relocateActive('rename')], ['Move active file', () => relocateActive('move')], ['Clear editor', () => codeEditor.clear()], ['Select all source text', () => codeEditor.selectAll()], ['Copy source text', () => copySelection()], ['Cut source text', () => cutSelection()], ['Paste clipboard', () => pasteClipboard()], ['Download active file', () => downloadActive()], ['Share project', () => shareProject()], ['Preview web project', () => previewProject()], ['Export project', () => $('exportButton').click()],
     ['Show output panel', () => switchPanel('output')], ['Show problems panel', () => switchPanel('problems')], ['Show preview panel', () => switchPanel('preview')],
-    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }], ['Select all source text', () => codeEditor.selectAll()], ['Copy source text', () => navigator.clipboard?.writeText(codeEditor.value).then(()=>toast('Copied'))]
+    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }]
   ];
 }
 function showPalette() {
@@ -421,6 +484,15 @@ $('newFileButton').addEventListener('click', ()=>$('newFileDialog').showModal())
 $('createFileConfirm').addEventListener('click',(event)=>{event.preventDefault();$('newFileDialog').close();void newFile($('newFilePath').value).catch((error)=>toast(error.message));});
 $('saveButton').addEventListener('click',()=>void saveActive().catch((error)=>toast(error.message)));
 $('saveAllButton').addEventListener('click',()=>void saveAll().catch((error)=>toast(error.message)));
+$('renameButton').addEventListener('click',()=>void relocateActive('rename').catch((error)=>toast(error.message)));
+$('moveButton').addEventListener('click',()=>void relocateActive('move').catch((error)=>toast(error.message)));
+$('clearEditorButton').addEventListener('click',()=>{if(activePath && confirm('Clear the entire editor contents?')) codeEditor.clear();});
+$('selectAllButton').addEventListener('click',()=>{codeEditor.selectAll();codeEditor.focus();});
+$('copyButton').addEventListener('click',()=>void copySelection().catch(error=>toast(error.message)));
+$('cutButton').addEventListener('click',()=>void cutSelection().catch(error=>toast(error.message)));
+$('pasteButton').addEventListener('click',()=>void pasteClipboard().catch(error=>toast(error.message)));
+$('downloadButton').addEventListener('click',()=>{try{downloadActive();}catch(error){toast(error.message);}});
+$('shareButton').addEventListener('click',()=>void shareProject().catch(error=>toast(error.message)));
 $('deleteButton').addEventListener('click',()=>void deleteActive().catch((error)=>toast(error.message)));
 $('undoDeleteButton').addEventListener('click',()=>void undoDelete().catch((error)=>toast(error.message)));
 $('refreshButton').addEventListener('click',()=>void renderExplorer());

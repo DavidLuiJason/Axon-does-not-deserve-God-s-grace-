@@ -1,0 +1,31 @@
+[
+  {
+    "id": "R14-WP3-FILE-OPS-01",
+    "suite": "r14-wp03-file-operations-and-control-wiring",
+    "capability": "workbench-file-operations-and-editor-controls",
+    "status": "PASS",
+    "command": "npm run build && node --test tests/r14-wp03-control-wiring.test.mjs tests/r14-wp03-file-operations.test.mjs",
+    "exitCode": 0,
+    "durationMs": 119,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "negativeTests": 13,
+    "mutantCaught": true
+  },
+  {
+    "id": "R14-WP3-REAL-BROWSER-MOUNT-02",
+    "suite": "r14-wp03-real-engine-mount",
+    "capability": "codemirror6-xtermjs-browser-mount",
+    "status": "NOT RUN",
+    "command": "python3 tests/round12-workbench-ui.integration.py",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "reason": "The attempt did not complete before the 120-second execution timeout; the previously reproduced Chromium navigation restriction ERR_BLOCKED_BY_ADMINISTRATOR still prevents claiming a real CodeMirror/xterm mount. Static control-wiring tests are not browser interaction evidence."
+  }
+]
