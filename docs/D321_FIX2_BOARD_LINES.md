@@ -1,0 +1,5 @@
+# D321-FIX2 board lines (owner appends; no shared ledger file is touched)
+
+WHAT: cloud build #185 got past the web build, type check and tests and failed in Gradle, task :app:compileDebugJavaWithJavac: ScreenCapturePlugin.java:153 "unreported exception JSONException; must be caught or declared to be thrown" (JSObject.fromJSONObject throws it). Fix: getStatus() in android-overlay/app/src/main/java/com/axon/app/screencapture/ScreenCapturePlugin.java now wraps the call in try/catch and rejects with a plain message. Only that method changed. The compiler listed exactly 1 error, so this was the only compile error in that file set.
+EVIDENCE: the log text (build #185, owner-pasted). The only other use of fromJSONObject in the file (line 47) is already inside a try. NOT RUN: Java compile (no Android SDK or javac in the Director sandbox); the cloud build is the proof.
+MERGE_TAG line: 2026-11-11 | D321-FIX2 [android-overlay/.../ScreenCapturePlugin.java getStatus try/catch, docs/D321_FIX2_BOARD_LINES.md] | build #185 Java compile error JSONException | log evidence only, NOT RUN: Java compile

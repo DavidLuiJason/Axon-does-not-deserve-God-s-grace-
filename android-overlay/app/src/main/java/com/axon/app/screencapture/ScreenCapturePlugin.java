@@ -150,7 +150,11 @@ public class ScreenCapturePlugin extends Plugin {
 
     @PluginMethod
     public void getStatus(PluginCall call) {
-        call.resolve(JSObject.fromJSONObject(ScreenCaptureService.reconcileSnapshot(getContext())));
+        try {
+            call.resolve(JSObject.fromJSONObject(ScreenCaptureService.reconcileSnapshot(getContext())));
+        } catch (Exception error) {
+            call.reject("Unable to read the screen-capture status: " + error.getMessage());
+        }
     }
 
     @PluginMethod
