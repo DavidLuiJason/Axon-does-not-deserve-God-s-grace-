@@ -1,0 +1,24 @@
+[
+  {
+    "id": "R14-WP02-IDB-RELOAD",
+    "suite": "workspace-persistence",
+    "capability": "indexeddb-reload-persistence",
+    "status": "NOT RUN",
+    "command": "python3 tests/r14-wp02-wp12-browser.integration.py",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "598592ccab2afc23",
+    "reason": "Chromium navigation blocked by host policy: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:33309/ui/index.html\nCall log:\n  - navigating to \"http://127.0.0.1:33309/ui/index.html\", waiting until \"load\"\n"
+  },
+  {
+    "id": "R14-WP12-IDB-RECOVERY",
+    "suite": "job-recovery",
+    "capability": "indexeddb-job-recovery",
+    "status": "NOT RUN",
+    "command": "python3 tests/r14-wp02-wp12-browser.integration.py",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "598592ccab2afc23",
+    "reason": "Real IndexedDB reload test could not start because Chromium navigation is blocked by host policy."
+  }
+]

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AXON Code R4 Harness</title></head>
+<body>
+<script type="module">
+  import { BrowserOpaqueWorkerProvider } from '../dist/runtime/browserOpaqueWorkerProvider.js';
+  import { JavaScriptWorkerExecutionAdapter } from '../dist/runtime/javascriptWorker.js';
+
+  const provider = new BrowserOpaqueWorkerProvider(document);
+  let adapter;
+  let initError = null;
+  try {
+    await provider.initialize(5000);
+    adapter = new JavaScriptWorkerExecutionAdapter(
+      { async readSingleEntry(request) {
+        const file = request.entryFiles[0];
+        if (file !== window.__r4_entryPath || typeof window.__r4_source !== 'string') return null;
+        return { path: file, source: window.__r4_source };
+      } },
+      provider,
+      { maxTimeoutMs: 5000, maxOutputBytes: 65536, maxSourceBytes: 1024 * 1024 }
+    );
+  } catch (error) {
+    initError = String(error);
+  }
+
+  window.__axonR4 = {
+    ready: Boolean(adapter),
+    initError,
+    attestation: provider.attest(),
+    async run(input) {
+      if (!adapter) return { status: 'not-implemented', notes: [initError || 'Browser Worker provider unavailable.'], diagnostics: [] };
+      window.__r4_entryPath = input.entryPath || 'src/main.js';
+      window.__r4_source = input.source;
+      const controller = new AbortController();
+      if (input.cancelAfterMs !== undefined) setTimeout(() => controller.abort(), input.cancelAfterMs);
+      const request = {
+        requestId: input.requestId || 'r4-request',
+        projectId: 'r4-project',
+        entryFiles: [window.__r4_entryPath],
+        runtimeId: 'javascript-worker-ac2',
+        mode: 'FULL_LOCAL',
+        timeoutMs: input.timeoutMs === undefined ? 5000 : input.timeoutMs,
+        outputLimitBytes: input.outputLimitBytes === undefined ? 65536 : input.outputLimitBytes,
+        networkAllowed: input.networkAllowed === undefined ? false : input.networkAllowed,
+        fileAccess: input.fileAccess || 'none'
+      };
+      const result = await adapter.execute(request, input.cancelAfterMs !== undefined ? controller.signal : undefined);
+      return result;
+    },
+    dispose() { provider.dispose(); }
+  };
+  window.__axonR4Ready = true;
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "environment": {
+    "browser": "Chromium",
+    "viewport": "1440x900",
+    "origin": "about:blank",
+    "storage": "in-memory IndexedDB-compatible test shim; persistent browser IndexedDB not exercised because Chromium navigation is blocked by container policy"
+  },
+  "checks": [
+    {
+      "id": "R12-UI-01",
+      "description": "Direct user can create a local project without AXON Brain",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-02",
+      "description": "User edits and saves a multi-file web project; isolated iframe preview executes linked local JavaScript",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-03",
+      "description": "Saved text is read back from the workspace storage adapter",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-04",
+      "description": "Delete moves a file to undo area and restore brings its content back",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-05",
+      "description": "Project ZIP export is a readable archive containing saved files",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-06",
+      "description": "Command palette opens; unavailable terminal is disclosed rather than simulated",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-07",
+      "description": "Resource panel distinguishes exposed browser values from unavailable host/thermal data",
+      "status": "PASS"
+    },
+    {
+      "id": "R14-UI-09",
+      "description": "Capability panel displays statuses loaded from the machine-derived registry",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-UI-08",
+      "description": "No uncaught browser page errors during direct-user workflow",
+      "status": "PASS"
+    }
+  ],
+  "passed": 9,
+  "failed": 0,
+  "pageErrors": [],
+  "exportedFiles": [
+    "README.md",
+    "app.js",
+    "index.html"
+  ],
+  "exportedContents": {
+    "README.md": "# R12 UI Integration\n\nCreated in the direct-user AXON Code Workbench.\n",
+    "app.js": "document.querySelector('#add').addEventListener('click', () => { document.querySelector('#count').textContent = String(Number(document.querySelector('#count').textContent) + 1); });",
+    "index.html": "<!doctype html><html><head><title>R12 Preview</title></head><body><h1>Direct preview</h1><button id=\"add\">Add</button><output id=\"count\">0</output><script src=\"./app.js\"></script></body></html>"
+  },
+  "previewScreenshot": "docs/ROUND12_WORKBENCH_PREVIEW.png",
+  "capabilityText": "android-native-host\nNOT RUN\naxon-code-brain-gateway-contract\nTESTED\nchromium-browser-verification\nTESTED\ndependency-and-pty-regression\nTESTED\ndirector-verification\nBLOCKED\ndurable-workspace-and-transaction-journal\nTESTED\nhardened-loopback-pty-bridge\nNOT IMPLEMENTED\nindexeddb-job-recovery\nNOT RUN\nindexeddb-reload-persistence\nNOT RUN\nlinux-pty-provider\nTESTED\npersistent-jobs-and-crash-recovery\nTESTED\nreproducible-clean-install\nBLOCKED\nround12-node-regression\nTESTED\ntypescript-current-version-compatibility\nNOT RUN\nworkspace-trust-and-secret-redaction\nTESTED",
+  "securityBoundary": "Browser iframe sandbox and CSP only; not an operating-system process sandbox."
+}

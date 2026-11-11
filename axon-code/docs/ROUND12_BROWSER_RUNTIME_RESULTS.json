@@ -1,0 +1,114 @@
+{
+  "environment": {
+    "browser": "Chromium",
+    "workerProvider": "browser-opaque-origin-blob-worker-v1",
+    "rootContainerLaunchFlag": "--no-sandbox (container-only browser launcher setting; not a product setting)"
+  },
+  "topLevelAwait": {
+    "requestId": "r12-tla-browser",
+    "status": "completed",
+    "exitCode": 0,
+    "stdout": "R12_TLA_EXECUTED 42\nAXON_ENTRY {\"answer\":42}\n",
+    "stderr": "",
+    "diagnostics": [],
+    "elapsedMs": 34,
+    "artifacts": [],
+    "evidence": "ADAPTER_REPORTED",
+    "notes": [
+      "Executed single entry 'src/main.ts' through provider 'browser-opaque-origin-blob-worker-v1'."
+    ]
+  },
+  "mappedRuntimeError": {
+    "requestId": "r12-source-map-browser",
+    "status": "failed",
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "",
+    "diagnostics": [
+      {
+        "id": "src/main.ts:JAVASCRIPT_RUNTIME_ERROR:3:7",
+        "code": "JAVASCRIPT_RUNTIME_ERROR",
+        "severity": "error",
+        "stage": "runtime",
+        "message": "Error: R12_RUNTIME_SOURCE_MAP",
+        "location": {
+          "file": "src/main.ts",
+          "line": 3,
+          "column": 7
+        },
+        "evidence": "ADAPTER_REPORTED",
+        "confidence": "high",
+        "explanation": "Error: R12_RUNTIME_SOURCE_MAP\n    at src/main.ts (axon-user-entry.js:9:7)\n    at eval (axon-user-entry.js:33:11)\n    at async __axonLoad (axon-user-entry.js:36:16)\n    at async eval (axon-user-entry.js:38:21)\n    at async self.onmessage (blob:null/8e8573e4-f446-4153-9aaa-89d2a9eb97c4:20:24)"
+      }
+    ],
+    "elapsedMs": 13,
+    "artifacts": [],
+    "evidence": "ADAPTER_REPORTED",
+    "notes": [
+      "Error: R12_RUNTIME_SOURCE_MAP"
+    ]
+  },
+  "invalidSyntax": {
+    "requestId": "r12-invalid-js",
+    "status": "failed",
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "",
+    "diagnostics": [
+      {
+        "id": "src/invalid.js:JAVASCRIPT_SYNTAX_ERROR",
+        "code": "JAVASCRIPT_SYNTAX_ERROR",
+        "severity": "error",
+        "stage": "syntax",
+        "message": "SyntaxError: Unexpected token ';'",
+        "location": {
+          "file": "src/invalid.js"
+        },
+        "evidence": "CHECKED",
+        "confidence": "high",
+        "explanation": "The host ECMAScript parser rejected the transpiled JavaScript. A verified line/column was not exposed by this host parser."
+      }
+    ],
+    "elapsedMs": 1,
+    "artifacts": [],
+    "evidence": "ADAPTER_REPORTED",
+    "notes": [
+      "Compiler parser found syntax errors; execution was not started."
+    ]
+  },
+  "checks": [
+    {
+      "id": "R12-RUN-01",
+      "description": "Actual bundled TypeScript project with top-level await passes project semantic check",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-RUN-02",
+      "description": "Top-level await bundle executes in the actual isolated browser Worker",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-RUN-03",
+      "description": "Runtime exception is surfaced from the actual Worker with expected marker",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-RUN-04",
+      "description": "Worker runtime error source map resolves original TS file and line 3",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-RUN-05",
+      "description": "Opaque-origin Worker attestation confirms network/filesystem/host bridge restrictions",
+      "status": "PASS"
+    },
+    {
+      "id": "R12-RUN-06",
+      "description": "Native ECMAScript parser rejects malformed JavaScript before Worker execution",
+      "status": "PASS"
+    }
+  ],
+  "passed": 6,
+  "failed": 0,
+  "securityBoundary": "Opaque-origin browser Worker with restrictive browser policy; NOT an OS process sandbox and not native Android/desktop isolation."
+}

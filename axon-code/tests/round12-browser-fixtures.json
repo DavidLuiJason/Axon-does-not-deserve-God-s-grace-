@@ -1,0 +1,62 @@
+{
+  "topLevelAwait": {
+    "checked": {
+      "diagnostics": [],
+      "checkedFiles": 2,
+      "success": true
+    },
+    "bundle": {
+      "complete": true,
+      "source": "const __axonFactories = {\n\"src/main.ts\": async function(module, exports, require) {\n\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.answer = void 0;\nconst math_js_1 = require(\"./math.js\");\nexports.answer = await Promise.resolve(math_js_1.value + 1);\nconsole.log('R12_TLA_EXECUTED', exports.answer);\n\n}\n,\n\"src/math.ts\": async function(module, exports, require) {\n\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.value = void 0;\nexports.value = 41;\n\n}\n};\nconst __axonMaps = {\"src/main.ts\":{\"./math.js\":\"src/math.ts\"},\"src/math.ts\":{}};\nconst __axonCache = Object.create(null);\nasync function __axonLoad(id) {\n  const prior = __axonCache[id];\n  if (prior) return prior.state === \"LOADING\" ? Promise.resolve(prior.module.exports) : prior.promise;\n  const factory = __axonFactories[id]; if (typeof factory !== \"function\") throw new Error(\"Missing bundled module: \" + id);\n  const module = { exports: {} };\n  const record = { module, state: \"LOADING\", promise: null }; __axonCache[id] = record;\n  const localRequire = (specifier) => { const target = __axonMaps[id] && __axonMaps[id][specifier]; if (!target || !__axonCache[target]) throw new Error(\"Blocked or unresolved module: \" + specifier + \" from \" + id); return __axonCache[target].module.exports; };\n  record.promise = (async () => {\n    const dependencies = Object.values(__axonMaps[id] || {});\n    for (const dependency of dependencies) await __axonLoad(dependency);\n    await factory(module, module.exports, localRequire);\n    record.state = \"LOADED\"; return module.exports;\n  })();\n  try { return await record.promise; } catch (error) { record.state = \"FAILED\"; throw error; }\n}\nconst __axonEntry = await __axonLoad(\"src/main.ts\");\nif (__axonEntry !== undefined) console.log(\"AXON_ENTRY\", __axonEntry && Object.prototype.hasOwnProperty.call(__axonEntry, \"default\") ? __axonEntry.default : __axonEntry);",
+      "sourceMap": {
+        "version": 3,
+        "file": "axon-bundle.js",
+        "sources": [
+          "src/main.ts",
+          "src/math.ts"
+        ],
+        "sourcesContent": [
+          "import { value } from './math.js';\nexport const answer = await Promise.resolve(value + 1);\nconsole.log('R12_TLA_EXECUTED', answer);",
+          "export const value = 41;"
+        ],
+        "names": [],
+        "mappings": ";;;;;AAAA,uCAAkC;AACrB,QAAA,MAAM,GAAG,MAAM,OAAO,CAAC,OAAO,CAAC,eAAK,GAAG,CAAC,CAAC,CAAC;AACvD,OAAO,CAAC,GAAG,CAAC,kBAAkB,EAAE,cAAM,CAAC,CAAC;;;;;;;;ACF3B,QAAA,KAAK,GAAG,EAAE,CAAC"
+      },
+      "includedFiles": [
+        "src/main.ts",
+        "src/math.ts"
+      ],
+      "diagnostics": []
+    }
+  },
+  "mappedRuntimeError": {
+    "checked": {
+      "diagnostics": [],
+      "checkedFiles": 2,
+      "success": true
+    },
+    "bundle": {
+      "complete": true,
+      "source": "const __axonFactories = {\n\"src/main.ts\": async function(module, exports, require) {\n\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nconst helper_js_1 = require(\"./helper.js\");\nconst result = (0, helper_js_1.helper)();\nthrow new Error('R12_RUNTIME_SOURCE_MAP');\n\n}\n,\n\"src/helper.ts\": async function(module, exports, require) {\n\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.helper = helper;\nfunction helper() { return 7; }\n\n}\n};\nconst __axonMaps = {\"src/main.ts\":{\"./helper.js\":\"src/helper.ts\"},\"src/helper.ts\":{}};\nconst __axonCache = Object.create(null);\nasync function __axonLoad(id) {\n  const prior = __axonCache[id];\n  if (prior) return prior.state === \"LOADING\" ? Promise.resolve(prior.module.exports) : prior.promise;\n  const factory = __axonFactories[id]; if (typeof factory !== \"function\") throw new Error(\"Missing bundled module: \" + id);\n  const module = { exports: {} };\n  const record = { module, state: \"LOADING\", promise: null }; __axonCache[id] = record;\n  const localRequire = (specifier) => { const target = __axonMaps[id] && __axonMaps[id][specifier]; if (!target || !__axonCache[target]) throw new Error(\"Blocked or unresolved module: \" + specifier + \" from \" + id); return __axonCache[target].module.exports; };\n  record.promise = (async () => {\n    const dependencies = Object.values(__axonMaps[id] || {});\n    for (const dependency of dependencies) await __axonLoad(dependency);\n    await factory(module, module.exports, localRequire);\n    record.state = \"LOADED\"; return module.exports;\n  })();\n  try { return await record.promise; } catch (error) { record.state = \"FAILED\"; throw error; }\n}\nconst __axonEntry = await __axonLoad(\"src/main.ts\");\nif (__axonEntry !== undefined) console.log(\"AXON_ENTRY\", __axonEntry && Object.prototype.hasOwnProperty.call(__axonEntry, \"default\") ? __axonEntry.default : __axonEntry);",
+      "sourceMap": {
+        "version": 3,
+        "file": "axon-bundle.js",
+        "sources": [
+          "src/main.ts",
+          "src/helper.ts"
+        ],
+        "sourcesContent": [
+          "import { helper } from './helper.js';\nconst result = helper();\nthrow new Error('R12_RUNTIME_SOURCE_MAP');",
+          "export function helper(){ return 7; }"
+        ],
+        "names": [],
+        "mappings": ";;;;AAAA,2CAAqC;AACrC,MAAM,MAAM,GAAG,IAAA,kBAAM,GAAE,CAAC;AACxB,MAAM,IAAI,KAAK,CAAC,wBAAwB,CAAC,CAAC;;;;;;;ACF1C,wBAAqC;AAArC,SAAgB,MAAM,KAAI,OAAO,CAAC,CAAC,CAAC,CAAC"
+      },
+      "includedFiles": [
+        "src/helper.ts",
+        "src/main.ts"
+      ],
+      "diagnostics": []
+    }
+  }
+}

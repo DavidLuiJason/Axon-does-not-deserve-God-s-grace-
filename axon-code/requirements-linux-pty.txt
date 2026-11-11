@@ -1,0 +1,2 @@
+# Optional Linux host bridge dependency; not part of the Android app bundle.
+websockets==16.0

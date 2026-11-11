@@ -1,0 +1,50 @@
+[
+  {
+    "suite": "r14-host-provider-evidence",
+    "command": "Not run: Android SDK/Gradle/device unavailable in this host.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "grade": "T3",
+    "id": "R14-C3-ANDROID-DEVICE",
+    "capability": "android-capacitor-provider",
+    "status": "NOT RUN",
+    "reason": "Kotlin Capacitor plugin source and fake-host contract tests exist. Android compilation, plugin registration, persisted SAF grants and physical device read/write remain NOT RUN."
+  },
+  {
+    "suite": "r14-host-provider-evidence",
+    "command": "Not run: no verified Pyodide offline pack assets are present; registry DNS resolution failed.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "grade": "T3",
+    "id": "R14-C4-PYODIDE-PACK",
+    "capability": "pyodide-cpython-wasm-worker",
+    "status": "BLOCKED",
+    "reason": "Provider and pack verification/install/removal contracts are built. Real CPython execution is blocked until a real Pyodide distribution is supplied or registry access returns."
+  },
+  {
+    "suite": "r14-host-provider-evidence",
+    "command": "Not run: npm registry unavailable; CodeMirror/xterm package tarballs are absent from npm cache.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "grade": "T3",
+    "id": "R14-C5-CODEMIRROR-XTERM",
+    "capability": "codemirror6-xtermjs-workbench",
+    "status": "BLOCKED",
+    "reason": "Engine choice and strict integration contracts are implemented. Actual package pin/lock integrity, UI migration and real xterm-to-PTY connection cannot be completed without obtaining the exact packages."
+  },
+  {
+    "suite": "r14-host-provider-evidence",
+    "command": "Not run: physical Android target device unavailable.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "grade": "T3",
+    "id": "R14-C5-ANDROID-PERFORMANCE",
+    "capability": "codemirror6-android-performance",
+    "status": "NOT RUN",
+    "reason": "Target-device performance cannot be inferred from desktop tests."
+  }
+]

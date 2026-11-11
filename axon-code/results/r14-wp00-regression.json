@@ -1,0 +1,32 @@
+[
+  {
+    "id": "R14-WP00-FULL-NODE-REGRESSION",
+    "suite": "full-node-regression",
+    "capability": "round12-node-regression",
+    "status": "PASS",
+    "command": "npm test (host-global TypeScript 5.8.3 linked locally; not clean npm ci)",
+    "exitCode": 0,
+    "durationMs": 14572,
+    "hostFingerprint": "15c2681736cce035",
+    "tests": 1053,
+    "passed": 1053,
+    "failed": 0,
+    "skipped": 0,
+    "grade": "T1"
+  },
+  {
+    "id": "R14-WP00-LINUX-PTY",
+    "suite": "linux-pty-provider",
+    "capability": "linux-pty-provider",
+    "status": "PASS",
+    "command": "python3 tools/test-round12-pty.py",
+    "exitCode": 0,
+    "durationMs": 16881,
+    "hostFingerprint": "15c2681736cce035",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "grade": "T1"
+  }
+]

@@ -1,0 +1,4 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; background: #f4f6f8; color: #17202a; }
+body { margin: 0; padding: 2rem; } main { max-width: 48rem; margin: auto; background: white; padding: 1.5rem; border-radius: 1rem; }
+header { display:flex; justify-content:space-between; align-items:center; gap:1rem; } #products { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+article { border:1px solid #dce2e8; padding:1rem; border-radius:.75rem; } button { min-height:2.75rem; padding:.5rem 1rem; }

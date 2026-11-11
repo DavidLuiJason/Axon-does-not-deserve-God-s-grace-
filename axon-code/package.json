@@ -1,0 +1,39 @@
+{
+  "name": "axon-code",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AXON Code v1.0.0: direct-user workbench, compiler-backed project analysis, source maps and guarded browser execution.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "npm run build && node --test --test-reporter=tap tests/*.test.mjs",
+    "test:r4-browser": "python3 tests/round4-browser.integration.py",
+    "test:prer5-browser": "python3 tests/prer5-browser.integration.py",
+    "test:prer5": "npm test && npm run test:prer5-browser",
+    "test:host-smoke": "python3 tools/host-toolchain-smoke.py",
+    "benchmark:typescript": "node tools/benchmark-ts-compiler.mjs",
+    "test:round5-host": "python3 tools/round5-host-toolchain-tests.py && node tools/verify-round5-host-diagnostics.mjs",
+    "test:full-r1-r5": "python3 tools/run-full-regression.py",
+    "test:round6-browser": "python3 tests/round6-browser.integration.py",
+    "test:round6-host-probe": "python3 tools/round6-host-probe.py",
+    "test:full-r1-r6": "python3 tools/run-full-regression-r1-r6.py",
+    "test:round7-browser-actions": "python3 tests/round7-browser-actions.integration.py",
+    "test:round7": "node --test tests/round7-workspace-actions.test.mjs tests/round7-deep-forensic.test.mjs && npm run test:round7-browser-actions",
+    "test:full-r1-r7": "python3 tools/run-full-regression-r1-r7.py",
+    "test:round9": "npm run build && node --test tests/round9-environment.test.mjs tests/round9-execution.test.mjs tests/round9-intelligence.test.mjs tests/round9-routing-evidence.test.mjs tests/round9-workbench.test.mjs",
+    "test:full-r1-r9": "python3 tools/run-full-regression-r1-r9.py",
+    "test:round10": "node --test tests/round10-direct-user.test.mjs tests/round10-project-workloads.test.mjs && python3 tests/round10-browser-projects.integration.py && python3 tools/round10-host-projects.py",
+    "test:round12": "npm run build && node --test tests/round12.test.mjs && python3 tests/round12-browser-runtime.integration.py && python3 tests/round12-workbench-ui.integration.py && python3 tools/test-round12-pty.py",
+    "test:full-r1-r10": "bash tools/run-full-regression-r1-r10.sh",
+    "status:derive": "node tools/derive-capability-status.mjs",
+    "verify:director": "node tools/verify-director.mjs",
+    "verify:browser": "node tools/verify-browser.mjs",
+    "test:r14:phase-a": "npm run build && node tools/run-r14-phase-a-suites.mjs && python3 tests/test-r14-pty-websocket.py",
+    "test:r14:pty-websocket": "python3 tests/test-r14-pty-websocket.py",
+    "test:full-r14": "npm run build && node tools/run-r14-full-regression.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}

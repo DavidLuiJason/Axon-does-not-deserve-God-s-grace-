@@ -1,0 +1,38 @@
+[
+  {
+    "id": "R14-WP00-NPM-CI",
+    "suite": "clean-install",
+    "capability": "reproducible-clean-install",
+    "status": "BLOCKED",
+    "command": "npm ci --ignore-scripts --no-audit --no-fund --offline",
+    "exitCode": 1,
+    "durationMs": null,
+    "hostFingerprint": "15c2681736cce035",
+    "reason": "Offline npm ci failed ENOTCACHED because the TypeScript 5.8.3 tarball has no cached response. Online registry probe failed DNS resolution: Could not resolve host: registry.npmjs.org. No verified integrity hash or clean-install proof is available.",
+    "grade": "T1"
+  },
+  {
+    "id": "R14-WP00-CURRENT-TS",
+    "suite": "typescript-compatibility",
+    "capability": "typescript-current-version-compatibility",
+    "status": "NOT RUN",
+    "command": "Not run: registry unavailable; only pinned TypeScript 5.8.3 was available locally.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "15c2681736cce035",
+    "reason": "Current TypeScript package could not be fetched.",
+    "grade": "T1"
+  },
+  {
+    "id": "R14-WP00-ANDROID",
+    "suite": "android-host",
+    "capability": "android-native-host",
+    "status": "NOT RUN",
+    "command": "Not run: no Android device/build host available.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "15c2681736cce035",
+    "reason": "Android host/device evidence not supplied.",
+    "grade": "T3"
+  }
+]

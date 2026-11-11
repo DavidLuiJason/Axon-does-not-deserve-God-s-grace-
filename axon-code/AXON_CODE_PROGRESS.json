@@ -1,0 +1,364 @@
+{
+  "round": 14,
+  "project": "AXON Code only; AXON main app is out of scope",
+  "baseline": {
+    "archive": "AXON_CODE_v1_0_ROUND12_BUILD (1).zip",
+    "sha256": "f0482b17075b779481d19b1c815215af698eccbdb9e3e16413f58c54fef2becd",
+    "archiveIntegrity": "PASS",
+    "archiveFiles": 425,
+    "historicalSha256Entries": 424,
+    "historicalSha256Verified": 424,
+    "historicalSha256Mismatches": 0
+  },
+  "phaseA": "BLOCKED",
+  "workPackages": {
+    "WP0": {
+      "state": "BLOCKED",
+      "tier": "T1",
+      "summary": "Round 12 baseline frozen. TypeScript 5.8.3 pinned; PTY exit/signal race fixed; shell environment allow-listed; hardened loopback WebSocket bridge built and tested with one-time random token, exact Origin/Host checks, 64 KiB frame cap and 60-message/10-second rate limit. Clean npm ci remains blocked and current TypeScript compatibility is NOT RUN.",
+      "filesChanged": [
+        "package.json",
+        "package-lock.json",
+        "requirements-linux-pty.txt",
+        "src/runtime/sandboxedLanguageRuntime.ts",
+        "tools/linux-pty-provider.py",
+        "tools/test-round12-pty.py",
+        "tools/linux-pty-websocket-bridge.py",
+        "tests/r14-wp00-baseline.test.mjs",
+        "tests/test-r14-pty-websocket.py",
+        "tools/run-r14-phase-a-suites.mjs"
+      ],
+      "testsAdded": 16,
+      "testsPassed": 16,
+      "negativeTests": 10,
+      "mutantCaught": true,
+      "blockers": [
+        "npm ci --offline exited 1 with ENOTCACHED: TypeScript 5.8.3 tarball has no cached response. Online registry probe exited 6: Could not resolve host: registry.npmjs.org. The lockfile has no verified integrity hash.",
+        "Current TypeScript compatibility is NOT RUN."
+      ]
+    },
+    "WP1": {
+      "state": "DONE",
+      "tier": "T1",
+      "summary": "JSON-only AXON Code gateway contract, scoped capability reads, machine-result-derived capability registry and registry-driven UI panel implemented.",
+      "filesChanged": [
+        "src/gateway/axonCodeGateway.ts",
+        "tools/derive-capability-status.mjs",
+        "docs/CAPABILITY_REGISTRY.json",
+        "ui/index.html",
+        "ui/workbench.js",
+        "ui/workbench.css",
+        "tests/r14-wp01-gateway-registry.test.mjs"
+      ],
+      "testsAdded": 10,
+      "testsPassed": 10,
+      "negativeTests": 6,
+      "mutantCaught": true
+    },
+    "WP2": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Added durable transaction-intent journal over the KeyValueStore, with before/after hashes and non-destructive recovery classification. Atomic workspace CAS, write-if-absent, tombstones and path safety are tested. Real IndexedDB reload persistence is NOT RUN because Chromium navigation is blocked by host policy.",
+      "filesChanged": [
+        "src/storage/indexedDbWorkspaceFileStore.ts",
+        "src/storage/indexedDbStore.ts",
+        "src/storage/workspaceTransactionJournal.ts",
+        "tests/r14-wp02-workspace.test.mjs",
+        "tests/r14-wp02-wp12-browser.integration.py",
+        "results/r14-wp02-wp12-browser.json"
+      ],
+      "testsAdded": 10,
+      "testsPassed": 10,
+      "negativeTests": 6,
+      "mutantCaught": true,
+      "blockers": [
+        "Real Chromium IndexedDB reload test NOT RUN: net::ERR_BLOCKED_BY_ADMINISTRATOR when navigating to the local test origin.",
+        "Android SAF persisted URI grants, desktop filesystem provider and SFTP provider are not implemented in this phase."
+      ]
+    },
+    "WP5": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Restricted-by-default trust and exact-request/project/action single-use approvals remain tested. Redaction now has a central telemetry boundary for diagnostics, structured logs, crash reports and diagnostic exports, in addition to project export, execution output and evidence. CPU/memory/process/disk/network quota enforcement and provider isolation-grade enforcement remain incomplete.",
+      "filesChanged": [
+        "src/security/workspaceTrust.ts",
+        "src/security/secretRedactor.ts",
+        "src/runtime/sandboxedLanguageRuntime.ts",
+        "src/workspace/projectExport.ts",
+        "src/verification/evidenceLedger.ts",
+        "tests/r14-wp05-trust.test.mjs",
+        "tests/r14-wp05-security.test.mjs",
+        "src/security/securityArtifactRedaction.ts",
+        "src/security/safeTelemetry.ts",
+        "src/diagnostics.ts",
+        "src/analysis/diagnosticAdapters.ts",
+        "src/verification/evidenceLedger.ts",
+        "src/security/secretRedactor.ts",
+        "tests/r14-wp05-security-completion.test.mjs",
+        "src/index.ts"
+      ],
+      "testsAdded": 31,
+      "testsPassed": 31,
+      "negativeTests": 17,
+      "mutantsCaught": 3,
+      "blockers": [
+        "Per-provider isolation grades and host-enforced CPU, memory, process-count and disk quotas remain incomplete."
+      ]
+    },
+    "WP12": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Persistent job versioning, checkpoints, recovery coordinator and resource governor behavior tested. Checkpoint hash, runtime and project fingerprint checks prevent unsafe automatic resume. Real IndexedDB reload and Android force-stop/device recovery remain NOT RUN.",
+      "filesChanged": [
+        "src/jobs/persistentJobs.ts",
+        "src/jobs/recoveryCoordinator.ts",
+        "src/resources/resourceGovernor.ts",
+        "tests/r14-wp12-recovery.test.mjs",
+        "tests/r14-wp02-wp12-browser.integration.py",
+        "results/r14-wp02-wp12-browser.json"
+      ],
+      "testsAdded": 12,
+      "testsPassed": 12,
+      "negativeTests": 6,
+      "mutantCaught": true,
+      "blockers": [
+        "Real IndexedDB job/checkpoint persistence across browser reload NOT RUN due host navigation policy.",
+        "Android force-stop/restart evidence NOT RUN; host-supported pause/suspend semantics still require provider integration."
+      ]
+    },
+    "WP14": {
+      "state": "BLOCKED",
+      "tier": "T1",
+      "summary": "Director and browser verification commands, source manifest, checksums, merge set and machine-readable result files prepared. Director verification is BLOCKED by clean npm ci evidence; browser persistence is NOT RUN.",
+      "filesChanged": [
+        "tools/verify-director.mjs",
+        "tools/verify-browser.mjs",
+        "tools/derive-capability-status.mjs",
+        "tools/run-r14-phase-a-suites.mjs",
+        "MERGE_SET.txt",
+        "FILES_MANIFEST.txt",
+        "SHA256SUMS.txt",
+        "VERIFY_SUMMARY.json",
+        "docs/CAPABILITY_REGISTRY.json",
+        "docs/ROUND14_IMPLEMENTATION_REPORT.md"
+      ],
+      "testsAdded": 0,
+      "testsPassed": 0,
+      "negativeTests": 0,
+      "mutantCaught": false,
+      "blockers": [
+        "Clean extraction plus npm ci cannot be proven without the exact verified TypeScript package integrity and registry/cache availability.",
+        "One real IndexedDB browser suite remains NOT RUN."
+      ]
+    },
+    "WP03": {
+      "state": "PARTIAL",
+      "tier": "T3",
+      "summary": "C3 Android Capacitor provider contract and Kotlin plugin source added; fake-host contract tests pass. C5 CodeMirror 6 and xterm.js choices are fixed and strict integration contracts refuse textarea/fake-terminal fallbacks. Real package install/UI migration is BLOCKED by registry DNS failure and absent package tarballs. Android build/device and Android performance remain NOT RUN.",
+      "filesChanged": [
+        "src/runtime/androidHostProvider.ts",
+        "android/src/main/java/com/axoncode/host/AxonCodeHostPlugin.kt",
+        "src/workbench/editorEngineContracts.ts",
+        "tests/r14-wp03-android-host-contract.test.mjs",
+        "tests/r14-wp03-editor-engine-contract.test.mjs",
+        "docs/C5_ENGINE_ADOPTION.md",
+        "src/index.ts"
+      ],
+      "testsAdded": 12,
+      "testsPassed": 12,
+      "negativeTests": 6,
+      "mutantCaught": true,
+      "blockers": [
+        "Kotlin/Capacitor compilation and physical Android SAF tests NOT RUN; no Android SDK/device evidence.",
+        "CodeMirror 6/xterm.js packages unavailable locally; npm registry DNS resolution fails; actual UI migration and xterm-to-PTY integration BLOCKED."
+      ]
+    },
+    "WP04": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "A distinct real Pyodide CPython WebAssembly Worker adapter, verified offline-pack contract, install/removal interface, source/time/output limits and cancellation were added. Fake pack/worker tests pass. No real Pyodide assets are available, so the provider correctly stays unavailable and real CPython execution is BLOCKED.",
+      "filesChanged": [
+        "src/runtime/pyodideWorkerProvider.ts",
+        "tests/r14-wp04-pyodide-provider.test.mjs",
+        "docs/C3_C4_HOST_PROVIDER_STATUS.md",
+        "src/index.ts"
+      ],
+      "testsAdded": 8,
+      "testsPassed": 8,
+      "negativeTests": 4,
+      "mutantCaught": true,
+      "blockers": [
+        "No actual Pyodide distribution/asset pack exists in source or npm cache; registry DNS resolution failed. Real CPython runtime tests NOT RUN."
+      ]
+    }
+  },
+  "promptCorrections": {
+    "C1": {
+      "state": "BLOCKED",
+      "details": "TypeScript 5.8.3 is an exact required devDependency and package-lock exists. Clean npm ci and verified package integrity remain blocked by registry/cache availability; current TypeScript compatibility NOT RUN."
+    },
+    "C2": {
+      "state": "DONE",
+      "details": "PTY exit/signal race fixed; signal reported separately; shell environment allow-listed; loopback-only WebSocket bridge uses a one-time random token, exact Host/Origin checks, 64 KiB frame cap and rate limiting. Six live PTY/WebSocket integration checks pass."
+    },
+    "C3": {
+      "state": "PARTIAL",
+      "details": "Android host TypeScript contract and Kotlin Capacitor/SAF plugin source added; fake-host tests 8/8 pass. Android compile, plugin registration, persisted-grant/device read-write and native provider execution remain NOT RUN."
+    },
+    "C4": {
+      "state": "PARTIAL",
+      "details": "Real Pyodide CPython WebAssembly Worker adapter, offline pack verification and optional install/removal contracts added; 8/8 tests pass. No real Pyodide assets are present, so actual interpreter execution is BLOCKED and not imitated."
+    },
+    "C5": {
+      "state": "BLOCKED",
+      "details": "CodeMirror 6 and xterm.js fixed as the only accepted engines; strict integration contracts 4/4 pass and reject textarea/fake-terminal fallback. Actual packages, verified lock entries, UI migration, xterm/PTy connection and Android performance remain blocked/not run because registry DNS fails and packages are absent from cache."
+    },
+    "C6": {
+      "state": "DONE",
+      "details": "158 historical reports are under docs/history; MERGE_SET contains only mergeable files and excludes dist/history/node_modules. Final count/bytes are in VERIFY_SUMMARY.json."
+    },
+    "C7": {
+      "state": "DONE",
+      "details": "Machine-readable result rows include id, suite, capability, status, command, exitCode, durationMs and hostFingerprint; capability registry is derived from results/*.json."
+    },
+    "C8": {
+      "state": "DONE",
+      "details": "Ratchet floor remains 1,015; all current WP0/WP1/WP2/WP5/WP12 Node suites exceed 30% negative tests and contain deliberately broken mutants that their tests catch."
+    },
+    "C9": {
+      "state": "PARTIAL",
+      "details": "verify:director and verify:browser are implemented. Director run remains BLOCKED by clean-install proof; browser run has two PASS suites and one real IndexedDB persistence suite NOT RUN."
+    },
+    "C10": {
+      "state": "DONE",
+      "details": "Restricted-by-default workspace trust, single-use exact-request/project/action approvals, replay/cross-project/tampering/expiry refusal tests, and central redaction boundary for logs, diagnostics, exports and crash reports implemented. Existing archive attack tests remain green. Provider resource quotas/isolation grades remain a separate WP5 gap."
+    }
+  },
+  "latestEvidence": {
+    "nodeTests": {
+      "command": "npm run test:full-r14",
+      "exitCode": 0,
+      "testFiles": 31,
+      "tests": 1108,
+      "passed": 1108,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 15119
+    },
+    "pty": {
+      "command": "python3 tools/test-round12-pty.py",
+      "exitCode": 0,
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "ptyWebSocket": {
+      "command": "python3 tests/test-r14-pty-websocket.py",
+      "exitCode": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "phaseANodeSuites": {
+      "command": "npm run test:r14:phase-a",
+      "exitCode": 0,
+      "suites": {
+        "WP0": "10/10",
+        "WP1": "10/10",
+        "WP2": "10/10",
+        "WP3": "12/12",
+        "WP4": "8/8",
+        "WP5": "31/31",
+        "WP12": "12/12"
+      }
+    },
+    "browser": {
+      "command": "npm run verify:browser",
+      "exitCode": 0,
+      "passSuites": 2,
+      "notRunSuites": 1,
+      "failSuites": 0,
+      "notRunReason": "Real IndexedDB reload proof blocked by Chromium navigation policy."
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "typescript": "5.8.3 from host-global installation linked locally; not clean npm ci"
+    },
+    "wp5": {
+      "command": "node --test tests/r14-wp05-security.test.mjs tests/r14-wp05-trust.test.mjs",
+      "exitCode": 0,
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "negativeTests": 13,
+      "mutantsCaught": 2
+    },
+    "verifyDirector": {
+      "command": "npm run verify:director",
+      "exitCode": 2,
+      "status": "BLOCKED",
+      "nodeTests": 1108,
+      "passed": 1108,
+      "failed": 0,
+      "skipped": 0,
+      "typecheckExitCode": 0,
+      "buildExitCode": 0,
+      "manifestEntries": 354,
+      "hashEntries": 355,
+      "hashMismatches": 0,
+      "mergeFiles": 195,
+      "mergeBytes": 1514822,
+      "ratchetMinimum": 1015,
+      "ratchetActual": 1108,
+      "reason": "All local checks passed except clean npm ci proof; registry DNS failed and TypeScript 5.8.3 tarball is not cached. This is not Claude/Director approval.",
+      "registryCapabilities": 21
+    },
+    "cleanInstall": {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund --offline",
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "error": "ENOTCACHED: TypeScript 5.8.3 tarball has no cached response."
+    },
+    "registryConnectivity": {
+      "command": "curl -I --max-time 8 https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz",
+      "exitCode": 6,
+      "status": "BLOCKED",
+      "error": "Could not resolve host: registry.npmjs.org"
+    }
+  },
+  "lastCommand": {
+    "command": "npm run test:full-r14",
+    "exitCode": 0,
+    "result": "31 test files passed; 1,108/1,108 tests passed, zero failed and zero skipped."
+  },
+  "resumeRule": "Use this updated tree and ledger. C10 is DONE. C3 and C4 provider sources/contracts are PARTIAL and require host/real-pack proof. C5 is BLOCKED on registry/package acquisition. Do not mark Round 14 complete until all remaining WP exit criteria and clean-install verification are met.",
+  "directorVerification": {
+    "date": "2026-11-09",
+    "by": "Director (Claude), independent run on a clean extraction",
+    "reproduced": {
+      "hashes": "all 355 matched before the Director fixes",
+      "nodeTests": "1108 of 1108 pass (TypeScript 6.0.3 linked, no network)",
+      "mergeSet": "195 files, 1.5 MB, inside the 600 file and 8 MB budget",
+      "importBoundary": "passes; merged under axon-code/ the main repo snapshot, guard and brainBoundary pass"
+    },
+    "directorFixes": [
+      "C1: three TypeScript 6 type errors fixed (packageManager.ts sha256Hex copies into a fresh Uint8Array; hostRuntimeSuite.ts signature copy; zipExtractor.ts type-only cast); typecheck and build now clean on 6.0.3; pinned 5.8.3 NOT RUN",
+      "C2: tools/linux-pty-provider.py exit_status(): at PTY end-of-stream the child was read with poll() before it could be reaped, so the exit event could carry exitCode null (R12-PTY-01 failed in the Director sandbox, 3 of 4); now waits up to 2 s; 4 of 4 pass three times",
+      "gateway: validateAxonCodeGatewayRequest never throws (a throwing-getter object made it throw); fuzz of 3,277 hostile cases: no wrong acceptance of a non-string field, no throw"
+    ],
+    "notRunByDirector": [
+      "npm ci (no network)",
+      "verify:browser and every Chromium suite",
+      "tests/test-r14-pty-websocket.py (python websockets package not installable here)",
+      "TypeScript 5.8.3",
+      "any Android code"
+    ],
+    "stillOpen": [
+      "WP0 clean npm ci in the cloud",
+      "WP2 WP5 WP12 WP14 partial per this ledger",
+      "WP3 WP4 WP6 to WP13 not complete; CodeMirror, xterm.js and Pyodide blocked by registry access (owner must supply a vendor pack)"
+    ]
+  }
+}

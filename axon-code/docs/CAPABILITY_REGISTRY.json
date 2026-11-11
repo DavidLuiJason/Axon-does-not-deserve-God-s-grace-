@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "results/*.json",
+  "resultSetSha256": "641ba02568bab96db31369240108d8f6903416cf2fbfbafa808ae0500a78472c",
+  "capabilityCount": 21,
+  "capabilities": [
+    {
+      "id": "android-and-editor-host-contracts",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP03-01",
+        "R14-WP03-02",
+        "R14-WP03-03",
+        "R14-WP03-04",
+        "R14-WP03-05",
+        "R14-WP03-06",
+        "R14-WP03-07",
+        "R14-WP03-08",
+        "R14-WP03-09",
+        "R14-WP03-10",
+        "R14-WP03-11",
+        "R14-WP03-12"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-tests.json"
+      ]
+    },
+    {
+      "id": "android-capacitor-provider",
+      "status": "NOT RUN",
+      "grade": "T3",
+      "evidenceIds": [
+        "R14-C3-ANDROID-DEVICE"
+      ],
+      "resultFiles": [
+        "results/r14-host-provider-gates.json"
+      ]
+    },
+    {
+      "id": "android-native-host",
+      "status": "NOT RUN",
+      "grade": "T3",
+      "evidenceIds": [
+        "R14-WP00-ANDROID"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-blockers.json"
+      ]
+    },
+    {
+      "id": "axon-code-brain-gateway-contract",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP01-1",
+        "R14-WP01-2",
+        "R14-WP01-3",
+        "R14-WP01-4",
+        "R14-WP01-5",
+        "R14-WP01-6",
+        "R14-WP01-7",
+        "R14-WP01-8",
+        "R14-WP01-9",
+        "R14-WP01-10",
+        "R14-WP01-01",
+        "R14-WP01-02",
+        "R14-WP01-03",
+        "R14-WP01-04",
+        "R14-WP01-05",
+        "R14-WP01-06",
+        "R14-WP01-07",
+        "R14-WP01-08",
+        "R14-WP01-09",
+        "R14-WP01-10"
+      ],
+      "resultFiles": [
+        "results/r14-wp01-gateway.json",
+        "results/r14-wp01-tests.json"
+      ]
+    },
+    {
+      "id": "chromium-browser-verification",
+      "status": "TESTED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-ROUND12-BROWSER-RUNTIME-INTEGRATION-PY",
+        "R14-ROUND12-WORKBENCH-UI-INTEGRATION-PY"
+      ],
+      "resultFiles": [
+        "results/r14-browser-verification.json"
+      ]
+    },
+    {
+      "id": "codemirror6-android-performance",
+      "status": "NOT RUN",
+      "grade": "T3",
+      "evidenceIds": [
+        "R14-C5-ANDROID-PERFORMANCE"
+      ],
+      "resultFiles": [
+        "results/r14-host-provider-gates.json"
+      ]
+    },
+    {
+      "id": "codemirror6-xtermjs-workbench",
+      "status": "BLOCKED",
+      "grade": "T3",
+      "evidenceIds": [
+        "R14-C5-CODEMIRROR-XTERM"
+      ],
+      "resultFiles": [
+        "results/r14-host-provider-gates.json"
+      ]
+    },
+    {
+      "id": "dependency-and-pty-regression",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-NODE-1",
+        "R14-WP00-NODE-2",
+        "R14-WP00-NODE-3",
+        "R14-WP00-NODE-4",
+        "R14-WP00-NODE-5",
+        "R14-WP00-NODE-6",
+        "R14-WP00-01",
+        "R14-WP00-02",
+        "R14-WP00-03",
+        "R14-WP00-04",
+        "R14-WP00-05",
+        "R14-WP00-06",
+        "R14-WP00-07",
+        "R14-WP00-08",
+        "R14-WP00-09",
+        "R14-WP00-10"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-node-tests.json",
+        "results/r14-wp00-tests.json"
+      ]
+    },
+    {
+      "id": "director-verification",
+      "status": "BLOCKED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP14-DIRECTOR-VERIFY-LATEST"
+      ],
+      "resultFiles": [
+        "results/r14-wp14-verification.json"
+      ]
+    },
+    {
+      "id": "durable-workspace-and-transaction-journal",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP02-01",
+        "R14-WP02-02",
+        "R14-WP02-03",
+        "R14-WP02-04",
+        "R14-WP02-05",
+        "R14-WP02-06",
+        "R14-WP02-07",
+        "R14-WP02-08",
+        "R14-WP02-09",
+        "R14-WP02-10"
+      ],
+      "resultFiles": [
+        "results/r14-wp02-tests.json"
+      ]
+    },
+    {
+      "id": "full-retained-node-regression",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-FULL-FOUNDATION",
+        "R14-FULL-PRER4-COMPLETION",
+        "R14-FULL-PRER4-REMEDIATION",
+        "R14-FULL-PRER5-EXPANSION",
+        "R14-FULL-R14-WP00-BASELINE",
+        "R14-FULL-R14-WP01-GATEWAY-REGISTRY",
+        "R14-FULL-R14-WP02-WORKSPACE",
+        "R14-FULL-R14-WP03-ANDROID-HOST-CONTRACT",
+        "R14-FULL-R14-WP03-EDITOR-ENGINE-CONTRACT",
+        "R14-FULL-R14-WP04-PYODIDE-PROVIDER",
+        "R14-FULL-R14-WP05-SECURITY-COMPLETION",
+        "R14-FULL-R14-WP05-SECURITY",
+        "R14-FULL-R14-WP05-TRUST",
+        "R14-FULL-R14-WP12-RECOVERY",
+        "R14-FULL-ROUND1-150",
+        "R14-FULL-ROUND10-DIRECT-USER",
+        "R14-FULL-ROUND10-PROJECT-WORKLOADS",
+        "R14-FULL-ROUND12",
+        "R14-FULL-ROUND2-COMPLEX",
+        "R14-FULL-ROUND3-ADAPTIVE-AND-USECASES",
+        "R14-FULL-ROUND4-FOUNDATION",
+        "R14-FULL-ROUND5-RESOURCE-RECOVERY",
+        "R14-FULL-ROUND5-TOOLCHAIN-DIAGNOSTICS",
+        "R14-FULL-ROUND6-END-TO-END",
+        "R14-FULL-ROUND7-DEEP-FORENSIC",
+        "R14-FULL-ROUND7-WORKSPACE-ACTIONS",
+        "R14-FULL-ROUND9-ENVIRONMENT",
+        "R14-FULL-ROUND9-EXECUTION",
+        "R14-FULL-ROUND9-INTELLIGENCE",
+        "R14-FULL-ROUND9-ROUTING-EVIDENCE",
+        "R14-FULL-ROUND9-WORKBENCH",
+        "R14-FULL-REGRESSION-SUMMARY"
+      ],
+      "resultFiles": [
+        "results/r14-full-regression-per-file.json",
+        "results/r14-full-regression-summary.json"
+      ]
+    },
+    {
+      "id": "hardened-loopback-pty-bridge",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-WS-ORIGIN",
+        "R14-WP00-WS-HOST",
+        "R14-WP00-WS-TOKEN",
+        "R14-WP00-WS-PTY",
+        "R14-WP00-WS-FRAME",
+        "R14-WP00-WS-RATE"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-websocket-tests.json"
+      ]
+    },
+    {
+      "id": "indexeddb-job-recovery",
+      "status": "NOT RUN",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-WP12-IDB-RECOVERY"
+      ],
+      "resultFiles": [
+        "results/r14-wp02-wp12-browser.json"
+      ]
+    },
+    {
+      "id": "indexeddb-reload-persistence",
+      "status": "NOT RUN",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-R14-WP02-WP12-BROWSER-INTEGRATION-PY",
+        "R14-WP02-IDB-RELOAD"
+      ],
+      "resultFiles": [
+        "results/r14-browser-verification.json",
+        "results/r14-wp02-wp12-browser.json"
+      ]
+    },
+    {
+      "id": "linux-pty-provider",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-LINUX-PTY"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-regression.json"
+      ]
+    },
+    {
+      "id": "persistent-jobs-and-crash-recovery",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP12-01",
+        "R14-WP12-02",
+        "R14-WP12-03",
+        "R14-WP12-04",
+        "R14-WP12-05",
+        "R14-WP12-06",
+        "R14-WP12-07",
+        "R14-WP12-08",
+        "R14-WP12-09",
+        "R14-WP12-10",
+        "R14-WP12-11",
+        "R14-WP12-12"
+      ],
+      "resultFiles": [
+        "results/r14-wp12-tests.json"
+      ]
+    },
+    {
+      "id": "pyodide-cpython-wasm-worker",
+      "status": "BLOCKED",
+      "grade": "MIXED",
+      "evidenceIds": [
+        "R14-C4-PYODIDE-PACK",
+        "R14-WP04-01",
+        "R14-WP04-02",
+        "R14-WP04-03",
+        "R14-WP04-04",
+        "R14-WP04-05",
+        "R14-WP04-06",
+        "R14-WP04-07",
+        "R14-WP04-08"
+      ],
+      "resultFiles": [
+        "results/r14-host-provider-gates.json",
+        "results/r14-wp04-tests.json"
+      ]
+    },
+    {
+      "id": "reproducible-clean-install",
+      "status": "BLOCKED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-NPM-CI"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-blockers.json"
+      ]
+    },
+    {
+      "id": "round12-node-regression",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-FULL-NODE-REGRESSION"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-regression.json"
+      ]
+    },
+    {
+      "id": "typescript-current-version-compatibility",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP00-CURRENT-TS"
+      ],
+      "resultFiles": [
+        "results/r14-wp00-blockers.json"
+      ]
+    },
+    {
+      "id": "workspace-trust-and-secret-redaction",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP05-01",
+        "R14-WP05-02",
+        "R14-WP05-03",
+        "R14-WP05-04",
+        "R14-WP05-05",
+        "R14-WP05-06",
+        "R14-WP05-07",
+        "R14-WP05-08",
+        "R14-WP05-09",
+        "R14-WP05-10",
+        "R14-WP05-11",
+        "R14-WP05-12",
+        "R14-WP05-13",
+        "R14-WP05-14",
+        "R14-WP05-15",
+        "R14-WP05-16",
+        "R14-WP05-17",
+        "R14-WP05-18",
+        "R14-WP05-19",
+        "R14-WP05-20",
+        "R14-WP05-21",
+        "R14-WP05-22",
+        "R14-WP05-23",
+        "R14-WP05-24",
+        "R14-WP05-25",
+        "R14-WP05-26",
+        "R14-WP05-27",
+        "R14-WP05-28",
+        "R14-WP05-29",
+        "R14-WP05-30",
+        "R14-WP05-31"
+      ],
+      "resultFiles": [
+        "results/r14-wp05-tests.json"
+      ]
+    }
+  ]
+}

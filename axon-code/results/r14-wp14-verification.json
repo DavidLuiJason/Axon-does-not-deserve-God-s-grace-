@@ -1,0 +1,23 @@
+[
+  {
+    "id": "R14-WP14-DIRECTOR-VERIFY-LATEST",
+    "suite": "director-verification",
+    "capability": "director-verification",
+    "status": "BLOCKED",
+    "command": "npm run verify:director",
+    "exitCode": 2,
+    "durationMs": null,
+    "hostFingerprint": "fda2d54c458b84a6",
+    "reason": "Local Director verifier completed: typecheck/build and all 1,108 Node tests passed; 354 manifest entries and 355 hashes verified with zero mismatches; import boundary, honesty, size budget and ratchet passed. Overall BLOCKED only because clean npm ci cannot be proven while TypeScript 5.8.3 is uncached and registry DNS fails.",
+    "grade": "T1",
+    "nodeTests": 1108,
+    "nodeTestsPassed": 1108,
+    "nodeTestsFailed": 0,
+    "nodeTestsSkipped": 0,
+    "hashEntries": 355,
+    "hashMismatches": 0,
+    "manifestEntries": 354,
+    "mergeFiles": 195,
+    "mergeBytes": 1514822
+  }
+]

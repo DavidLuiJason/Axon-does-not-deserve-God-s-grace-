@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111820">
+  <title>AXON Code Workbench</title>
+  <link rel="stylesheet" href="./workbench.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">A</span><div><strong>AXON Code</strong><small>Independent development workbench</small></div></div>
+      <div class="project-context"><span class="status-dot"></span><span id="projectName">No project open</span><span class="badge" id="trustBadge">UNTRUSTED</span></div>
+      <div class="top-actions">
+        <button id="openProjectButton" class="button ghost">Open / Import</button>
+        <button id="newProjectButton" class="button primary">New Project</button>
+        <button id="settingsButton" class="icon-button" aria-label="Workbench information" title="Workbench information">⋯</button>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <aside class="sidebar" aria-label="Project explorer">
+        <div class="panel-heading"><span>EXPLORER</span><div class="mini-actions"><button id="newFileButton" title="New file" aria-label="New file">＋</button><button id="refreshButton" title="Refresh files" aria-label="Refresh files">↻</button></div></div>
+        <div class="project-label" id="explorerProject">No project</div>
+        <div id="fileTree" class="file-tree"><div class="empty-state">Create or import a project to begin.</div></div>
+        <div class="sidebar-footer"><button id="importFilesButton" class="button subtle full">Add files</button><input id="fileInput" type="file" multiple hidden></div>
+      </aside>
+
+      <section class="editor-area">
+        <div class="toolbar">
+          <div class="toolbar-group"><button id="saveButton" class="button small primary" disabled>Save</button><button id="saveAllButton" class="button small ghost" disabled>Save all</button><button id="deleteButton" class="button small danger-outline" disabled>Delete</button><button id="undoDeleteButton" class="button small ghost" disabled>Undo delete</button></div>
+          <div class="toolbar-group"><button id="previewButton" class="button small ghost" disabled>Preview web</button><button id="exportButton" class="button small ghost" disabled>Export</button><button id="paletteButton" class="button small ghost">Command palette</button></div>
+        </div>
+        <div id="tabs" class="tabs" aria-label="Open files"><div class="tab-placeholder">No open files</div></div>
+        <div class="editor-wrap">
+          <div class="editor-gutter" id="lineNumbers">1</div>
+          <textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Source editor" placeholder="Open or create a file to start editing…" disabled></textarea>
+        </div>
+        <div class="quicktools" aria-label="Editor quick tools">
+          <button data-insert="  ">Indent</button><button data-insert="{}">{ }</button><button data-insert="()">( )</button><button data-insert="[]">[ ]</button><button data-insert="&quot;&quot;">&quot; &quot;</button><button data-insert="'&#39;">' '</button><button data-insert="=>">⇒</button><button data-insert=";">;</button><button data-insert="// ">//</button><button data-insert="\n">↵</button>
+        </div>
+        <div class="statusbar"><span id="editorStatus">Ready</span><span id="cursorStatus">Ln 1, Col 1</span><span id="languageStatus">Plain text</span><span id="encodingStatus">UTF-8</span></div>
+      </section>
+
+      <aside class="right-panel" aria-label="Development panels">
+        <div class="panel-tabs"><button class="panel-tab active" data-panel="output">Output</button><button class="panel-tab" data-panel="problems">Problems</button><button class="panel-tab" data-panel="preview">Preview</button><button class="panel-tab" data-panel="resources">Resources</button><button class="panel-tab" data-panel="terminal">Terminal</button><button class="panel-tab" data-panel="capabilities">Capabilities</button></div>
+        <section class="panel-content" id="outputPanel"><div class="panel-title">Workbench output</div><pre id="outputText">AXON Code is ready. Your projects are stored locally in this browser profile.
+
+AXON Brain is not required to use this workbench.</pre></section>
+        <section class="panel-content hidden" id="problemsPanel"><div class="panel-title">Problems</div><div id="problemsText" class="notice">No project analysis provider is connected in this standalone browser shell. Compiler diagnostics are available through the AXON Code TypeScript services when hosted by the application.</div></section>
+        <section class="panel-content hidden" id="previewPanel"><div class="panel-title">Web preview <span class="badge subtle-badge">opaque origin</span></div><div class="notice">Preview runs in a sandboxed iframe with a restrictive Content Security Policy. It is not an operating-system security sandbox.</div><iframe id="previewFrame" title="Project preview" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></section>
+        <section class="panel-content hidden" id="resourcesPanel"><div class="panel-title">Resource monitor</div><div id="resourceText" class="resource-grid"><div><strong>Browser memory</strong><span>Checking…</span></div><div><strong>Storage</strong><span>Checking…</span></div><div><strong>Host runtime</strong><span>Not connected</span></div><div><strong>Thermal / battery</strong><span>Unavailable in browser</span></div></div><div class="notice">Values unavailable to this browser are shown as unavailable, not estimated as live measurements.</div></section>
+        <section class="panel-content hidden" id="terminalPanel"><div class="panel-title">Terminal <span class="badge">HOST REQUIRED</span></div><div class="notice warning">A real terminal requires a host process provider. This standalone browser interface does not fake a shell or execute commands in the page. Round 12 includes an experimental Linux PTY provider separately.</div><pre id="terminalStatus">No terminal host connected.
+
+To inspect the provider: python3 tools/linux-pty-provider.py --help</pre></section>
+        <section class="panel-content hidden" id="capabilitiesPanel"><div class="panel-title">Capability registry</div><div id="capabilityList" class="notice">Loading machine-derived capability statuses…</div></section>
+      </aside>
+    </main>
+  </div>
+
+  <input id="importProjectInput" type="file" multiple webkitdirectory directory hidden>
+  <dialog id="projectDialog"><form method="dialog"><h2>Create project</h2><label>Project name<input id="projectNameInput" maxlength="80" required placeholder="My project"></label><div class="dialog-actions"><button class="button ghost" value="cancel">Cancel</button><button id="createProjectConfirm" class="button primary" value="confirm">Create project</button></div></form></dialog>
+  <dialog id="newFileDialog"><form method="dialog"><h2>New file</h2><label>Project-relative path<input id="newFilePath" maxlength="240" required placeholder="src/main.js"></label><div class="dialog-actions"><button class="button ghost" value="cancel">Cancel</button><button id="createFileConfirm" class="button primary" value="confirm">Create file</button></div></form></dialog>
+  <dialog id="paletteDialog"><form method="dialog"><h2>Command palette</h2><input id="paletteSearch" autocomplete="off" placeholder="Type a command…"><div id="paletteCommands" class="palette-commands"></div><div class="dialog-actions"><button class="button ghost" value="cancel">Close</button></div></form></dialog>
+  <dialog id="exportDialog"><form method="dialog"><h2>Export project</h2><p>Export the currently selected project's text files. Exports may contain source code and secrets; inspect the selection before sharing.</p><label>Format<select id="exportFormat"><option value="zip">ZIP archive</option><option value="json">JSON</option><option value="md">Markdown</option><option value="txt">TXT</option></select></label><div class="dialog-actions"><button class="button ghost" value="cancel">Cancel</button><button id="exportConfirm" class="button primary" value="confirm">Export</button></div></form></dialog>
+  <dialog id="infoDialog"><form method="dialog"><h2>AXON Code Workbench</h2><p>This is the direct-user browser workspace. It operates without AXON Brain and stores project text in browser IndexedDB.</p><ul><li>Direct editing and local project file operations are available.</li><li>Web preview uses a restricted browser iframe.</li><li>OS terminal, native execution, Android builds, debugger and remote workers require real host providers.</li><li>Do not treat browser preview as proof of native code security.</li></ul><div class="dialog-actions"><button class="button primary" value="close">Close</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./workbench.js"></script>
+</body>
+</html>
