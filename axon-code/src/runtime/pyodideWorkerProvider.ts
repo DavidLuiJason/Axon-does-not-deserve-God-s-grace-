@@ -26,7 +26,7 @@ export async function removeOfflinePyodidePack(store: OfflineRuntimePackStore, i
 export interface PyodideWorkerLike { postMessage(message: unknown): void; terminate(): void; addEventListener(type: 'message' | 'error', listener: (event: any) => void, options?: unknown): void; removeEventListener?(type: 'message' | 'error', listener: (event: any) => void): void; }
 export interface PyodideWorkerFactory { create(source: string): PyodideWorkerLike; }
 
-const REQUIRED_FILES = ['pyodide.js', 'pyodide.asm.js', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json'];
+const REQUIRED_FILES = ['pyodide.js', 'pyodide.asm.mjs', 'pyodide.asm.wasm', 'python_stdlib.zip', 'pyodide-lock.json'];
 const MAX_SOURCE_BYTES = 512 * 1024;
 const MAX_PACK_FILE_BYTES = 64 * 1024 * 1024;
 

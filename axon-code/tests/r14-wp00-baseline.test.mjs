@@ -9,22 +9,22 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const lock = JSON.parse(fs.readFileSync(path.join(root, 'package-lock.json'), 'utf8'));
 const pty = fs.readFileSync(path.join(root, 'tools/linux-pty-provider.py'), 'utf8');
 
-test('R14 WP0 pins TypeScript as an exact development dependency', () => {
-  assert.equal(pkg.devDependencies?.typescript, '5.8.3');
+test('R14 WP0 pins TypeScript as an exact production dependency', () => {
+  assert.equal(pkg.dependencies?.typescript, '5.8.3');
   assert.equal(pkg.optionalDependencies?.typescript, undefined);
 });
 
 test('R14 WP0 lockfile resolves the same exact TypeScript version', () => {
   assert.equal(lock.lockfileVersion, 3);
   assert.equal(lock.packages?.['node_modules/typescript']?.version, '5.8.3');
-  assert.equal(lock.packages?.['']?.devDependencies?.typescript, '5.8.3');
+  assert.equal(lock.packages?.['']?.dependencies?.typescript, '5.8.3');
 });
 
 test('R14 WP0 rejects a dependency/lockfile version mismatch', () => {
   const mutantLockVersion = '5.8.2';
-  assert.notEqual(mutantLockVersion, pkg.devDependencies.typescript);
+  assert.notEqual(mutantLockVersion, pkg.dependencies.typescript);
   assert.throws(() => {
-    assert.equal(mutantLockVersion, pkg.devDependencies.typescript);
+    assert.equal(mutantLockVersion, pkg.dependencies.typescript);
   }, { name: 'AssertionError' });
 });
 
@@ -79,4 +79,14 @@ test('R14 WP0 catches a deliberately broken WebSocket Host-check mutant', () => 
   const allowed = new Set(['127.0.0.1:3000']);
   assert.equal(secureHostCheck(['evil.test'], allowed), false);
   assert.throws(() => assert.equal(brokenMutant(['evil.test'], allowed), false), { name: 'AssertionError' });
+});
+
+test('R14 C1 dependency migration is documented with a rollback path', () => {
+  const note = fs.readFileSync(path.join(root, 'docs/R14_DEPENDENCY_MIGRATION.md'), 'utf8');
+  assert.match(note, /typescript.*dependencies/i);
+  assert.match(note, /Rollback:/);
+  assert.match(note, /No hash was invented/);
+  // Deliberately broken mutant: silently omitting the rollback instructions must be caught.
+  const mutant = note.replace(/Rollback:[\s\S]*/, '');
+  assert.throws(() => assert.match(mutant, /Rollback:/), { name: 'AssertionError' });
 });

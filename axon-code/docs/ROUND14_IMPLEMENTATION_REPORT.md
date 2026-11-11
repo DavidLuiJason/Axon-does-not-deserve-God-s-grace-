@@ -138,3 +138,37 @@ Dashed connections represent provider source/contracts that are not yet proven o
 7. Claude/Director must independently run the prescribed verification commands from a clean extraction. ChatGPT's local verification is not a substitute for Director approval.
 
 **Conclusion:** C10 is complete for the specified trust/approval/redaction requirements. C3 and C4 have been started with real provider source/contracts and are awaiting host/runtime proof. C5 has fixed engine choices and tested integration contracts but is blocked before actual library integration. C1 remains blocked by a demonstrable DNS/cache failure. This is a full-source checkpoint, not a final finished AXON Code release.
+
+## 7. Checkpoint continuation — 2026-11-11
+
+This section supersedes earlier C4/C5 statements above where they say that the packages were unavailable. The newly supplied `AXON_CODE_VENDOR_PACK_FINAL.zip` contains exact package payloads and lock metadata; those files have now been added to the source project's dependency manifest/lockfile.
+
+### Dependency and engine work completed in this continuation
+- `typescript` is now an exact production dependency (`5.8.3`) rather than a development dependency, as C1 requires. The TypeScript lock entry still lacks a verified integrity value; no value was invented. Therefore clean `npm ci` and C1 remain **BLOCKED**.
+- Added the vendor's exact CodeMirror 6, xterm.js, and Pyodide versions plus all transitive lock entries and integrity hashes supplied by the vendor lockfile.
+- Added `ui/engineBootstrap.js`, `ui/engines.js`, and `ui/terminalEndpoint.js`. The app now mounts a real CodeMirror 6 `EditorView` and xterm.js `Terminal`/`FitAddon`; the old textarea is hidden and retained only as a compatibility buffer. If the engine bootstrap is absent, the UI throws rather than falling back to a visible textarea or simulated terminal.
+- The xterm adapter connects only to `ws://127.0.0.1:<port>/session`, appends the bridge token, and handles the actual PTY provider's `started`, `data`, `exit`, `closed`, `resized`, and `error` events. The trusted host must supply `window.axonCodeHost.startTerminal`; browser JavaScript does not launch a host process.
+- Corrected the Pyodide required asset from `pyodide.asm.js` to `pyodide.asm.mjs`, matching the actual vendor package. The supplied distribution's required files were inspected and checked by a new test.
+
+### New verification
+- `npm test`: **1,114/1,114 passed**, 0 failed, 0 skipped.
+- `npm run typecheck`: PASS using the exact host-global TypeScript 5.8.3 installation.
+- `npm run build`: PASS using the exact host-global TypeScript 5.8.3 installation.
+- `python3 tests/round12-workbench-ui.integration.py`: PASS, 9/9 retained UI workflow checks. This legacy suite uses a test-only IndexedDB shim and engine adapter shim; it does **not** prove CodeMirror/xterm mounted in the real browser UI.
+- `python3 tests/round12-browser-runtime.integration.py`: PASS, 6/6 browser runtime checks.
+- `python3 tests/r14-wp02-wp12-browser.integration.py`: exit 0 but both IndexedDB reload/recovery checks are **NOT RUN**, because Chromium navigation is blocked by `ERR_BLOCKED_BY_ADMINISTRATOR`.
+- A fresh invocation of `python3 tests/test-r14-pty-websocket.py` did not finish within the command timeout in this continuation. The prior checkpoint's six live PTY/WebSocket checks remain prior evidence; this continuation does not claim a new pass for that command.
+- `npm run verify:browser` timed out while running the browser sequence; its machine result records two PASS suites and the IndexedDB suite NOT RUN. Do not interpret the timeout as a successful overall browser verification.
+
+### Work-package state after this continuation
+- WP0: **BLOCKED** — clean npm install / TypeScript integrity unresolved.
+- WP1: **DONE** — no rework.
+- WP2: **PARTIAL** — actual IndexedDB reload test remains NOT RUN.
+- WP5: **PARTIAL** — trust, approvals and redaction tests pass; host-enforced resource quotas and complete provider isolation-grade enforcement remain incomplete.
+- WP12: **PARTIAL** — job journal/checkpoint contracts pass; browser reload and Android force-stop recovery remain NOT RUN.
+- WP14: **BLOCKED** — Director verifier still depends on clean-install evidence.
+- WP3: **PARTIAL** — real engine source is wired, but browser mount and full visible-control acceptance list are not complete.
+- WP4: **PARTIAL** — xterm bridge message adapter exists; independent sessions, process listing, safe kill and reconnect lifecycle remain incomplete.
+- WP7: **PARTIAL** — real Pyodide distribution assets are now available through the vendor dependency; actual CPython Worker execution and optional-pack install/remove in a real browser/WebView remain NOT RUN.
+
+**Phase A is not complete. Phase B is in progress, not complete.** No Android provider capability has been promoted based on fake-host results.

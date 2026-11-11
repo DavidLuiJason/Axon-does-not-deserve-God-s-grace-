@@ -6,6 +6,33 @@
   <meta name="theme-color" content="#111820">
   <title>AXON Code Workbench</title>
   <link rel="stylesheet" href="./workbench.css">
+  <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css">
+<script type="importmap">
+{
+  "imports": {
+    "@codemirror/autocomplete": "../node_modules/@codemirror/autocomplete/dist/index.js",
+    "@codemirror/commands": "../node_modules/@codemirror/commands/dist/index.js",
+    "@codemirror/lang-javascript": "../node_modules/@codemirror/lang-javascript/dist/index.js",
+    "@codemirror/language": "../node_modules/@codemirror/language/dist/index.js",
+    "@codemirror/lint": "../node_modules/@codemirror/lint/dist/index.js",
+    "@codemirror/state": "../node_modules/@codemirror/state/dist/index.js",
+    "@codemirror/streamparser": "../node_modules/@codemirror/streamparser/dist/index.js",
+    "@codemirror/view": "../node_modules/@codemirror/view/dist/index.js",
+    "@lezer/common": "../node_modules/@lezer/common/dist/index.js",
+    "@lezer/highlight": "../node_modules/@lezer/highlight/dist/index.js",
+    "@lezer/javascript": "../node_modules/@lezer/javascript/dist/index.js",
+    "@lezer/lr": "../node_modules/@lezer/lr/dist/index.js",
+    "@marijn/find-cluster-break": "../node_modules/@marijn/find-cluster-break/src/index.js",
+    "@xterm/addon-fit": "../node_modules/@xterm/addon-fit/lib/addon-fit.mjs",
+    "@xterm/xterm": "../node_modules/@xterm/xterm/lib/xterm.mjs",
+    "crelt": "../node_modules/crelt/index.js",
+    "pyodide": "../node_modules/pyodide/pyodide.mjs",
+    "style-mod": "../node_modules/style-mod/src/style-mod.js",
+    "w3c-keyname": "../node_modules/w3c-keyname/index.js"
+  }
+}
+</script>
+
 </head>
 <body>
   <div class="app-shell">
@@ -35,10 +62,12 @@
         <div id="tabs" class="tabs" aria-label="Open files"><div class="tab-placeholder">No open files</div></div>
         <div class="editor-wrap">
           <div class="editor-gutter" id="lineNumbers">1</div>
+          <div id="editorHost" aria-label="CodeMirror 6 source editor"></div>
           <textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Source editor" placeholder="Open or create a file to start editing…" disabled></textarea>
         </div>
         <div class="quicktools" aria-label="Editor quick tools">
-          <button data-insert="  ">Indent</button><button data-insert="{}">{ }</button><button data-insert="()">( )</button><button data-insert="[]">[ ]</button><button data-insert="&quot;&quot;">&quot; &quot;</button><button data-insert="'&#39;">' '</button><button data-insert="=>">⇒</button><button data-insert=";">;</button><button data-insert="// ">//</button><button data-insert="\n">↵</button>
+          <button data-insert="  ">Indent</button><button data-insert="{}">{ }</button><button data-insert="()">( )</button><button data-insert="[]">[ ]</button><button data-insert="&quot;&quot;">&quot; &quot;</button><button data-insert="'&#39;">' '</button><button data-insert="=>">⇒</button><button data-insert=";">;</button><button data-insert="// ">//</button><button data-insert="
+">↵</button>
         </div>
         <div class="statusbar"><span id="editorStatus">Ready</span><span id="cursorStatus">Ln 1, Col 1</span><span id="languageStatus">Plain text</span><span id="encodingStatus">UTF-8</span></div>
       </section>
@@ -51,7 +80,7 @@ AXON Brain is not required to use this workbench.</pre></section>
         <section class="panel-content hidden" id="problemsPanel"><div class="panel-title">Problems</div><div id="problemsText" class="notice">No project analysis provider is connected in this standalone browser shell. Compiler diagnostics are available through the AXON Code TypeScript services when hosted by the application.</div></section>
         <section class="panel-content hidden" id="previewPanel"><div class="panel-title">Web preview <span class="badge subtle-badge">opaque origin</span></div><div class="notice">Preview runs in a sandboxed iframe with a restrictive Content Security Policy. It is not an operating-system security sandbox.</div><iframe id="previewFrame" title="Project preview" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe></section>
         <section class="panel-content hidden" id="resourcesPanel"><div class="panel-title">Resource monitor</div><div id="resourceText" class="resource-grid"><div><strong>Browser memory</strong><span>Checking…</span></div><div><strong>Storage</strong><span>Checking…</span></div><div><strong>Host runtime</strong><span>Not connected</span></div><div><strong>Thermal / battery</strong><span>Unavailable in browser</span></div></div><div class="notice">Values unavailable to this browser are shown as unavailable, not estimated as live measurements.</div></section>
-        <section class="panel-content hidden" id="terminalPanel"><div class="panel-title">Terminal <span class="badge">HOST REQUIRED</span></div><div class="notice warning">A real terminal requires a host process provider. This standalone browser interface does not fake a shell or execute commands in the page. Round 12 includes an experimental Linux PTY provider separately.</div><pre id="terminalStatus">No terminal host connected.
+        <section class="panel-content hidden" id="terminalPanel"><div class="panel-title">Terminal <span class="badge">HOST REQUIRED</span></div><div class="notice warning">A real terminal requires a host process provider. This standalone browser interface does not fake a shell or execute commands in the page. Round 12 includes an experimental Linux PTY provider separately.</div><div id="terminalHost" class="terminal-host" aria-label="xterm.js terminal"></div><pre id="terminalStatus">No terminal host connected.
 
 To inspect the provider: python3 tools/linux-pty-provider.py --help</pre></section>
         <section class="panel-content hidden" id="capabilitiesPanel"><div class="panel-title">Capability registry</div><div id="capabilityList" class="notice">Loading machine-derived capability statuses…</div></section>
@@ -66,6 +95,7 @@ To inspect the provider: python3 tools/linux-pty-provider.py --help</pre></secti
   <dialog id="exportDialog"><form method="dialog"><h2>Export project</h2><p>Export the currently selected project's text files. Exports may contain source code and secrets; inspect the selection before sharing.</p><label>Format<select id="exportFormat"><option value="zip">ZIP archive</option><option value="json">JSON</option><option value="md">Markdown</option><option value="txt">TXT</option></select></label><div class="dialog-actions"><button class="button ghost" value="cancel">Cancel</button><button id="exportConfirm" class="button primary" value="confirm">Export</button></div></form></dialog>
   <dialog id="infoDialog"><form method="dialog"><h2>AXON Code Workbench</h2><p>This is the direct-user browser workspace. It operates without AXON Brain and stores project text in browser IndexedDB.</p><ul><li>Direct editing and local project file operations are available.</li><li>Web preview uses a restricted browser iframe.</li><li>OS terminal, native execution, Android builds, debugger and remote workers require real host providers.</li><li>Do not treat browser preview as proof of native code security.</li></ul><div class="dialog-actions"><button class="button primary" value="close">Close</button></div></form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./engineBootstrap.js"></script>
   <script type="module" src="./workbench.js"></script>
 </body>
 </html>

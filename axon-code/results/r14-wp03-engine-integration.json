@@ -1,0 +1,68 @@
+[
+  {
+    "id": "R14-WP3-ENGINE-01",
+    "suite": "r14-wp03-engine-tests",
+    "capability": "codemirror6-xtermjs-package-wiring",
+    "status": "PASS",
+    "command": "node --test tests/r14-wp03-workbench-engines.test.mjs",
+    "exitCode": 0,
+    "durationMs": 65,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": false,
+    "mutantCaught": false
+  },
+  {
+    "id": "R14-WP3-ENGINE-02",
+    "suite": "r14-wp03-engine-tests",
+    "capability": "codemirror6-xtermjs-package-wiring",
+    "status": "PASS",
+    "command": "node --test tests/r14-wp03-workbench-engines.test.mjs",
+    "exitCode": 0,
+    "durationMs": 65,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": false,
+    "mutantCaught": false
+  },
+  {
+    "id": "R14-WP3-ENGINE-03",
+    "suite": "r14-wp03-engine-tests",
+    "capability": "codemirror6-xtermjs-package-wiring",
+    "status": "PASS",
+    "command": "node --test tests/r14-wp03-workbench-engines.test.mjs",
+    "exitCode": 0,
+    "durationMs": 65,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": true,
+    "mutantCaught": true
+  },
+  {
+    "id": "R14-WP3-UI-LEGACY-01",
+    "suite": "r14-wp3-legacy-ui-regression",
+    "capability": "legacy-workbench-ui-regression",
+    "status": "PASS",
+    "command": "python3 tests/round12-workbench-ui.integration.py",
+    "exitCode": 0,
+    "durationMs": 3710,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": false,
+    "mutantCaught": false
+  },
+  {
+    "id": "R14-WP3-UI-MOUNT-01",
+    "suite": "r14-wp3-browser-mount",
+    "capability": "codemirror6-xtermjs-browser-mount",
+    "status": "NOT RUN",
+    "command": "Chromium navigation blocked by host policy; direct UI mount not executed.",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": false,
+    "mutantCaught": false,
+    "reason": "Chromium rejects both file:// and local HTTP navigation with ERR_BLOCKED_BY_ADMINISTRATOR. Static source tests do not substitute for a real mount."
+  }
+]

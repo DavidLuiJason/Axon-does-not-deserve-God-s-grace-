@@ -11,7 +11,7 @@
     "stdout": "R12_TLA_EXECUTED 42\nAXON_ENTRY {\"answer\":42}\n",
     "stderr": "",
     "diagnostics": [],
-    "elapsedMs": 34,
+    "elapsedMs": 38,
     "artifacts": [],
     "evidence": "ADAPTER_REPORTED",
     "notes": [
@@ -38,10 +38,10 @@
         },
         "evidence": "ADAPTER_REPORTED",
         "confidence": "high",
-        "explanation": "Error: R12_RUNTIME_SOURCE_MAP\n    at src/main.ts (axon-user-entry.js:9:7)\n    at eval (axon-user-entry.js:33:11)\n    at async __axonLoad (axon-user-entry.js:36:16)\n    at async eval (axon-user-entry.js:38:21)\n    at async self.onmessage (blob:null/8e8573e4-f446-4153-9aaa-89d2a9eb97c4:20:24)"
+        "explanation": "Error: R12_RUNTIME_SOURCE_MAP\n    at src/main.ts (axon-user-entry.js:9:7)\n    at eval (axon-user-entry.js:33:11)\n    at async __axonLoad (axon-user-entry.js:36:16)\n    at async eval (axon-user-entry.js:38:21)\n    at async self.onmessage (blob:null/9e559065-9a32-4153-b432-4f2b27bcb856:20:24)"
       }
     ],
-    "elapsedMs": 13,
+    "elapsedMs": 12,
     "artifacts": [],
     "evidence": "ADAPTER_REPORTED",
     "notes": [
@@ -69,7 +69,7 @@
         "explanation": "The host ECMAScript parser rejected the transpiled JavaScript. A verified line/column was not exposed by this host parser."
       }
     ],
-    "elapsedMs": 1,
+    "elapsedMs": 4,
     "artifacts": [],
     "evidence": "ADAPTER_REPORTED",
     "notes": [

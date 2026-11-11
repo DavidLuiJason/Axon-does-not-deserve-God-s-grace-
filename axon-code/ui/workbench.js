@@ -10,6 +10,14 @@ let openTabs = [];
 let buffers = new Map();
 let deletedFile = null;
 let toastTimer;
+const legacyEditor = $('editor');
+let codeEditor;
+let terminalEngine;
+function setEditorValue(value) {
+  legacyEditor.value = String(value ?? '');
+  codeEditor?.setValue(legacyEditor.value);
+  updateCursorStatus();
+}
 
 function toast(message) {
   $('toast').textContent = message;
@@ -17,6 +25,32 @@ function toast(message) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2600);
 }
+const engineAdapters = window.AXONCodeEngines;
+if (!engineAdapters || typeof engineAdapters.mountCodeMirror !== 'function' || typeof engineAdapters.mountXterm !== 'function') {
+  throw new Error('Required CodeMirror 6 and xterm.js engine bootstrap is unavailable; no editor or terminal fallback is provided.');
+}
+codeEditor = engineAdapters.mountCodeMirror({
+  parent: $('editorHost'),
+  initialText: '',
+  onChange(text) {
+    legacyEditor.value = text;
+    legacyEditor.dispatchEvent(new Event('input', {bubbles:true}));
+    updateCursorStatus();
+  }
+});
+legacyEditor.hidden = true;
+legacyEditor.setAttribute('aria-hidden','true');
+terminalEngine = engineAdapters.mountXterm($('terminalHost'), {onStatus: message => {
+  $('terminalStatus').textContent = message;
+}});
+window.axonCodeWorkbench = {
+  connectTerminal(session) {
+    const host = window.axonCodeHost;
+    if (!host || typeof host.startTerminal !== 'function') throw new Error('Trusted host terminal service is not connected.');
+    return Promise.resolve(host.startTerminal(session)).then(connection => terminalEngine.connect(connection));
+  }
+};
+
 function safePath(raw) {
   if (typeof raw !== 'string' || !raw.trim() || raw.length > 240 || raw.includes('\\') || raw.startsWith('/') || /^[A-Za-z]:/.test(raw)) return null;
   const parts = raw.split('/');
@@ -136,7 +170,7 @@ async function openFile(path) {
   if (!openTabs.includes(path)) openTabs.push(path);
   activePath = path;
   $('editor').disabled = false;
-  $('editor').value = buffers.get(path).content;
+  setEditorValue(buffers.get(path).content);
   updateLanguage(path);
   updateCursorStatus();
   renderTabs();
@@ -164,7 +198,7 @@ function closeTab(path) {
   if (activePath === path) {
     activePath = openTabs.at(-1) ?? null;
     if (activePath) void openFile(activePath);
-    else { $('editor').value = ''; $('editor').disabled = true; }
+    else { setEditorValue(''); $('editor').disabled = true; }
   }
   renderTabs(); updateButtons();
 }
@@ -179,9 +213,10 @@ function updateLanguage(path) {
   $('languageStatus').textContent = names[ext] ?? 'Plain text';
 }
 function updateCursorStatus() {
-  const editor = $('editor'); const before = editor.value.slice(0, editor.selectionStart); const lines = before.split('\n');
-  $('cursorStatus').textContent = `Ln ${lines.length}, Col ${lines.at(-1).length + 1}`;
-  const count = editor.value.split('\n').length; $('lineNumbers').textContent = Array.from({ length: count }, (_, index) => index + 1).join('\n');
+  const text = codeEditor?.value ?? $('editor').value;
+  const count = text.split('\n').length;
+  $('cursorStatus').textContent = `Ln ${count}, CodeMirror 6`;
+  $('lineNumbers').textContent = Array.from({ length: count }, (_, index) => index + 1).join('\n');
 }
 function updateOutput(message, append = false) {
   if (append) $('outputText').textContent += `\n${message}`; else $('outputText').textContent = message;
@@ -205,7 +240,7 @@ async function newFile(path) {
   if (!canonical) throw new Error('The file path is unsafe or non-portable.');
   const existing = await readFile(activeProject.id, canonical);
   if (existing && !existing.deleted) throw new Error('A file already exists at that path.');
-  await writeFile(canonical, ''); await openFile(canonical); $('editor').focus(); toast(`Created ${canonical}`);
+  await writeFile(canonical, ''); await openFile(canonical); codeEditor.focus(); toast(`Created ${canonical}`);
 }
 async function deleteActive() {
   if (!activePath || !activeProject) return;
@@ -215,7 +250,7 @@ async function deleteActive() {
   deletedFile = { ...file, deleted: false };
   await storePut('files', { ...file, deleted: true, deletedAt: Date.now() });
   closeTab(path); activePath = openTabs.at(-1) ?? null;
-  if (activePath) await openFile(activePath); else { $('editor').value = ''; $('editor').disabled = true; }
+  if (activePath) await openFile(activePath); else { setEditorValue(''); $('editor').disabled = true; }
   await renderExplorer(); updateButtons(); toast(`Moved ${path} to undo area.`);
 }
 async function undoDelete() {
@@ -336,7 +371,7 @@ function allCommands() {
     ['New project', () => $('newProjectButton').click()], ['Open / import files', () => $('openProjectButton').click()], ['Create file', () => $('newFileButton').click()],
     ['Save current file', () => saveActive()], ['Save all open files', () => saveAll()], ['Preview web project', () => previewProject()], ['Export project', () => $('exportButton').click()],
     ['Show output panel', () => switchPanel('output')], ['Show problems panel', () => switchPanel('problems')], ['Show preview panel', () => switchPanel('preview')],
-    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }], ['Select all source text', () => $('editor').select()], ['Copy source text', () => navigator.clipboard?.writeText($('editor').value).then(()=>toast('Copied'))]
+    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }], ['Select all source text', () => codeEditor.selectAll()], ['Copy source text', () => navigator.clipboard?.writeText(codeEditor.value).then(()=>toast('Copied'))]
   ];
 }
 function showPalette() {
@@ -364,11 +399,11 @@ $('editor').addEventListener('click', updateCursorStatus); $('editor').addEventL
 $('editor').addEventListener('keydown', (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void saveActive().catch((error)=>toast(error.message)); }
   if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'p') { event.preventDefault(); showPalette(); }
-  if (event.key === 'Tab') { event.preventDefault(); const start=$('editor').selectionStart,end=$('editor').selectionEnd; const value=$('editor').value; $('editor').setRangeText('  ',start,end,'end'); $('editor').dispatchEvent(new Event('input')); }
+  if (event.key === 'Tab') { event.preventDefault(); codeEditor.replaceSelection('  '); }
 });
 document.querySelectorAll('[data-insert]').forEach((button) => button.addEventListener('click', () => {
   const value = button.dataset.insert.replaceAll('&quot;','"').replaceAll('&#39;',"'").replaceAll('\\n','\n');
-  const editor=$('editor'); if (editor.disabled) return; const start=editor.selectionStart,end=editor.selectionEnd; editor.setRangeText(value,start,end,'end'); editor.dispatchEvent(new Event('input')); editor.focus();
+  if ($('editor').disabled) return; codeEditor.replaceSelection(value); codeEditor.focus();
 }));
 $('newProjectButton').addEventListener('click', () => $('projectDialog').showModal());
 $('createProjectConfirm').addEventListener('click', (event) => { event.preventDefault(); $('projectDialog').close(); void createProject($('projectNameInput').value).then(()=>toast('Project created')).catch((error)=>toast(error.message)); });

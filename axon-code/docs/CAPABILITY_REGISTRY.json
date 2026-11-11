@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "641ba02568bab96db31369240108d8f6903416cf2fbfbafa808ae0500a78472c",
-  "capabilityCount": 21,
+  "resultSetSha256": "8d32a980d552e9b8f9b424e9aa4b613cdfc39dacc31a1a20ae77fb875f21ab33",
+  "capabilityCount": 26,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -103,6 +103,30 @@
       ]
     },
     {
+      "id": "codemirror6-xtermjs-browser-mount",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP3-UI-MOUNT-01"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-engine-integration.json"
+      ]
+    },
+    {
+      "id": "codemirror6-xtermjs-package-wiring",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP3-ENGINE-01",
+        "R14-WP3-ENGINE-02",
+        "R14-WP3-ENGINE-03"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-engine-integration.json"
+      ]
+    },
+    {
       "id": "codemirror6-xtermjs-workbench",
       "status": "BLOCKED",
       "grade": "T3",
@@ -133,7 +157,8 @@
         "R14-WP00-07",
         "R14-WP00-08",
         "R14-WP00-09",
-        "R14-WP00-10"
+        "R14-WP00-10",
+        "R14-WP00-11"
       ],
       "resultFiles": [
         "results/r14-wp00-node-tests.json",
@@ -255,6 +280,17 @@
       ]
     },
     {
+      "id": "legacy-workbench-ui-regression",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP3-UI-LEGACY-01"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-engine-integration.json"
+      ]
+    },
+    {
       "id": "linux-pty-provider",
       "status": "TESTED",
       "grade": "T1",
@@ -305,6 +341,29 @@
       "resultFiles": [
         "results/r14-host-provider-gates.json",
         "results/r14-wp04-tests.json"
+      ]
+    },
+    {
+      "id": "pyodide-runtime-execution",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP4-RUNTIME-01"
+      ],
+      "resultFiles": [
+        "results/r14-wp04-pyodide-vendor.json"
+      ]
+    },
+    {
+      "id": "pyodide-vendor-assets",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-WP4-VENDOR-01",
+        "R14-WP4-VENDOR-02"
+      ],
+      "resultFiles": [
+        "results/r14-wp04-pyodide-vendor.json"
       ]
     },
     {

@@ -10,12 +10,12 @@
     "historicalSha256Verified": 424,
     "historicalSha256Mismatches": 0
   },
-  "phaseA": "BLOCKED",
+  "phaseA": "BLOCKED \u2014 WP0/C1 clean-install integrity and WP2/WP12 real IndexedDB reload evidence remain unavailable; WP5 host-enforced quotas/isolation grades are incomplete.",
   "workPackages": {
     "WP0": {
       "state": "BLOCKED",
       "tier": "T1",
-      "summary": "Round 12 baseline frozen. TypeScript 5.8.3 pinned; PTY exit/signal race fixed; shell environment allow-listed; hardened loopback WebSocket bridge built and tested with one-time random token, exact Origin/Host checks, 64 KiB frame cap and 60-message/10-second rate limit. Clean npm ci remains blocked and current TypeScript compatibility is NOT RUN.",
+      "summary": "Baseline freeze retained. TypeScript 5.8.3 moved to exact production dependencies. Vendor CodeMirror/xterm/Pyodide exact versions and transitive lock entries added. Existing WP0 checks now pass 11/11. C1 remains BLOCKED: TypeScript lock integrity is unavailable and clean npm ci cannot be proven; online registry DNS failed.",
       "filesChanged": [
         "package.json",
         "package-lock.json",
@@ -26,11 +26,14 @@
         "tools/linux-pty-websocket-bridge.py",
         "tests/r14-wp00-baseline.test.mjs",
         "tests/test-r14-pty-websocket.py",
-        "tools/run-r14-phase-a-suites.mjs"
+        "tools/run-r14-phase-a-suites.mjs",
+        "docs/R14_DEPENDENCY_MIGRATION.md",
+        "tests/r14-wp00-baseline.test.mjs",
+        "package-lock.json"
       ],
-      "testsAdded": 16,
-      "testsPassed": 16,
-      "negativeTests": 10,
+      "testsAdded": 17,
+      "testsPassed": 17,
+      "negativeTests": 11,
       "mutantCaught": true,
       "blockers": [
         "npm ci --offline exited 1 with ENOTCACHED: TypeScript 5.8.3 tarball has no cached response. Online registry probe exited 6: Could not resolve host: registry.npmjs.org. The lockfile has no verified integrity hash.",
@@ -190,12 +193,78 @@
       "blockers": [
         "No actual Pyodide distribution/asset pack exists in source or npm cache; registry DNS resolution failed. Real CPython runtime tests NOT RUN."
       ]
+    },
+    "WP3": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Actual CodeMirror 6 EditorView and xterm.js Terminal/FitAddon adapters are wired through engineBootstrap; textarea is hidden compatibility storage only, and terminal connection accepts only the authenticated loopback PTY bridge. Exact vendor dependencies and lock entries are present. Static engine tests pass 3/3. The legacy Chromium workbench workflow passes with its test-only adapter shim, but real engine mount cannot be tested because Chromium navigation is blocked by host policy. Required WP3 controls (rename/move/cut/paste/share/download/clear) are not yet fully implemented or verified.",
+      "filesChanged": [
+        "package.json",
+        "package-lock.json",
+        "ui/index.html",
+        "ui/workbench.js",
+        "ui/workbench.css",
+        "ui/engineBootstrap.js",
+        "ui/engines.js",
+        "ui/terminalEndpoint.js",
+        "tests/r14-wp03-workbench-engines.test.mjs",
+        "tests/round12-workbench-ui.integration.py",
+        "results/r14-wp03-engine-integration.json",
+        "docs/R14_DEPENDENCY_MIGRATION.md"
+      ],
+      "testsAdded": 3,
+      "testsPassed": 3,
+      "negativeTests": 1,
+      "mutantCaught": true,
+      "blockers": [
+        "Real Chromium engine mount NOT RUN: both file:// and localhost navigation return ERR_BLOCKED_BY_ADMINISTRATOR.",
+        "Complete WP3 command coverage remains in progress."
+      ]
+    },
+    "WP4": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "xterm.js is wired to the existing Linux PTY bridge protocol, including session ID, base64 output/input, resize and exit events. Two-session management, process listing, safe kill and reconnect lifecycle are not yet completed or verified.",
+      "filesChanged": [
+        "ui/engines.js",
+        "ui/terminalEndpoint.js",
+        "ui/workbench.js",
+        "tests/r14-wp03-workbench-engines.test.mjs"
+      ],
+      "testsAdded": 0,
+      "testsPassed": 0,
+      "negativeTests": 0,
+      "mutantCaught": false,
+      "blockers": [
+        "Full terminal acceptance matrix is not implemented; host bootstrap integration is not available in this browser-only workbench."
+      ]
+    },
+    "WP7": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Exact Pyodide 314.0.7 distribution is now supplied in the vendor pack and its actual runtime asset names are checked. The provider's required asm asset was corrected to pyodide.asm.mjs. Two vendor-asset tests pass; real CPython Worker execution and optional pack lifecycle integration are NOT RUN.",
+      "filesChanged": [
+        "package.json",
+        "package-lock.json",
+        "src/runtime/pyodideWorkerProvider.ts",
+        "tests/r14-wp04-pyodide-provider.test.mjs",
+        "tests/r14-wp04-pyodide-vendor.test.mjs",
+        "results/r14-wp04-pyodide-vendor.json",
+        "docs/R14_DEPENDENCY_MIGRATION.md"
+      ],
+      "testsAdded": 2,
+      "testsPassed": 2,
+      "negativeTests": 1,
+      "mutantCaught": true,
+      "blockers": [
+        "Real Pyodide CPython execution NOT RUN in Chromium or Android WebView; no runtime pack copied into project because the 8 MB merge budget excludes large optional runtime packs."
+      ]
     }
   },
   "promptCorrections": {
     "C1": {
       "state": "BLOCKED",
-      "details": "TypeScript 5.8.3 is an exact required devDependency and package-lock exists. Clean npm ci and verified package integrity remain blocked by registry/cache availability; current TypeScript compatibility NOT RUN."
+      "details": "TypeScript moved to exact production dependency 5.8.3; exact vendor package versions and integrity-bearing lock entries for CodeMirror 6, xterm.js and Pyodide were added. TypeScript lock integrity remains unavailable and clean npm ci remains blocked by offline ENOTCACHED and registry DNS failure. No hash fabricated."
     },
     "C2": {
       "state": "DONE",
@@ -207,11 +276,11 @@
     },
     "C4": {
       "state": "PARTIAL",
-      "details": "Real Pyodide CPython WebAssembly Worker adapter, offline pack verification and optional install/removal contracts added; 8/8 tests pass. No real Pyodide assets are present, so actual interpreter execution is BLOCKED and not imitated."
+      "details": "Actual Pyodide 314.0.7 package and required asset files are present via vendor dependency; provider asset name matches real package. Real CPython Worker execution, optional pack installation/removal against real storage and browser/Android runtime remain NOT RUN."
     },
     "C5": {
-      "state": "BLOCKED",
-      "details": "CodeMirror 6 and xterm.js fixed as the only accepted engines; strict integration contracts 4/4 pass and reject textarea/fake-terminal fallback. Actual packages, verified lock entries, UI migration, xterm/PTy connection and Android performance remain blocked/not run because registry DNS fails and packages are absent from cache."
+      "state": "PARTIAL",
+      "details": "Exact CodeMirror 6/xterm.js dependencies and integrity-bearing transitive lock entries added. Real CodeMirror EditorView and xterm Terminal/FitAddon adapters wired into UI; loopback PTY endpoint and message protocol wired. Chromium runtime mount and Android performance NOT RUN; full workbench operations not complete."
     },
     "C6": {
       "state": "DONE",
@@ -236,14 +305,14 @@
   },
   "latestEvidence": {
     "nodeTests": {
-      "command": "npm run test:full-r14",
+      "command": "npm test",
       "exitCode": 0,
-      "testFiles": 31,
-      "tests": 1108,
-      "passed": 1108,
+      "testFiles": 33,
+      "tests": 1114,
+      "passed": 1114,
       "failed": 0,
       "skipped": 0,
-      "durationMs": 15119
+      "durationMs": 14628
     },
     "pty": {
       "command": "python3 tools/test-round12-pty.py",
@@ -273,17 +342,17 @@
       }
     },
     "browser": {
-      "command": "npm run verify:browser",
+      "command": "python3 tests/round12-workbench-ui.integration.py; python3 tests/round12-browser-runtime.integration.py; python3 tests/r14-wp02-wp12-browser.integration.py",
       "exitCode": 0,
       "passSuites": 2,
       "notRunSuites": 1,
       "failSuites": 0,
-      "notRunReason": "Real IndexedDB reload proof blocked by Chromium navigation policy."
+      "notRunReason": "Real IndexedDB reload and actual editor/terminal mount cannot navigate due ERR_BLOCKED_BY_ADMINISTRATOR. Legacy UI suite uses test-only storage and engine adapter shims."
     },
     "build": {
-      "command": "npm run build",
+      "command": "npm run typecheck && npm run build",
       "exitCode": 0,
-      "typescript": "5.8.3 from host-global installation linked locally; not clean npm ci"
+      "typescript": "5.8.3 host-global exact version; vendor dependencies extracted locally for source verification; clean npm ci NOT RUN"
     },
     "wp5": {
       "command": "node --test tests/r14-wp05-security.test.mjs tests/r14-wp05-trust.test.mjs",
@@ -299,21 +368,20 @@
       "command": "npm run verify:director",
       "exitCode": 2,
       "status": "BLOCKED",
-      "nodeTests": 1108,
-      "passed": 1108,
+      "nodeTests": 1114,
+      "passed": 1114,
       "failed": 0,
       "skipped": 0,
       "typecheckExitCode": 0,
       "buildExitCode": 0,
-      "manifestEntries": 354,
-      "hashEntries": 355,
+      "manifestEntries": 205,
+      "hashEntries": 206,
       "hashMismatches": 0,
-      "mergeFiles": 195,
-      "mergeBytes": 1514822,
+      "mergeFiles": 204,
+      "mergeBytes": 1572277,
       "ratchetMinimum": 1015,
-      "ratchetActual": 1108,
-      "reason": "All local checks passed except clean npm ci proof; registry DNS failed and TypeScript 5.8.3 tarball is not cached. This is not Claude/Director approval.",
-      "registryCapabilities": 21
+      "ratchetActual": 1114,
+      "reason": "The verifier passes typecheck, build, all Node tests, manifest, hashes, import boundary, honesty, registry, and budget checks. It exits 2 only because clean npm ci remains BLOCKED by missing verified TypeScript tarball integrity and registry DNS."
     },
     "cleanInstall": {
       "command": "npm ci --ignore-scripts --no-audit --no-fund --offline",
@@ -329,11 +397,11 @@
     }
   },
   "lastCommand": {
-    "command": "npm run test:full-r14",
+    "command": "npm test",
     "exitCode": 0,
-    "result": "31 test files passed; 1,108/1,108 tests passed, zero failed and zero skipped."
+    "result": "33 test files; 1,114/1,114 tests passed, zero failed and zero skipped."
   },
-  "resumeRule": "Use this updated tree and ledger. C10 is DONE. C3 and C4 provider sources/contracts are PARTIAL and require host/real-pack proof. C5 is BLOCKED on registry/package acquisition. Do not mark Round 14 complete until all remaining WP exit criteria and clean-install verification are met.",
+  "resumeRule": "Resume at WP3/WP4. Phase A remains blocked on C1 clean npm ci, real IndexedDB reload, and WP5 resource/isolation enforcement; do not claim Phase A complete. Continue WP3 remaining controls, then WP4 terminal session lifecycle. Do not mark any Android capability TESTED from fake-host results.",
   "directorVerification": {
     "date": "2026-11-09",
     "by": "Director (Claude), independent run on a clean extraction",
@@ -359,6 +427,13 @@
       "WP0 clean npm ci in the cloud",
       "WP2 WP5 WP12 WP14 partial per this ledger",
       "WP3 WP4 WP6 to WP13 not complete; CodeMirror, xterm.js and Pyodide blocked by registry access (owner must supply a vendor pack)"
-    ]
-  }
+    ],
+    "wp3Delta": {
+      "date": "2026-11-11",
+      "reproduced": "1114 of 1114 Node tests, typecheck and build clean, PTY 4 of 4, verify:director BLOCKED only by clean install",
+      "finding": "ui/index.html import map pointed four modules CodeMirror needs (@marijn/find-cluster-break, crelt, style-mod, w3c-keyname) at files that do not exist, and had a typescript entry (dist/index.js does not exist); the editor could not load in a browser. Fixed; a module-graph crawl now resolves 20 of 20 modules; permanent test tests/r14-wp03-import-map-resolves.test.mjs (4 tests, 2 negative)",
+      "stillNotRun": "actual CodeMirror and xterm mount in a browser, Pyodide Worker execution through the provider, IndexedDB reload (no Chromium in the Director sandbox; ChatGPT sandbox blocked navigation)"
+    }
+  },
+  "phaseB": "IN_PROGRESS \u2014 WP3 engine source and adapter integration started; full workbench command coverage and real browser mount remain unverified."
 }

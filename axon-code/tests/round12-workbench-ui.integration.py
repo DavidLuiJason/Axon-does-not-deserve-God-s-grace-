@@ -60,6 +60,15 @@ async def main() -> int:
         registry_payload = json.loads((ROOT / 'docs' / 'CAPABILITY_REGISTRY.json').read_text(encoding='utf-8'))
         await page.add_script_tag(content='window.__AXON_CAPABILITY_REGISTRY__ = '+json.dumps(registry_payload)+';')
         await page.add_script_tag(content=IDB_SHIM)
+        await page.add_script_tag(content="""
+          window.AXONCodeEngines = {
+            mountCodeMirror({parent, initialText='', onChange}) {
+              const textarea=document.querySelector('#editor');
+              return {get value(){return textarea.value},setValue(v){textarea.value=v},focus(){textarea.focus()},selectAll(){textarea.select()},replaceSelection(v){textarea.setRangeText(v)},getSelection(){return textarea.value.slice(textarea.selectionStart,textarea.selectionEnd)},destroy(){}};
+            },
+            mountXterm(){ return {connect(){throw new Error('No terminal host in this storage-only test')},write(){},dispose(){}}; }
+          };
+        """)
         await page.add_script_tag(content=js, type='module')
         await page.wait_for_function("document.querySelector('#outputText').textContent.includes('direct-user Workbench loaded')")
 
@@ -74,7 +83,7 @@ async def main() -> int:
         await page.locator('#createFileConfirm').click()
         await page.wait_for_function("document.querySelector('#languageStatus').textContent === 'HTML'")
         html_source = '<!doctype html><html><head><title>R12 Preview</title></head><body><h1>Direct preview</h1><button id="add">Add</button><output id="count">0</output><script src="./app.js"></script></body></html>'
-        await page.locator('#editor').fill(html_source)
+        await page.locator('#editor').evaluate('(el, value) => { el.value = value; el.dispatchEvent(new Event("input", {bubbles:true})); }', html_source)
         await page.locator('#saveButton').click()
         await page.wait_for_function("document.querySelector('#editorStatus').textContent === 'Saved'")
 
@@ -82,7 +91,7 @@ async def main() -> int:
         await page.locator('#newFilePath').fill('app.js')
         await page.locator('#createFileConfirm').click()
         await page.wait_for_function("document.querySelector('#languageStatus').textContent === 'JavaScript'")
-        await page.locator('#editor').fill("document.querySelector('#add').addEventListener('click', () => { document.querySelector('#count').textContent = String(Number(document.querySelector('#count').textContent) + 1); });")
+        await page.locator('#editor').evaluate('(el, value) => { el.value = value; el.dispatchEvent(new Event("input", {bubbles:true})); }', "document.querySelector('#add').addEventListener('click', () => { document.querySelector('#count').textContent = String(Number(document.querySelector('#count').textContent) + 1); });")
         await page.locator('#saveButton').click()
         await page.locator('#previewButton').click()
         frame = page.frame_locator('#previewFrame')

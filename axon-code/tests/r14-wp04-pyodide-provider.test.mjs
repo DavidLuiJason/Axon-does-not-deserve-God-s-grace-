@@ -4,7 +4,7 @@ import { createPyodideWorkerSource, installOfflinePyodidePack, removeOfflinePyod
 import { createHash } from 'node:crypto';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const makePack = (files = {}) => {
-  const data = new Map(Object.entries({ 'pyodide.js': new Uint8Array([1]), 'pyodide.asm.js': new Uint8Array([4]), 'pyodide.asm.wasm': new Uint8Array([2]), 'python_stdlib.zip': new Uint8Array([3]), 'pyodide-lock.json': new Uint8Array([5]), ...files }));
+  const data = new Map(Object.entries({ 'pyodide.js': new Uint8Array([1]), 'pyodide.asm.mjs': new Uint8Array([4]), 'pyodide.asm.wasm': new Uint8Array([2]), 'python_stdlib.zip': new Uint8Array([3]), 'pyodide-lock.json': new Uint8Array([5]), ...files }));
   return { id: 'offline-pyodide', version: '0.28.2', baseUrl: 'file:///axon-packs/pyodide/', files: [...data].map(([path, bytes]) => ({ path, sizeBytes: bytes.length, sha256: hash(bytes) })), async readFile(path) { return data.get(path) ?? null; } };
 };
 function request(overrides = {}) { return { requestId: 'r1', projectId: 'p1', entryFiles: ['main.py'], runtimeId: 'pyodide-cpython-wasm-worker', mode: 'FULL_LOCAL', timeoutMs: 5000, outputLimitBytes: 4096, networkAllowed: false, fileAccess: 'project-read-only', ...overrides }; }

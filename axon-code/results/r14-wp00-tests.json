@@ -138,5 +138,18 @@
     "negativeTest": true,
     "mutantCaught": true,
     "grade": "T1"
+  },
+  {
+    "id": "R14-WP00-11",
+    "suite": "r14-wp00-tests",
+    "capability": "dependency-and-pty-regression",
+    "status": "PASS",
+    "command": "node --test tests/r14-wp00-baseline.test.mjs",
+    "exitCode": 0,
+    "durationMs": 114,
+    "hostFingerprint": "15c2681736cce035",
+    "grade": "T1",
+    "negativeTest": true,
+    "mutantCaught": true
   }
 ]
