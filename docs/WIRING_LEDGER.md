@@ -1,4 +1,4 @@
-# WIRING LEDGER (Director, 2026-11-07; snapshot MEASURED from the live registries of the main zip, tests NOT RUN on a phone)
+# WIRING LEDGER (Director, 2026-11-07; CORRECTED 2026-11-11 by TEST-FIX2 for number-to-words, encoder-decoder, hash-tool only; snapshot MEASURED from the live registries of the main zip, tests NOT RUN on a phone)
 
 WHO IT IS FOR: the owner and every Director. It answers: for each tool, which parts that connect it to the brain exist, and what is still missing before it may be switched ON.
 
@@ -18,18 +18,17 @@ Parts 1, 2, 3, 4-live (switch, choices, task) can be produced from one WIRE CARD
 NEW IN THIS PACKAGE (CONNECT0): `src/tools/runners/liveAdmission.ts` + `tests/liveAdmission.test.ts`. The ADMISSION GATE: a tool cannot be ON unless parts 2, 4, 5 (when it has a choice slot), 6, 7, 8 and its task record all exist, and chat can never claim a tool whose switch is OFF. Switching `calculator` ON today fails the test and names exactly what it lacks. This is what keeps wrong or half-wired things out of the brain.
 
 ## 2. COUNTS (MEASURED from the registries)
-60 tools in the catalog: 37 available, 23 coming soon. All 60 have a schema row. 19 have a runner. 3 are ON through the brain.
+60 tools in the catalog: 37 available, 23 coming soon. All 60 have a schema row. 19 have a runner. 6 are ON through the brain (3 more since TEST-FIX2 corrected this line: the other lines of this snapshot were NOT re-measured).
 
-## 3. ON TODAY (3)
-text-counter, case-converter, sort-lines
+## 3. ON TODAY (6)
+text-counter, case-converter, sort-lines, number-to-words, encoder-decoder, hash-tool (the last three: CONNECT1-A, switched ON in `liveSwitches.ts`; the admission gate `tests/liveAdmission.test.ts` reports no missing part for them; proof tests `liveBrainNumberToWords` 71 checks, `liveBrainEncoderDecoder` 19, `liveBrainHashTool` 13)
 
-## 4. A RUNNER EXISTS, THE REST OF THE CONNECTION IS MISSING (16)
+## 4. A RUNNER EXISTS, THE REST OF THE CONNECTION IS MISSING (13)
 - converter: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 - find-replace: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard
 - text-cleaner: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard
 - text-compare: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 - calculator: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
-- number-to-words: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard
 - percentage-helper: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 - timer (state tool): missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 - stopwatch (state tool): missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
@@ -38,8 +37,6 @@ text-counter, case-converter, sort-lines
 - qr-maker: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 - password-generator: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard
 - random-picker: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
-- encoder-decoder: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
-- hash-tool: missing no-task-record, kernel-action-not-registered, no-available-chat-action, no-lane-guard, no-live-choices
 
 ## 5. AVAILABLE (SCREEN) BUT NO RUNNER YET (18): a runner must be written first
 interface-capture, background-proof, video-frames, file-converter, zip-tool, batch-convert, file-inspector, file-compare, dictionary, my-dictionary, document-reader, summarizer, json-viewer, code-formatter, pattern-tester, loan-calculator, split-bill, device-profile

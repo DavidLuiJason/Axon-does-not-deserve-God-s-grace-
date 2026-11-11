@@ -768,7 +768,7 @@
   "description": "Write a number in words, and back.",
   "group": "numbers-converters",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Spell supported numeric input as words, with optional ordinal form."
@@ -1119,7 +1119,7 @@
   "description": "Convert text to and from Base64, URL and hexadecimal.",
   "group": "create-encode",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Encode or decode text using supported Base64, Base64URL, URL, HTML, hex, binary and ROT13 formats."
@@ -1163,7 +1163,7 @@
   "description": "Work out the checksum of a text or a file.",
   "group": "create-encode",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Calculate supported digest or checksum values for text or bytes using the supplied digest provider."

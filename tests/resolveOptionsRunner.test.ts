@@ -86,7 +86,8 @@ ok(map['constructor' as string] === undefined && map['toString' as string] === u
 ok(Object.keys(map).length === facts.length, `one entry per fact (${Object.keys(map).length} of ${facts.length})`);
 for (const f of facts) ok(map[f.id] === deriveStatus(f), `status of ${f.id} equals deriveStatus`);
 const count = (s: string): number => Object.values(map).filter((v) => v === s).length;
-ok(count('ready') === 5 && count('built') === 35 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 5 / 35 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
+// TEST-FIX2 (Director, 2026-11-11): was 5 / 35 / 18 / 5. number-to-words, encoder-decoder and hash-tool went live through the brain (CONNECT1-A, switched ON in liveSwitches.ts) and moved built -> ready: 8 / 32 / 18 / 5.
+ok(count('ready') === 8 && count('built') === 32 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 8 / 32 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
 ok(map['text-counter'] === 'ready', 'text-counter is ready');
 ok(api.statusMapFrom(facts) !== map, 'each call returns a NEW object');
 const mk = (p: Record<string, unknown>): ToolFact => ({ kind: 'tool', id: 'x', name: 'X', description: 'd', group: 'g', screen: true, chat: 'not-built', leftOut: false, ...p }) as ToolFact;

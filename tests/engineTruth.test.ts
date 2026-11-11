@@ -1,4 +1,5 @@
 /** Menu, engine descriptors and registry actions must remain in agreement. */
+import { existsSync } from 'node:fs';
 import { CATALOG_TOOLS } from '../src/tools/toolCatalog';
 import { ENGINE_DESCRIPTORS, registerEngineTools } from '../src/capabilities/registerEngineTools';
 import { registerAxonToolsCapability } from '../src/capabilities/registerAxonTools';
@@ -38,9 +39,23 @@ function main(): void {
     assert(matches[0]?.action.note === 'Opens from the Tools menu once its screen exists; chat control arrives with the brain.', `engine action ${toolId} has the required honest note`);
   }
   // Only actions whose own test files prove chat can run them may be 'available'; engine actions never are.
-  const PROVEN_AVAILABLE = new Set(['act.text-counter', 'act.case-converter', 'act.sort-lines', 'act.english-dictionary.lookup']);
+  // TEST-FIX2 (Director, 2026-11-11): each available action names the test file that proves chat can run it, and that file must exist.
+  // The three CONNECT1-A tools were switched on (liveSwitches.ts, admission gate) while this list still held four ids; nobody could run this
+  // test then (jszip missing), so the cloud build was the first to show it. A new 'available' action now needs a named proof file here.
+  const PROVEN_AVAILABLE: Readonly<Record<string, string>> = {
+    'act.text-counter': 'tests/liveTextCounter.test.ts',
+    'act.case-converter': 'tests/textCaseAction.test.ts',
+    'act.sort-lines': 'tests/liveSortLines.test.ts',
+    'act.english-dictionary.lookup': 'tests/dictionarySlot.test.ts',
+    'act.number-to-words': 'tests/liveBrainNumberToWords.test.ts',
+    'act.encoder-decoder': 'tests/liveBrainEncoderDecoder.test.ts',
+    'act.hash-tool': 'tests/liveBrainHashTool.test.ts',
+  };
   for (const { action } of actions) {
-    assert(action.status !== 'available' || PROVEN_AVAILABLE.has(action.id), `only proven actions are available: ${action.id}`);
+    if (action.status !== 'available') continue;
+    const proof = PROVEN_AVAILABLE[action.id];
+    assert(proof !== undefined, `only proven actions are available: ${action.id}`);
+    assert(existsSync(proof), `the proof test of ${action.id} exists: ${proof}`);
   }
 
   const available = CATALOG_TOOLS.filter((tool) => tool.status === 'available');
