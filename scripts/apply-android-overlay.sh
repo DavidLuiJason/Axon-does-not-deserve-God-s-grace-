@@ -12,15 +12,20 @@ if [[ ! -d "$ANDROID/app" ]]; then
   exit 1
 fi
 
-echo "==> Copying Java sources (BackgroundJobService, BackgroundJobsPlugin, FileSaverPlugin, MainActivity)"
+echo "==> Copying Java sources (background jobs, file saver, screen capture, MainActivity)"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/background"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/filesaver"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screencapture"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobService.java" \
       "$ANDROID/app/src/main/java/com/axon/app/background/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobsPlugin.java" \
       "$ANDROID/app/src/main/java/com/axon/app/background/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/filesaver/FileSaverPlugin.java" \
       "$ANDROID/app/src/main/java/com/axon/app/filesaver/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screencapture/ScreenCapturePlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screencapture/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screencapture/ScreenCaptureService.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screencapture/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
@@ -51,6 +56,7 @@ ensure_perm() {
 ensure_perm "POST_NOTIFICATIONS"
 ensure_perm "FOREGROUND_SERVICE"
 ensure_perm "FOREGROUND_SERVICE_SPECIAL_USE"
+ensure_perm "FOREGROUND_SERVICE_MEDIA_PROJECTION"
 ensure_perm "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"
 ensure_perm "WAKE_LOCK"
 ensure_perm "INTERNET"
@@ -81,6 +87,18 @@ if ! grep -q "BackgroundJobService" "$MANIFEST"; then
   echo "    + added BackgroundJobService"
 else
   echo "    = BackgroundJobService already present"
+fi
+
+echo "==> Ensuring ScreenCaptureService declaration"
+if ! grep -q "ScreenCaptureService" "$MANIFEST"; then
+  SERVICE_XML='        <service
+            android:name=".screencapture.ScreenCaptureService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />'
+  awk -v svc="$SERVICE_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  echo "    + added ScreenCaptureService"
+else
+  echo "    = ScreenCaptureService already present"
 fi
 
 echo "==> Overlay applied successfully."

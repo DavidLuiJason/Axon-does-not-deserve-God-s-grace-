@@ -7,6 +7,7 @@ import { registerAxonToolsCapability } from './capabilities/registerAxonTools';
 import { registerEngineTools } from './capabilities/registerEngineTools';
 import { registerAxonSourceCapability } from './capabilities/registerAxonSource';
 import { registerInterfaceCaptureCapability } from './capabilities/registerInterfaceCapture';
+import { registerScreenIntelligenceCapability } from './capabilities/registerScreenIntelligence';
 import { registerBackgroundProofCapability } from './capabilities/registerBackgroundProof';
 import { registerDictionaryCapability } from './capabilities/registerDictionary';
 import { registerPlannedCapabilities } from './capabilities/registerPlanned';
@@ -30,6 +31,7 @@ registerEngineTools();
 registerAxonSourceCapability();
 // Stage 4D: Interface Capture capability — shell only (engine deleted)
 registerInterfaceCaptureCapability();
+registerScreenIntelligenceCapability();
 // Stage 6: Background Proof capability
 registerBackgroundProofCapability();
 // B04B4P4 (owner yes, 2026-10-27): the dictionary and the planned abilities were imported but never called, so the app

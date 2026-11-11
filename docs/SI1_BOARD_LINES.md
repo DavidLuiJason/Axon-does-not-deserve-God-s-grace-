@@ -1,0 +1,5 @@
+SI1 (D47, 2026-11-11): Screen Intelligence foundation merged as an isolated engine, no caller. Files: src/screen-intelligence/*, src/capabilities/registerScreenIntelligence.ts, src/main.tsx (+2 lines), tools/run-tests.mjs (runs .test.mjs too), android-overlay (screencapture Java, manifest, MainActivity), scripts/apply-android-overlay.sh, tests/screen-intelligence*.test.mjs, docs.
+MEASURED (D47): node --test on the two screen-intelligence test files 185 pass 0 fail; snapshot test OK; guard OK; brainGolden 79 messages 242 checks unchanged; directorNap 7, wireGenerated 64, brainBoundary, roadmapSize 111 OK; type check of registerScreenIntelligence.ts alone clean.
+NOT RUN: full tsc (no node_modules here), Java compile, jszip tests, full cloud suite, any phone test.
+NEXT: owner runs the cloud build and returns the log text; then SI2 or SI3 (docs/SCREEN_INTELLIGENCE_PLAN.md).
+NAP LINE FOR D47 (to be written at my next package, on a fresh zip, so D471's NAP is not overwritten): D47 (2026-11-11): Screen Intelligence then AXON Apps. Leaves alone: tool-connection lane (D471), AXON Code, Market Scope, roadmap, NOW/MERGE_TAG.

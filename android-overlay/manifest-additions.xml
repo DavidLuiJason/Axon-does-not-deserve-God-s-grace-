@@ -6,6 +6,7 @@
     POST_NOTIFICATIONS
     FOREGROUND_SERVICE
     FOREGROUND_SERVICE_SPECIAL_USE
+    FOREGROUND_SERVICE_MEDIA_PROJECTION (API 34+)
     REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
     WAKE_LOCK
     INTERNET
@@ -18,6 +19,7 @@
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 <uses-permission android:name="android.permission.WAKE_LOCK" />
 <uses-permission android:name="android.permission.INTERNET" />
@@ -33,4 +35,12 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Background execution proof: continuous native heartbeat and activity label for reliability measurement. Not media, not data sync." />
         </service>
+-->
+
+<!-- Insert inside <application> when applying the overlay. -->
+<!--
+        <service
+            android:name=".screencapture.ScreenCaptureService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection" />
 -->

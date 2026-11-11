@@ -9,7 +9,7 @@ import { join } from 'node:path';
 const filter = (process.argv[2] ?? '').toLowerCase();
 const dir = 'tests';
 const files = readdirSync(dir)
-  .filter((f) => f.endsWith('.test.ts') && f.toLowerCase().includes(filter))
+  .filter((f) => (f.endsWith('.test.ts') || f.endsWith('.test.mjs')) && f.toLowerCase().includes(filter))
   .sort();
 if (files.length === 0) { console.error(`No test files match "${filter}".`); process.exit(2); }
 
@@ -18,7 +18,9 @@ const failed = [];
 const started = Date.now();
 for (const f of files) {
   const t0 = Date.now();
-  const r = spawnSync(tsx, ['tsx', join(dir, f)], { encoding: 'utf8', timeout: 180_000, maxBuffer: 64 * 1024 * 1024 });
+  const command = f.endsWith('.test.mjs') ? process.execPath : tsx;
+  const args = f.endsWith('.test.mjs') ? ['--test', join(dir, f)] : ['tsx', join(dir, f)];
+  const r = spawnSync(command, args, { encoding: 'utf8', timeout: 180_000, maxBuffer: 64 * 1024 * 1024 });
   const ok = r.status === 0;
   const last = (r.stdout || '').trim().split('\n').filter(Boolean).pop() ?? '';
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${f}  (${((Date.now() - t0) / 1000).toFixed(1)}s)  ${ok ? last.slice(0, 100) : ''}`);
