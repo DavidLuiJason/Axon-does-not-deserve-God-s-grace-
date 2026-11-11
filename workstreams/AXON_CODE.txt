@@ -1,0 +1,10 @@
+WORKSTREAM: AXON CODE (Round 14 build, Round 15 verification)
+ACCOUNT / ROLE: Claude = Director and verifier; ChatGPT = builder (separate chat)
+UPDATED: 2026-11-11
+STATE NOW: complete Director-fixed base = AXON_CODE_R14_DIRECTOR_BASE.zip, folder axon-code/. 1,147 of 1,147 Node tests pass AFTER `npm run build` (the tests import compiled files; without the build 32 of 64 test files fail). Work packages: WP1 done; WP0, WP2, WP3, WP4, WP5, WP7, WP12, WP14 partial or blocked; WP6, WP8, WP9, WP10, WP11, WP13 not started. Not proven in a real browser or on a phone.
+BASE TO START FROM: AXON_CODE_R14_DIRECTOR_BASE.zip, then `npm run build`, then `node --test tests/*.test.mjs` must print 1,147 pass, 0 fail.
+OWNS: axon-code/ and docs/AXON_CODE_*.md
+MUST NOT TOUCH: src/, tests/, tools/ and public/ at the repository ROOT (the AXON app), .github, the root package.json, root tsconfig.json (it already excludes axon-code), NOW.txt, MERGE_TAG.txt, docs/JOB_BOARD.md.
+NOT BEING DONE HERE: connecting tools to the brain, AXON Web or Browser, AI Studio screens, registering any AXON tool. AXON Code is a separate project; it imports nothing from the AXON app and the AXON app does not use it yet.
+NEXT: ChatGPT continuation 3 (Node-provable work packages), Director verifies the delta.
+WAITING ON THE OWNER: vendor pack v2 (adds jsdom and fake-indexeddb); a computer or a cloud build with Chromium to run the browser tests.
