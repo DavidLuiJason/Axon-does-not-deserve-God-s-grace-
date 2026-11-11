@@ -12,6 +12,7 @@ import { SORT_OPTION_WORDS, sortWordsOf } from '../../tools/runners/sortOptionWo
 import { numberToWordsGuard } from '../../tools/runners/guards/numberToWordsGuard';
 import { encoderDecoderGuard } from '../../tools/runners/guards/encoderDecoderGuard';
 import { hashToolGuard } from '../../tools/runners/guards/hashToolGuard';
+import { qrMakerGuard } from '../../tools/runners/guards/qrMakerGuard';
 
 /** Text Counter: the old handler adds a note when the text holds code (or may); the runner does not, so the lane yields. */
 const textCounterGuard: LaneGuard = (args, message) => {
@@ -65,4 +66,4 @@ const sortLinesGuard: LaneGuard = (args, message) => {
   return null;
 };
 
-export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard, 'encoder-decoder': encoderDecoderGuard, 'hash-tool': hashToolGuard });
+export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard, 'encoder-decoder': encoderDecoderGuard, 'hash-tool': hashToolGuard, 'qr-maker': qrMakerGuard });

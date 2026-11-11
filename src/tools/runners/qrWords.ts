@@ -2,8 +2,7 @@
 import type { QrLevel } from '../engines/create/qrCode';
 
 export const QR_LEVEL_WORDS: Readonly<Record<string, QrLevel>> = Object.freeze({
-  low: 'L', medium: 'M', quartile: 'Q', high: 'H',
-  l: 'L', m: 'M', q: 'Q', h: 'H'
+  low: 'L', medium: 'M', quartile: 'Q', high: 'H'
 });
 export const QR_LEVEL_CHOICES: readonly string[] = Object.freeze(Object.keys(QR_LEVEL_WORDS));
 

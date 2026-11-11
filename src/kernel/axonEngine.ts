@@ -14,6 +14,7 @@ import { TEXT_SORT_ACTION } from '../tools/textSortAction';
 import { NUMBER_WORDS_ACTION } from '../tools/numberWordsAction';
 import { ENCODE_ACTION } from '../tools/encodeAction';
 import { HASH_ACTION } from '../tools/hashAction';
+import { QR_ACTION } from '../tools/qrAction';
 
 export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   const engine = createTaskEngine({ readProfile: () => readDeviceProfile(), ...options });
@@ -23,6 +24,7 @@ export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   engine.registerAction(NUMBER_WORDS_ACTION);
   engine.registerAction(ENCODE_ACTION);
   engine.registerAction(HASH_ACTION);
+  engine.registerAction(QR_ACTION);
   return engine;
 }
 

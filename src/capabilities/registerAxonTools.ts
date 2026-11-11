@@ -71,7 +71,7 @@ const CREATION_TOOLS_CAPABILITY = {
   dataProvider: 'noUserData',
   chatActions: [{
     id: 'act.encoder-decoder', purpose: 'Encode or decode text', examples: ['encode \"hello\" as base64', 'decode \"aGVsbG8=\" from base64'], status: 'available', link: { actionId: 'create.encode' },
-  }, { id: 'act.hash-tool', purpose: 'Calculate a hash or checksum', examples: ['calculate checksum of \"123456789\" using CRC32'], status: 'available', link: { actionId: 'create.hash' } }] as ChatAction[],
+  }, { id: 'act.hash-tool', purpose: 'Calculate a hash or checksum', examples: ['calculate checksum of \"123456789\" using CRC32'], status: 'available', link: { actionId: 'create.hash' } }, { id: 'act.qr-maker', purpose: 'QR code maker', examples: ['create QR code containing \"https://example.com\"'], status: 'available', link: { actionId: 'create.qr' } }] as ChatAction[],
 } as const;
 
 const NUMBER_TOOLS_CAPABILITY = {
