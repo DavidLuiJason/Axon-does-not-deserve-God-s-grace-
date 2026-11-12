@@ -11,8 +11,19 @@ test('WP3 rejects a missing source', () => assert.throws(()=>planFileOperation('
 test('WP3 rejects destination collision', () => assert.throws(()=>planFileOperation('rename','src/main.ts','src/util.ts',files),/already exists/));
 test('WP3 rejects no-op rename', () => assert.throws(()=>planFileOperation('rename','src/main.ts','src/main.ts',files),/identical/));
 test('WP3 rejects cross-directory rename', () => assert.throws(()=>planFileOperation('rename','src/main.ts','lib/main.ts',files),/same directory/));
-test('WP3 rejects unsupported operation (negative mutant guard)', () => {
-  const unsafeMutant = (op, from, to, paths) => ({operation:op,source:from,destination:to});
-  assert.throws(()=>planFileOperation('copy','src/main.ts','src/copy.ts',files),/Unsupported/);
-  assert.notDeepEqual(unsafeMutant('copy','../secret','/tmp/secret',files), planFileOperation('rename','src/main.ts','src/new.ts',files));
+test('WP3 NEGATIVE (real mutant): removing the real compiled operation guard is detected', async () => {
+  const fs = await import('node:fs');
+  const os = await import('node:os');
+  const path = await import('node:path');
+  const { pathToFileURL } = await import('node:url');
+  const compiled = fs.readFileSync(new URL('../dist/workbench/fileOperations.js', import.meta.url), 'utf8');
+  const guard = "if (operation !== 'rename' && operation !== 'move')";
+  assert.ok(compiled.includes(guard), 'mutated guard must exist in the real compiled module');
+  const mutantPath = path.join(os.tmpdir(), `axon-wp3-operation-mutant-${process.pid}.mjs`);
+  fs.writeFileSync(mutantPath, compiled.replace(guard, 'if (false)'));
+  try {
+    const mutant = await import(pathToFileURL(mutantPath).href);
+    assert.doesNotThrow(() => mutant.planFileOperation('copy', 'src/main.ts', 'src/copy.ts', files), 'mutant should accept an operation the real module refuses');
+    assert.throws(() => planFileOperation('copy', 'src/main.ts', 'src/copy.ts', files), /Unsupported/);
+  } finally { fs.rmSync(mutantPath, { force: true }); }
 });

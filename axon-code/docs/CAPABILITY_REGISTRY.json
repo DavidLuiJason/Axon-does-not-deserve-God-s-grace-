@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "cc39f35f8d4d8723970c858867e827d92be7cc5311d285112c7bd3586ef1dbcf",
-  "capabilityCount": 27,
+  "resultSetSha256": "2e841f62b405975b3a766e1d8fb335bfcb21c170ebaa929f1ccad33f54041ad4",
+  "capabilityCount": 42,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -49,6 +49,17 @@
       ]
     },
     {
+      "id": "android-webview-storage-recovery",
+      "status": "NOT RUN",
+      "grade": "T3",
+      "evidenceIds": [
+        "R14-P6-ANDROID-WEBVIEW-STORAGE"
+      ],
+      "resultFiles": [
+        "results/r14-p6-storage-recovery.json"
+      ]
+    },
+    {
       "id": "axon-code-brain-gateway-contract",
       "status": "TESTED",
       "grade": "T1",
@@ -77,6 +88,28 @@
       "resultFiles": [
         "results/r14-wp01-gateway.json",
         "results/r14-wp01-tests.json"
+      ]
+    },
+    {
+      "id": "browser-indexeddb-persistence",
+      "status": "NOT RUN",
+      "grade": "T2",
+      "evidenceIds": [
+        "R14-P6-BROWSER-INDEXEDDB"
+      ],
+      "resultFiles": [
+        "results/r14-p6-storage-recovery.json"
+      ]
+    },
+    {
+      "id": "browser-indexeddb-quota-pressure",
+      "status": "NOT RUN",
+      "grade": "T2",
+      "evidenceIds": [
+        "R14-P6-REAL-IDB-QUOTA"
+      ],
+      "resultFiles": [
+        "results/r14-p6-storage-recovery.json"
       ]
     },
     {
@@ -210,13 +243,23 @@
         "R14-FULL-R14-WP00-BASELINE",
         "R14-FULL-R14-WP01-GATEWAY-REGISTRY",
         "R14-FULL-R14-WP02-WORKSPACE",
+        "R14-FULL-R14-WP02-WP05-WP12-STORAGE-RECOVERY",
         "R14-FULL-R14-WP03-ANDROID-HOST-CONTRACT",
+        "R14-FULL-R14-WP03-CONTROL-WIRING",
         "R14-FULL-R14-WP03-EDITOR-ENGINE-CONTRACT",
+        "R14-FULL-R14-WP03-FILE-OPERATIONS-DIRECTOR",
+        "R14-FULL-R14-WP03-FILE-OPERATIONS",
+        "R14-FULL-R14-WP03-IMPORT-MAP-RESOLVES",
+        "R14-FULL-R14-WP03-WORKBENCH-ENGINES",
         "R14-FULL-R14-WP04-PYODIDE-PROVIDER",
+        "R14-FULL-R14-WP04-PYODIDE-VENDOR",
         "R14-FULL-R14-WP05-SECURITY-COMPLETION",
         "R14-FULL-R14-WP05-SECURITY",
         "R14-FULL-R14-WP05-TRUST",
+        "R14-FULL-R14-WP06-PACKAGE-MANAGER",
+        "R14-FULL-R14-WP10-TYPESCRIPT-DEBUGGER",
         "R14-FULL-R14-WP12-RECOVERY",
+        "R14-FULL-R14-WP13-GIT",
         "R14-FULL-ROUND1-150",
         "R14-FULL-ROUND10-DIRECT-USER",
         "R14-FULL-ROUND10-PROJECT-WORKLOADS",
@@ -239,6 +282,17 @@
       "resultFiles": [
         "results/r14-full-regression-per-file.json",
         "results/r14-full-regression-summary.json"
+      ]
+    },
+    {
+      "id": "git-local-repository-operations",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P5-WP13-REAL-GIT"
+      ],
+      "resultFiles": [
+        "results/r14-wp13-git.json"
       ]
     },
     {
@@ -304,6 +358,39 @@
       ]
     },
     {
+      "id": "node-inspector-debug-adapter",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P3-WP10-NODE-INSPECTOR"
+      ],
+      "resultFiles": [
+        "results/r14-wp10-typescript-debugger.json"
+      ]
+    },
+    {
+      "id": "npm-local-registry-package-manager",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P4-WP6-NPM-LOCAL-REGISTRY"
+      ],
+      "resultFiles": [
+        "results/r14-wp06-package-manager.json"
+      ]
+    },
+    {
+      "id": "npm-managed-package-execution",
+      "status": "BLOCKED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P4-WP6-NPM-MANAGED-EXECUTION-BLOCKED"
+      ],
+      "resultFiles": [
+        "results/r14-wp06-package-manager.json"
+      ]
+    },
+    {
       "id": "persistent-jobs-and-crash-recovery",
       "status": "TESTED",
       "grade": "T1",
@@ -326,6 +413,39 @@
       ]
     },
     {
+      "id": "pip-local-index-package-manager",
+      "status": "TESTED",
+      "grade": "T2",
+      "evidenceIds": [
+        "R14-P4-WP6-PIP-LOCAL-INDEX"
+      ],
+      "resultFiles": [
+        "results/r14-wp06-package-manager.json"
+      ]
+    },
+    {
+      "id": "pip-managed-package-execution",
+      "status": "BLOCKED",
+      "grade": "T2",
+      "evidenceIds": [
+        "R14-P4-WP6-PIP-MANAGED-EXECUTION-BLOCKED"
+      ],
+      "resultFiles": [
+        "results/r14-wp06-package-manager.json"
+      ]
+    },
+    {
+      "id": "pyodide-browser-worker-runtime",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P2-WP7-BROWSER-NOT-RUN"
+      ],
+      "resultFiles": [
+        "results/r14-wp07-node-runtime.json"
+      ]
+    },
+    {
       "id": "pyodide-cpython-wasm-worker",
       "status": "BLOCKED",
       "grade": "MIXED",
@@ -343,6 +463,17 @@
       "resultFiles": [
         "results/r14-host-provider-gates.json",
         "results/r14-wp04-tests.json"
+      ]
+    },
+    {
+      "id": "pyodide-node-worker-runtime",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P2-WP7-NODE-RUNTIME"
+      ],
+      "resultFiles": [
+        "results/r14-wp07-node-runtime.json"
       ]
     },
     {
@@ -391,6 +522,17 @@
       ]
     },
     {
+      "id": "storage-recovery-trust-approval-redaction",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P6-WP2-WP5-WP12-STORAGE-RECOVERY"
+      ],
+      "resultFiles": [
+        "results/r14-p6-storage-recovery.json"
+      ]
+    },
+    {
       "id": "typescript-current-version-compatibility",
       "status": "NOT RUN",
       "grade": "T1",
@@ -402,14 +544,49 @@
       ]
     },
     {
+      "id": "typescript-language-server",
+      "status": "BLOCKED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P3-WP10-LSP-BLOCKED"
+      ],
+      "resultFiles": [
+        "results/r14-wp10-typescript-debugger.json"
+      ]
+    },
+    {
+      "id": "typescript-project-diagnostics",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P3-WP10-TYPESCRIPT"
+      ],
+      "resultFiles": [
+        "results/r14-wp10-typescript-debugger.json"
+      ]
+    },
+    {
+      "id": "workbench-browser-live-ui-acceptance",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-P1-WP3-BROWSER-UI"
+      ],
+      "resultFiles": [
+        "results/r14-wp03-node-ui.json"
+      ]
+    },
+    {
       "id": "workbench-file-operations-and-editor-controls",
       "status": "TESTED",
       "grade": "T1",
       "evidenceIds": [
-        "R14-WP3-FILE-OPS-01"
+        "R14-WP3-FILE-OPS-01",
+        "R14-P1-WP3-NODE-UI"
       ],
       "resultFiles": [
-        "results/r14-wp03-file-operations.json"
+        "results/r14-wp03-file-operations.json",
+        "results/r14-wp03-node-ui.json"
       ]
     },
     {

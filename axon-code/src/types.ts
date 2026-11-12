@@ -209,12 +209,16 @@ export interface ExecutionRequest {
   outputLimitBytes: number;
   networkAllowed: boolean;
   fileAccess: 'none' | 'project-read-only' | 'working-copy';
+  /** Optional line-oriented stdin supplied by the caller for interactive runtimes. */
+  stdin?: string;
 }
 
 export interface ExecutionResult {
   requestId: string;
   status: 'completed' | 'failed' | 'timed-out' | 'cancelled' | 'blocked' | 'not-implemented';
   exitCode?: number;
+  /** JSON-safe textual return value from runtimes that expose one. */
+  value?: string;
   stdout: string;
   stderr: string;
   diagnostics: CodeDiagnostic[];

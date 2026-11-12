@@ -13,15 +13,18 @@ Not proven:
 
 The plugin advertises process/Python/Gradle providers as false. It does not claim those runtimes exist.
 
-## C4 Pyodide CPython WebAssembly Worker
+## C4 / WP7 Pyodide CPython WebAssembly Worker
 
-Implemented:
-- A distinct `PyodideWorkerExecutionAdapter` using the real `loadPyodide` and `runPythonAsync` entry points in a Worker.
-- Offline pack contract, per-file SHA-256 and byte-size verification, required runtime asset checks, optional pack install/removal interfaces, source/output/time limits, cancellation and Worker termination.
-- Grade 1 isolation label only; Worker isolation is not an OS sandbox.
-- Fake-worker/pack contract tests prove rejection and pack-management logic, not Python interpreter correctness.
+Implemented and Node-proven:
+- `PyodideWorkerExecutionAdapter` accepts an injectable `PyodideWorkerFactory`; production browser Workers and the Node `worker_threads` proof runner use the same run/output/completion protocol.
+- Vendor Pack V2 supplies the real Pyodide 314.0.7 distribution and WASM/stdlib assets. The Node tests verify asset hashes and execute the actual CPython runtime from those local files.
+- Real Node worker_threads execution proves print output, returned expression value, syntax errors, runtime tracebacks, stdin, wall-clock termination of an infinite loop, output caps, source-size refusal, per-run state isolation, and scoped `/project` virtual file read/write.
+- The Node runner gives Python an empty JavaScript-global bridge, mounts no host filesystem, denies Python socket connection audit events, and denies writes outside `/project`. It does not fetch runtime assets from the network.
+- The execution boundary is **Grade 1 (Worker/process separation)**. It is not an OS-enforced hostile-code sandbox. The Node runner's evidence does not establish Grade 2 or Grade 3 isolation.
 
-Blocked/not run:
-- No actual Pyodide runtime assets are present in the project or local npm cache. The network cannot resolve the npm registry. Therefore no real offline pack is installed and the adapter correctly reports unavailable/BLOCKED.
-- Real CPython execution, package imports, offline restart, browser compatibility, and Android WebView memory/performance are NOT RUN.
-- No interpreter imitation or remote fetch fallback is provided.
+Still NOT RUN / not established:
+- Real Chromium browser Worker execution, browser offline pack install/reload and browser-native filesystem/network policy parity.
+- Android WebView execution, Android memory/performance on the 4 GB target, native Python provider, or Android device recovery.
+- Production pack lifecycle integration with the app's persistent optional-pack store. The test runner reads the exact local vendor pack directly; it does not claim the application has installed that pack for end users.
+
+No interpreter imitation, fake Python engine, remote fetch fallback, or OS-sandbox claim is used.

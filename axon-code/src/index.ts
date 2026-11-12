@@ -77,3 +77,7 @@ export * from './security/safeTelemetry.js';
 export * from './runtime/androidHostProvider.js';
 export * from './runtime/pyodideWorkerProvider.js';
 export * from './workbench/editorEngineContracts.js';
+export * from './environment/npmPackageManagerAdapter.js';
+export * from './environment/pipPackageManagerAdapter.js';
+export * from './versionControl/gitProvider.js';
+export * from './storage/fileBackedKeyValueStore.js';

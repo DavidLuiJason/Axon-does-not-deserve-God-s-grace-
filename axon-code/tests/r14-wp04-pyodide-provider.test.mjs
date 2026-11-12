@@ -14,16 +14,16 @@ test('C4 rejects missing, modified, oversized and path-traversal pack files', as
   const tampered = makePack(); tampered.readFile = async () => new Uint8Array([9]); assert.match((await verifyOfflinePyodidePack(tampered)).reason, /failed SHA-256/);
   const unsafe = makePack(); unsafe.files = [{ path: '../pyodide.js', sizeBytes: 1, sha256: hash(new Uint8Array([1])) }]; assert.equal((await verifyOfflinePyodidePack(unsafe)).valid, false);
 });
-test('C4 creates a real Pyodide loader worker and never embeds a fake interpreter', () => { const source = createPyodideWorkerSource('https://local.invalid/pyodide/'); assert.match(source, /importScripts/); assert.match(source, /loadPyodide/); assert.match(source, /runPythonAsync/); assert.doesNotMatch(source, /mockPython|fakeInterpreter|eval\(/); });
+test('C4 rejects a remote base URL for an offline-only runtime pack', async () => { const remote = makePack(); remote.baseUrl = 'https://cdn.example.invalid/pyodide/'; const result = await verifyOfflinePyodidePack(remote); assert.equal(result.valid, false); assert.match(result.reason, /metadata is invalid/); });
 test('C4 refuses execution when no offline pack is installed', async () => {
   const adapter = new PyodideWorkerExecutionAdapter({ async readPythonEntry() { return { path: 'main.py', source: 'print(1)' }; } }, { create() { throw new Error('must not create worker'); } }, null);
   const init = await adapter.initialize(); assert.equal(init.available, false); const result = await adapter.execute(request()); assert.equal(result.status, 'blocked'); assert.match(result.notes.join(' '), /No Python interpreter imitation/);
 });
 test('C4 requires a verified pack, offline request, Python file and bounded policy', async () => {
   const adapter = new PyodideWorkerExecutionAdapter({ async readPythonEntry() { return { path: 'main.py', source: 'print(1)' }; } }, { create() { throw new Error('worker not expected for invalid request'); } }, makePack());
-  await adapter.initialize(); assert.equal(adapter.canHandle(request({ networkAllowed: true })), false); assert.equal(adapter.canHandle(request({ timeoutMs: 60000 })), false); assert.equal(adapter.canHandle(request({ fileAccess: 'working-copy' })), false); assert.equal(adapter.canHandle(request({ entryFiles: ['main.js'] })), false);
+  await adapter.initialize(); assert.equal(adapter.canHandle(request({ networkAllowed: true })), false); assert.equal(adapter.canHandle(request({ timeoutMs: 60000 })), false); assert.equal(adapter.canHandle(request({ fileAccess: 'working-copy' })), true); assert.equal(adapter.canHandle(request({ entryFiles: ['main.js'] })), false);
 });
-test('C4 includes a deliberately broken worker-mutant assertion', () => { const source = createPyodideWorkerSource('https://local.invalid/pyodide/'); assert.notEqual(source.includes('loadPyodide'), false); assert.notEqual(source.includes('runPythonAsync'), false); });
+test('C4 rejects a malformed Pyodide worker base URL', () => { assert.throws(() => createPyodideWorkerSource('not a valid URL'), TypeError); });
 
 test('C4 installs only verified offline packs and supports explicit removal', async () => {
   let saved = null; const store = { async get() { return saved; }, async put(pack) { saved = pack; }, async remove(id) { if (saved?.id !== id) return false; saved = null; return true; } };

@@ -9,7 +9,7 @@ const TEXT_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\bAKIA[0-9A-Z]{16}\b/g, replacement: REDACTED },
   { pattern: /\bsk-(?:proj-|live-)?[A-Za-z0-9_-]{20,}\b/g, replacement: REDACTED },
   { pattern: /\bBearer\s+[A-Za-z0-9._~+/-]+=*/gi, replacement: `Bearer ${REDACTED}` },
-  { pattern: /((?:api[_-]?key|access[_-]?token|refresh[_-]?token|auth[_-]?token|authorization|cookie|session(?:[_-]?id)?|credential(?:s)?|password|passwd|secret|client[_-]?secret)\s*[:=]\s*["']?)([^"'&\s,;]+)/gi, replacement: `$1${REDACTED}` },
+  { pattern: /(["']?(?:api[_-]?key|access[_-]?token|refresh[_-]?token|auth[_-]?token|authorization|cookie|session(?:[_-]?id)?|credential(?:s)?|password|passwd|secret|client[_-]?secret)["']?\s*[:=]\s*["']?)([^"'&\s,;]+)/gi, replacement: `$1${REDACTED}` },
   { pattern: /(https?:\/\/[^:/\s]+:)([^@/\s]+)(@)/gi, replacement: `$1${REDACTED}$3` },
 ];
 

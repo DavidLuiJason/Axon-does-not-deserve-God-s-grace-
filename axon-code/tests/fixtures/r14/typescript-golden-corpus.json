@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "compiler": "typescript@5.8.3",
+  "projects": [
+    {
+      "id": "01-clean",
+      "files": {
+        "main.ts": "const count: number = 7; console.log(count);"
+      },
+      "expectedCodes": []
+    },
+    {
+      "id": "02-type-mismatch",
+      "files": {
+        "main.ts": "const count: number = \"seven\";"
+      },
+      "expectedCodes": [
+        2322
+      ]
+    },
+    {
+      "id": "03-missing-property",
+      "files": {
+        "main.ts": "const user = { name: \"Ada\" }; console.log(user.age);"
+      },
+      "expectedCodes": [
+        2339
+      ]
+    },
+    {
+      "id": "04-unknown-name",
+      "files": {
+        "main.ts": "console.log(unknownAxonValue);"
+      },
+      "expectedCodes": [
+        2304
+      ]
+    },
+    {
+      "id": "05-argument-count",
+      "files": {
+        "main.ts": "function add(a: number, b: number) { return a + b; } add(1);"
+      },
+      "expectedCodes": [
+        2554
+      ]
+    },
+    {
+      "id": "06-return-type",
+      "files": {
+        "main.ts": "function getCount(): number { return \"wrong\"; }"
+      },
+      "expectedCodes": [
+        2322
+      ]
+    },
+    {
+      "id": "07-generic-constraint",
+      "files": {
+        "main.ts": "function take<T extends string>(value: T) { return value; } take(42);"
+      },
+      "expectedCodes": [
+        2345
+      ]
+    },
+    {
+      "id": "08-strict-null",
+      "files": {
+        "main.ts": "let maybeText: string | null = null; const length: number = maybeText.length;"
+      },
+      "expectedCodes": [
+        18047
+      ]
+    },
+    {
+      "id": "09-implicit-any",
+      "files": {
+        "main.ts": "function greet(name) { return \"Hello \" + name; }"
+      },
+      "expectedCodes": [
+        7006
+      ]
+    },
+    {
+      "id": "10-no-overload",
+      "files": {
+        "main.ts": "const date = new Date(Symbol(\"bad\"));"
+      },
+      "expectedCodes": [
+        2769
+      ]
+    },
+    {
+      "id": "11-missing-module",
+      "files": {
+        "main.ts": "import { absent } from \"./not-installed.js\"; console.log(absent);"
+      },
+      "expectedCodes": [
+        2307
+      ]
+    },
+    {
+      "id": "12-duplicate-identifier",
+      "files": {
+        "main.ts": "const repeated = 1; const repeated = 2;"
+      },
+      "expectedCodes": [
+        2451
+      ]
+    },
+    {
+      "id": "13-readonly-assignment",
+      "files": {
+        "main.ts": "interface Item { readonly id: number } const item: Item = { id: 1 }; item.id = 2;"
+      },
+      "expectedCodes": [
+        2540
+      ]
+    },
+    {
+      "id": "14-index-signature",
+      "files": {
+        "main.ts": "const values = { known: 1 }; const n = values[\"missing\"];"
+      },
+      "expectedCodes": [
+        7053
+      ]
+    },
+    {
+      "id": "15-enum-mismatch",
+      "files": {
+        "main.ts": "enum Mode { On, Off } const mode: Mode = \"On\";"
+      },
+      "expectedCodes": [
+        2322
+      ]
+    },
+    {
+      "id": "16-syntax-error",
+      "files": {
+        "main.ts": "const value = ;"
+      },
+      "expectedCodes": [
+        1109
+      ]
+    },
+    {
+      "id": "17-union-narrowing",
+      "files": {
+        "main.ts": "function read(value: string | number) { return value.toUpperCase(); }"
+      },
+      "expectedCodes": [
+        2339
+      ]
+    },
+    {
+      "id": "18-tuple-index",
+      "files": {
+        "main.ts": "const pair: [string, number] = [\"x\", 1]; const third = pair[2];"
+      },
+      "expectedCodes": [
+        2493
+      ]
+    },
+    {
+      "id": "19-excess-property",
+      "files": {
+        "main.ts": "interface User { name: string } const user: User = { name: \"A\", age: 1 };"
+      },
+      "expectedCodes": [
+        2353
+      ]
+    },
+    {
+      "id": "20-function-variance",
+      "files": {
+        "main.ts": "let fn: (value: string) => void; const numeric = (value: number) => {}; fn = numeric;"
+      },
+      "expectedCodes": [
+        2322
+      ]
+    },
+    {
+      "id": "21-invalid-spread",
+      "files": {
+        "main.ts": "const value = { ...42 };"
+      },
+      "expectedCodes": [
+        2698
+      ]
+    },
+    {
+      "id": "22-jsx-intrinsic",
+      "files": {
+        "main.tsx": "const view = <unknown-tag />;"
+      },
+      "expectedCodes": [
+        7026
+      ]
+    },
+    {
+      "id": "23-cross-file-missing-export",
+      "files": {
+        "main.ts": "import { missing } from \"./lib\"; console.log(missing);",
+        "lib.ts": "export const present = 1;"
+      },
+      "expectedCodes": [
+        2305
+      ]
+    },
+    {
+      "id": "24-cross-file-type-mismatch",
+      "files": {
+        "main.ts": "import { value } from \"./lib\"; const text: string = value;",
+        "lib.ts": "export const value: number = 9;"
+      },
+      "expectedCodes": [
+        2322
+      ]
+    },
+    {
+      "id": "25-cross-file-missing-module",
+      "files": {
+        "main.ts": "import { value } from \"./missing\"; console.log(value);",
+        "lib.ts": "export const other = 1;"
+      },
+      "expectedCodes": [
+        2307
+      ]
+    },
+    {
+      "id": "26-tsconfig-invalid-target",
+      "files": {
+        "main.ts": "const value = 1;"
+      },
+      "expectedCodes": [
+        6046
+      ],
+      "tsconfig": "{\"compilerOptions\":{\"target\":\"NOT_A_TARGET\"}}"
+    },
+    {
+      "id": "27-tsconfig-missing-extends",
+      "files": {
+        "main.ts": "const value = 1;"
+      },
+      "expectedCodes": [
+        5083
+      ],
+      "tsconfig": "{\"extends\":\"./missing-base.json\"}"
+    },
+    {
+      "id": "28-tsconfig-malformed-json",
+      "files": {
+        "main.ts": "const value = 1;"
+      },
+      "expectedCodes": [
+        1109
+      ],
+      "tsconfig": "{\"compilerOptions\":{\"strict\": }}"
+    },
+    {
+      "id": "29-tsconfig-no-input-files",
+      "files": {
+        "main.ts": "const value = 1;"
+      },
+      "expectedCodes": [
+        18003
+      ],
+      "tsconfig": "{\"include\":[\"missing/**/*.ts\"]}"
+    },
+    {
+      "id": "30-tsconfig-unknown-option",
+      "files": {
+        "main.ts": "const value = 1;"
+      },
+      "expectedCodes": [
+        5023
+      ],
+      "tsconfig": "{\"compilerOptions\":{\"notARealOption\":true}}"
+    }
+  ]
+}

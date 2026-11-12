@@ -99,15 +99,36 @@ async function readFile(projectId, path) {
   const transaction = db.transaction('files', 'readonly');
   return (await requestResult(transaction.objectStore('files').get([projectId, path]))) ?? null;
 }
-async function writeFile(path, content) {
+async function writeFile(path, content, expectedRevision) {
   if (!activeProject) throw new Error('Create or open a project first.');
   const canonical = safePath(path);
   if (!canonical) throw new Error('File path is unsafe or non-portable.');
   if (new TextEncoder().encode(content).byteLength > MAX_TEXT_FILE_BYTES) throw new Error('Text file exceeds the 2 MiB editor limit.');
-  const previous = await readFile(activeProject.id, canonical);
-  await storePut('files', { projectId: activeProject.id, path: canonical, content, sizeBytes: new TextEncoder().encode(content).byteLength, updatedAt: Date.now(), revision: (previous?.revision ?? 0) + 1, deleted: false });
+  const projectId = activeProject.id;
+  const transaction = db.transaction('files', 'readwrite');
+  const store = transaction.objectStore('files');
+  const request = store.get([projectId, canonical]);
+  const saved = await new Promise((resolve, reject) => {
+    request.onsuccess = () => {
+      const previous = request.result ?? null;
+      if (expectedRevision !== undefined && (previous?.revision ?? 0) !== expectedRevision) {
+        const error = new Error('Save conflict: this file changed outside the current editor. Reopen it before saving again.');
+        try { transaction.abort(); } catch {}
+        reject(error);
+        return;
+      }
+      const record = { projectId, path: canonical, content, sizeBytes: new TextEncoder().encode(content).byteLength, updatedAt: Date.now(), revision: (previous?.revision ?? 0) + 1, deleted: false };
+      store.put(record);
+      resolve(record);
+    };
+    request.onerror = () => reject(request.error ?? new Error('File save read failed.'));
+    transaction.onabort = () => reject(transaction.error ?? new Error('File save transaction aborted.'));
+    transaction.onerror = () => reject(transaction.error ?? new Error('File save transaction failed.'));
+  });
+  await new Promise((resolve, reject) => { transaction.oncomplete = resolve; transaction.onerror = () => reject(transaction.error); transaction.onabort = () => reject(transaction.error ?? new Error('File save transaction aborted.')); });
   activeProject = { ...activeProject, updatedAt: Date.now() };
   await storePut('projects', activeProject);
+  return saved;
 }
 async function createProject(name) {
   const cleaned = name.trim().replace(/[\u0000-\u001f\u007f]/g, '').slice(0, 80);
@@ -227,14 +248,14 @@ function updateOutput(message, append = false) {
 async function saveActive() {
   if (!activePath) return;
   const buffer = buffers.get(activePath); if (!buffer) return;
-  await writeFile(activePath, buffer.content);
+  const stored = await writeFile(activePath, buffer.content, buffer.revision);
   buffer.savedContent = buffer.content; buffer.dirty = false;
-  const stored = await readFile(activeProject.id, activePath); buffer.revision = stored?.revision ?? buffer.revision;
+  buffer.revision = stored.revision;
   $('editorStatus').textContent = 'Saved'; renderTabs(); await renderExplorer(); updateButtons();
   updateOutput(`Saved ${activePath}.`);
 }
 async function saveAll() {
-  for (const [path, buffer] of buffers) if (buffer.dirty) { await writeFile(path, buffer.content); buffer.savedContent = buffer.content; buffer.dirty = false; }
+  for (const [path, buffer] of buffers) if (buffer.dirty) { const stored = await writeFile(path, buffer.content, buffer.revision); buffer.savedContent = buffer.content; buffer.dirty = false; buffer.revision = stored.revision; }
   renderTabs(); await renderExplorer(); updateButtons(); $('editorStatus').textContent = 'All open files saved'; updateOutput('All open files saved.');
 }
 async function newFile(path) {
@@ -248,7 +269,7 @@ async function deleteActive() {
   if (!activePath || !activeProject) return;
   const path = activePath;
   if (!confirm(`Move ${path} to the temporary undo area?`)) return;
-  const file = await readFile(activeProject.id, path); if (!file) return;
+  const file = await readFile(activeProject.id, path); if (!file || file.deleted) throw new Error('Cannot delete: the file no longer exists in the project store.');
   deletedFile = { ...file, deleted: false };
   await storePut('files', { ...file, deleted: true, deletedAt: Date.now() });
   closeTab(path); activePath = openTabs.at(-1) ?? null;

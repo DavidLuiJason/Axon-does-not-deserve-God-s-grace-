@@ -1,0 +1,38 @@
+[
+  {
+    "id": "R14-P2-WP7-NODE-RUNTIME",
+    "suite": "r14-p2-wp7-real-pyodide-node-worker",
+    "capability": "pyodide-node-worker-runtime",
+    "status": "PASS",
+    "command": "npm run build && node --test tests/helpers/pyodide-node-suite.mjs tests/r14-wp04-pyodide-provider.test.mjs tests/r14-wp04-pyodide-vendor.test.mjs",
+    "exitCode": 0,
+    "durationMs": 25197,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "negativeTests": 10,
+    "mutantCaught": true,
+    "runtimeVersion": "314.0.7",
+    "isolationGrade": "Grade 1",
+    "notes": [
+      "Real Pyodide CPython WebAssembly executed inside node:worker_threads.",
+      "No host filesystem mount; JS bridge empty; socket audit and out-of-project writes denied.",
+      "No OS-enforced sandbox claim."
+    ]
+  },
+  {
+    "id": "R14-P2-WP7-BROWSER-NOT-RUN",
+    "suite": "r14-p2-wp7-browser-worker-parity",
+    "capability": "pyodide-browser-worker-runtime",
+    "status": "NOT RUN",
+    "command": "Chromium browser Worker execution (not run)",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "reason": "P2 proves real CPython execution in Node worker_threads. Chromium/browser Worker integration and browser-host policy parity were not run; Android WebView was also not run."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "R14-P5-WP13-REAL-GIT",
+    "suite": "r14-p5-wp13-real-git-cli",
+    "capability": "git-local-repository-operations",
+    "status": "PASS",
+    "command": "npm run build && node --test tests/r14-wp13-git.test.mjs",
+    "exitCode": 0,
+    "durationMs": 654,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "grade": "T1",
+    "tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "negativeTests": 7,
+    "mutantCaught": true,
+    "gitVersion": "2.47.3",
+    "isolationGrade": "Grade 0",
+    "checks": [
+      "status",
+      "diff",
+      "log",
+      "current branch and branch list",
+      "commit",
+      "branch creation",
+      "checkout",
+      "real merge conflict",
+      "ignored files",
+      "2 MiB large-file commit",
+      "oversize refusal",
+      "outside-workspace refusal",
+      "hooks disabled",
+      "askpass/SSH-agent/credential environment not forwarded"
+    ]
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "R14-P3-WP10-TYPESCRIPT",
+    "suite": "r14-p3-wp10-typescript-compiler-golden-corpus",
+    "capability": "typescript-project-diagnostics",
+    "status": "PASS",
+    "command": "npm run build && node --test tests/r14-wp10-typescript-debugger.test.mjs",
+    "exitCode": 0,
+    "durationMs": 8106,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "tests": 39,
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "negativeTests": 36,
+    "mutantCaught": true,
+    "goldenProjects": 30,
+    "compilerVersion": "5.8.3"
+  },
+  {
+    "id": "R14-P3-WP10-NODE-INSPECTOR",
+    "suite": "r14-p3-wp10-real-node-inspector-protocol",
+    "capability": "node-inspector-debug-adapter",
+    "status": "PASS",
+    "command": "node --test tests/r14-wp10-typescript-debugger.test.mjs",
+    "exitCode": 0,
+    "durationMs": 8106,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "isolationGrade": "Grade 1",
+    "notes": [
+      "Real Node child process and WebSocket Inspector Protocol.",
+      "Breakpoints, stepping, stack, variables, evaluate, stop and uncaught-crash detection executed.",
+      "No OS sandbox claim."
+    ]
+  },
+  {
+    "id": "R14-P3-WP10-LSP-BLOCKED",
+    "suite": "r14-p3-wp10-language-server-availability",
+    "capability": "typescript-language-server",
+    "status": "BLOCKED",
+    "command": "node -e package resolution check for typescript-language-server, vscode-languageserver, vscode-languageserver-protocol, @volar/language-server, @typescript-eslint/language-service",
+    "exitCode": 0,
+    "durationMs": 0,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "reason": "All five package resolution checks returned MISSING in Vendor Pack V2. No fake LSP server was created."
+  }
+]

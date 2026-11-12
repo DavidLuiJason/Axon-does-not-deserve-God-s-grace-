@@ -1,14 +1,14 @@
 WORKSTREAM: AXON CODE (Round 14 build, Round 15 verification)
 ACCOUNT / ROLE: Claude = Director and verifier; ChatGPT = builder (separate chat)
 UPDATED: 2026-11-12
-STATE NOW: base = AXON_CODE_R14_DIRECTOR_BASE.zip (folder axon-code/): npm run build, then node --test gives 1,147 of 1,147 once node_modules (with typescript) sits inside axon-code/. Work packages: WP1 done; WP0, 2, 3, 4, 5, 7, 12, 14 partial or blocked; WP6, 8, 9, 10, 11, 13 not started. Not proven in a real browser or on a phone.
-BASE TO START FROM: AXON_CODE_R14_DIRECTOR_BASE.zip + vendor pack V2 (typescript 5.8.3, jsdom, fake-indexeddb, CodeMirror, xterm, pyodide). The workflow that builds the pack is added by hand on GitHub (see rule 7).
+STATE NOW: continuation 3 delivered P1 to P6 (Node-provable): real-DOM UI tests, Pyodide in a Node worker, TypeScript diagnostics, Node debugger adapter, npm and pip adapters, git, storage recovery. Director found and fixed one real vulnerability (git ran programs named in a project's own .git/config). 1,209 tests; in the Director sandbox 1,176 pass and 33 fail only for environment reasons (TypeScript 6 instead of 5.8.3, no jsdom, no fake-indexeddb). Not proven in a real browser or on a phone.
+BASE TO START FROM: the merged repository folder axon-code/ (this merge included) + vendor pack V2. Run `npm run build`, then `node --test tests/*.test.mjs`; with TypeScript 5.8.3, jsdom and fake-indexeddb installed expect 1,209 of 1,209 (not yet confirmed by the Director).
 OWNS: axon-code/, docs/AXON_CODE_*.md, workstreams/AXON_CODE.txt
 MUST NOT TOUCH: src/, tests/, tools/, public/ at the repository ROOT (the AXON app), .github, root package.json and tsconfig.json, NOW.txt, MERGE_TAG.txt, docs/JOB_BOARD.md
-NOT BEING DONE HERE: tools to brain, AXON Web, AXON Apps, AXON Games, AI Studio screens, registering any AXON tool. AXON Code imports nothing from the AXON app and the app does not use it yet.
-SCREENS: the Director knows AI Studio screens are coming (built by another Director). Facts for it: docs/AXON_CODE_SCREEN_READINESS.md (what is real today, what to show as NOT AVAILABLE, which element ids must stay).
-SCREEN-READY NOW: capability status screen (real registry); workspace trust and approval sheet; project files, editor controls and file actions (logic tested in Node, not clicked in a browser).
-SCREEN NOT READY: phone terminal, Python run, diagnostics, debugger, Git, packages, Android host. Show NOT AVAILABLE.
-ASKS OF OTHERS: screen Director: keep every element id listed in the readiness note.
-NEXT: vendor pack V2, ChatGPT continuation 3 (P1 to P6, provable in Node), Director verifies the delta, Director writes the browser-proof workflow text.
-WAITING ON THE OWNER: add the vendor pack workflow by hand on GitHub and run it; download AXON_CODE_VENDOR_PACK_V2.
+NOT BEING DONE HERE: tools to brain, AXON Web, AXON Apps, AXON Games, AI Studio screens, registering any AXON tool.
+SCREENS: the Director knows AI Studio screens are coming (another Director). Facts: docs/AXON_CODE_SCREEN_READINESS.md (updated). Most areas are now PARTIAL (tested in Node on a desktop host).
+SCREEN-READY NOW: capability status, trust and approval sheet, project and file actions, Python run (as "not verified in browser"), problems list, git status.
+SCREEN NOT READY: phone terminal, debugger and packages on a phone, preview, Android host.
+ASKS OF OTHERS: screen Director: keep the element ids in the readiness note.
+NEXT: add jsdom and fake-indexeddb to axon-code/package.json and lock from vendor pack V2; Director writes the browser-proof workflow text; remaining packages WP8, WP9, WP11, rest of WP13.
+WAITING ON THE OWNER: vendor pack V2 (workflow added by hand on GitHub), a place with Chromium for the browser proofs.

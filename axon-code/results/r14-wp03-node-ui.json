@@ -1,0 +1,39 @@
+[
+  {
+    "id": "R14-P1-WP3-NODE-UI",
+    "suite": "r14-p1-wp3-real-jsdom-ui",
+    "capability": "workbench-file-operations-and-editor-controls",
+    "status": "PASS",
+    "command": "npm run build && node --test tests/r14-wp03-control-wiring.test.mjs tests/r14-wp03-file-operations.test.mjs tests/r14-wp03-file-operations-director.test.mjs",
+    "exitCode": 0,
+    "durationMs": 5153,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "tests": 29,
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "negativeTests": 21,
+    "mutantCaught": true,
+    "fakeBoundaries": [
+      "jsdom dialog showModal/close presentation",
+      "file picker FileList injection",
+      "clipboard read/write permission API",
+      "native share sheet",
+      "anchor download click/navigation",
+      "xterm drawing and ResizeObserver"
+    ]
+  },
+  {
+    "id": "R14-P1-WP3-BROWSER-UI",
+    "suite": "r14-p1-wp3-live-browser-acceptance",
+    "capability": "workbench-browser-live-ui-acceptance",
+    "status": "NOT RUN",
+    "command": "Chromium browser acceptance workflow (not run)",
+    "exitCode": null,
+    "durationMs": null,
+    "hostFingerprint": "f752641fb0e023ea",
+    "grade": "T1",
+    "reason": "jsdom cannot prove Chromium rendering, native clipboard/file-picker/share/download integration, or xterm painting. The Node suite mounted the real CodeMirror 6 EditorView and used fake-indexeddb; browser-specific boundaries are explicitly FAKE_BOUNDARY."
+  }
+]

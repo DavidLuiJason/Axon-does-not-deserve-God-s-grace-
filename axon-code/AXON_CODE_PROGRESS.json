@@ -61,7 +61,7 @@
     "WP2": {
       "state": "PARTIAL",
       "tier": "T1",
-      "summary": "Added durable transaction-intent journal over the KeyValueStore, with before/after hashes and non-destructive recovery classification. Atomic workspace CAS, write-if-absent, tombstones and path safety are tested. Real IndexedDB reload persistence is NOT RUN because Chromium navigation is blocked by host policy.",
+      "summary": "Continuation 3 Node proof completed with fake-indexeddb and real file-backed store: atomic SIGKILL recovery, interrupted project import, two-tab stale write conflict, quota enforcement and SHA-256 corruption detection passed. Real Chromium/Android IndexedDB quota and device persistence remain NOT RUN.",
       "filesChanged": [
         "src/storage/indexedDbWorkspaceFileStore.ts",
         "src/storage/indexedDbStore.ts",
@@ -77,12 +77,15 @@
       "blockers": [
         "Real Chromium IndexedDB reload test NOT RUN: net::ERR_BLOCKED_BY_ADMINISTRATOR when navigating to the local test origin.",
         "Android SAF persisted URI grants, desktop filesystem provider and SFTP provider are not implemented in this phase."
-      ]
+      ],
+      "continuation3State": "DONE",
+      "continuation3LastCommand": "npm run typecheck && npm run build && node --test tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs",
+      "continuation3LastResult": "12/12 PASS; 7 negative; real compiled-module mutant caught. fake-indexeddb and real file-store Node evidence passed. Browser/Android/real IndexedDB quota remain NOT RUN."
     },
     "WP5": {
       "state": "PARTIAL",
       "tier": "T1",
-      "summary": "Restricted-by-default trust and exact-request/project/action single-use approvals remain tested. Redaction now has a central telemetry boundary for diagnostics, structured logs, crash reports and diagnostic exports, in addition to project export, execution output and evidence. CPU/memory/process/disk/network quota enforcement and provider isolation-grade enforcement remain incomplete.",
+      "summary": "Continuation 3 Node proof completed: unknown/mismatched workspace defaults to Restricted; single-use approvals reject replay, cross-project use and modified requests; secrets corpus is redacted across logs, diagnostics, exports and crash reports. Device/browser integration remains NOT RUN.",
       "filesChanged": [
         "src/security/workspaceTrust.ts",
         "src/security/secretRedactor.ts",
@@ -106,12 +109,15 @@
       "mutantsCaught": 3,
       "blockers": [
         "Per-provider isolation grades and host-enforced CPU, memory, process-count and disk quotas remain incomplete."
-      ]
+      ],
+      "continuation3State": "DONE",
+      "continuation3LastCommand": "npm run typecheck && npm run build && node --test tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs",
+      "continuation3LastResult": "12/12 PASS; 7 negative; real compiled-module mutant caught. fake-indexeddb and real file-store Node evidence passed. Browser/Android/real IndexedDB quota remain NOT RUN."
     },
     "WP12": {
       "state": "PARTIAL",
       "tier": "T1",
-      "summary": "Persistent job versioning, checkpoints, recovery coordinator and resource governor behavior tested. Checkpoint hash, runtime and project fingerprint checks prevent unsafe automatic resume. Real IndexedDB reload and Android force-stop/device recovery remain NOT RUN.",
+      "summary": "Continuation 3 Node proof completed: real file-backed save interrupted by SIGKILL preserves prior committed data; interrupted IndexedDB project import keeps previous active version; existing job/checkpoint recovery tests remain green. Browser/Android lifecycle recovery remains NOT RUN.",
       "filesChanged": [
         "src/jobs/persistentJobs.ts",
         "src/jobs/recoveryCoordinator.ts",
@@ -127,7 +133,10 @@
       "blockers": [
         "Real IndexedDB job/checkpoint persistence across browser reload NOT RUN due host navigation policy.",
         "Android force-stop/restart evidence NOT RUN; host-supported pause/suspend semantics still require provider integration."
-      ]
+      ],
+      "continuation3State": "DONE",
+      "continuation3LastCommand": "npm run typecheck && npm run build && node --test tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs",
+      "continuation3LastResult": "12/12 PASS; 7 negative; real compiled-module mutant caught. fake-indexeddb and real file-store Node evidence passed. Browser/Android/real IndexedDB quota remain NOT RUN."
     },
     "WP14": {
       "state": "BLOCKED",
@@ -179,57 +188,60 @@
     "WP04": {
       "state": "PARTIAL",
       "tier": "T1",
-      "summary": "A distinct real Pyodide CPython WebAssembly Worker adapter, verified offline-pack contract, install/removal interface, source/time/output limits and cancellation were added. Fake pack/worker tests pass. No real Pyodide assets are available, so the provider correctly stays unavailable and real CPython execution is BLOCKED.",
+      "summary": "Continuation 3 P2 Node proof is complete: the actual Vendor Pack V2 Pyodide 314.0.7 distribution executes real CPython in Node worker_threads. Print/value, syntax/runtime traceback, stdin, timeout termination, output cap, oversized-source refusal, fresh-worker isolation, project virtual FS read/write, host-path/network denial and unsafe path/writeback refusals all pass. One real compiled-provider mutant is caught. Grade 1 only. Browser Worker parity, production optional-pack lifecycle and Android WebView/device testing remain NOT RUN.",
       "filesChanged": [
+        "src/types.ts",
         "src/runtime/pyodideWorkerProvider.ts",
+        "tests/helpers/pyodide-node-worker.mjs",
+        "tests/helpers/pyodide-node-suite.mjs",
         "tests/r14-wp04-pyodide-provider.test.mjs",
+        "results/r14-wp04-tests.json",
+        "results/r14-wp07-node-runtime.json",
         "docs/C3_C4_HOST_PROVIDER_STATUS.md",
-        "src/index.ts"
-      ],
-      "testsAdded": 8,
-      "testsPassed": 8,
-      "negativeTests": 4,
-      "mutantCaught": true,
-      "blockers": [
-        "No actual Pyodide distribution/asset pack exists in source or npm cache; registry DNS resolution failed. Real CPython runtime tests NOT RUN."
-      ]
-    },
-    "WP3": {
-      "state": "PARTIAL",
-      "tier": "T1",
-      "summary": "CodeMirror 6 EditorView and xterm.js/FitAddon engine adapters remain integrated. This continuation added working Rename/Move, Clear, Select all, Copy, Cut, Paste, Download and Share controls plus command-palette actions. Rename/move use a path-validated plan and one IndexedDB read-write transaction for destination plus source tombstone; dirty content is saved first. New source/control tests pass 22/22 (13 negative; two deliberately broken mutants caught). Full npm regression is 1,136/1,136, typecheck/build pass. Real Chromium CodeMirror/xterm mounting and click-level interaction remain NOT RUN because the browser harness timed out and the host previously returned ERR_BLOCKED_BY_ADMINISTRATOR.",
-      "filesChanged": [
-        "package.json",
-        "package-lock.json",
-        "ui/index.html",
-        "ui/workbench.js",
-        "ui/workbench.css",
-        "ui/engineBootstrap.js",
-        "ui/engines.js",
-        "ui/terminalEndpoint.js",
-        "tests/r14-wp03-workbench-engines.test.mjs",
-        "tests/round12-workbench-ui.integration.py",
-        "results/r14-wp03-engine-integration.json",
-        "docs/R14_DEPENDENCY_MIGRATION.md",
-        "src/workbench/fileOperations.ts",
-        "tests/r14-wp03-control-wiring.test.mjs",
-        "tests/r14-wp03-file-operations.test.mjs",
-        "results/r14-wp03-file-operations.json",
-        "docs/R14_WP3_CONTINUATION_REPORT.md",
+        "docs/R14_P2_WP7_REPORT.md",
         "docs/CAPABILITY_REGISTRY.json",
         "AXON_CODE_PROGRESS.json",
         "FILES_MANIFEST.txt",
         "SHA256SUMS.txt",
         "MERGE_SET.txt"
       ],
-      "testsAdded": 25,
-      "testsPassed": 25,
-      "negativeTests": 14,
+      "testsAdded": 12,
+      "testsPassed": 22,
+      "negativeTests": 10,
       "mutantCaught": true,
       "blockers": [
-        "Real CodeMirror 6/xterm.js browser mount and live UI interactions NOT RUN: browser harness did not complete within 120 seconds; the previously reproduced Chromium navigation error is ERR_BLOCKED_BY_ADMINISTRATOR.",
-        "WP3 cannot be marked DONE until the browser acceptance workflow exercises each visible control against real IndexedDB and actual engine mounts."
-      ]
+        "Chromium browser Worker parity NOT RUN.",
+        "Production optional offline-pack persistence/install/restart lifecycle NOT RUN.",
+        "Android WebView, 4 GB device memory/performance and recovery NOT RUN.",
+        "Prompt does not specify a numeric Pyodide WASM linear-memory limit; only the 512 KiB source-input limit is proven."
+      ],
+      "lastCommand": "npm run build && node --test tests/helpers/pyodide-node-suite.mjs tests/r14-wp04-pyodide-provider.test.mjs tests/r14-wp04-pyodide-vendor.test.mjs",
+      "lastResult": "BUILD PASS; 22/22 targeted tests passed, 0 failed, 0 skipped; 10 negative tests; one real compiled-provider mutant caught. Full root suite: 1,147/1,147 pass, 0 failed, 0 skipped."
+    },
+    "WP3": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "Continuation 3 P1 Node proof: the real ui/workbench.js was loaded in jsdom, the real CodeMirror 6 EditorView was mounted from Vendor Pack V2, and fake-indexeddb backed the real UI project store. All 19 requested controls were exercised end-to-end, including create/open/import/edit/save/save-all/reopen/export/rename/move/delete/undo/clear/select-all/copy/cut/paste/share/download. Save-conflict, missing-delete and rename-collision refusals pass. P1 test set: 29/29 pass, 21 negative, two real compiled-module mutants caught. jsdom-only boundaries are explicitly FAKE_BOUNDARY. Live Chromium browser acceptance remains NOT RUN, so overall WP3 remains PARTIAL.",
+      "filesChanged": [
+        "ui/workbench.js",
+        "tests/r14-wp03-control-wiring.test.mjs",
+        "tests/r14-wp03-file-operations.test.mjs",
+        "results/r14-wp03-node-ui.json",
+        "docs/CAPABILITY_REGISTRY.json",
+        "AXON_CODE_PROGRESS.json",
+        "FILES_MANIFEST.txt",
+        "SHA256SUMS.txt",
+        "MERGE_SET.txt"
+      ],
+      "testsAdded": 12,
+      "testsPassed": 29,
+      "negativeTests": 21,
+      "mutantCaught": true,
+      "blockers": [
+        "Live Chromium browser acceptance NOT RUN: jsdom does not prove real browser rendering or browser-native clipboard/file-picker/share/download behaviour; xterm drawing was intentionally FAKE_BOUNDARY and is outside P1."
+      ],
+      "lastCommand": "npm run build && node --test tests/r14-wp03-control-wiring.test.mjs tests/r14-wp03-file-operations.test.mjs tests/r14-wp03-file-operations-director.test.mjs",
+      "lastResult": "BUILD PASS; 29 tests passed, 0 failed, 0 skipped; 21 negative tests; two real compiled-module mutants caught."
     },
     "WP4": {
       "state": "PARTIAL",
@@ -269,6 +281,98 @@
       "blockers": [
         "Real Pyodide CPython execution NOT RUN in Chromium or Android WebView; no runtime pack copied into project because the 8 MB merge budget excludes large optional runtime packs."
       ]
+    },
+    "WP10": {
+      "state": "PARTIAL",
+      "tier": "T1",
+      "summary": "P3 TypeScript compiler diagnostics and Node Inspector debugging are implemented and Node-tested. The real TypeScript 5.8.3 compiler API passed a 30-project golden corpus. The real Node Inspector Protocol adapter passed breakpoint, step over/in/out, stack, variables, evaluate, stop and uncaught-crash tests. One real compiled-module mutant was caught. LSP remains BLOCKED because no real language-server package is present in Vendor Pack V2; browser/Android debugger UI was NOT RUN. Debugger isolation is Grade 1 only.",
+      "filesChanged": [
+        "src/analysis/typescriptProjectDiagnostics.ts",
+        "src/debug/nodeInspectorAdapter.ts",
+        "tests/fixtures/r14/typescript-golden-corpus.json",
+        "tests/r14-wp10-typescript-debugger.test.mjs",
+        "tests/helpers/node-inspector-host.mjs",
+        "docs/R14_P3_WP10_REPORT.md",
+        "results/r14-wp10-typescript-debugger.json",
+        "docs/CAPABILITY_REGISTRY.json",
+        "AXON_CODE_PROGRESS.json",
+        "FILES_MANIFEST.txt",
+        "SHA256SUMS.txt",
+        "MERGE_SET.txt"
+      ],
+      "testsAdded": 39,
+      "testsPassed": 39,
+      "negativeTests": 36,
+      "mutantCaught": true,
+      "blockers": [
+        "Real LSP server BLOCKED: typescript-language-server, vscode-languageserver, vscode-languageserver-protocol, @volar/language-server and @typescript-eslint/language-service are absent from Vendor Pack V2.",
+        "Browser debugger UI, Chromium integration, Android WebView and physical-device debugger validation NOT RUN.",
+        "Node Inspector target runs as a separate process but shares host OS user privileges (Grade 1, not a sandbox)."
+      ],
+      "lastCommand": "npm run build && node --test tests/r14-wp10-typescript-debugger.test.mjs",
+      "lastResult": "BUILD PASS; 39/39 targeted tests passed, 0 failed, 0 skipped; 36 negative tests; one real compiled-module mutant caught. Full root suite: 1,186/1,186 pass, 0 failed, 0 skipped."
+    },
+    "WP6": {
+      "state": "PARTIAL",
+      "tier": "T1/T2",
+      "summary": "Continuation 3 P4: a real npm CLI adapter was exercised against a local registry fixture (install, package-lock version/resolved origin/SHA-512 integrity, scripts disabled, tamper refusal, npm integrity failure after preflight, rollback, offline npm ci from cache and uninstall). A real pip 25.1.1 adapter installed a hash-pinned wheel from a local PEP 503 index (T2). 13/13 targeted tests pass, 9 negative, one real compiled-module mutant caught. Managed npm and pip execution remain BLOCKED because this host does not provide OS process confinement; the adapters report this honestly and PackagePlanService refuses managed execution.",
+      "filesChanged": [
+        "src/environment/npmPackageManagerAdapter.ts",
+        "src/environment/pipPackageManagerAdapter.ts",
+        "src/index.ts",
+        "tests/r14-wp06-package-manager.test.mjs",
+        "tests/helpers/npm-node-host.mjs",
+        "tests/helpers/npm-local-registry.mjs",
+        "tests/helpers/pip-node-host.mjs",
+        "tests/helpers/create-pip-wheel.py",
+        "results/r14-wp06-package-manager.json",
+        "results/r14-full-regression-per-file.json",
+        "results/r14-full-regression-summary.json",
+        "docs/R14_P4_WP6_REPORT.md",
+        "docs/CAPABILITY_REGISTRY.json",
+        "AXON_CODE_PROGRESS.json",
+        "FILES_MANIFEST.txt",
+        "SHA256SUMS.txt",
+        "MERGE_SET.txt"
+      ],
+      "testsAdded": 13,
+      "testsPassed": 13,
+      "negativeTests": 9,
+      "mutantCaught": true,
+      "blockers": [
+        "PackagePlanService-managed npm installation BLOCKED: host probe reports isolatedEnvironment=false and childProcessConfinement=false; no OS process confinement is available.",
+        "PackagePlanService-managed pip installation BLOCKED for the same host-confinement reason.",
+        "pip evidence is T2 local-index host proof only; no Android/Pydroid/native Python claim."
+      ],
+      "lastCommand": "npm run typecheck && npm run build && node --test tests/r14-wp06-package-manager.test.mjs; then each of 39 tests/*.test.mjs files with node --test <file>",
+      "lastResult": "Typecheck PASS; build PASS; P4 targeted 13/13 PASS, 0 failed, 0 skipped, 9 negative, one real mutant caught. Full retained Node regression: 39 files, 1,199/1,199 PASS, 0 failed, 0 skipped."
+    },
+    "WP13": {
+      "state": "DONE",
+      "tier": "T1",
+      "summary": "Continuation 3 P5 is complete. The real Git 2.47.3 binary performed status, diff, log, branch, commit, checkout, merge-conflict, ignored-file and 2 MiB large-file operations. The provider refused outside-workspace repositories, oversized files, dirty checkout, unsafe branches and traversal paths; hooks were disabled and askpass/SSH-agent/credential env values were not forwarded. 12/12 tests pass, 7 negative, one real compiled-module mutant caught. Full retained Node regression: 1,211/1,211 across 40 files.",
+      "filesChanged": [
+        "src/versionControl/gitProvider.ts",
+        "src/index.ts",
+        "tests/r14-wp13-git.test.mjs",
+        "tests/helpers/git-node-host.mjs",
+        "results/r14-wp13-git.json",
+        "docs/R14_P5_WP13_REPORT.md",
+        "results/r14-full-regression-per-file.json",
+        "results/r14-full-regression-summary.json",
+        "docs/CAPABILITY_REGISTRY.json",
+        "AXON_CODE_PROGRESS.json",
+        "FILES_MANIFEST.txt",
+        "SHA256SUMS.txt",
+        "MERGE_SET.txt"
+      ],
+      "testsAdded": 12,
+      "testsPassed": 12,
+      "negativeTests": 7,
+      "mutantCaught": true,
+      "blockers": [],
+      "lastCommand": "npm run typecheck && npm run build && node --test tests/r14-wp13-git.test.mjs; then node --test <each of 40 tests/*.test.mjs files>",
+      "lastResult": "Typecheck PASS; build PASS; P5 targeted 12/12 PASS, 0 failed, 0 skipped; 7 negative; real mutant caught. Full retained Node regression: 40 files, 1,211/1,211 PASS, 0 failed, 0 skipped."
     }
   },
   "promptCorrections": {
@@ -423,11 +527,7 @@
       "reason": "The command did not complete within the 120-second execution limit; prior attempts document Chromium navigation blocked by ERR_BLOCKED_BY_ADMINISTRATOR."
     }
   },
-  "lastCommand": {
-    "command": "npm test",
-    "exitCode": 0,
-    "result": "35 test files; 1,136/1,136 tests passed, zero failed and zero skipped."
-  },
+  "lastCommand": "P6 / WP2 + WP5 + WP12 complete; 41-file retained Node regression",
   "resumeRule": "Resume at WP3 browser-backed acceptance if a Chromium-enabled host is available. Do not repeat completed WP3 source/control work. If browser mounting remains blocked, record the evidence and then continue to WP4 only after preserving WP3 as PARTIAL. Phase A remains blocked on clean npm ci, real IndexedDB reload, and WP5 resource/isolation enforcement.",
   "directorVerification": {
     "date": "2026-11-09",
@@ -462,7 +562,46 @@
       "weakTests": "tests/r14-wp03-control-wiring.test.mjs only searches the source text for strings, and its two mutant tests exercise functions defined inside the test, so they cannot fail; they prove that code text exists, not that a control works",
       "fileOperationsFix": "planFileOperation accepted percent-encoded traversal (%2e%2e, %2f, %5c) and names that differ only in letter case from another file; both now refused; new tests/r14-wp03-file-operations-director.test.mjs (7 tests, a real mutant of the compiled module); 21 other hostile inputs were already refused",
       "stillNotRun": "browser mount of CodeMirror and xterm, every button actually clicked, IndexedDB transaction, Pyodide Worker execution"
+    },
+    "continuation3": {
+      "date": "2026-11-12",
+      "reproduced": "1201 tests found; 1168 pass; 33 fail ONLY in the Director sandbox for environmental reasons: 30 WP10 golden projects and 1 WP10 mutant test assert compiler version 5.8.3 and the sandbox has 6.0.3; 2 test files need jsdom and fake-indexeddb, which the sandbox lacks. Build and typecheck clean on 6.0.3. NOT confirmed on 5.8.3 with jsdom and fake-indexeddb.",
+      "noRegression": "every earlier Director fix is intact (import map, file planner, PTY exit status, gateway validator, type fixes)",
+      "finding": "GitProvider disabled hooks and credential helpers but not the repository own configuration: a project .git/config with core.fsmonitor or a filter driver plus .gitattributes ran a command on status or commit (reproduced: marker file created). Fixed in src/versionControl/gitProvider.ts: the repository configuration is audited before every command against an allow-list of safe settings, anything else returns BLOCKED; new tests/r14-wp13-git-config-director.test.mjs (8 tests: 6 hostile configs, 1 ordinary repo, 1 real mutant). Argument injection (branch names, option-like names, path traversal, pathspec magic) was already refused.",
+      "alsoChecked": "npm adapter uses --ignore-scripts and --offline; pip uses --require-hashes and --no-deps; debugger target binds 127.0.0.1; package names validated",
+      "openItems": [
+        "package.json and package-lock.json do not declare jsdom or fake-indexeddb (they exist only in the vendor pack), so npm ci in the cloud would not install them and the two tests that need them would fail; adopt vendor pack V2 package-lock into axon-code next",
+        "tests/r14-wp03-control-wiring.test.mjs and tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs could not be run by the Director",
+        "CodeMirror and xterm browser mount, Pyodide Worker through a real browser, Android: still NOT RUN"
+      ]
     }
   },
-  "phaseB": "IN_PROGRESS \u2014 WP3 controls are now implemented and source-level negative tests pass; real Chromium engine mount/click verification remains NOT RUN. WP4 has not been advanced in this checkpoint."
+  "phaseB": "IN_PROGRESS \u2014 WP3 controls are now implemented and source-level negative tests pass; real Chromium engine mount/click verification remains NOT RUN. WP4 has not been advanced in this checkpoint.",
+  "lastResult": "P6 DONE for Node-provable scope; 12/12 targeted PASS, 7 negative, real mutant caught. Full retained Node regression: 1,223/1,223 across 41 files, 0 failed, 0 skipped.",
+  "continuation3": {
+    "P1": {
+      "state": "DONE",
+      "result": "WP3 real UI tests; 29/29 targeted, Chromium boundary NOT RUN."
+    },
+    "P2": {
+      "state": "DONE",
+      "result": "WP7 real Pyodide Node worker proof; 22/22 targeted, browser/Android NOT RUN."
+    },
+    "P3": {
+      "state": "PARTIAL",
+      "result": "WP10 TypeScript compiler diagnostics and Node inspector debugger; 39/39 targeted. Real LSP BLOCKED if vendor package unavailable."
+    },
+    "P4": {
+      "state": "PARTIAL",
+      "result": "WP6 real npm 10/10 and pip T2 3/3; managed npm/pip execution BLOCKED without OS process confinement."
+    },
+    "P5": {
+      "state": "DONE",
+      "result": "WP13 real Git CLI; 12/12 targeted, 7 negative, real mutant caught."
+    },
+    "P6": {
+      "state": "DONE",
+      "result": "WP2/WP5/WP12 Node-provable storage/recovery: 12/12 targeted, 7 negative, real file-store hash mutant caught. fake-indexeddb interrupted import/two-tab conflict pass; actual file-store SIGKILL recovery, quota, hash corruption, Restricted trust, approval replay and secrets corpus pass. Browser/Android and real IndexedDB quota remain NOT RUN."
+    }
+  }
 }
