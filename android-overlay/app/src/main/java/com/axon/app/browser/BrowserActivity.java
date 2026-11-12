@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,7 +28,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceError;
-import android.webkit.SslError;
+import android.webkit.WebBackForwardList;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -245,7 +246,7 @@ public final class BrowserActivity extends Activity {
         if (tab == null || tab.view != null) return;
         createWebView(tab);
         if (tab.savedState != null) {
-            WebView.WebBackForwardList restored = tab.view.restoreState(tab.savedState);
+            WebBackForwardList restored = tab.view.restoreState(tab.savedState);
             tab.savedState = null;
             if (restored == null && tab.url != null) tab.view.loadUrl(tab.url);
             else if (tab.view.getUrl() != null) tab.url = tab.view.getUrl();
