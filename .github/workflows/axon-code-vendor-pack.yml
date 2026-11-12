@@ -1,0 +1,67 @@
+name: AXON Code vendor pack (manual)
+
+# Builds the packages AXON Code needs when its builder has no internet: the exact versions from axon-code/package.json
+# plus TypeScript 5.8.3, jsdom and fake-indexeddb. Runs ONLY when started by hand (Actions tab, Run workflow). It never runs on a push.
+# Result: an artifact named AXON_CODE_VENDOR_PACK_V2 (a zip holding package.json, package-lock.json and node_modules).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the exact packages
+        run: |
+          mkdir vendor
+          cd vendor
+          cat > package.json <<'JSON'
+          {
+            "name": "axon-code-vendor",
+            "version": "2.0.0",
+            "private": true,
+            "description": "AXON Code external dependencies vendor pack, version 2",
+            "dependencies": {
+              "@codemirror/state": "6.7.6",
+              "@codemirror/view": "6.43.15",
+              "@codemirror/commands": "6.11.1",
+              "@codemirror/language": "6.13.1",
+              "@codemirror/lang-javascript": "6.2.5",
+              "@xterm/xterm": "6.0.0",
+              "@xterm/addon-fit": "0.11.0",
+              "pyodide": "314.0.7",
+              "typescript": "5.8.3"
+            }
+          }
+          JSON
+          npm install --ignore-scripts --no-audit --no-fund
+          npm install --save-exact --ignore-scripts --no-audit --no-fund jsdom fake-indexeddb
+
+      - name: Prove the packages load
+        working-directory: vendor
+        run: |
+          node -e "import('typescript').then(m => console.log('typescript', (m.default || m).version))"
+          node -e "import('jsdom').then(m => { const d = new m.JSDOM('<p>ok</p>'); console.log('jsdom', d.window.document.querySelector('p').textContent); })"
+          node -e "import('fake-indexeddb/auto').then(() => console.log('fake-indexeddb', typeof indexedDB.open))"
+          node -e "import('@codemirror/state').then(m => console.log('codemirror state', m.EditorState.create({ doc: 'hello' }).doc.length))"
+          node -e "import('pyodide').then(async m => { const py = await m.loadPyodide(); console.log('pyodide python', py.runPython('1+1')); })"
+          npm ls --depth=0
+
+      - name: Zip
+        run: |
+          cd vendor
+          zip -qr ../AXON_CODE_VENDOR_PACK_V2.zip package.json package-lock.json node_modules
+          ls -l ../AXON_CODE_VENDOR_PACK_V2.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AXON_CODE_VENDOR_PACK_V2
+          path: AXON_CODE_VENDOR_PACK_V2.zip
+          retention-days: 30
