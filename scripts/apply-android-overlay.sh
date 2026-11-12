@@ -134,5 +134,33 @@ else
   echo "    = BrowserActivity already present"
 fi
 
+echo "==> Screen structure reader (accessibility service, read-only)"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screenstructure" "$ANDROID/app/src/main/res/xml" "$ANDROID/app/src/main/res/values"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
+cp -f "$OVERLAY/app/src/main/res/xml/axon_accessibility_service.xml" "$ANDROID/app/src/main/res/xml/"
+cp -f "$OVERLAY/app/src/main/res/values/axon_accessibility_strings.xml" "$ANDROID/app/src/main/res/values/"
+if ! grep -q "AxonAccessibilityService" "$MANIFEST"; then
+  A11Y_XML='        <service
+            android:name=".screenstructure.AxonAccessibilityService"
+            android:exported="true"
+            android:label="AXON screen reader"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/axon_accessibility_service" />
+        </service>'
+  awk -v svc="$A11Y_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  grep -q "AxonAccessibilityService" "$MANIFEST" || { echo "ERROR: AxonAccessibilityService declaration insertion failed"; exit 1; }
+  echo "    + added AxonAccessibilityService"
+else
+  echo "    = AxonAccessibilityService already present"
+fi
+
 echo "==> Overlay applied successfully."
 echo "Next: npx cap sync android && cd android && ./gradlew assembleDebug"

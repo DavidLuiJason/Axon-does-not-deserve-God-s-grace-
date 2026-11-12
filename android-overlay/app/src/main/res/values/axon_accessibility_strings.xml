@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="axon_accessibility_description">AXON reads what is on your screen (text, buttons and fields) only when you ask it to. It does not tap or type for you, and it never reads password fields.</string>
+</resources>

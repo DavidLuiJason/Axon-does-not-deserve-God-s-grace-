@@ -1,27 +1,28 @@
 DIRECTOR NAP (Director Notification About the Project)
 WHAT THIS IS: short notes between the Directors (the Claude accounts that direct AXON) and from the owner. Read it right after NOW.txt every time a zip arrives. It holds what the roadmap does not say yet.
 
-LAWS OF THIS FILE (owner 2026-11-04, 2026-11-11, 2026-11-12):
+LAWS OF THIS FILE (owner 2026-11-04 to 11-12):
 1. Maximum 5,000 characters at all times. A test checks it. Remove whatever is no longer current: finished work lives in NOW.txt, MERGE_TAG.txt and docs/JOB_BOARD.md.
 2. Every note is short, plain and explains itself.
 3. Newest note first. Near the limit, remove notes that reached the roadmap or went stale, never one still needed.
 4. The roadmap outranks this file for laws. This file covers what the roadmap lacks: new ideas, choices, progress.
 5. Only Directors edit this file, and never another Director's line.
 6. Every Director has an identification number: the digits attached to the email its account was registered with. A Director without one asks the owner at once and never guesses.
-7. Each Director keeps ONE line on the board below: its number and what it is doing now, at most 300 characters. Write it once; when the work changes, replace the line and say what was left ("was X, now Y; X is free").
-8. A Director that was never given a number reads this board: if no line says "unnamed", it signs "unnamed one" (the next one "unnamed two"), and in its reply reminds the owner to name it. Once named, it replaces its line in its next useful merge ("unnamed one, now D<number>").
-9. Never make a merge only for a name, a line or a note. Edit this file only inside a merge that moves the project forward.
+7. Each Director keeps ONE line on the board below: its number and what it is doing now, at most 300 characters. Write it once; when its work changes, replace the line and say what it left ("was X, now Y; X is free"). Do not waste usage here.
+8. Each board line ends with the Director's completion estimate for its current work ("~40%"); the Director also tells the owner it in every reply on that work.
 
 DIRECTORS BOARD:
-D471 (2026-11-12): tool connection (CONNECT2 done, 7 tools live; RAND1 real random source done). Now: slot-filling design for tools the brain cannot bind (Find Replace, Password, Converter, Calculator...). Leaves AXON Code, Market Scope, Web and screens alone.
+D471 (2026-11-11): verifying and merging ChatGPT's tool-connection waves (CONNECT2: 7 tools live). Next: the lane's random source, then slot filling for tools the brain cannot bind yet. Not touching AXON Code or Market Scope.
 D321 (2026-11-11): OVERSEER, not a higher rank: checks every Director's return against its lane, fixes breaks that hit all cloud builds, uses ChatGPT as eyes for big checks. Now: red build fix D321-FIX1. Leaves AXON Code, Market Scope and tool wiring alone.
 D204 (2026-11-12): AXON WEB (= AXON Browser). Was merging the Web scaffolding (cloud green), now screen readiness doc, then tab groups, incognito, isolated AXON session. Leaves brain, tools, Code, Apps, screens and screen capture alone.
+D47 (2026-11-12): Screen Intelligence, then AXON Apps. Done SI1, SI3a; now SI3b. ~30% of screen reading. Leaves tools, Code, Web, roadmap alone.
 OTHER DIRECTORS: add your line here (number, work, what you leave alone) the next time you add anything.
 
 NOTES:
 N20 (2026-11-12, D204) AXON WEB SCREENS. Read docs/AXON_WEB_SCREEN_READINESS_D204.txt before designing. AXON Web = AXON Browser: one product that AXON must drive like a person under the permission rules (sign-in and payment always ask the owner). No search bar: the chat box is search; the floating button switches AXON and AXON Web. No button clutter. Tabs: normal, incognito, stealth; tab groups; one shared quiet "AXON is in control" indicator. Roadmap 7R and docs/AXON_VISION.md line 39 read Web as network access only: wrong, fix later.
-N18 (2026-11-11, D321) RED BUILD CAUSES. Switching a tool on needs 3 test edits or the cloud fails: PROVEN_AVAILABLE in tests/engineTruth.test.ts, the tool's chat field in tests/fixtures/toolFacts.json, LIVE_SAY_DEFAULTS in tests/sortModeWords.test.ts. The cloud runs TypeScript 7, strict by default: check types with tsc --strict, tests included. Fixed in D321-FIX1.
-N17 (2026-11-11, D471) CONNECT2 LESSONS. A builder with no test runner proves nothing: send axon-toolchain.zip. A chat action's purpose and examples feed the fallback matcher: always run tests/brainGolden.test.ts (a generic verb made unrelated requests answer "Yes: ..."). A chat example must be a message the brain really answers. Tools that match but whose required slots are never filled are BINDER GAPS (Find Replace, Password, Text Cleaner flags, Converter, Calculator, Percentage Helper, Random Picker, Date Calculator); Text Compare is a RESOLVER GAP. The lane's random source is real now (RAND1, src/brain/laneRandom.ts). Details: docs/CONNECT2_W1_BOARD_LINES.md to W4, docs/RAND1_BOARD_LINES.md.
+N18 (2026-11-11, D321) RED BUILD CAUSES. Switching a tool on needs 3 test edits or the cloud fails: PROVEN_AVAILABLE in tests/engineTruth.test.ts, the tool's chat field in tests/fixtures/toolFacts.json, LIVE_SAY_DEFAULTS in tests/sortModeWords.test.ts. The cloud runs TypeScript 7, strict by default: check types with tsc --strict. Fixed in D321-FIX1.
+N17 (2026-11-11, D471) CONNECT2 LESSONS. A builder with no test runner proves nothing: send axon-toolchain.zip with every prompt. A chat action's purpose and examples feed the fallback matcher: always run tests/brainGolden.test.ts (a generic verb made unrelated requests answer "Yes: ..."). A chat example must be a message the brain really answers. Tools that match but whose required slots are never filled are BINDER GAPS (Find Replace, Password, Text Cleaner flags, Converter, Calculator, Percentage Helper, Random Picker, Date Calculator); Text Compare is a RESOLVER GAP. The lane's random source is a constant zero (src/brain/index.ts line 76): fix before Password or Random Picker. Details: docs/CONNECT2_W1_BOARD_LINES.md to W4.
 N16 (2026-11-10) OWNER DECISIONS. (1) Cloud build was GREEN (owner-reported). (2) The Director decides the closed choice words (docs/AUTO_APPROVED.md), overrulable. (3) AXON CODE is built in a SEPARATE Claude account: this one never starts it. (4) Auto-wiring (wire cards, tools/wire-write.mjs, src/generated) exists but no tool uses it yet; parts 5 to 8 are made by hand.
 N15 (2026-11-07) STATE_TOOL_IDS = timer, stopwatch, tally-counter (the lane refuses them until STATE3 wires the state keeper src/tools/state/toolStateStore.ts); the date calculator is not a state tool.
+N14 (2026-11-06) The cloud lint type-checks tests/ too, but tsx does not: run tsc on a package's files before it leaves (docs/reports/CHR3B_LINT_FIX_REPORT.md).
 N13 (2026-11-07) OPEN NEXT, owner yes given: card DLG2 (question wording, docs/DLG1_QUESTION_WORDING_DESIGN.md); BUD6 card; the Settings design (reset path for a corrupt Charter, stored used tokens).

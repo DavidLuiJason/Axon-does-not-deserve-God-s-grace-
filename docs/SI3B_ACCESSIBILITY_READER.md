@@ -1,0 +1,6 @@
+# SI3b ACCESSIBILITY READER (D47, 2026-11-12)
+PLAIN: lets AXON read the screen of any app as text, buttons and fields, after the owner turns on "AXON screen reader" in Android Accessibility settings. Read-only: no tapping, typing or scrolling (later stage, ask-first). Password text is never sent. Not called by any screen yet.
+NEW FILES: android-overlay/.../screenstructure/AxonAccessibilityService.java and ScreenStructurePlugin.java, res/xml/axon_accessibility_service.xml, res/values/axon_accessibility_strings.xml, src/screen-intelligence/structure-source.mjs and structure-native.ts, tests/screen-structure-source.test.mjs.
+EDITED (small, announced): scripts/apply-android-overlay.sh (copies files, adds the service to the manifest, one block before the final echo), android-overlay/.../MainActivity.java (+2 lines: import, registerPlugin), android-overlay/manifest-additions.xml (+2 comment lines), DIRECTOR_NAP.txt (law 8, D47 line).
+STATUS: JS source ISOLATED-TESTED with a fake plugin. Java BUILT, NOT COMPILED here (the cloud build is the probe). Real phone reading NOT RUN.
+NEXT: SI4 phone test (a small test screen, design check first), then SI3c ask-first actions only after reading is proven on the phone.

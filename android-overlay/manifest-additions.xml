@@ -47,3 +47,6 @@
 
 <!-- Browser host activity (inserted by scripts/apply-android-overlay.sh). -->
 <!-- <activity android:name=".browser.BrowserActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden" /> -->
+
+<!-- Read-only accessibility screen reader (inserted by scripts/apply-android-overlay.sh; the owner turns it on in Android Accessibility settings). -->
+<!-- <service android:name=".screenstructure.AxonAccessibilityService" android:exported="true" android:label="AXON screen reader" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"> with the accessibility intent-filter and @xml/axon_accessibility_service -->
