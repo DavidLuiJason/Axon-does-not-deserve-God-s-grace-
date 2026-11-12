@@ -1,10 +1,10 @@
 WORKSTREAM: AXON CODE (Round 14 build, Round 15 verification)
 ACCOUNT / ROLE: Claude = Director and verifier; ChatGPT = builder (separate chat)
-UPDATED: 2026-11-11
-STATE NOW: complete Director-fixed base = AXON_CODE_R14_DIRECTOR_BASE.zip, folder axon-code/. 1,147 of 1,147 Node tests pass AFTER `npm run build` (the tests import compiled files; without the build 32 of 64 test files fail). Work packages: WP1 done; WP0, WP2, WP3, WP4, WP5, WP7, WP12, WP14 partial or blocked; WP6, WP8, WP9, WP10, WP11, WP13 not started. Not proven in a real browser or on a phone.
-BASE TO START FROM: AXON_CODE_R14_DIRECTOR_BASE.zip, then `npm run build`, then `node --test tests/*.test.mjs` must print 1,147 pass, 0 fail.
-OWNS: axon-code/ and docs/AXON_CODE_*.md
-MUST NOT TOUCH: src/, tests/, tools/ and public/ at the repository ROOT (the AXON app), .github, the root package.json, root tsconfig.json (it already excludes axon-code), NOW.txt, MERGE_TAG.txt, docs/JOB_BOARD.md.
-NOT BEING DONE HERE: connecting tools to the brain, AXON Web or Browser, AI Studio screens, registering any AXON tool. AXON Code is a separate project; it imports nothing from the AXON app and the AXON app does not use it yet.
-NEXT: ChatGPT continuation 3 (Node-provable work packages), Director verifies the delta.
-WAITING ON THE OWNER: vendor pack v2 (adds jsdom and fake-indexeddb); a computer or a cloud build with Chromium to run the browser tests.
+UPDATED: 2026-11-12
+STATE NOW: complete Director-fixed base = AXON_CODE_R14_DIRECTOR_BASE.zip, folder axon-code/. In a clean extraction with node_modules inside axon-code/ and TypeScript installed, `npm run build` then `node --test tests/*.test.mjs` gives 1,147 of 1,147. Continuation 3 stopped at its start gate (correctly): vendor pack v1 had no typescript, jsdom or fake-indexeddb. Without typescript exactly 151 tests fail, the rest pass. Work packages: WP1 done; WP0, 2, 3, 4, 5, 7, 12, 14 partial or blocked; WP6, 8, 9, 10, 11, 13 not started. Not proven in a real browser or on a phone.
+BASE TO START FROM: AXON_CODE_R14_DIRECTOR_BASE.zip + AXON_CODE_VENDOR_PACK_V2.zip (node_modules copied to axon-code/node_modules, so that axon-code/node_modules/typescript/package.json exists).
+OWNS: axon-code/ and docs/AXON_CODE_*.md and .github/workflows/axon-code-*.yml
+MUST NOT TOUCH: src/, tests/, tools/ and public/ at the repository ROOT (the AXON app), the other workflows in .github, the root package.json, root tsconfig.json (it already excludes axon-code), NOW.txt, MERGE_TAG.txt, docs/JOB_BOARD.md.
+NOT BEING DONE HERE: connecting tools to the brain, AXON Web or Browser, AI Studio screens, registering any AXON tool. AXON Code imports nothing from the AXON app and the AXON app does not use it yet.
+NEXT: owner runs the vendor pack workflow, ChatGPT continuation 3 (P1 to P6, Node-provable), Director verifies the delta; Director then writes the browser-proof workflow.
+WAITING ON THE OWNER: run Actions, AXON Code vendor pack (manual), download AXON_CODE_VENDOR_PACK_V2.
