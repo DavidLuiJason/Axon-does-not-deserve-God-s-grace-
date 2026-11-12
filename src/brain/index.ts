@@ -27,6 +27,10 @@ import { LANE_GUARDS } from './mind/laneGuards';
 import { readSortReverse } from '../tools/runners/sortModeWords';
 import type { LaneConfig } from './mind/directLane';
 import type { KnowledgeSlot } from './knowledge/slot';
+import { createLaneRandom } from './laneRandom';
+
+/** RAND1: the lane's real (secure) random source; it throws only when asked and none exists, and the lane then yields. */
+const LANE_RANDOM = createLaneRandom();
 
 export const BRAIN_COMMANDS = [TEXT_COUNT_COMMAND];
 const BRAIN_PROVIDERS = [createDictionaryProvider()];
@@ -73,7 +77,7 @@ export function buildLaneConfig(switches: RunnerSwitches = LIVE_SWITCHES): LaneC
     },
     choicesFor: (toolId) => LIVE_CHOICES[toolId] ?? {},
     toolNameFor: (toolId) => CATALOG_TOOLS.find((tool) => tool.id === toolId)?.name ?? toolId,
-    deps: () => ({ now: Date.now(), randomBelow: () => 0, random01: () => 0 }),
+    deps: () => ({ now: Date.now(), randomBelow: LANE_RANDOM.randomBelow, random01: LANE_RANDOM.random01 }),
   };
 }
 
