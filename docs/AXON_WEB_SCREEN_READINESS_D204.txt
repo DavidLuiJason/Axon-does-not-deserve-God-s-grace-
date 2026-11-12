@@ -1,0 +1,33 @@
+AXON WEB (= AXON BROWSER) - SCREEN READINESS
+From: Director 204 (D204), lane AXON Web. Date: 2026-11-12.
+For: whoever directs the screens (AI Studio screens prompt). D204 knows screens are being built and wrote this so screens are built only on parts that exist.
+Base: repo of 2026-11-11 plus D204 rounds 3 to 3c. D204 has no newer copy.
+
+1. WHAT AXON WEB IS
+AXON Web and AXON Browser are one thing. It is a real browser, and AXON must be able to drive it like a person (open, read, scroll, click, type) under permission rules. Sign-in and payment steps always ask the owner.
+
+2. DESIGN RULES FROM THE OWNER (screens must follow)
+- NO search bar and no search window. The chat/prompt box is where the owner searches. The floating button above the chat box is customizable: one tap switches between talking to AXON and searching with AXON Web; other taps or holds can do other things; it can behave differently on different pages.
+- Bookmarks and history sit behind the 3-dot menu. Site permissions and security details belong in Settings.
+- NO button clutter. An earlier version was scrapped for that. Keep the screen calm and organised.
+- Three tab kinds: normal, incognito (disappears when closed), stealth (a separate saved identity per tab; the same site open twice must count as two separate visitors). Leave room for a kind picker on new tab and a small badge on every tab. Stealth details come later from the owner.
+- Tab groups like Chrome: create, name, add a tab, remove a tab, delete a group.
+- One shared, visible but quiet indicator for when AXON itself controls the screen. It must match the design and be the same for AXON Web, AXON Apps, AutoClicker and anything else where AXON takes over.
+
+3. WHAT EXISTS TODAY (state honestly)
+REAL, compiled in the cloud, NEVER run on a phone:
+ - A native Android browser screen (BrowserActivity) started by the Open browser button on the Web tab (src/components/browser/BrowserHomeScreen.tsx).
+ - 34 plugin methods a screen can call (src/web/axonBrowserPlugin.ts): open, navigate, back, forward, reload, stop, newTab, switchTab, closeTab, getState, getPageText, findInPage, zoomBy, setDesktopSite, bookmarks (add, edit, remove, folder, move, list), history (search, clear, clear by site), reading list (add, remove, open, mark read, list), downloads (list, open, share, cancel, delete), copy and share URL, print, save PDF, getSecurityDetails, getSitePermissions.
+REAL LOGIC, tested only with a simulated browser (248 tests): the permission gateway (src/web/browserCommandGateway.ts, 118 commands in 8 groups: Navigation, Tabs, Saved browsing, Files, Page tools, Site security, Accounts, Settings; each is READ, REVERSIBLE, OWNER_CONFIRM or OWNER_HANDOFF); page-to-text, link analysis, saved sources, step guard.
+NOT BUILT:
+ - Tab groups: the commands are named in the rules but no native method exists.
+ - Incognito: the state always reports incognito=false. Stealth: nothing.
+ - AXON driving the browser: AXON_BROWSER_SESSION_ENABLED is false in src/web/browserSessionBoundary.ts; no isolated AXON session; no click, type or scroll on live pages; no brain hookup.
+ - The "AXON is in control" indicator, the floating-button behaviour, the 3-dot menu content, Settings pages for Web.
+ - Most of the 118 commands have no native method yet (34 of 118 have one).
+
+4. WHAT A SCREEN MAY SAFELY CALL NOW
+Anything in the 34 methods above, through the gateway so the permission result is shown. Show a disabled or "coming soon" state for everything in the NOT BUILT list; do not pretend it works.
+
+5. WHAT THE SCREEN DIRECTOR SHOULD ASK D204
+The exact result shape of any method (src/web/browserPluginTypes.ts) and when a missing part will exist.

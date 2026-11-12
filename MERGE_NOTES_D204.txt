@@ -1,7 +1,4 @@
-FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 3c (fix of round 3b). No wrapper folder: copy these files into the repo root.
-FIXES (from cloud run #190):
- - BrowserPlugin.java: Capacitor call.resolve needs JSObject but getState/getSecurityDetails/getSitePermissions return JSONObject (14 errors). Added a small converter js().
- - BrowserActivity.java: SslError import corrected to android.net.http.SslError; WebBackForwardList is android.webkit.WebBackForwardList, not WebView.WebBackForwardList.
-DELETE from the repo: tests/androidBuildContracts.test.ts. It checks the Node 22 / Capacitor 7.6.9 pins from the old Web snapshot, which D204 deliberately did not merge (package.json, .nvmrc, BUILD.md are other Directors files). It also needs .github/workflows/axon-web-android.yml, which was never uploaded and is not needed.
-ALSO delete if still present: folder AXON_WEB_D204_ROUND3/ and loose AXON_WEB_MERGE.zip.
-MEASURED: browser tests 248/248, overlay test OK, guard OK. NOT MEASURED: Java compile (no Android SDK here), device, live sites.
+FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 4. No wrapper folder: copy into the repo root.
+D204 KNOWS the AXON screens (Web, Code, Games, Apps and others) are being built by another Director with AI Studio, and that Web is far enough along for a screen even though the engine is unfinished. This round is docs only: no code, no tests, no shared file touched.
+Files: docs/AXON_WEB_SCREEN_READINESS_D204.txt (new), NAP_LINES_D204.txt (read, then paste 2 lines into DIRECTOR_NAP.txt by hand, then delete this file from the repo).
+Not touched: DIRECTOR_NAP.txt, NOW.txt, MERGE_TAG.txt, roadmap, package.json, anything under src/ or tests/.

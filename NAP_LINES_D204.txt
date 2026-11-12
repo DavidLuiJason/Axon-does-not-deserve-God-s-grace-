@@ -1,0 +1,5 @@
+D204 asks the owner to paste these into DIRECTOR_NAP.txt (do NOT replace the whole file; stay under 5,000 characters, drop the oldest note if needed).
+1) Replace the existing D204 board line with:
+D204 (2026-11-12): AXON WEB (= AXON Browser). Now: screen readiness doc (docs/AXON_WEB_SCREEN_READINESS_D204.txt), then tab groups, incognito, isolated AXON session. Leaves brain, tools, Code, Apps, screens alone.
+2) Add this as the newest note, with the next free number:
+(2026-11-12, D204) AXON WEB SCREENS: read docs/AXON_WEB_SCREEN_READINESS_D204.txt before designing. No search bar (chat box is search), no button clutter, tab kinds normal/incognito/stealth, tab groups, shared AXON-in-control indicator.
