@@ -1,4 +1,4 @@
-FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 4. No wrapper folder: copy into the repo root.
-D204 KNOWS the AXON screens (Web, Code, Games, Apps and others) are being built by another Director with AI Studio, and that Web is far enough along for a screen even though the engine is unfinished. This round is docs only: no code, no tests, no shared file touched.
-Files: docs/AXON_WEB_SCREEN_READINESS_D204.txt (new), NAP_LINES_D204.txt (read, then paste 2 lines into DIRECTOR_NAP.txt by hand, then delete this file from the repo).
-Not touched: DIRECTOR_NAP.txt, NOW.txt, MERGE_TAG.txt, roadmap, package.json, anything under src/ or tests/.
+FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 4b. No wrapper folder: copy into the repo root.
+ONE FILE: DIRECTOR_NAP.txt, a complete replacement built from the owner current NAP (the one with N13 to N19). Only D204 parts changed: D204 board line updated; D204 note N19 replaced by N20 (AXON Web screens). Every other line is unchanged. 4,669 of 5,000 characters; the repo NAP test passes.
+D204 KNOWS the AXON screens are being built by another Director and that Web is far enough along for a screen.
+Needs docs/AXON_WEB_SCREEN_READINESS_D204.txt from round 4 (already added). NAP_LINES_D204.txt from round 4 is now unnecessary and harmless.
