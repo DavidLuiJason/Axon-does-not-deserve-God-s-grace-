@@ -1,0 +1,137 @@
+name: AXON Code verify and vendor pack (manual)
+
+# Runs ONLY when started by hand (Actions tab, Run workflow). It never runs on a push and never changes the repository.
+# 1. Installs AXON Code from its lockfile (TypeScript 5.8.3), adds jsdom and fake-indexeddb for the tests that need them,
+#    builds, and runs every Node test.
+# 2. Starts a real Chromium (Playwright) and runs the browser and terminal test scripts.
+# 3. Writes a summary table on the run page and uploads the full logs.
+# 4. Builds AXON_CODE_VENDOR_PACK_V2: package.json, package-lock.json and node_modules including jsdom, fake-indexeddb,
+#    esbuild and typescript-language-server, for a builder that has no internet.
+# Download the artifacts at the bottom of the finished run.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: axon-code
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install from the lockfile
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm install --no-save --ignore-scripts --no-audit --no-fund jsdom fake-indexeddb
+          node -e "import('typescript').then(m => console.log('typescript', (m.default || m).version))"
+
+      - name: Build
+        run: npm run build
+
+      - name: Node tests
+        id: nodetests
+        continue-on-error: true
+        run: |
+          mkdir -p ../ci-results
+          node --test tests/*.test.mjs > ../ci-results/node-tests.txt 2>&1
+          code=$?
+          grep -E "^# (tests|pass|fail|skipped)" ../ci-results/node-tests.txt | tr '\n' ' ' > ../ci-results/node-counts.txt || true
+          exit $code
+
+      - name: Real Chromium and Python test tools
+        id: browser
+        continue-on-error: true
+        run: |
+          python -m pip install --quiet playwright websockets
+          python -m playwright install --with-deps chromium
+          CHROME=$(python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); print(p.chromium.executable_path); p.stop()")
+          echo "Chromium at $CHROME"
+          export AXON_CHROMIUM="$CHROME"
+          mkdir -p ../ci-results
+          : > ../ci-results/browser-table.md
+          failed=0
+          for script in tests/round4-browser.integration.py tests/prer5-browser.integration.py tests/round6-browser.integration.py tests/round7-browser-actions.integration.py tests/round10-browser-projects.integration.py tests/round12-browser-runtime.integration.py tests/round12-workbench-ui.integration.py tests/r14-wp02-wp12-browser.integration.py tests/test-r14-pty-websocket.py tools/test-round12-pty.py; do
+            [ -f "$script" ] || { echo "| $script | MISSING |" >> ../ci-results/browser-table.md; continue; }
+            name=$(basename "$script")
+            timeout 600 python "$script" > "../ci-results/$name.log" 2>&1
+            code=$?
+            if [ $code -eq 0 ]; then echo "| $script | PASS |" >> ../ci-results/browser-table.md; else echo "| $script | FAIL (exit $code) |" >> ../ci-results/browser-table.md; failed=1; fi
+          done
+          exit $failed
+
+      - name: Write the summary
+        if: always()
+        run: |
+          {
+            echo "## AXON Code verification"
+            echo ""
+            echo "**Node tests:** $(cat ../ci-results/node-counts.txt 2>/dev/null || echo 'not produced')"
+            echo ""
+            echo "**Browser and terminal scripts**"
+            echo ""
+            echo "| script | result |"
+            echo "|---|---|"
+            cat ../ci-results/browser-table.md 2>/dev/null || echo "| (not run) | |"
+            echo ""
+            echo "First failing Node tests:"
+            echo '```'
+            grep "^not ok" ../ci-results/node-tests.txt 2>/dev/null | head -15 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: axon-code-ci-results
+          path: ci-results
+          retention-days: 30
+
+      - name: Gate
+        if: always()
+        run: |
+          if [ "${{ steps.nodetests.outcome }}" != "success" ] || [ "${{ steps.browser.outcome }}" != "success" ]; then echo "At least one group failed: see the summary table and the logs."; exit 1; fi
+
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build the vendor pack
+        run: |
+          mkdir vendor
+          cp axon-code/package.json axon-code/package-lock.json vendor/
+          cd vendor
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm install --save-dev --save-exact --ignore-scripts --no-audit --no-fund jsdom fake-indexeddb esbuild typescript-language-server
+          node -e "import('typescript').then(m => console.log('typescript', (m.default || m).version))"
+          node -e "import('jsdom').then(m => console.log('jsdom', new m.JSDOM('<p>ok</p>').window.document.querySelector('p').textContent))"
+          node -e "import('fake-indexeddb/auto').then(() => console.log('fake-indexeddb', typeof indexedDB.open))"
+          node -e "import('esbuild').then(m => console.log('esbuild', m.version))"
+          node -e "import('pyodide').then(async m => { const py = await m.loadPyodide(); console.log('pyodide python', py.runPython('1+1')); })"
+          test -f node_modules/typescript-language-server/package.json && echo "typescript-language-server present"
+          zip -qr ../AXON_CODE_VENDOR_PACK_V2.zip package.json package-lock.json node_modules
+          ls -l ../AXON_CODE_VENDOR_PACK_V2.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AXON_CODE_VENDOR_PACK_V2
+          path: AXON_CODE_VENDOR_PACK_V2.zip
+          retention-days: 30
