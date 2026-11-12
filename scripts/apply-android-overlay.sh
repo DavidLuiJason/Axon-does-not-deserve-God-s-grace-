@@ -16,6 +16,7 @@ echo "==> Copying Java sources (background jobs, file saver, screen capture, Mai
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/background"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/filesaver"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screencapture"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/browser"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobService.java" \
       "$ANDROID/app/src/main/java/com/axon/app/background/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobsPlugin.java" \
@@ -26,6 +27,10 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/screencapture/ScreenCapturePlugin
       "$ANDROID/app/src/main/java/com/axon/app/screencapture/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/screencapture/ScreenCaptureService.java" \
       "$ANDROID/app/src/main/java/com/axon/app/screencapture/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserPlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/browser/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/browser/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
@@ -99,6 +104,34 @@ if ! grep -q "ScreenCaptureService" "$MANIFEST"; then
   echo "    + added ScreenCaptureService"
 else
   echo "    = ScreenCaptureService already present"
+fi
+
+echo "==> Ensuring AXON Web BrowserActivity declaration"
+if ! grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST"; then
+  ACTIVITY_XML='        <activity
+            android:name=".browser.BrowserActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="AXON Web" />'
+  awk -v act="$ACTIVITY_XML" '
+    BEGIN { in_start=0; done=0 }
+    !done && !in_start && /<application([[:space:]>]|$)/ {
+      print
+      if (index($0, ">")) { print act; done=1 } else { in_start=1 }
+      next
+    }
+    in_start {
+      print
+      if (index($0, ">")) { print act; in_start=0; done=1 }
+      next
+    }
+    { print }
+    END { if (!done) exit 42 }
+  ' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST" || { echo "ERROR: BrowserActivity declaration insertion failed"; exit 1; }
+  echo "    + added BrowserActivity"
+else
+  echo "    = BrowserActivity already present"
 fi
 
 echo "==> Overlay applied successfully."

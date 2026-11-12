@@ -21,6 +21,7 @@ import { VideoEditorScreen } from './components/editors/VideoEditorScreen';
 import { AudioEditorScreen } from './components/editors/AudioEditorScreen';
 import { ConverterScreen } from './components/ConverterScreen';
 import { DictionaryScreen } from './components/DictionaryScreen';
+import { BrowserHomeScreen } from './components/browser/BrowserHomeScreen';
 import { ToolScreenHost } from './tools/screens/registry';
 import { ScreenGuard } from './components/ScreenGuard';
 import { sendQueryToAxonBoundary } from './services/axonBrainInterface';
@@ -222,12 +223,11 @@ function AppInner() {
               activeChatId ? 'pt-16 pb-36 flex flex-col justify-between' : 'flex flex-col'
             }`}
           >
-            {mode !== 'chat' ? (
-              // Web and Apps are not built yet: say so honestly
+            {mode === 'web' ? (
+              <BrowserHomeScreen />
+            ) : mode === 'apps' ? (
               <div className="flex-1 flex items-center justify-center px-8 text-center text-sm text-[#8E9094]">
-                {mode === 'web'
-                  ? "Web is coming soon. AXON's own browser will live here."
-                  : "Apps is coming soon. Your phone's apps will open here with AXON on top."}
+                Apps is coming soon. Your phone's apps will open here with AXON on top.
               </div>
             ) : activeChatId ? (
               // Active Conversation State (Image 2)

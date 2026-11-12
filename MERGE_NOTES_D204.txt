@@ -1,0 +1,6 @@
+FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 3b (fix of round 3).
+HOW TO USE: this zip has NO wrapper folder. Its contents are repo-root files (src/, tests/, docs/, DIRECTOR_NAP.txt ...). Upload/copy them INTO the repo root.
+FIRST delete from the repo: the folder AXON_WEB_D204_ROUND3/ (round 3 was uploaded as a nested folder by mistake) and the loose AXON_WEB_MERGE.zip.
+FIXES vs round 3: tests/browserCommandGateway.test.ts and tests/browserSavedBrowsing.test.ts had two real type errors under the repo tsc; fixed. Browser tests still 248/248.
+Everything else is as in round 3: 42 new files + DIRECTOR_NAP.txt (D204 line + note N19; paste only those two lines if the NAP changed meanwhile) + src/App.tsx, MainActivity.java, manifest-additions.xml, apply-android-overlay.sh (rebased on the 2026-11-11 repo).
+NOT run: real Android build, device, live sites, Chromium simulation, full cloud suite.
