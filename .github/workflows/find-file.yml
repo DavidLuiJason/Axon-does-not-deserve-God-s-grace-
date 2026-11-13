@@ -1,0 +1,148 @@
+name: "Find a file (manual)"
+
+# Type a file name (or part of it) and press Run workflow. It lists:
+#   1. files in the repository RIGHT NOW whose name matches or is similar,
+#   2. files that were added earlier (including zips that were unpacked and removed) and when,
+#   3. commit messages that mention the name,
+#   4. files whose TEXT mentions it.
+# Runs ONLY when started by hand (Actions tab > Find a file (manual) > Run workflow). It never changes the repository.
+# Add this file by hand once at .github/workflows/find-file.yml (GitHub does not let a workflow install workflow files).
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'File name or part of it (for example SI3C, merge, structure-reader). Capitals, spaces and the difference between 1 / l / I and 0 / O do not matter.'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Search
+        env:
+          QUERY: ${{ inputs.name }}
+        run: |
+          python3 - <<'PY'
+          import os, re, subprocess, difflib
+
+          q = os.environ.get('QUERY', '').strip()
+          LIMIT = 30
+
+          def git(*args):
+              return subprocess.run(['git', *args], capture_output=True, text=True, errors='replace').stdout
+
+          def fold(s):
+              s = s.lower().replace('1', 'i').replace('l', 'i').replace('0', 'o')
+              return re.sub(r'[^a-z0-9]', '', s)
+
+          nq = fold(q)
+          out = []
+          def say(line=''):
+              out.append(line)
+              print(line)
+
+          if not nq:
+              say('Type at least one letter or number.')
+          else:
+              def rank(path):
+                  base = path.rsplit('/', 1)[-1]
+                  nb = fold(base)
+                  if base.lower() == q.lower():
+                      return (0, 1.0, 'exact name')
+                  if nq in nb:
+                      return (1, 1.0, 'name contains it')
+                  if any(nq in fold(seg) for seg in path.split('/')[:-1]):
+                      return (2, 1.0, 'folder name contains it')
+                  if len(nq) >= 5 and nb:
+                      w = min(len(nq), len(nb))
+                      best = max(difflib.SequenceMatcher(None, nq, nb[i:i + w]).ratio() for i in range(0, len(nb) - w + 1))
+                      if best >= 0.8:
+                          return (3, best, 'similar name')
+                  return None
+
+              current = [p for p in git('ls-files').split('\n') if p]
+              cur_set = set(current)
+
+              # history: when each path was first added / removed (newest commit first)
+              added, removed = {}, {}
+              subjects = []
+              sha = date = subj = ''
+              for line in git('log', '--all', '--diff-filter=AD', '--name-status', '--date=short', '--format=@@ %h %ad %s').split('\n'):
+                  if line.startswith('@@ '):
+                      _, sha, date, subj = (line.split(' ', 3) + [''])[:4]
+                      subjects.append((sha, date, subj))
+                  elif '\t' in line:
+                      st, path = line.split('\t', 1)
+                      if st.startswith('A'):
+                          added[path] = (date, sha)      # last one seen = oldest
+                      elif st.startswith('D') and path not in removed:
+                          removed[path] = (date, sha)    # first one seen = newest
+
+              say(f'## Looking for: `{q}`   (searched as `{nq}`)')
+              say()
+
+              now = sorted([(rank(p), p) for p in current if rank(p)], key=lambda x: (x[0][0], -x[0][1], x[1]))
+              say(f'### 1. In the repository now ({len(now)} found)')
+              if not now:
+                  say('Nothing with that name or a similar name.')
+              for (r, s, why), p in now[:LIMIT]:
+                  when = f', first added {added[p][0]} (commit {added[p][1]})' if p in added else ''
+                  say(f'- `{p}` : {why}{when}')
+              if len(now) > LIMIT:
+                  say(f'- ...and {len(now) - LIMIT} more. Type more of the name to narrow it.')
+              say()
+
+              gone = sorted([(rank(p), p) for p in added if p not in cur_set and rank(p)], key=lambda x: (x[0][0], -x[0][1], x[1]))
+              say(f'### 2. Added earlier but NOT in the repository now ({len(gone)} found)')
+              say('(Merge zips show up here: the build unpacks them and deletes the zip, so the zip is gone but the files it brought stay.)')
+              if not gone:
+                  say('None.')
+              for (r, s, why), p in gone[:LIMIT]:
+                  gone_on = f', removed {removed[p][0]} (commit {removed[p][1]})' if p in removed else ''
+                  say(f'- `{p}` : {why}, added {added[p][0]} (commit {added[p][1]}){gone_on}')
+              if len(gone) > LIMIT:
+                  say(f'- ...and {len(gone) - LIMIT} more.')
+              say()
+
+              msgs = [(h, d, s) for h, d, s in subjects if nq in fold(s)]
+              say(f'### 3. Commit messages that mention it ({len(msgs)} found)')
+              if not msgs:
+                  say('None.')
+              for h, d, s in msgs[:15]:
+                  say(f'- {d} commit {h}: {s}')
+              say()
+
+              hits = []
+              if len(q) >= 3:
+                  for line in git('grep', '-I', '-i', '-c', '-F', '-e', q).split('\n'):
+                      if ':' in line:
+                          f, n = line.rsplit(':', 1)
+                          hits.append((f, n))
+              say(f'### 4. Files whose text mentions it ({len(hits)} found)')
+              if not hits:
+                  say('None.')
+              for f, n in hits[:15]:
+                  say(f'- `{f}` ({n} times)')
+              if len(hits) > 15:
+                  say(f'- ...and {len(hits) - 15} more.')
+              say()
+
+              if not now and not gone and not msgs and not hits:
+                  say('**NOT FOUND.** Check the spelling, try a shorter part of the name, or the file was never added.')
+              elif now:
+                  say('**FOUND in the repository now** (section 1).')
+              elif gone or msgs:
+                  say('**It was added before but is not in the repository now** (sections 2 and 3).')
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('\n'.join(out) + '\n')
+          PY
