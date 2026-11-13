@@ -1,7 +1,3 @@
-FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 6 (WEB6 tab groups, built by ChatGPT, reviewed and fixed by D204). No wrapper folder: copy into the repo root, replacing files.
-WHAT: tab groups (create, rename, move in, move out, delete keeping tabs, close group, list) in the native browser, plugin, rules (3 new commands: tabs.deleteGroup, tabs.removeFromGroup, tabs.listGroups) and tests; tab kind field (normal; incognito and stealth refused as not built yet).
-D204 FIXES TO CHATGPT WORK: (1) BrowserPlugin.createGroup built a JSONArray inside a lambda that cannot throw JSONException: a Java compile error; now passes the JSArray directly. (2) tests/browserRuntime150.test.mjs hard-coded 151 commands; it is now 154 (included here).
-DIRECTOR_NAP.txt: complete drop-in built from the owner current NAP (with D47 and law 8). Only the D204 line changed (now ends ~30%). 4,968 of 5,000 characters; NAP test passes.
-MEASURED on a copy of the repo with this applied: Web tests 256 of 256; tsc --strict clean on src/web and the browser tests (except @capacitor/core, absent here); overlay test OK; guard OK; NAP test OK.
-NOT MEASURED: Java compile (no Android SDK here; cloud is the check), device, live sites.
-Not touched: package.json, tsconfig, NOW.txt, MERGE_TAG.txt, roadmap, brain, tools, Code, Apps, screens.
+FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 6b: fix for red cloud run #204. No wrapper folder: copy into the repo root, replacing the file.
+FAULT: BrowserActivity.java line 773 had a literal backslash and the letter n (text, not a newline) between two statements, written by the builder (ChatGPT) in WEB6: "illegal character" and "; expected". Replaced by a real line break. Nothing else changed.
+CHECKED: D204 scanned both browser Java files for any other backslash outside a string literal: none. Added code balanced (braces and parentheses). Web tests 256/256, overlay test OK. NOT CHECKED: Java compile (no Android SDK here); the cloud is the check.
