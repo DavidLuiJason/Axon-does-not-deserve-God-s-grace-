@@ -290,7 +290,7 @@ public final class BrowserActivity extends Activity {
                 return true;
             }
         });
-        web.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> startDownload(url, userAgent, contentDisposition, mimeType));
+        web.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> startDownload(tab, url, userAgent, contentDisposition, mimeType));
     }
 
     /** Keep only the selected tab's renderer alive; other tabs retain navigation state only. */

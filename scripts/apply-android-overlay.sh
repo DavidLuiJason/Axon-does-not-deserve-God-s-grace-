@@ -12,11 +12,12 @@ if [[ ! -d "$ANDROID/app" ]]; then
   exit 1
 fi
 
-echo "==> Copying Java sources (background jobs, file saver, screen capture, MainActivity)"
+echo "==> Copying Java sources (background jobs, file saver, screen capture, browser, screen structure, MainActivity)"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/background"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/filesaver"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screencapture"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/browser"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screenstructure"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobService.java" \
       "$ANDROID/app/src/main/java/com/axon/app/background/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobsPlugin.java" \
@@ -31,6 +32,10 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserPlugin.java" \
       "$ANDROID/app/src/main/java/com/axon/app/browser/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/browser/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
@@ -58,6 +63,13 @@ echo "==> Copying notification icon"
 mkdir -p "$ANDROID/app/src/main/res/drawable"
 cp -f "$OVERLAY/app/src/main/res/drawable/ic_notification.xml" \
       "$ANDROID/app/src/main/res/drawable/"
+
+echo "==> Copying accessibility screen reader resources"
+mkdir -p "$ANDROID/app/src/main/res/xml" "$ANDROID/app/src/main/res/values"
+cp -f "$OVERLAY/app/src/main/res/xml/axon_accessibility_service.xml" \
+      "$ANDROID/app/src/main/res/xml/"
+cp -f "$OVERLAY/app/src/main/res/values/axon_accessibility_strings.xml" \
+      "$ANDROID/app/src/main/res/values/"
 
 MANIFEST="$ANDROID/app/src/main/AndroidManifest.xml"
 if [[ ! -f "$MANIFEST" ]]; then
@@ -152,6 +164,27 @@ if ! grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST"; then
   echo "    + added BrowserActivity"
 else
   echo "    = BrowserActivity already present"
+fi
+
+echo "==> Ensuring AxonAccessibilityService declaration (read-only screen reader; the owner turns it on in Android settings)"
+if ! grep -q "AxonAccessibilityService" "$MANIFEST"; then
+  SERVICE_XML='        <service
+            android:name=".screenstructure.AxonAccessibilityService"
+            android:exported="true"
+            android:label="AXON screen reader"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/axon_accessibility_service" />
+        </service>'
+  awk -v svc="$SERVICE_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  grep -q "AxonAccessibilityService" "$MANIFEST" || { echo "ERROR: AxonAccessibilityService declaration insertion failed"; exit 1; }
+  echo "    + added AxonAccessibilityService"
+else
+  echo "    = AxonAccessibilityService already present"
 fi
 
 echo "==> Overlay applied successfully."
