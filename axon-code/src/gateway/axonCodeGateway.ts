@@ -38,6 +38,10 @@ export interface AxonCodeGatewayRequest {
     | 'project.inspect'
     | 'job.status'
     | 'job.submit'
+    | 'job.pause'
+    | 'job.resume'
+    | 'job.cancel'
+    | 'job.results'
     | 'workspace.export';
   payload: AxonCodeJson;
 }
@@ -68,7 +72,7 @@ function validateAxonCodeGatewayRequestShape(
   if (typeof request['requestId'] !== 'string' || !request['requestId'].trim()) return false;
   if (typeof request['approvalReference'] !== 'string' || !request['approvalReference'].trim()) return false;
   if (typeof request['auditId'] !== 'string' || !request['auditId'].trim()) return false;
-  if (!['capabilities.read', 'project.inspect', 'job.status', 'job.submit', 'workspace.export'].includes(String(request['operation']))) return false;
+  if (!['capabilities.read', 'project.inspect', 'job.status', 'job.submit', 'job.pause', 'job.resume', 'job.cancel', 'job.results', 'workspace.export'].includes(String(request['operation']))) return false;
   const caller = request['callerContext'] as Record<string, unknown> | null;
   if (!caller || typeof caller !== 'object' || Array.isArray(caller)) return false;
   if (typeof caller['callerId'] !== 'string' || !caller['callerId'].trim()) return false;

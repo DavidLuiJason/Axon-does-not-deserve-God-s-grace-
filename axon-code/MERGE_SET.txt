@@ -1,9 +1,16 @@
 AXON_CODE_PROGRESS.json
 README.md
+android/app/build.gradle
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/java/com/axoncode/host/MainActivity.kt
+android/build.gradle
+android/settings.gradle
 android/src/main/java/com/axoncode/host/AxonCodeHostPlugin.kt
+docs/BRAIN_GATEWAY_CONTRACT.md
 docs/C3_C4_HOST_PROVIDER_STATUS.md
 docs/C5_ENGINE_ADOPTION.md
 docs/CAPABILITY_REGISTRY.json
+docs/R14_CONTINUATION4_REPORT.md
 docs/R14_DEPENDENCY_MIGRATION.md
 docs/R14_P1_WP3_REPORT.md
 docs/R14_P2_WP7_REPORT.md
@@ -22,8 +29,11 @@ package-lock.json
 package.json
 requirements-linux-pty.txt
 results/r14-browser-verification.json
+results/r14-clean-reapply.json
+results/r14-continuation4.json
 results/r14-full-regression-per-file.json
 results/r14-full-regression-summary.json
+results/r14-full-suite-exact-command.json
 results/r14-host-provider-gates.json
 results/r14-p6-storage-recovery.json
 results/r14-wp00-blockers.json
@@ -68,6 +78,7 @@ src/environment/pipPackageManagerAdapter.ts
 src/execution/buildOrchestrator.ts
 src/execution/terminalSessions.ts
 src/gateway/axonCodeGateway.ts
+src/gateway/jobGateway.mjs
 src/hosts/executionRouter.ts
 src/hosts/routedExecution.ts
 src/index.ts
@@ -77,8 +88,12 @@ src/intelligence/languageServices.ts
 src/jobs/persistentJobs.ts
 src/jobs/recoveryCoordinator.ts
 src/lexer.ts
+src/lsp/typescriptLspClient.mjs
 src/pathSafety.ts
+src/preview/managedPreviewServer.mjs
 src/projectAnalyzer.ts
+src/providers/wasm/wasm-worker.mjs
+src/providers/wasm/wasmProvider.mjs
 src/resources/adaptiveExecution.ts
 src/resources/lagControl.ts
 src/resources/lagProtection.ts
@@ -107,6 +122,7 @@ src/security/securityArtifactRedaction.ts
 src/security/workspaceTrust.ts
 src/security/zipExtractor.ts
 src/selectiveExecution.ts
+src/services/projectServices.mjs
 src/storage/fileBackedKeyValueStore.ts
 src/storage/indexedDbProjectSink.ts
 src/storage/indexedDbStore.ts
@@ -152,6 +168,7 @@ tests/helpers/npm-node-host.mjs
 tests/helpers/pip-node-host.mjs
 tests/helpers/pyodide-node-suite.mjs
 tests/helpers/pyodide-node-worker.mjs
+tests/helpers/r14-mutant.mjs
 tests/helpers/round5-recovery-restart-worker.mjs
 tests/helpers/zipBuilder.mjs
 tests/prer4-completion.test.mjs
@@ -159,6 +176,14 @@ tests/prer4-remediation.test.mjs
 tests/prer5-browser-fixtures.mjs
 tests/prer5-browser.integration.py
 tests/prer5-expansion.test.mjs
+tests/r14-director-host-header.test.mjs
+tests/r14-p10-services.test.mjs
+tests/r14-p11-lsp.test.mjs
+tests/r14-p12-gateway.test.mjs
+tests/r14-p13-android-source.test.mjs
+tests/r14-p7-ui-packaging.test.mjs
+tests/r14-p8-wasm.test.mjs
+tests/r14-p9-preview.test.mjs
 tests/r14-wp00-baseline.test.mjs
 tests/r14-wp01-gateway-registry.test.mjs
 tests/r14-wp02-workspace.test.mjs
@@ -215,6 +240,7 @@ tests/round9-routing-evidence.test.mjs
 tests/round9-workbench.test.mjs
 tests/test-r14-pty-websocket.py
 tools/benchmark-ts-compiler.mjs
+tools/build-ui.mjs
 tools/derive-capability-status.mjs
 tools/host-toolchain-smoke.py
 tools/linux-pty-provider.py
@@ -230,6 +256,7 @@ tools/run-full-regression-r1-r9.py
 tools/run-full-regression.py
 tools/run-r14-full-regression.mjs
 tools/run-r14-phase-a-suites.mjs
+tools/serve-ui.mjs
 tools/test-round12-pty.py
 tools/verify-browser.mjs
 tools/verify-director.mjs

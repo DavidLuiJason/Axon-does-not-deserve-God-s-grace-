@@ -139,28 +139,22 @@
       "continuation3LastResult": "12/12 PASS; 7 negative; real compiled-module mutant caught. fake-indexeddb and real file-store Node evidence passed. Browser/Android/real IndexedDB quota remain NOT RUN."
     },
     "WP14": {
-      "state": "BLOCKED",
+      "state": "PARTIAL",
       "tier": "T1",
-      "summary": "Director and browser verification commands, source manifest, checksums, merge set and machine-readable result files prepared. Director verification is BLOCKED by clean npm ci evidence; browser persistence is NOT RUN.",
+      "summary": "Continuation 4 P7 UI packaging and loopback static server are built and Node/jsdom tested. Reproducible bundle includes CodeMirror, xterm and complete offline Pyodide assets. Chromium/browser mount remains NOT RUN.",
       "filesChanged": [
-        "tools/verify-director.mjs",
-        "tools/verify-browser.mjs",
-        "tools/derive-capability-status.mjs",
-        "tools/run-r14-phase-a-suites.mjs",
-        "MERGE_SET.txt",
-        "FILES_MANIFEST.txt",
-        "SHA256SUMS.txt",
-        "VERIFY_SUMMARY.json",
-        "docs/CAPABILITY_REGISTRY.json",
-        "docs/ROUND14_IMPLEMENTATION_REPORT.md"
+        "tools/build-ui.mjs",
+        "tools/serve-ui.mjs",
+        "tests/r14-p7-ui-packaging.test.mjs",
+        "tests/helpers/r14-mutant.mjs",
+        "results/r14-continuation4.json"
       ],
-      "testsAdded": 0,
-      "testsPassed": 0,
-      "negativeTests": 0,
-      "mutantCaught": false,
+      "testsAdded": 12,
+      "testsPassed": 12,
+      "negativeTests": 7,
+      "mutantCaught": true,
       "blockers": [
-        "Clean extraction plus npm ci cannot be proven without the exact verified TypeScript package integrity and registry/cache availability.",
-        "One real IndexedDB browser suite remains NOT RUN."
+        "Chromium engine mount, actual UI button interactions and Android WebView are NOT RUN."
       ]
     },
     "WP03": {
@@ -527,8 +521,8 @@
       "reason": "The command did not complete within the 120-second execution limit; prior attempts document Chromium navigation blocked by ERR_BLOCKED_BY_ADMINISTRATOR."
     }
   },
-  "lastCommand": "P6 / WP2 + WP5 + WP12 complete; 41-file retained Node regression",
-  "resumeRule": "Resume at WP3 browser-backed acceptance if a Chromium-enabled host is available. Do not repeat completed WP3 source/control work. If browser mounting remains blocked, record the evidence and then continue to WP4 only after preserving WP3 as PARTIAL. Phase A remains blocked on clean npm ci, real IndexedDB reload, and WP5 resource/isolation enforcement.",
+  "lastCommand": "npm run build; node --test tests/*.test.mjs (background runner; captured output)",
+  "resumeRule": "Director review next. Do not claim browser or Android validation. Next close preview iframe event bridge and inbound LSP hostile-frame tests; wire gateway to real providers only after explicit provider/host acceptance, and implement pause/resume only with real host suspension or checkpoint support.",
   "directorVerification": {
     "date": "2026-11-09",
     "by": "Director (Claude), independent run on a clean extraction",
@@ -574,10 +568,23 @@
         "tests/r14-wp03-control-wiring.test.mjs and tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs could not be run by the Director",
         "CodeMirror and xterm browser mount, Pyodide Worker through a real browser, Android: still NOT RUN"
       ]
+    },
+    "continuation4": {
+      "date": "2026-11-12",
+      "baseHashes": "BASE_HASHES.txt matched the Director base for all 13 replaced files (no stale overwrite)",
+      "reproduced": "Director sandbox lacks jsdom, fake-indexeddb, typescript-language-server and TypeScript 5.8.3, so P7 (jsdom), P11 real-server tests (2), the WP10 golden corpus (31) and the two jsdom storage and UI files (24) could not run here; with esbuild linked P8 14/14, P9 9/9, P10 14/14, P12 23/23 pass; build clean on 6.0.3. The UI bundle builds (14.8 MB, budget 16 MB) and two builds are byte-identical. The cloud workflow run is the proof for the rest.",
+      "findings": [
+        "managed preview server and UI server answered requests with a FOREIGN Host header (DNS rebinding: a web page could read the user project or the UI); both now answer 421; new tests/r14-director-host-header.test.mjs (4 tests, 2 real mutants)",
+        "WASM provider held under hostile modules: infinite loop killed at the 700 ms deadline, forbidden host import denied, unbounded memory refused, garbage and oversize bytes refused; isolation grade honestly stated as worker-thread, filesystem isolation NOT PROVIDED",
+        "job gateway held: 8 concurrent uses of one approval gave 1 success and 7 refusals, 5 MB payload refused, cross-user cancel refused",
+        "runProjectTests is honestly BLOCKED (no OS-level confinement to run project code)"
+      ],
+      "designDecisionOpen": "the gateway refuses a USER cancelling a job that AXON started (OWNER_MISMATCH); the product vision says the user can pause or cancel anything running on their device, so the rule should let a USER with the permission cancel and pause AXON-origin jobs, while AXON still cannot cancel user jobs without permission",
+      "stillNotRun": "jsdom UI smoke of the bundle, real language server, golden corpus on 5.8.3, browser mount, Android"
     }
   },
-  "phaseB": "IN_PROGRESS \u2014 WP3 controls are now implemented and source-level negative tests pass; real Chromium engine mount/click verification remains NOT RUN. WP4 has not been advanced in this checkpoint.",
-  "lastResult": "P6 DONE for Node-provable scope; 12/12 targeted PASS, 7 negative, real mutant caught. Full retained Node regression: 1,223/1,223 across 41 files, 0 failed, 0 skipped.",
+  "phaseB": "IN PROGRESS \u2014 Continuation 4 P7\u2013P13 Node-provable scope implemented. Full Node regression 1,312/1,312 passes. Browser/Android validation, native process confinement, full provider dispatch and pause/resume remain incomplete.",
+  "lastResult": "Continuation 4 P7\u2013P13: 81 new targeted tests passed (0 failed, 0 skipped); full regression 1,312/1,312 PASS, 0 failed, 0 skipped. npm run build PASS. Browser/Android/native sandbox limitations remain as documented.",
   "continuation3": {
     "P1": {
       "state": "DONE",
@@ -602,6 +609,163 @@
     "P6": {
       "state": "DONE",
       "result": "WP2/WP5/WP12 Node-provable storage/recovery: 12/12 targeted, 7 negative, real file-store hash mutant caught. fake-indexeddb interrupted import/two-tab conflict pass; actual file-store SIGKILL recovery, quota, hash corruption, Restricted trust, approval replay and secrets corpus pass. Browser/Android and real IndexedDB quota remain NOT RUN."
+    }
+  },
+  "continuation4": {
+    "date": "2026-11-13",
+    "directorRuling": "Start gate accepted at 1,231 tests; the prior 1,209 figure excluded 24 jsdom/fake-indexeddb tests and counted two file-level failures. tests/ratchet.json minimumNodeTests is 1,231.",
+    "dependencyAdoption": {
+      "state": "DONE",
+      "devDependencies": {
+        "esbuild": "0.28.2",
+        "fake-indexeddb": "6.2.8",
+        "jsdom": "31.0.0",
+        "typescript-language-server": "6.0.3"
+      },
+      "commands": [
+        "npm ci --ignore-scripts --dry-run",
+        "npm run build"
+      ],
+      "npmCiDryRun": "PASS",
+      "fullSuiteAfterDependencyAdoption": {
+        "tests": 1231,
+        "passed": 1231,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cleanInstall": {
+        "status": "BLOCKED",
+        "command": "npm ci --offline --ignore-scripts (isolated package-only directory)",
+        "exitCode": 1,
+        "reason": "ENOTCACHED for xmlchars-2.2.0.tgz; TypeScript 5.8.3 lock entry lacks verified integrity hash. npm ci --ignore-scripts --dry-run passed."
+      }
+    },
+    "packages": {
+      "P7": {
+        "workPackage": "WP14",
+        "state": "PARTIAL",
+        "tests": 12,
+        "passed": 12,
+        "negativeTests": 7,
+        "mutantCaught": true,
+        "summary": "esbuild bundles workbench, CodeMirror, xterm, and full Pyodide offline assets. Loopback static server rejects traversal and symlink escapes. Deterministic hashes and jsdom controls tested. Browser mount NOT RUN."
+      },
+      "P8": {
+        "workPackage": "WP8",
+        "state": "PARTIAL",
+        "tests": 14,
+        "passed": 14,
+        "negativeTests": 10,
+        "mutantCaught": true,
+        "summary": "Real plain WASM and WASI hello-world execute in worker_threads; timeout kill, declared memory maximum, output cap, host-import refusal and separate workers tested. T1 only, not OS isolation. Native compiler provider BLOCKED."
+      },
+      "P9": {
+        "workPackage": "WP11",
+        "state": "PARTIAL",
+        "tests": 9,
+        "passed": 9,
+        "negativeTests": 6,
+        "mutantCaught": true,
+        "summary": "Loopback per-instance virtual preview server with CSP, MIME, nosniff, path confinement, caps and lifecycle tests. Console/error API is not yet wired to iframe messages; Chromium and WebView NOT RUN."
+      },
+      "P10": {
+        "workPackage": "WP13",
+        "state": "PARTIAL",
+        "tests": 14,
+        "passed": 14,
+        "negativeTests": 11,
+        "mutantCaught": true,
+        "summary": "Bounded literal text search and real TypeScript language service diagnostics, definitions, references and rename preview. Confined child test runner BLOCKED without OS process confinement; formatter BLOCKED because package absent."
+      },
+      "P11": {
+        "workPackage": "WP10",
+        "state": "PARTIAL",
+        "tests": 6,
+        "passed": 6,
+        "negativeTests": 3,
+        "mutantCaught": true,
+        "summary": "Real typescript-language-server 6.0.3 client initialized, opened/changed documents, received diagnostics, completion, hover, definition, shut down and restarted once after a real crash. Hostile inbound malformed/out-of-order protocol fixtures remain incomplete."
+      },
+      "P12": {
+        "workPackage": "WP1/WP5/WP12",
+        "state": "PARTIAL",
+        "tests": 23,
+        "passed": 23,
+        "negativeTests": 16,
+        "mutantCaught": true,
+        "summary": "File-backed job store and JSON gateway; complete-request hash-bound single-use approvals, scope/permission/owner checks, audit, user/AXON origin, quota/time/output caps, actual running-executor cancellation and recovery tested. Existing providers not yet wired into production dispatcher; pause/resume NOT_SUPPORTED."
+      },
+      "P13": {
+        "workPackage": "WP9/T3",
+        "state": "PARTIAL",
+        "tests": 4,
+        "passed": 4,
+        "negativeTests": 2,
+        "mutantCaught": false,
+        "summary": "Capacitor/SAF source and Gradle skeleton added and source-contract tested. Gradle and Android SDK unavailable; all Android runtime/device/APK capabilities NOT RUN."
+      }
+    },
+    "fullRegression": {
+      "exactCommand": {
+        "command": "node --test tests/*.test.mjs (nohup background runner; output captured to /tmp/r14-final-suite2.tap)",
+        "tests": 1313,
+        "passed": 1313,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 68945,
+        "status": "PASS"
+      },
+      "sequentialPerFile": {
+        "command": "node tools/run-r14-full-regression.mjs",
+        "testFiles": 49,
+        "tests": 1313,
+        "passed": 1313,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 79746,
+        "status": "PASS"
+      }
+    },
+    "hostileCoverage": {
+      "P7": "encoded dots/slashes, malformed encodings, dot segments, NUL, symlink escape, non-loopback binding",
+      "P8": "invalid modules, arbitrary host imports, memory maxima, non-terminating CPU, output cap, separate worker instances; WASI preopens one workspace; OS sandbox not proven",
+      "P9": "absolute/dot/encoded paths, control characters, file-count and byte limits; no zip extraction or filesystem project paths",
+      "P10": "symlinks, binary files, oversized files, file-count/byte/depth caps, control characters, O_NOFOLLOW file open; literal search only",
+      "P11": "oversized outbound frames and crashed process; inbound malformed/out-of-order direct fixtures NOT RUN",
+      "P12": "approval replay, changed caller/request, wrong project/scope, expiry, concurrent use, permissions, owner, quotas, deadlines, output cap, restart recovery",
+      "P13": "source contract only; Android runtime hostile project cases NOT RUN"
+    },
+    "limitations": [
+      "No Chromium or Android WebView run.",
+      "No Android Gradle build/APK/device run.",
+      "No OS-level sandbox or native compiler provider.",
+      "Project test execution and formatter are BLOCKED.",
+      "Preview console/error message bridge is not wired.",
+      "Gateway provider dispatcher is not wired to all existing execution providers; pause/resume are NOT_SUPPORTED."
+    ],
+    "packageSuiteTotals": {
+      "tests": 82,
+      "passed": 82,
+      "failed": 0,
+      "skipped": 0,
+      "negativeTests": 55,
+      "realCompiledModuleMutantsCaught": 6,
+      "P13CompiledMutant": "NOT RUN \u2014 Android compiler/toolchain unavailable"
+    },
+    "cleanBaseReapply": {
+      "status": "PASS",
+      "build": "PASS",
+      "exactFullSuite": {
+        "tests": 1313,
+        "passed": 1313,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 78618
+      },
+      "sha256Entries": 271,
+      "mergeSetFiles": 270,
+      "sourceTreeMatchesWorkingTree": true,
+      "workflowFilesIncluded": false
     }
   }
 }

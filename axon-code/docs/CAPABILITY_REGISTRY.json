@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "2e841f62b405975b3a766e1d8fb335bfcb21c170ebaa929f1ccad33f54041ad4",
-  "capabilityCount": 42,
+  "resultSetSha256": "e942ea65ff28e43c49423ae7a96ed36d6084fdb45cdc0ced0aa786f1c3dca57b",
+  "capabilityCount": 57,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -60,6 +60,28 @@
       ]
     },
     {
+      "id": "axon-code-android-capacitor-saf-source-skeleton",
+      "status": "BUILT",
+      "grade": "SOURCE_ONLY",
+      "evidenceIds": [
+        "R14-C4-P13-ANDROID-SOURCE"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-android-device-host",
+      "status": "NOT RUN",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P13-ANDROID-DEVICE"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
       "id": "axon-code-brain-gateway-contract",
       "status": "TESTED",
       "grade": "T1",
@@ -88,6 +110,149 @@
       "resultFiles": [
         "results/r14-wp01-gateway.json",
         "results/r14-wp01-tests.json"
+      ]
+    },
+    {
+      "id": "axon-code-brain-gateway-job-lifecycle-core",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P12-GATEWAY-JOBS"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-confined-project-test-runner",
+      "status": "BLOCKED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P10-TEST-RUNNER"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-gateway-provider-integration",
+      "status": "BLOCKED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P12-PROVIDER-INTEGRATION"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-job-pause-resume-host-adapters",
+      "status": "BLOCKED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P12-PAUSE-RESUME"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-loopback-ui-static-server",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P7-LOOPBACK-SERVER"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-managed-preview-server",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P9-PREVIEW"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-native-compiler-provider",
+      "status": "BLOCKED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P8-NATIVE-COMPILERS"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-offline-ui-bundle",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P7-UI-BUNDLE"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-preview-browser-and-webview-integration",
+      "status": "NOT RUN",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P9-BROWSER-WEBVIEW"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-project-formatter",
+      "status": "BLOCKED",
+      "grade": "UNSPECIFIED",
+      "evidenceIds": [
+        "R14-C4-P10-FORMATTER"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-project-search-and-typescript-language-service",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P10-PROJECT-SERVICES"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-typescript-language-server-client",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P11-TYPESCRIPT-LSP"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-wasm-worker-provider",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C4-P8-WASM"
+      ],
+      "resultFiles": [
+        "results/r14-continuation4.json"
       ]
     },
     {
@@ -236,10 +401,18 @@
       "status": "TESTED",
       "grade": "T1",
       "evidenceIds": [
+        "R14-C4-CLEAN-BASE-REAPPLY",
         "R14-FULL-FOUNDATION",
         "R14-FULL-PRER4-COMPLETION",
         "R14-FULL-PRER4-REMEDIATION",
         "R14-FULL-PRER5-EXPANSION",
+        "R14-FULL-R14-P10-SERVICES",
+        "R14-FULL-R14-P11-LSP",
+        "R14-FULL-R14-P12-GATEWAY",
+        "R14-FULL-R14-P13-ANDROID-SOURCE",
+        "R14-FULL-R14-P7-UI-PACKAGING",
+        "R14-FULL-R14-P8-WASM",
+        "R14-FULL-R14-P9-PREVIEW",
         "R14-FULL-R14-WP00-BASELINE",
         "R14-FULL-R14-WP01-GATEWAY-REGISTRY",
         "R14-FULL-R14-WP02-WORKSPACE",
@@ -259,6 +432,7 @@
         "R14-FULL-R14-WP06-PACKAGE-MANAGER",
         "R14-FULL-R14-WP10-TYPESCRIPT-DEBUGGER",
         "R14-FULL-R14-WP12-RECOVERY",
+        "R14-FULL-R14-WP13-GIT-CONFIG-DIRECTOR",
         "R14-FULL-R14-WP13-GIT",
         "R14-FULL-ROUND1-150",
         "R14-FULL-ROUND10-DIRECT-USER",
@@ -277,11 +451,14 @@
         "R14-FULL-ROUND9-INTELLIGENCE",
         "R14-FULL-ROUND9-ROUTING-EVIDENCE",
         "R14-FULL-ROUND9-WORKBENCH",
-        "R14-FULL-REGRESSION-SUMMARY"
+        "R14-FULL-REGRESSION-SUMMARY",
+        "R14-C4-EXACT-FULL-SUITE"
       ],
       "resultFiles": [
+        "results/r14-clean-reapply.json",
         "results/r14-full-regression-per-file.json",
-        "results/r14-full-regression-summary.json"
+        "results/r14-full-regression-summary.json",
+        "results/r14-full-suite-exact-command.json"
       ]
     },
     {
@@ -504,9 +681,11 @@
       "status": "BLOCKED",
       "grade": "T1",
       "evidenceIds": [
+        "R14-C4-NPM-CI-OFFLINE",
         "R14-WP00-NPM-CI"
       ],
       "resultFiles": [
+        "results/r14-continuation4.json",
         "results/r14-wp00-blockers.json"
       ]
     },

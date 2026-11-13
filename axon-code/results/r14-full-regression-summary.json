@@ -3,18 +3,15 @@
   "suite": "full-node-regression",
   "capability": "full-retained-node-regression",
   "status": "PASS",
-  "command": "Clean-copy serial per-file execution: node --test <each tests/*.test.mjs> (41 separate processes)",
+  "command": "npm run test:full-r14",
   "exitCode": 0,
-  "durationMs": 48720,
+  "durationMs": 79746,
   "hostFingerprint": "73fc35ab4e5c9a30",
-  "grade": "T1",
-  "testFiles": 41,
-  "tests": 1223,
-  "passed": 1223,
+  "schemaVersion": 1,
+  "testFiles": 49,
+  "tests": 1313,
+  "passed": 1313,
   "failed": 0,
   "skipped": 0,
-  "notes": [
-    "P6 delta applied to a clean P5 base after all replacement BASE_HASHES matched.",
-    "Every root tests/*.test.mjs file was executed once in its own Node test process."
-  ]
+  "grade": "T1"
 }

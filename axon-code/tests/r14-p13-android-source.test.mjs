@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile,stat} from 'node:fs/promises';
+const files=['android/settings.gradle','android/build.gradle','android/app/build.gradle','android/app/src/main/AndroidManifest.xml','android/app/src/main/java/com/axoncode/host/MainActivity.kt','android/src/main/java/com/axoncode/host/AxonCodeHostPlugin.kt'];
+test('P13 Gradle and Capacitor Android source skeleton files exist',async()=>{for(const f of files)assert.ok((await stat(f)).isFile(),f);});
+test('P13 host plugin exposes SAF workspace selection and persistable permission handling',async()=>{const src=await readFile(files[5],'utf8');assert.match(src,/ACTION_OPEN_DOCUMENT_TREE/);assert.match(src,/takePersistableUriPermission/);assert.match(src,/DocumentsContract/);});
+test('P13 process and compiler providers remain explicitly unavailable on Android',async()=>{const src=await readFile(files[5],'utf8');assert.match(src,/processProvider", false/);assert.match(src,/pythonProvider", false/);assert.match(src,/gradleProvider", false/);});
+test('P13 source-only skeleton does not claim a built APK',async()=>{const manifest=await readFile(files[3],'utf8');assert.match(manifest,/android:allowBackup="false"/);});
