@@ -44,6 +44,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * First AXON Web native host. Normal tabs only; tabs share the default WebView cookie store.
@@ -60,9 +61,17 @@ public final class BrowserActivity extends Activity {
         String title = "New tab";
         boolean loading = false;
         Bundle savedState;
+        String groupId;
+        String kind = "normal";
+    }
+    private static final class BrowserTabGroup {
+        String id;
+        String name;
+        BrowserTabGroup(String id, String name) { this.id = id; this.name = name; }
     }
 
     private final ArrayList<BrowserTab> tabs = new ArrayList<>();
+    private final ArrayList<BrowserTabGroup> tabGroups = new ArrayList<>();
     private final ArrayList<JSONObject> history = new ArrayList<>();
     private final ArrayList<JSONObject> bookmarks = new ArrayList<>();
     private final ArrayList<String> bookmarkFolders = new ArrayList<>();
@@ -682,9 +691,68 @@ public final class BrowserActivity extends Activity {
         } catch (JSONException ignored) { }
         return out;
     }
+    private JSONArray getGroupsJson() {
+        JSONArray out = new JSONArray();
+        for (BrowserTabGroup group : tabGroups) { JSONObject item = new JSONObject(); try { item.put("id", group.id); item.put("name", group.name); out.put(item); } catch (JSONException ignored) {} }
+        return out;
+    }
+    private JSONObject getGroupsState() {
+        JSONObject out = new JSONObject(); JSONArray groups = new JSONArray();
+        for (BrowserTabGroup group : tabGroups) {
+            JSONObject item = new JSONObject(); JSONArray indexes = new JSONArray();
+            for (int i=0;i<tabs.size();i++) if (group.id.equals(tabs.get(i).groupId)) indexes.put(i);
+            try { item.put("id",group.id); item.put("name",group.name); item.put("tabIndexes",indexes); groups.put(item); } catch(JSONException ignored) {}
+        }
+        try { out.put("groups",groups); } catch(JSONException ignored) {}
+        return out;
+    }
+    public JSONObject listGroups() { return getGroupsState(); }
+    public JSONObject createGroup(String name, JSONArray indexes) {
+        String clean = name == null ? "" : name.trim();
+        if (clean.isEmpty()) throw new IllegalArgumentException("Group name is required.");
+        BrowserTabGroup group = new BrowserTabGroup(UUID.randomUUID().toString(), clean);
+        if (indexes != null) {
+            for (int i=0;i<indexes.length();i++) { int index=indexes.optInt(i,-1); if(index<0 || index>=tabs.size()) throw new IllegalArgumentException("Tab index out of range: "+index); }
+        }
+        tabGroups.add(group);
+        if (indexes != null) for(int i=0;i<indexes.length();i++) tabs.get(indexes.optInt(i)).groupId=group.id;
+        saveTabs(); return getGroupsState();
+    }
+    public JSONObject renameGroup(String groupId, String name) {
+        BrowserTabGroup group=findGroup(groupId); String clean=name==null?"":name.trim();
+        if(clean.isEmpty()) throw new IllegalArgumentException("Group name is required.");
+        group.name=clean; saveTabs(); return getGroupsState();
+    }
+    public JSONObject moveTabToGroup(int index, String groupId) {
+        if(index<0 || index>=tabs.size()) throw new IllegalArgumentException("Tab index out of range.");
+        BrowserTabGroup group=findGroup(groupId); tabs.get(index).groupId=group.id; saveTabs(); return getState();
+    }
+    public JSONObject removeTabFromGroup(int index) {
+        if(index<0 || index>=tabs.size()) throw new IllegalArgumentException("Tab index out of range.");
+        tabs.get(index).groupId=null; saveTabs(); return getState();
+    }
+    public JSONObject deleteGroup(String groupId) {
+        BrowserTabGroup group=findGroup(groupId);
+        for(BrowserTab tab:tabs) if(group.id.equals(tab.groupId)) tab.groupId=null;
+        tabGroups.remove(group); saveTabs(); return getGroupsState();
+    }
+    public JSONObject closeGroup(String groupId) {
+        BrowserTabGroup group=findGroup(groupId);
+        for(int i=tabs.size()-1;i>=0;i--) if(group.id.equals(tabs.get(i).groupId)) closeTab(i);
+        tabGroups.remove(group); saveTabs(); return getState();
+    }
+    private BrowserTabGroup findGroup(String groupId) {
+        if(groupId==null || groupId.trim().isEmpty()) throw new IllegalArgumentException("groupId is required.");
+        for(BrowserTabGroup group:tabGroups) if(group.id.equals(groupId)) return group;
+        throw new IllegalArgumentException("Tab group not found: "+groupId);
+    }
+
     public JSONObject getState() {
         JSONObject out = new JSONObject(); BrowserTab t = active();
-        try { out.put("available", true); out.put("tabCount", tabs.size()); out.put("activeIndex", activeIndex); out.put("url", t == null ? "" : t.url); out.put("title", t == null ? "" : t.title); out.put("loading", t != null && t.loading); out.put("canGoBack", t != null && t.view.canGoBack()); out.put("canGoForward", t != null && t.view.canGoForward()); out.put("engine", "android-system-webview"); out.put("incognito", false); } catch (JSONException ignored) {}
+        try { out.put("available", true); out.put("tabCount", tabs.size()); out.put("activeIndex", activeIndex); out.put("url", t == null ? "" : t.url); out.put("title", t == null ? "" : t.title); out.put("loading", t != null && t.loading); out.put("canGoBack", t != null && t.view.canGoBack()); out.put("canGoForward", t != null && t.view.canGoForward()); out.put("engine", "android-system-webview"); out.put("incognito", false);
+            JSONArray tabRows=new JSONArray();
+            for(int i=0;i<tabs.size();i++){ BrowserTab tab=tabs.get(i); JSONObject row=new JSONObject(); row.put("index",i); row.put("url",tab.url); row.put("title",tab.title); row.put("groupId",tab.groupId==null?JSONObject.NULL:tab.groupId); row.put("kind","normal"); tabRows.put(row); }
+            out.put("tabs",tabRows); out.put("groups",getGroupsState().optJSONArray("groups")); } catch (JSONException ignored) {}
         return out;
     }
     public void getPageText(ValueCallback<String> callback) {
@@ -701,19 +769,19 @@ public final class BrowserActivity extends Activity {
         android.content.SharedPreferences prefs = getSharedPreferences("axon_web_normal", MODE_PRIVATE);
         try {
             JSONArray savedTabs = new JSONArray(prefs.getString("tabs", "[]")); activeIndex = prefs.getInt("active", 0);
-            for (int i=0;i<savedTabs.length();i++) { JSONObject item=savedTabs.optJSONObject(i); BrowserTab t=new BrowserTab(); t.url=item==null?"https://www.google.com":item.optString("url","https://www.google.com"); t.title=item==null?t.url:item.optString("title",t.url); tabs.add(t); }
-            JSONArray savedHistory = new JSONArray(prefs.getString("history", "[]")); for(int i=0;i<savedHistory.length();i++) history.add(savedHistory.getJSONObject(i));
+            for (int i=0;i<savedTabs.length();i++) { JSONObject item=savedTabs.optJSONObject(i); BrowserTab t=new BrowserTab(); t.url=item==null?"https://www.google.com":item.optString("url","https://www.google.com"); t.title=item==null?t.url:item.optString("title",t.url); t.groupId=item==null?null:item.optString("groupId",null); t.kind="normal"; tabs.add(t); }
+            JSONArray savedGroups = new JSONArray(prefs.getString("tabGroups", "[]")); for(int i=0;i<savedGroups.length();i++){ JSONObject g=savedGroups.optJSONObject(i); if(g!=null) tabGroups.add(new BrowserTabGroup(g.optString("id"),g.optString("name","Group"))); }\n            JSONArray savedHistory = new JSONArray(prefs.getString("history", "[]")); for(int i=0;i<savedHistory.length();i++) history.add(savedHistory.getJSONObject(i));
             JSONArray savedBookmarks = new JSONArray(prefs.getString("bookmarks", "[]")); for(int i=0;i<savedBookmarks.length();i++) bookmarks.add(savedBookmarks.getJSONObject(i));
             JSONArray savedFolders = new JSONArray(prefs.getString("bookmarkFolders", "[]")); for(int i=0;i<savedFolders.length();i++) bookmarkFolders.add(savedFolders.getString(i));
             JSONArray savedReading = new JSONArray(prefs.getString("readingList", "[]")); for(int i=0;i<savedReading.length();i++) readingList.add(savedReading.getJSONObject(i));
             JSONArray savedDownloads = new JSONArray(prefs.getString("downloads", "[]")); for(int i=0;i<savedDownloads.length();i++) downloadIds.add(savedDownloads.getLong(i));
-        } catch (Exception ignored) { tabs.clear(); history.clear(); bookmarks.clear(); bookmarkFolders.clear(); readingList.clear(); downloadIds.clear(); }
+        } catch (Exception ignored) { tabs.clear(); tabGroups.clear(); history.clear(); bookmarks.clear(); bookmarkFolders.clear(); readingList.clear(); downloadIds.clear(); }
         if (activeIndex < 0 || activeIndex >= tabs.size()) activeIndex = 0;
     }
     private void saveTabs() {
         JSONArray array = new JSONArray();
-        for (BrowserTab t : tabs) { JSONObject item = new JSONObject(); try { item.put("url", t.url); item.put("title", t.title); array.put(item); } catch (JSONException ignored) {} }
-        getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString("tabs", array.toString()).putInt("active", activeIndex).apply();
+        for (BrowserTab t : tabs) { JSONObject item = new JSONObject(); try { item.put("url", t.url); item.put("title", t.title); if(t.groupId!=null) item.put("groupId",t.groupId); item.put("kind","normal"); array.put(item); } catch (JSONException ignored) {} }
+        getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString("tabs", array.toString()).putString("tabGroups", getGroupsJson().toString()).putInt("active", activeIndex).apply();
     }
     private void saveJson(String key, ArrayList<JSONObject> rows) { JSONArray array = new JSONArray(rows); getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString(key, array.toString()).apply(); }
 

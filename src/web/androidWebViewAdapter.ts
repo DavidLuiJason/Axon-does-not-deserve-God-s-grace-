@@ -15,7 +15,14 @@ export class AndroidWebViewAdapter implements BrowserEngineAdapter {
   forward() { return this.plugin.forward(); }
   reload() { return this.plugin.reload(); }
   stop() { return this.plugin.stop(); }
-  newTab(options?: { url?: string }) { return this.plugin.newTab(options); }
+  newTab(options?: { url?: string; kind?: 'normal' | 'incognito' | 'stealth' }) { return this.plugin.newTab(options); }
+  createGroup(options: { name: string; tabIndexes?: number[] }) { return this.plugin.createGroup(options); }
+  renameGroup(options: { groupId: string; name: string }) { return this.plugin.renameGroup(options); }
+  moveTabToGroup(options: { index: number; groupId: string }) { return this.plugin.moveTabToGroup(options); }
+  removeTabFromGroup(options: { index: number }) { return this.plugin.removeTabFromGroup(options); }
+  deleteGroup(options: { groupId: string }) { return this.plugin.deleteGroup(options); }
+  closeGroup(options: { groupId: string }) { return this.plugin.closeGroup(options); }
+  listGroups() { return this.plugin.listGroups(); }
   switchTab(options: { index: number }) { return this.plugin.switchTab(options); }
   closeTab(options: { index: number }) { return this.plugin.closeTab(options); }
   getState() { return this.plugin.getState(); }

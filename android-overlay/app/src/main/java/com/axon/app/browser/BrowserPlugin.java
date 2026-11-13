@@ -34,7 +34,22 @@ public final class BrowserPlugin extends Plugin {
     @PluginMethod public void forward(PluginCall call) { withActivity(call, a -> {a.goForward();call.resolve(js(a.getState()));}); }
     @PluginMethod public void reload(PluginCall call) { withActivity(call, a -> {a.reload();call.resolve(js(a.getState()));}); }
     @PluginMethod public void stop(PluginCall call) { withActivity(call, a -> {a.stop();call.resolve(js(a.getState()));}); }
-    @PluginMethod public void newTab(PluginCall call) { String url=call.getString("url","https://www.google.com"); withActivity(call, a -> {a.newTab(url);call.resolve(js(a.getState()));}); }
+    @PluginMethod public void newTab(PluginCall call) {
+        String kind=call.getString("kind","normal");
+        if(!"normal".equals(kind)){call.reject("Tab kind '"+kind+"' is not built yet. Only normal tabs are available.");return;}
+        String url=call.getString("url","https://www.google.com");
+        withActivity(call, a -> {a.newTab(url);call.resolve(js(a.getState()));});
+    }
+    @PluginMethod public void createGroup(PluginCall call) {
+        String name=call.getString("name"); JSArray indexes=call.getArray("tabIndexes");
+        withActivity(call,a->call.resolve(js(a.createGroup(name,indexes))));
+    }
+    @PluginMethod public void renameGroup(PluginCall call) { String id=call.getString("groupId");String name=call.getString("name");withActivity(call,a->call.resolve(js(a.renameGroup(id,name)))); }
+    @PluginMethod public void moveTabToGroup(PluginCall call) { int index=call.getInt("index",-1);String id=call.getString("groupId");withActivity(call,a->call.resolve(js(a.moveTabToGroup(index,id)))); }
+    @PluginMethod public void removeTabFromGroup(PluginCall call) { int index=call.getInt("index",-1);withActivity(call,a->call.resolve(js(a.removeTabFromGroup(index)))); }
+    @PluginMethod public void deleteGroup(PluginCall call) { String id=call.getString("groupId");withActivity(call,a->call.resolve(js(a.deleteGroup(id)))); }
+    @PluginMethod public void closeGroup(PluginCall call) { String id=call.getString("groupId");withActivity(call,a->call.resolve(js(a.closeGroup(id)))); }
+    @PluginMethod public void listGroups(PluginCall call) { withActivity(call,a->call.resolve(js(a.listGroups()))); }
     @PluginMethod public void switchTab(PluginCall call) { int index=call.getInt("index",-1); withActivity(call, a -> {a.switchTab(index);call.resolve(js(a.getState()));}); }
     @PluginMethod public void closeTab(PluginCall call) { int index=call.getInt("index",-1); withActivity(call, a -> {a.closeTab(index);call.resolve(js(a.getState()));}); }
     @PluginMethod public void getState(PluginCall call) { withActivity(call, a -> call.resolve(js(a.getState()))); }

@@ -14,7 +14,7 @@ LAWS OF THIS FILE (owner 2026-11-04 to 11-12):
 DIRECTORS BOARD:
 D471 (2026-11-11): verifying and merging ChatGPT's tool-connection waves (CONNECT2: 7 tools live). Next: the lane's random source, then slot filling for tools the brain cannot bind yet. Not touching AXON Code or Market Scope.
 D321 (2026-11-11): OVERSEER, not a higher rank: checks every Director's return against its lane, fixes breaks that hit all cloud builds, uses ChatGPT as eyes for big checks. Now: red build fix D321-FIX1. Leaves AXON Code, Market Scope and tool wiring alone.
-D204 (2026-11-12): AXON WEB (= AXON Browser). Was merging the Web scaffolding (cloud green), now screen readiness doc, then tab groups, incognito, isolated AXON session. Leaves brain, tools, Code, Apps, screens and screen capture alone.
+D204 (2026-11-12): AXON WEB (= AXON Browser). Done: Web merge, screen doc, WEB6 tab groups. Next: incognito (WEB7), then the isolated AXON session. Leaves brain, tools, Code, Apps, screens and screen capture alone. ~30% of AXON Web.
 D47 (2026-11-12): Screen Intelligence, then AXON Apps. Done SI1, SI3a; now SI3b. ~30% of screen reading. Leaves tools, Code, Web, roadmap alone.
 OTHER DIRECTORS: add your line here (number, work, what you leave alone) the next time you add anything.
 

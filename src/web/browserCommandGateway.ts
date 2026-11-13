@@ -19,7 +19,7 @@ export type BrowserFunctionId =
   | 'navigation.securityDetails' | 'address.suggestions' | 'navigation.generateQr'
   // Tabs and tab groups
   | 'tabs.create' | 'tabs.close' | 'tabs.restoreClosed' | 'tabs.switch' | 'tabs.duplicate'
-  | 'tabs.createGroup' | 'tabs.renameGroup' | 'tabs.moveToGroup' | 'tabs.closeOthers'
+  | 'tabs.createGroup' | 'tabs.renameGroup' | 'tabs.moveToGroup' | 'tabs.deleteGroup' | 'tabs.removeFromGroup' | 'tabs.listGroups' | 'tabs.closeOthers'
   | 'tabs.suspend' | 'tabs.restoreSession' | 'tabs.listRecent' | 'tabs.pin' | 'tabs.closeGroup'
   // Bookmarks, history and reading list
   | 'bookmarks.add' | 'bookmarks.edit' | 'bookmarks.remove' | 'bookmarks.list' | 'bookmarks.createFolder' | 'bookmarks.move'
@@ -88,6 +88,9 @@ const definitions: readonly BrowserFunctionDefinition[] = [
   { id: 'tabs.createGroup', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Create a tab group.' },
   { id: 'tabs.renameGroup', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Rename a tab group.' },
   { id: 'tabs.moveToGroup', group: 'Tabs', surface: 'TAB', effect: 'REVERSIBLE', description: 'Move a permitted tab to a group.' },
+  { id: 'tabs.deleteGroup', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Delete a tab group while keeping its tabs open and ungrouped.' },
+  { id: 'tabs.removeFromGroup', group: 'Tabs', surface: 'TAB', effect: 'REVERSIBLE', description: 'Remove a permitted tab from its group without closing it.' },
+  { id: 'tabs.listGroups', group: 'Tabs', surface: 'BROWSER', effect: 'READ', description: 'List tab groups and their member tab indexes.' },
   { id: 'tabs.closeOthers', group: 'Tabs', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Close all other tabs in the active context.' },
   { id: 'tabs.suspend', group: 'Tabs', surface: 'TAB', effect: 'REVERSIBLE', description: 'Suspend a background tab to save memory.' },
   { id: 'tabs.restoreSession', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Restore a previously saved browser session.' },

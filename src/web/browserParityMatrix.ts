@@ -15,7 +15,7 @@ export type BrowserParityRow = Readonly<{
 // Owner command executors that currently reach the typed native plugin.
 const ownerCommandImplemented = new Set<BrowserFunctionId>([
   'address.navigate', 'navigation.back', 'navigation.forward', 'navigation.reload', 'navigation.stop',
-  'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close',
+  'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup',
   'tabs.switch', 'bookmarks.add', 'bookmarks.list', 'bookmarks.edit', 'bookmarks.remove',
   'bookmarks.createFolder', 'bookmarks.move', 'history.search', 'history.clear', 'history.clearBySite',
   'readingList.add', 'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'page.read',
@@ -28,7 +28,7 @@ const ownerCommandImplemented = new Set<BrowserFunctionId>([
 const ownerHostImplemented = new Set<BrowserFunctionId>([
   'address.navigate', 'address.search', 'navigation.back', 'navigation.forward', 'navigation.reload',
   'navigation.stop', 'navigation.requestDesktopSite', 'navigation.findInPage', 'navigation.zoom',
-  'tabs.create', 'tabs.close', 'tabs.switch', 'tabs.restoreSession', 'tabs.suspend',
+  'tabs.create', 'tabs.close', 'tabs.switch', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup', 'tabs.restoreSession', 'tabs.suspend',
   'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
   'bookmarks.list', 'history.search', 'history.clear', 'history.clearBySite', 'readingList.add',
   'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'history.openEntry',

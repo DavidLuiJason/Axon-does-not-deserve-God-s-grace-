@@ -1,3 +1,6 @@
+export type BrowserTabKind = 'normal' | 'incognito' | 'stealth';
+export type BrowserTabGroup = Readonly<{ id: string; name: string; tabIndexes: number[] }>;
+export type NativeBrowserTab = Readonly<{ index: number; url: string; title: string; groupId: string | null; kind: BrowserTabKind }>;
 export type NativeBrowserState = Readonly<{
   available: boolean;
   tabCount: number;
@@ -9,6 +12,8 @@ export type NativeBrowserState = Readonly<{
   canGoForward: boolean;
   engine: string;
   incognito: false;
+  tabs: NativeBrowserTab[];
+  groups: BrowserTabGroup[];
 }>;
 export type BrowserSavedItem = Readonly<{ title: string; url: string; id?: string; folder?: string; read?: boolean; visitedAt?: number; addedAt?: number }>;
 export type BrowserFolder = Readonly<{ name: string }>;
@@ -22,7 +27,14 @@ export interface AxonBrowserPlugin {
   forward(): Promise<NativeBrowserState>;
   reload(): Promise<NativeBrowserState>;
   stop(): Promise<NativeBrowserState>;
-  newTab(options?: { url?: string }): Promise<NativeBrowserState>;
+  newTab(options?: { url?: string; kind?: BrowserTabKind }): Promise<NativeBrowserState>;
+  createGroup(options: { name: string; tabIndexes?: number[] }): Promise<{ groups: BrowserTabGroup[] }>;
+  renameGroup(options: { groupId: string; name: string }): Promise<{ groups: BrowserTabGroup[] }>;
+  moveTabToGroup(options: { index: number; groupId: string }): Promise<NativeBrowserState>;
+  removeTabFromGroup(options: { index: number }): Promise<NativeBrowserState>;
+  deleteGroup(options: { groupId: string }): Promise<{ groups: BrowserTabGroup[] }>;
+  closeGroup(options: { groupId: string }): Promise<NativeBrowserState>;
+  listGroups(): Promise<{ groups: BrowserTabGroup[] }>;
   switchTab(options: { index: number }): Promise<NativeBrowserState>;
   closeTab(options: { index: number }): Promise<NativeBrowserState>;
   getState(): Promise<NativeBrowserState>;

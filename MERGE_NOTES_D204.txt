@@ -1,4 +1,7 @@
-FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 4b. No wrapper folder: copy into the repo root.
-ONE FILE: DIRECTOR_NAP.txt, a complete replacement built from the owner current NAP (the one with N13 to N19). Only D204 parts changed: D204 board line updated; D204 note N19 replaced by N20 (AXON Web screens). Every other line is unchanged. 4,669 of 5,000 characters; the repo NAP test passes.
-D204 KNOWS the AXON screens are being built by another Director and that Web is far enough along for a screen.
-Needs docs/AXON_WEB_SCREEN_READINESS_D204.txt from round 4 (already added). NAP_LINES_D204.txt from round 4 is now unnecessary and harmless.
+FROM: Director 204 (D204), Claude account, lane = AXON Web (= AXON Browser). Round 6 (WEB6 tab groups, built by ChatGPT, reviewed and fixed by D204). No wrapper folder: copy into the repo root, replacing files.
+WHAT: tab groups (create, rename, move in, move out, delete keeping tabs, close group, list) in the native browser, plugin, rules (3 new commands: tabs.deleteGroup, tabs.removeFromGroup, tabs.listGroups) and tests; tab kind field (normal; incognito and stealth refused as not built yet).
+D204 FIXES TO CHATGPT WORK: (1) BrowserPlugin.createGroup built a JSONArray inside a lambda that cannot throw JSONException: a Java compile error; now passes the JSArray directly. (2) tests/browserRuntime150.test.mjs hard-coded 151 commands; it is now 154 (included here).
+DIRECTOR_NAP.txt: complete drop-in built from the owner current NAP (with D47 and law 8). Only the D204 line changed (now ends ~30%). 4,968 of 5,000 characters; NAP test passes.
+MEASURED on a copy of the repo with this applied: Web tests 256 of 256; tsc --strict clean on src/web and the browser tests (except @capacitor/core, absent here); overlay test OK; guard OK; NAP test OK.
+NOT MEASURED: Java compile (no Android SDK here; cloud is the check), device, live sites.
+Not touched: package.json, tsconfig, NOW.txt, MERGE_TAG.txt, roadmap, brain, tools, Code, Apps, screens.

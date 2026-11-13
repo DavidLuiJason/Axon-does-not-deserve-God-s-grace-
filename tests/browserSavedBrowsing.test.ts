@@ -4,7 +4,7 @@ import { BrowserController } from '../src/web/browserController.ts';
 import { BROWSER_PARITY_MATRIX, getBrowserParity } from '../src/web/browserParityMatrix.ts';
 
 const calls: Array<[string, unknown[]]> = [];
-const state = { available: true, tabCount: 1, activeIndex: 0, url: 'https://example.test', title: 'Example', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: false as const };
+const state = { tabs: [{ index: 0, url: 'https://example.test', title: 'Example', groupId: null, kind: 'normal' as const }], groups: [], available: true, tabCount: 1, activeIndex: 0, url: 'https://example.test', title: 'Example', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: false as const };
 const adapter = {
   engineId: 'simulated' as const, isAvailable: () => true,
   open: async (...args: unknown[]) => { calls.push(['open', args]); return { opened: true, url: 'https://example.test' }; },
@@ -12,7 +12,14 @@ const adapter = {
   back: async (...args: unknown[]) => { calls.push(['back', args]); return state; }, forward: async (...args: unknown[]) => { calls.push(['forward', args]); return state; },
   reload: async (...args: unknown[]) => { calls.push(['reload', args]); return state; }, stop: async (...args: unknown[]) => { calls.push(['stop', args]); return state; },
   newTab: async (...args: unknown[]) => { calls.push(['newTab', args]); return state; }, switchTab: async (...args: unknown[]) => { calls.push(['switchTab', args]); return state; },
-  closeTab: async (...args: unknown[]) => { calls.push(['closeTab', args]); return state; }, getState: async (...args: unknown[]) => { calls.push(['getState', args]); return state; },
+  closeTab: async (...args: unknown[]) => { calls.push(['closeTab', args]); return state; },
+  createGroup: async (...args: unknown[]) => { calls.push(['createGroup', args]); return { groups: [] }; },
+  renameGroup: async (...args: unknown[]) => { calls.push(['renameGroup', args]); return { groups: [] }; },
+  moveTabToGroup: async (...args: unknown[]) => { calls.push(['moveTabToGroup', args]); return state; },
+  removeTabFromGroup: async (...args: unknown[]) => { calls.push(['removeTabFromGroup', args]); return state; },
+  deleteGroup: async (...args: unknown[]) => { calls.push(['deleteGroup', args]); return { groups: [] }; },
+  closeGroup: async (...args: unknown[]) => { calls.push(['closeGroup', args]); return state; },
+  listGroups: async (...args: unknown[]) => { calls.push(['listGroups', args]); return { groups: [] }; }, getState: async (...args: unknown[]) => { calls.push(['getState', args]); return state; },
   getPageText: async (...args: unknown[]) => { calls.push(['getPageText', args]); return { text: 'page' }; }, findInPage: async (...args: unknown[]) => { calls.push(['findInPage', args]); },
   zoomBy: async (...args: unknown[]) => { calls.push(['zoomBy', args]); }, setDesktopSite: async (...args: unknown[]) => { calls.push(['setDesktopSite', args]); return state; },
   addBookmark: async (...args: unknown[]) => { calls.push(['addBookmark', args]); }, editBookmark: async (...args: unknown[]) => { calls.push(['editBookmark', args]); },
@@ -72,7 +79,7 @@ test('all saved-browsing executors are marked implemented in the parity matrix',
     assert.equal(getBrowserParity(functionId as never)?.ownerHost, 'IMPLEMENTED');
     assert.equal(getBrowserParity(functionId as never)?.ownerCommand, 'IMPLEMENTED');
   }
-  assert.equal(BROWSER_PARITY_MATRIX.length, 118);
+  assert.equal(BROWSER_PARITY_MATRIX.length, 121);
 });
 
 test('AXON is denied all saved-browsing operations on the owner session', async () => {
@@ -80,6 +87,7 @@ test('AXON is denied all saved-browsing operations on the owner session', async 
   for (const [functionId, args] of cases) {
     const result = await controller.execute({ functionId: functionId as never, actor: 'AXON', sessionId: 'axon-task', args });
     assert.equal(result.ok, false);
+    if (result.ok) throw new Error('Expected AXON denial');
     assert.equal(result.code, 'DENIED');
   }
   assert.equal(calls.length, 0);

@@ -13,7 +13,7 @@ export type BrowserControllerResult<T = unknown> =
 
 const implemented = new Set<BrowserFunctionId>([
   'address.navigate', 'navigation.back', 'navigation.forward', 'navigation.reload', 'navigation.stop',
-  'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close',
+  'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup',
   'tabs.switch', 'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
   'bookmarks.list', 'history.search', 'history.clear', 'history.clearBySite', 'readingList.add',
   'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'page.read',
@@ -38,6 +38,9 @@ export class BrowserController {
     args?: Record<string, unknown>;
     approval?: { functionId: BrowserFunctionId; tabId: string | null; approvalId: string };
   }): Promise<BrowserControllerResult<T>> {
+    if (input.functionId === 'tabs.create' && input.args?.kind !== undefined && input.args.kind !== 'normal') {
+      return { ok: false, code: 'DENIED', message: `Tab kind '${String(input.args.kind)}' is not built yet. Only normal tabs are available.` };
+    }
     if (!implemented.has(input.functionId)) return { ok: false, code: 'NOT_READY', message: 'This browser function is catalogued but not implemented by the current native host.' };
     if (input.actor === 'AXON') return { ok: false, code: 'DENIED', message: 'AXON has no isolated browser session yet. It cannot use the owner browser session.' };
     if (!this.adapter.isAvailable()) return { ok: false, code: 'UNAVAILABLE', message: 'The native AXON Web host is not available in this current preview or host environment.' };
@@ -71,7 +74,14 @@ export class BrowserController {
         case 'navigation.findInPage': await this.adapter.findInPage({ text: String(a.text ?? '') }); value = null; break;
         case 'navigation.zoom': await this.adapter.zoomBy({ delta: Number(a.delta ?? 0) }); value = null; break;
         case 'navigation.requestDesktopSite': value = await this.adapter.setDesktopSite({ enabled: Boolean(a.enabled) }); break;
-        case 'tabs.create': value = await this.adapter.newTab({ url: String(a.url ?? 'https://www.google.com') }); break;
+        case 'tabs.create': value = await this.adapter.newTab({ url: String(a.url ?? 'https://www.google.com'), kind: 'normal' }); break;
+        case 'tabs.createGroup': value = await this.adapter.createGroup({ name: String(a.name ?? ''), tabIndexes: Array.isArray(a.tabIndexes) ? a.tabIndexes.map(Number) : undefined }); break;
+        case 'tabs.renameGroup': value = await this.adapter.renameGroup({ groupId: String(a.groupId ?? ''), name: String(a.name ?? '') }); break;
+        case 'tabs.moveToGroup': value = await this.adapter.moveTabToGroup({ index: Number(a.index ?? -1), groupId: String(a.groupId ?? '') }); break;
+        case 'tabs.removeFromGroup': value = await this.adapter.removeTabFromGroup({ index: Number(a.index ?? -1) }); break;
+        case 'tabs.deleteGroup': value = await this.adapter.deleteGroup({ groupId: String(a.groupId ?? '') }); break;
+        case 'tabs.closeGroup': value = await this.adapter.closeGroup({ groupId: String(a.groupId ?? '') }); break;
+        case 'tabs.listGroups': value = await this.adapter.listGroups(); break;
         case 'tabs.close': value = await this.adapter.closeTab({ index: Number(a.index ?? -1) }); break;
         case 'tabs.switch': value = await this.adapter.switchTab({ index: Number(a.index ?? -1) }); break;
         case 'bookmarks.add': await this.adapter.addBookmark({ title: String(a.title ?? a.url ?? ''), url: String(a.url ?? '') }); value = null; break;

@@ -121,5 +121,5 @@ add('browser Activity is copied and declared by the idempotent overlay script', 
 add('browser plugin exposes only typed app-side methods, not a website JavaScript interface', () => { assert.match(plugin, /@CapacitorPlugin\(name = "AxonBrowser"\)/); assert.doesNotMatch(java, /addJavascriptInterface/); });
 add('AXON Web mode displays launch surface and uses an engine-neutral adapter seam', () => { assert.match(app, /<BrowserHomeScreen \/>/); assert.doesNotMatch(app, /Web is coming soon/); const adapter=fs.readFileSync('src/web/browserEngineAdapter.ts','utf8'); const webview=fs.readFileSync('src/web/androidWebViewAdapter.ts','utf8'); assert.match(adapter,/interface BrowserEngineAdapter/); assert.match(webview,/android-system-webview/); });
 
-if (checks.length !== 151) throw new Error(`Expected exactly 151 checks after the saved-browsing catalogue addition, got ${checks.length}`);
+if (checks.length !== 154) throw new Error(`Expected exactly 154 checks after the saved-browsing and tab-group catalogue additions, got ${checks.length}`);
 for (const { name, fn } of checks) test(name, fn);
