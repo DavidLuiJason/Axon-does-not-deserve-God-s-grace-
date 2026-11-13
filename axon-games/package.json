@@ -1,0 +1,23 @@
+{
+  "name": "axon-games-lab",
+  "version": "0.9.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline-first portable AXON games challenge prototype",
+  "scripts": {
+    "test:smoke": "node tests/smoke-test.cjs",
+    "test:engines": "node tests/engine-test.mjs",
+    "test": "npm run test:smoke && npm run test:engines && npm run test:progression && npm run test:batch01 && npm run test:batch02 && npm run test:batch03 && npm run test:batch04 && npm run test:batch05 && npm run test:batch06 && npm run test:expanded && npm run test:playthrough && npm run test:depth && npm run test:oracle",
+    "test:progression": "node tests/progression-test.mjs",
+    "test:batch01": "node tests/batch-01-test.mjs",
+    "test:batch02": "node tests/batch-02-test.mjs",
+    "test:batch03": "node tests/batch-03-test.mjs",
+    "test:batch04": "node tests/batch-04-test.mjs",
+    "test:batch05": "node tests/batch-05-test.mjs",
+    "test:batch06": "node tests/batch-06-test.mjs",
+    "test:expanded": "node tests/expanded-games-test.mjs",
+    "test:playthrough": "node tests/full-playthrough-test.mjs",
+    "test:depth": "node tests/depth-floor.test.mjs",
+    "test:oracle": "node tests/oracle-audit.test.mjs"
+  }
+}

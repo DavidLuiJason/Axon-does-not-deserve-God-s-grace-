@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { getTierProfile, buildTierPlan } from '../src/progression/difficulty.js';
+import { buildTeachingFeedback, makeLesson } from '../src/progression/teaching.js';
+const profile={demo:{tiers:Array.from({length:15},(_,i)=>({levels:i<2?3:2,mechanics:`mechanic-${i+1}`}))}};
+assert.equal(getTierProfile('demo',1,profile).label,'Introduction');
+assert.equal(getTierProfile('demo',15,profile).mechanics,'mechanic-15');
+assert.equal(buildTierPlan('demo',profile).length,15);
+assert.equal(buildTierPlan('demo',profile)[0].levels.length,3);
+assert.throws(()=>getTierProfile('demo',0,profile),RangeError);
+assert.throws(()=>getTierProfile('missing',1,profile),/Missing 15-tier/);
+const feedback=buildTeachingFeedback({correct:false,rule:'Every item must satisfy the condition.',steps:['Check each item.'],misconception:'One item was skipped.'});
+assert.equal(feedback.result,'incorrect');
+assert.equal(feedback.steps.length,1);
+assert.equal(makeLesson({title:'T',objective:'O',explanation:'E',workedExample:'W',checkQuestion:'Q',checkAnswer:'A'}).title,'T');
+assert.throws(()=>makeLesson({title:'T'}),/requires objective/);
+console.log('Progression and teaching foundation tests passed.');

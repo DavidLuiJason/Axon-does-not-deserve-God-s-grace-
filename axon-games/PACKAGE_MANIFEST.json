@@ -1,0 +1,388 @@
+{
+ "name": "AXON Games Lab — Expanded Branch 07",
+ "version": "0.9.0-dt3-audit",
+ "status": "171 catalogue entries; DT3 audit 2026-11-13: 28 defect groups fixed, depth pass, independent oracle (64,302 rounds). npm test PASS (14 suites). Browser interaction NOT RUN.",
+ "catalogue_entries": 171,
+ "batch_01_games": "1–25",
+ "batch_02_games": "26–50",
+ "batch_03_games": "51–75",
+ "batch_04_games": "76–100",
+ "additional_games": [
+  "Find the Loophole (ten topic families)",
+  "Maze Master retained"
+ ],
+ "entry": "index.html",
+ "storage": "localStorage key axon.games.lab.v2",
+ "dependencies": [],
+ "network_required": false,
+ "verification": {
+  "automated_tests": "PASS: npm test including Batches 01–07 and full-catalogue playthrough simulation",
+  "full_catalogue_simulation": "PASS: 171 games × 15 tiers × 3 levels = 7,695 generated rounds; correct player action/answer paths checked; wrong-answer rejection checked where applicable",
+  "defects_fixed_during_audit": [
+   "Nim heap UI 1-based numbering and no-winning-move option",
+   "Missing teaching metadata for Called but Missing and Which Numbers Were Never Called",
+   "Missing teaching metadata for Target Number (Attention)",
+   "Stale hard-coded catalogue count"
+  ],
+  "browser_ui_playthrough": "NOT RUN: Chromium navigation blocked by execution environment (ERR_BLOCKED_BY_ADMINISTRATOR)",
+  "physical_android_11": "NOT TESTED",
+  "axon_integration": "NOT INCLUDED"
+ },
+ "files": [
+  {
+   "path": "README.md",
+   "bytes": 2462,
+   "sha256": "bedb67e4c4996ab5b04bcceb80b9459be32d5fee384c2e4e9b2a809317cf9dd2"
+  },
+  {
+   "path": "audit/audit.mjs",
+   "bytes": 4855,
+   "sha256": "c3e1c41e9200810b06c5d6954fa270d4e103bb1206e6b29cbfa2295ddf91db5e"
+  },
+  {
+   "path": "audit/dump.mjs",
+   "bytes": 849,
+   "sha256": "96f277de46d21eee48f7e3e9463812d1faeec70c41694a2ce904464e4826073d"
+  },
+  {
+   "path": "audit/inventory.mjs",
+   "bytes": 4086,
+   "sha256": "d4430cd50298b707aa250b2105603d7d1992703a986cf55576fba74d6446123f"
+  },
+  {
+   "path": "audit/pools.mjs",
+   "bytes": 1175,
+   "sha256": "e056dd850b3e07f4e466efe4b97205ae031c013f85d5d4e29008ac6572c91352"
+  },
+  {
+   "path": "docs/ACCEPTANCE_CHECKLIST.md",
+   "bytes": 838,
+   "sha256": "a81ee8f3c6765a881e55862527a9d0a828f6c05a73ad9050dd4778613ccfb74d"
+  },
+  {
+   "path": "docs/BRANCH_INFO.md",
+   "bytes": 657,
+   "sha256": "8717a499d63f26e31de5a80f9ce6464ba5c85a4e81e75d04015264788778d6af"
+  },
+  {
+   "path": "docs/CLAUDE_HANDOFF_PROMPT.md",
+   "bytes": 2389,
+   "sha256": "b07ef4b8235413428311bb58752ae60f5b69032cde27f99761f8386cc171e6de"
+  },
+  {
+   "path": "docs/INTEGRATION_CONTRACT.md",
+   "bytes": 1180,
+   "sha256": "94d2621ae9771a6bd4b4c5dd71f2b03a4d249c6487af3fe816e746d24d5574b5"
+  },
+  {
+   "path": "docs/TEST_REPORT.md",
+   "bytes": 2365,
+   "sha256": "492bb9b0f1f2d1a6f21b288fb9b6af11ecf7d7f0525f29158c8f48914515009f"
+  },
+  {
+   "path": "docs/restart/BATCH_01_AUDIT.md",
+   "bytes": 3520,
+   "sha256": "2128e0580733811f555760c855918158aff40da18d881b37551ea3d5cfcef6ff"
+  },
+  {
+   "path": "docs/restart/BATCH_01_GAME_DESIGN.md",
+   "bytes": 7965,
+   "sha256": "56c3e2fcb7c65cff2a4fa4972f714fc6697d0443e69f9e721b6da7bbf183f184"
+  },
+  {
+   "path": "docs/restart/BATCH_01_REPORT.md",
+   "bytes": 5447,
+   "sha256": "d43e05baa05f4ad5855e3ad78662db0368451c04734c268bdc427abc1892c3ab"
+  },
+  {
+   "path": "docs/restart/BATCH_02_REPORT.md",
+   "bytes": 5241,
+   "sha256": "e329443f4c17923f033606623dc98947efe7587d61f1536884427762f1b472dc"
+  },
+  {
+   "path": "docs/restart/BATCH_03_REPORT.md",
+   "bytes": 1715,
+   "sha256": "647ee36935c643c9d897095bd20192b2d450066fda0bb20a9f748ab5161a2227"
+  },
+  {
+   "path": "docs/restart/BATCH_04_REPORT.md",
+   "bytes": 4871,
+   "sha256": "08ca0d8735b4a48e0c7cb2e9b63fb45f11813917bec6e0281e2f9f42781911f0"
+  },
+  {
+   "path": "docs/restart/BATCH_05_REPORT.md",
+   "bytes": 4967,
+   "sha256": "95c2e449a62d2d6af8493e2e72d845dc80e40e8d04de4d05938f527dfbe9f3d4"
+  },
+  {
+   "path": "docs/restart/BATCH_06_REPORT.md",
+   "bytes": 3277,
+   "sha256": "d8aafdb534bfc862bc1236f1efc3ed5fa1b1f49a942af885b9108ab1274f9200"
+  },
+  {
+   "path": "docs/restart/BATCH_07_REPORT.md",
+   "bytes": 5277,
+   "sha256": "3e4d8f4e1add4cafe9fe4679656ea0493e960e41986f09fd602c2413f8e4a559"
+  },
+  {
+   "path": "docs/restart/CHECKPOINT_01_FOUNDATION.md",
+   "bytes": 1291,
+   "sha256": "c8d6fafbebb6cc4d3967c7f408e45db9ae88f38698aa99d240012e6215e2e3d7"
+  },
+  {
+   "path": "docs/restart/GAME_152_FIND_THE_LOOPHOLE.md",
+   "bytes": 4625,
+   "sha256": "0e8d7323db16e89aaff1489893e4af2796ff6b9f7a910f37f4a951ac87129584"
+  },
+  {
+   "path": "docs/restart/STATUS.md",
+   "bytes": 1675,
+   "sha256": "dbe33e27122898f8ee183ab2d2998804b1f19de3c3ef37cc67f3a75f3e1e2644"
+  },
+  {
+   "path": "index.html",
+   "bytes": 3058,
+   "sha256": "7fa2974df03a2f664c75cab5b76bc527fdb8e2ee0861262eac10a458a02676c8"
+  },
+  {
+   "path": "package.json",
+   "bytes": 1212,
+   "sha256": "4d566b1fc4e2e93985475be297d1b81c73d2323ab52e262611e6cbf8eceea21c"
+  },
+  {
+   "path": "src/app.js",
+   "bytes": 16221,
+   "sha256": "53b7115fab6b187d7a9f9dd86b9d6811143ae21cd85333da665e1dfa836784c6"
+  },
+  {
+   "path": "src/axon-adapter.example.ts",
+   "bytes": 645,
+   "sha256": "b0ce0468f035470625127401f2c8787ea5a9cd2d6ceb703abf1d680620945555"
+  },
+  {
+   "path": "src/catalogue.js",
+   "bytes": 44785,
+   "sha256": "953caa0bb6bbbceadfabfce29ef8ba4fc1246bd55270e14af5eb67154f381df3"
+  },
+  {
+   "path": "src/engine.js",
+   "bytes": 17816,
+   "sha256": "67ac8c7286ce8c0f412e8232064dd61cb62f2543401e37c5683272ebc69663fd"
+  },
+  {
+   "path": "src/games/batch-five.js",
+   "bytes": 14001,
+   "sha256": "e84b27e5844f9ef8903caf1653a73318835557b36fcca4e2ac4277bedd7c0b3a"
+  },
+  {
+   "path": "src/games/batch-four.js",
+   "bytes": 18633,
+   "sha256": "d705a0b993e2b555caf7ba78d5466d11229869a1d6f62e468fa8e9051e0995d6"
+  },
+  {
+   "path": "src/games/batch-six.js",
+   "bytes": 12478,
+   "sha256": "d78c14fd5a11b345602ee0392b985be00569a4a8b4b1211dc8bd7f1420986b8d"
+  },
+  {
+   "path": "src/games/batch-three.js",
+   "bytes": 15951,
+   "sha256": "cc7fcae388bd48bdb845b8f23e9a88296d08712176a21c15e381a349f206bad4"
+  },
+  {
+   "path": "src/games/batch-two.js",
+   "bytes": 17246,
+   "sha256": "e0265e454031c8ffd8fe1309e996aeba31211a42b4e62459987cdc19b3d0da91"
+  },
+  {
+   "path": "src/games/depth.js",
+   "bytes": 44890,
+   "sha256": "978d07b07b36813e03765225b4d563ed4fac794172ea5ef85e0cf79eaf6a570e"
+  },
+  {
+   "path": "src/games/expanded-games.js",
+   "bytes": 13672,
+   "sha256": "29ac05e9e25bc3211d6394d49ee56a63b3ca6388b2c5bbe2a43d13d817952071"
+  },
+  {
+   "path": "src/games/number-memory.js",
+   "bytes": 11315,
+   "sha256": "44fd2146c81aede5db2367da89baf88cfc35b6f5508af35b5b8849c256d327c1"
+  },
+  {
+   "path": "src/progression/batch-five-tiers.js",
+   "bytes": 3327,
+   "sha256": "26376fc4d8ffae9037b16cc93caa6f039083c52faa1182d3037acacb07be6e3d"
+  },
+  {
+   "path": "src/progression/batch-four-tiers.js",
+   "bytes": 2647,
+   "sha256": "342eb30cb7dca883a3b63ba5552737ab35f1abd22272a7d9a30392d626a72ab5"
+  },
+  {
+   "path": "src/progression/batch-six-tiers.js",
+   "bytes": 45402,
+   "sha256": "ebf01ad09cf23bebdb80659025a243f791a4819322a288722365353466212d0f"
+  },
+  {
+   "path": "src/progression/batch-three-tiers.js",
+   "bytes": 2288,
+   "sha256": "e7fe58aff1f57575344909e13332d62018a2416a6dc39a0b26dff8374557e165"
+  },
+  {
+   "path": "src/progression/batch-two-tiers.js",
+   "bytes": 5006,
+   "sha256": "3e0fc5639698592e84fac46c3d627dc59e00e76a79957296c3fa45c4ac867a49"
+  },
+  {
+   "path": "src/progression/difficulty.js",
+   "bytes": 1394,
+   "sha256": "be75ed0412186dd622ad0e03c58514bc6a4efaa6f7ab9f8c6a324e993c70e959"
+  },
+  {
+   "path": "src/progression/game-tiers.js",
+   "bytes": 2899,
+   "sha256": "f52951f8604dc8ec63deddacc83564a759720191ea7bd47809ce24b5faa74bf2"
+  },
+  {
+   "path": "src/progression/teaching.js",
+   "bytes": 1174,
+   "sha256": "3d656dde43856f869a063bc031054204d43119c3bef38edc04e5d832a34cf6f4"
+  },
+  {
+   "path": "src/random.js",
+   "bytes": 872,
+   "sha256": "28021593ac2f688ce1e7bf0121731d7dbdaca546268a9fb28c4481062593e197"
+  },
+  {
+   "path": "src/styles.css",
+   "bytes": 4305,
+   "sha256": "d59a856a64db76d749387521de00b27fb7471b600434b3fccc1ddf736df710f3"
+  },
+  {
+   "path": "tests/batch-01-test.mjs",
+   "bytes": 2551,
+   "sha256": "87bc37a04a3dc53de556af02eb3acd1d6c1cd82a0b9137791e5dc92d871b437a"
+  },
+  {
+   "path": "tests/batch-02-test.mjs",
+   "bytes": 1845,
+   "sha256": "4281e8da9fea8fba09f0db06d3873f41b68210c41525f68cf5f5e7b24a9798e1"
+  },
+  {
+   "path": "tests/batch-03-test.mjs",
+   "bytes": 1481,
+   "sha256": "614368aab99d4df009be8ec0a64e870aa1d5789f7b6c3f57bfd1a9f58dc049ea"
+  },
+  {
+   "path": "tests/batch-04-test.mjs",
+   "bytes": 1866,
+   "sha256": "6c6f96fa43df2cfa251edc93ddee137ed48318b07f851bc9b0d5fcff50283cb2"
+  },
+  {
+   "path": "tests/batch-05-test.mjs",
+   "bytes": 1959,
+   "sha256": "ce3177567dcd95ffdca100cb36701261d21cc24435be676fdd691fce741e64de"
+  },
+  {
+   "path": "tests/batch-06-test.mjs",
+   "bytes": 1425,
+   "sha256": "7162e33b66e44b55c615ec6e31d7257a812260bc267825a855863a48f761d71b"
+  },
+  {
+   "path": "tests/depth-floor.test.mjs",
+   "bytes": 1682,
+   "sha256": "4b1df8eccd75523e2fe5352534592e7f774c50c556f5962781b94bf6f919687a"
+  },
+  {
+   "path": "tests/engine-test.mjs",
+   "bytes": 1489,
+   "sha256": "9d0d7e2101650a3f68d6b831d789bb746c570cb6e2532265ec1a7d169f1c6ea5"
+  },
+  {
+   "path": "tests/expanded-games-test.mjs",
+   "bytes": 1453,
+   "sha256": "cd617c3f1439bf6af2a2c9701968aff5a95f5ce23fce392859f8f8201f4e07dc"
+  },
+  {
+   "path": "tests/full-playthrough-test.mjs",
+   "bytes": 3442,
+   "sha256": "b582d29b6ee2962f7a1956188716ba8571546530db63a6872f1172ad25db6b6e"
+  },
+  {
+   "path": "tests/oracle-audit.test.mjs",
+   "bytes": 33250,
+   "sha256": "18013ecf09831a6450f3ef069d3c063c3527feaacc0150439e1428001933382c"
+  },
+  {
+   "path": "tests/progression-test.mjs",
+   "bytes": 1224,
+   "sha256": "ca81219ab90a034564fb63aedb439e6572465d8e7e897d31df2102562f392d80"
+  },
+  {
+   "path": "tests/smoke-test.cjs",
+   "bytes": 1764,
+   "sha256": "6093bcafc66b8c34556efa7d10bcf4a3030480fd3962ed2934c872aee5daa2ef"
+  }
+ ],
+ "batch_05_games": "101–125",
+ "packageVersion": "0.8.0",
+ "latestBatch": "07",
+ "gameRange": "1-150 plus 3 carried-forward / additional entries and 18 Batch 07 additions",
+ "batch06": {
+  "games": [
+   "cube-net",
+   "three-dimensional-rotation",
+   "block-assembly",
+   "spatial-navigation",
+   "maze-master",
+   "shortest-path",
+   "spatial-sequence",
+   "paper-folding",
+   "hidden-geometry",
+   "matrix-reasoning",
+   "abstract-sequence",
+   "rule-discovery",
+   "pattern-completion",
+   "symbol-transformation",
+   "relationship-mapping",
+   "analogy-matrix",
+   "sequence-prediction",
+   "abstract-odd-one-out",
+   "multi-rule-patterns",
+   "alternative-uses",
+   "planning-puzzle",
+   "resource-allocation",
+   "mystery-laboratory",
+   "ultimate-brain-challenge",
+   "mastermind-mini"
+  ],
+  "report": "docs/restart/BATCH_06_REPORT.md",
+  "difficultyTiers": 15
+ },
+ "batch07": {
+  "games": [
+   "imagine",
+   "scrambled-words",
+   "what-would-you-do",
+   "find-a-way-to-escape",
+   "escape-room",
+   "the-detective",
+   "the-interrogator",
+   "the-negotiator",
+   "the-strategist",
+   "the-impostor",
+   "the-paradox",
+   "the-architect",
+   "the-survival-planner",
+   "the-investigator",
+   "the-codebreaker",
+   "the-experimenter",
+   "the-deceiver",
+   "the-systems-breaker"
+  ],
+  "difficultyTiers": 15,
+  "levelsPerTier": 3,
+  "report": "docs/restart/BATCH_07_REPORT.md"
+ }
+}

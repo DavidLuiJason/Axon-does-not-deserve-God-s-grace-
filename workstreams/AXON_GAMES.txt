@@ -1,0 +1,10 @@
+WORKSTREAM: AXON GAMES (Director DT3)
+UPDATED: 2026-11-13
+STATE NOW: axon-games/ (Games Lab, 171 games, plain JavaScript) audited and fixed: 28 defect groups, see docs/GAMES_AUDIT_REPORT.md; docs/GAMES_INVENTORY.md lists every game honestly. npm test (14 suites) passes inside axon-games/. Not run in a browser or on a phone.
+OWNER DECISION: games open from the TOOLS MENU (not a fourth place beside Chat, Web and Apps).
+OWNS: axon-games/, docs/GAMES_*.md, workstreams/AXON_GAMES.txt
+MUST NOT TOUCH: src/, tests/, tools/, public/, .github, root package.json and tsconfig, the brain, tools, AXON Web, AXON Code, AXON Apps.
+NOT MINE: the prompts for AI Studio screens (another Director, not yet named).
+NEXT: GAMES2 = registration plan for the Tools menu, then a TypeScript port of the logic layer (no screen) on AXON storage and the governed random source (axon-games/src/random.js: setRandomSource). Then depth waves for the 52 tier-flat games and a second reader for the 51 reviewed-only games.
+KEEP: tests/oracle-audit.test.mjs recomputes answers independently; every new game needs an oracle or an inventory note.
+LIMITS: board games are rules questions, not playable boards; five grid games share one mechanic.
