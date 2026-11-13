@@ -4,7 +4,7 @@ export type BrowserEngineId = 'android-system-webview' | 'ios-wkwebview' | 'desk
 
 /**
  * Engine-neutral contract used by the BrowserController. The inherited plugin contract
- * includes tab-group operations and the reserved tab-kind field on tab state.
+ * includes tab groups, incognito/stealth identity options, and default-mode settings.
  * Each implementation must report only capabilities it has actually implemented and tested.
  */
 export interface BrowserEngineAdapter extends AxonBrowserPlugin {

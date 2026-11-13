@@ -46,7 +46,7 @@ export type BrowserFunctionId =
   | 'credentials.generatePassword' | 'credentials.fillPassword' | 'credentials.usePasskey'
   | 'autofill.address' | 'autofill.payment'
   // Browser settings and maintenance
-  | 'settings.view' | 'settings.change' | 'settings.searchEngine' | 'settings.language'
+  | 'settings.view' | 'settings.change' | 'settings.defaultMode' | 'settings.searchEngine' | 'settings.language'
   | 'settings.accessibility' | 'settings.clearBrowsingData' | 'settings.exportData'
   | 'settings.importData' | 'settings.resetBrowser' | 'settings.defaultBrowser' | 'settings.homePage'
   | 'settings.newTabPage' | 'settings.clearCache' | 'settings.sync' | 'extensions.manage'
@@ -80,7 +80,7 @@ const definitions: readonly BrowserFunctionDefinition[] = [
   { id: 'address.suggestions', group: 'Navigation', surface: 'BROWSER', effect: 'READ', description: 'Show address-bar suggestions from permitted history and bookmarks.' },
   { id: 'navigation.generateQr', group: 'Navigation', surface: 'TAB', effect: 'REVERSIBLE', description: 'Generate a QR code for the current page URL.' },
   // Tabs and tab groups
-  { id: 'tabs.create', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Create a new tab in the caller’s permitted browser context.' },
+  { id: 'tabs.create', group: 'Tabs', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Create a normal, incognito, or stealth tab; mode selection always requires owner confirmation.' },
   { id: 'tabs.close', group: 'Tabs', surface: 'TAB', effect: 'REVERSIBLE', description: 'Close a permitted tab.' },
   { id: 'tabs.restoreClosed', group: 'Tabs', surface: 'BROWSER', effect: 'REVERSIBLE', description: 'Restore a recently closed tab.' },
   { id: 'tabs.switch', group: 'Tabs', surface: 'TAB', effect: 'REVERSIBLE', description: 'Switch to a permitted tab.' },
@@ -176,6 +176,7 @@ const definitions: readonly BrowserFunctionDefinition[] = [
   // Browser settings and maintenance
   { id: 'settings.view', group: 'Settings', surface: 'BROWSER', effect: 'READ', description: 'Read browser settings.' },
   { id: 'settings.change', group: 'Settings', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Change browser settings.' },
+  { id: 'settings.defaultMode', group: 'Settings', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Change whether new tabs default to normal or stealth mode.' },
   { id: 'settings.searchEngine', group: 'Settings', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Change the default search engine.' },
   { id: 'settings.language', group: 'Settings', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Change browser language settings.' },
   { id: 'settings.accessibility', group: 'Settings', surface: 'BROWSER', effect: 'OWNER_CONFIRM', description: 'Change browser accessibility settings.' },
@@ -210,6 +211,8 @@ export type BrowserTabContext = Readonly<{
   id: string;
   owner: 'OWNER' | 'AXON';
   selectedByOwner?: boolean;
+  kind?: 'normal' | 'incognito';
+  stealth?: boolean;
 }>;
 
 export type BrowserTabGrant = Readonly<{

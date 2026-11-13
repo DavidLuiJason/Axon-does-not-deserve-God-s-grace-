@@ -16,14 +16,32 @@ def run_case(manifest_text: str, name: str) -> None:
         tmp = Path(raw)
         (tmp / "scripts").mkdir()
         (tmp / "android/app/src/main").mkdir(parents=True)
+        (tmp / "android/app/build.gradle").write_text("plugins { id 'com.android.application' }\ndependencies {\n}\n", encoding="utf-8")
         shutil.copy2(SCRIPT, tmp / "scripts/apply-android-overlay.sh")
         shutil.copytree(OVERLAY, tmp / "android-overlay")
+        # The WEB7 mini-base intentionally omits unrelated overlay payloads. Supply
+        # temporary fixture placeholders so this test can exercise the complete
+        # idempotent script path without adding unrelated files to the return ZIP.
+        omitted = [
+            "app/src/main/java/com/axon/app/background/BackgroundJobService.java",
+            "app/src/main/java/com/axon/app/background/BackgroundJobsPlugin.java",
+            "app/src/main/java/com/axon/app/filesaver/FileSaverPlugin.java",
+            "app/src/main/java/com/axon/app/screencapture/ScreenCapturePlugin.java",
+            "app/src/main/java/com/axon/app/screencapture/ScreenCaptureService.java",
+            "app/src/main/res/drawable/ic_notification.xml",
+        ]
+        for relative in omitted:
+            fixture = tmp / "android-overlay" / relative
+            fixture.parent.mkdir(parents=True, exist_ok=True)
+            fixture.write_text("<!-- temporary WEB7 overlay-test fixture -->\n" if fixture.suffix == ".xml" else "// temporary WEB7 overlay-test fixture\n", encoding="utf-8")
         manifest = tmp / "android/app/src/main/AndroidManifest.xml"
         manifest.write_text(manifest_text, encoding="utf-8")
 
         for _ in range(2):
             subprocess.run(["bash", str(tmp / "scripts/apply-android-overlay.sh")], check=True, capture_output=True, text=True)
 
+        gradle = (tmp / "android/app/build.gradle").read_text(encoding="utf-8")
+        assert gradle.count('androidx.webkit:webkit:1.12.1') == 1, f"{name}: WebKit dependency missing or duplicated"
         content = manifest.read_text(encoding="utf-8")
         ET.fromstring(content)
         for class_name in [".browser.BrowserActivity", ".background.BackgroundJobService"]:
@@ -63,4 +81,4 @@ run_case(
 """,
     "multi-line-application",
 )
-print("BROWSER_OVERLAY_APPLY_OK: 2 manifest layouts, twice each, XML valid, no duplicate declarations")
+print("BROWSER_OVERLAY_APPLY_OK: 2 manifest layouts, twice each, XML valid, no duplicate declarations, WebKit dependency exactly once")

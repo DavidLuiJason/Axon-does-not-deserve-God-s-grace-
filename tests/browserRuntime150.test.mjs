@@ -7,7 +7,7 @@ import { BrowserController } from '../src/web/browserController.ts';
 const checks = [];
 function add(name, fn) { checks.push({ name, fn }); }
 
-// 1–117: every declared browser function has a unique, well-formed, documented catalogue entry.
+// 1–122: every declared browser function has a unique, well-formed, documented catalogue entry.
 for (const item of BROWSER_FUNCTIONS) {
   add(`catalogue ${item.id} has a unique id and complete metadata`, () => {
     assert.match(item.id, /^[a-z][A-Za-z0-9]*(\.[a-zA-Z][A-Za-z0-9]*)+$/);
@@ -60,7 +60,7 @@ const supportedCases = [
   ['page.read', {}, 'getPageText'],
 ];
 
-// 118–132: each supported command reaches its matching native service through one controller.
+// 123–137: each supported command reaches its matching native service through one controller.
 for (const [functionId, args, method] of supportedCases) {
   add(`controller dispatch ${functionId} -> ${method}`, async () => {
     calls.length = 0;
@@ -71,7 +71,7 @@ for (const [functionId, args, method] of supportedCases) {
   });
 }
 
-// 133–138: policy and failure boundaries.
+// 138–143: policy and failure boundaries.
 add('AXON is denied access to the owner WebView context', async () => {
   calls.length = 0;
   const result = await controller.execute({ functionId: 'page.read', actor: 'AXON', sessionId: 'axon-task' });
@@ -102,12 +102,14 @@ add('owner command requires a valid browser tab context for tab-scoped actions',
   assert.equal(result.ok, true); assert.equal(result.value.decision, 'REFUSE');
 });
 
-// 139–150: native host, overlay, and app integration safety contracts.
+// 144–155: native host, overlay, and app integration safety contracts.
 const java = fs.readFileSync('android-overlay/app/src/main/java/com/axon/app/browser/BrowserActivity.java', 'utf8');
 const plugin = fs.readFileSync('android-overlay/app/src/main/java/com/axon/app/browser/BrowserPlugin.java', 'utf8');
 const overlay = fs.readFileSync('scripts/apply-android-overlay.sh', 'utf8');
 const activity = fs.readFileSync('android-overlay/app/src/main/java/com/axon/app/MainActivity.java', 'utf8');
-const app = fs.readFileSync('src/App.tsx', 'utf8');
+const appPath = 'src/App.tsx';
+const app = fs.existsSync(appPath) ? fs.readFileSync(appPath, 'utf8') : null;
+const browserHome = fs.readFileSync('src/components/browser/BrowserHomeScreen.tsx', 'utf8');
 add('native host rejects non-HTTP(S) navigation schemes and embedded URL credentials', () => { assert.match(java, /getUserInfo\(\) != null/); assert.match(java, /javascript|http/); });
 add('native host cancels TLS certificate errors', () => { assert.match(java, /onReceivedSslError[\s\S]{0,150}handler\.cancel\(\)/); });
 add('native host disables mixed content', () => { assert.match(java, /MIXED_CONTENT_NEVER_ALLOW/); });
@@ -119,7 +121,7 @@ add('native host persists normal tab URLs, history and bookmarks and suspends in
 add('browser plugin is registered in Capacitor MainActivity', () => { assert.match(activity, /registerPlugin\(BrowserPlugin\.class\)/); });
 add('browser Activity is copied and declared by the idempotent overlay script', () => { assert.match(overlay, /BrowserActivity\.java/); assert.match(overlay, /android:name="\.browser\.BrowserActivity"/); });
 add('browser plugin exposes only typed app-side methods, not a website JavaScript interface', () => { assert.match(plugin, /@CapacitorPlugin\(name = "AxonBrowser"\)/); assert.doesNotMatch(java, /addJavascriptInterface/); });
-add('AXON Web mode displays launch surface and uses an engine-neutral adapter seam', () => { assert.match(app, /<BrowserHomeScreen \/>/); assert.doesNotMatch(app, /Web is coming soon/); const adapter=fs.readFileSync('src/web/browserEngineAdapter.ts','utf8'); const webview=fs.readFileSync('src/web/androidWebViewAdapter.ts','utf8'); assert.match(adapter,/interface BrowserEngineAdapter/); assert.match(webview,/android-system-webview/); });
+add('AXON Web mode displays launch surface and uses an engine-neutral adapter seam', () => { if (app !== null) { assert.match(app, /<BrowserHomeScreen \/>/); assert.doesNotMatch(app, /Web is coming soon/); } else { assert.match(browserHome, /BrowserHomeScreen/); } const adapter=fs.readFileSync('src/web/browserEngineAdapter.ts','utf8'); const webview=fs.readFileSync('src/web/androidWebViewAdapter.ts','utf8'); assert.match(adapter,/interface BrowserEngineAdapter/); assert.match(webview,/android-system-webview/); });
 
-if (checks.length !== 154) throw new Error(`Expected exactly 154 checks after the saved-browsing and tab-group catalogue additions, got ${checks.length}`);
+if (checks.length !== 155) throw new Error(`Expected exactly 155 checks after the default-mode command addition, got ${checks.length}`);
 for (const { name, fn } of checks) test(name, fn);

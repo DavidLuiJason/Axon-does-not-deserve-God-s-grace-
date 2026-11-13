@@ -108,6 +108,8 @@ check('browser-scoped read-only settings can be read without a tab', () => {
 });
 check('browser-scoped changes require owner approval', () => {
   assert.equal(decision({ functionId: 'settings.change', actor: 'AXON', support: 'SUPPORTED', session: { id: 'axon-session', owner: 'AXON' } }).decision, 'ASK_OWNER');
+  assert.equal(decision({ functionId: 'settings.defaultMode', actor: 'AXON', support: 'SUPPORTED', session: { id: 'axon-session', owner: 'AXON' } }).decision, 'ASK_OWNER');
+  assert.equal(getBrowserFunction('tabs.create')?.effect, 'OWNER_CONFIRM');
 });
 check('invalid request objects are rejected', () => {
   assert.equal(decideBrowserCommand(null).ok, false);

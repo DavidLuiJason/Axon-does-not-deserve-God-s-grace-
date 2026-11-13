@@ -1,6 +1,7 @@
-export type BrowserTabKind = 'normal' | 'incognito' | 'stealth';
+export type BrowserTabKind = 'normal' | 'incognito';
+export type BrowserDefaultMode = 'normal' | 'stealth';
 export type BrowserTabGroup = Readonly<{ id: string; name: string; tabIndexes: number[] }>;
-export type NativeBrowserTab = Readonly<{ index: number; url: string; title: string; groupId: string | null; kind: BrowserTabKind }>;
+export type NativeBrowserTab = Readonly<{ index: number; url: string; title: string; groupId: string | null; kind: BrowserTabKind; stealth: boolean }>;
 export type NativeBrowserState = Readonly<{
   available: boolean;
   tabCount: number;
@@ -11,7 +12,8 @@ export type NativeBrowserState = Readonly<{
   canGoBack: boolean;
   canGoForward: boolean;
   engine: string;
-  incognito: false;
+  incognito: boolean;
+  defaultMode: BrowserDefaultMode;
   tabs: NativeBrowserTab[];
   groups: BrowserTabGroup[];
 }>;
@@ -27,7 +29,9 @@ export interface AxonBrowserPlugin {
   forward(): Promise<NativeBrowserState>;
   reload(): Promise<NativeBrowserState>;
   stop(): Promise<NativeBrowserState>;
-  newTab(options?: { url?: string; kind?: BrowserTabKind }): Promise<NativeBrowserState>;
+  newTab(options?: { url?: string; kind?: BrowserTabKind; stealth?: boolean }): Promise<NativeBrowserState>;
+  getSettings(): Promise<{ defaultMode: BrowserDefaultMode; multiProfileSupported: boolean }>;
+  setDefaultMode(options: { defaultMode: BrowserDefaultMode }): Promise<{ defaultMode: BrowserDefaultMode; multiProfileSupported: boolean }>;
   createGroup(options: { name: string; tabIndexes?: number[] }): Promise<{ groups: BrowserTabGroup[] }>;
   renameGroup(options: { groupId: string; name: string }): Promise<{ groups: BrowserTabGroup[] }>;
   moveTabToGroup(options: { index: number; groupId: string }): Promise<NativeBrowserState>;

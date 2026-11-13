@@ -34,6 +34,26 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
+# Ensure AndroidX WebKit Multi-Profile API dependency is present exactly once.
+GRADLE="$ANDROID/app/build.gradle"
+if [[ -f "$GRADLE" ]]; then
+  if ! grep -Eq "androidx\.webkit:webkit:[0-9.]+" "$GRADLE"; then
+    if grep -q '^dependencies[[:space:]]*{' "$GRADLE"; then
+      sed -i '/^dependencies[[:space:]]*{/a\    implementation "androidx.webkit:webkit:1.12.1"' "$GRADLE"
+    else
+      printf '\ndependencies {\n    implementation "androidx.webkit:webkit:1.12.1"\n}\n' >> "$GRADLE"
+    fi
+  fi
+  COUNT=$(grep -Ec 'androidx\.webkit:webkit:' "$GRADLE" || true)
+  if [[ "$COUNT" -ne 1 ]]; then
+    echo "ERROR: expected exactly one androidx.webkit:webkit dependency, found $COUNT"
+    exit 1
+  fi
+else
+  echo "ERROR: $GRADLE missing; cannot install the approved WebKit dependency"
+  exit 1
+fi
+
 echo "==> Copying notification icon"
 mkdir -p "$ANDROID/app/src/main/res/drawable"
 cp -f "$OVERLAY/app/src/main/res/drawable/ic_notification.xml" \
@@ -132,34 +152,6 @@ if ! grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST"; then
   echo "    + added BrowserActivity"
 else
   echo "    = BrowserActivity already present"
-fi
-
-echo "==> Screen structure reader (accessibility service, read-only)"
-mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screenstructure" "$ANDROID/app/src/main/res/xml" "$ANDROID/app/src/main/res/values"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java" \
-      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java" \
-      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
-cp -f "$OVERLAY/app/src/main/res/xml/axon_accessibility_service.xml" "$ANDROID/app/src/main/res/xml/"
-cp -f "$OVERLAY/app/src/main/res/values/axon_accessibility_strings.xml" "$ANDROID/app/src/main/res/values/"
-if ! grep -q "AxonAccessibilityService" "$MANIFEST"; then
-  A11Y_XML='        <service
-            android:name=".screenstructure.AxonAccessibilityService"
-            android:exported="true"
-            android:label="AXON screen reader"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/axon_accessibility_service" />
-        </service>'
-  awk -v svc="$A11Y_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
-  grep -q "AxonAccessibilityService" "$MANIFEST" || { echo "ERROR: AxonAccessibilityService declaration insertion failed"; exit 1; }
-  echo "    + added AxonAccessibilityService"
-else
-  echo "    = AxonAccessibilityService already present"
 fi
 
 echo "==> Overlay applied successfully."

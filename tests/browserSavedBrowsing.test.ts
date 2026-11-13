@@ -4,14 +4,14 @@ import { BrowserController } from '../src/web/browserController.ts';
 import { BROWSER_PARITY_MATRIX, getBrowserParity } from '../src/web/browserParityMatrix.ts';
 
 const calls: Array<[string, unknown[]]> = [];
-const state = { tabs: [{ index: 0, url: 'https://example.test', title: 'Example', groupId: null, kind: 'normal' as const }], groups: [], available: true, tabCount: 1, activeIndex: 0, url: 'https://example.test', title: 'Example', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: false as const };
+const state = { tabs: [{ index: 0, url: 'https://example.test', title: 'Example', groupId: null, kind: 'normal' as const, stealth: false }], groups: [], available: true, tabCount: 1, activeIndex: 0, url: 'https://example.test', title: 'Example', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: false, defaultMode: 'normal' as const };
 const adapter = {
   engineId: 'simulated' as const, isAvailable: () => true,
   open: async (...args: unknown[]) => { calls.push(['open', args]); return { opened: true, url: 'https://example.test' }; },
   navigate: async (...args: unknown[]) => { calls.push(['navigate', args]); return state; },
   back: async (...args: unknown[]) => { calls.push(['back', args]); return state; }, forward: async (...args: unknown[]) => { calls.push(['forward', args]); return state; },
   reload: async (...args: unknown[]) => { calls.push(['reload', args]); return state; }, stop: async (...args: unknown[]) => { calls.push(['stop', args]); return state; },
-  newTab: async (...args: unknown[]) => { calls.push(['newTab', args]); return state; }, switchTab: async (...args: unknown[]) => { calls.push(['switchTab', args]); return state; },
+  newTab: async (...args: unknown[]) => { calls.push(['newTab', args]); return state; }, getSettings: async (...args: unknown[]) => { calls.push(['getSettings', args]); return { defaultMode: 'normal' as const, multiProfileSupported: true }; }, setDefaultMode: async (...args: unknown[]) => { calls.push(['setDefaultMode', args]); return { defaultMode: 'normal' as const, multiProfileSupported: true }; }, switchTab: async (...args: unknown[]) => { calls.push(['switchTab', args]); return state; },
   closeTab: async (...args: unknown[]) => { calls.push(['closeTab', args]); return state; },
   createGroup: async (...args: unknown[]) => { calls.push(['createGroup', args]); return { groups: [] }; },
   renameGroup: async (...args: unknown[]) => { calls.push(['renameGroup', args]); return { groups: [] }; },
@@ -79,7 +79,7 @@ test('all saved-browsing executors are marked implemented in the parity matrix',
     assert.equal(getBrowserParity(functionId as never)?.ownerHost, 'IMPLEMENTED');
     assert.equal(getBrowserParity(functionId as never)?.ownerCommand, 'IMPLEMENTED');
   }
-  assert.equal(BROWSER_PARITY_MATRIX.length, 121);
+  assert.equal(BROWSER_PARITY_MATRIX.length, 122);
 });
 
 test('AXON is denied all saved-browsing operations on the owner session', async () => {

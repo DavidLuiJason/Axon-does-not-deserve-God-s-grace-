@@ -4,21 +4,22 @@ import { BrowserController } from '../src/web/browserController.ts';
 import { getBrowserFunction } from '../src/web/browserCommandGateway.ts';
 import type { BrowserEngineAdapter } from '../src/web/browserEngineAdapter.ts';
 
-type SimTab = { url: string; groupId: string | null; kind: 'normal' };
+type SimTab = { url: string; groupId: string | null; kind: 'normal' | 'incognito'; stealth: boolean };
 type SimGroup = { id: string; name: string };
 
 class GroupBrowser {
   readonly engineId = 'simulated' as const;
   private tabs: SimTab[] = [
-    { url: 'https://one.test', groupId: null, kind: 'normal' },
-    { url: 'https://two.test', groupId: null, kind: 'normal' },
-    { url: 'https://three.test', groupId: null, kind: 'normal' },
+    { url: 'https://one.test', groupId: null, kind: 'normal', stealth: false },
+    { url: 'https://two.test', groupId: null, kind: 'normal', stealth: false },
+    { url: 'https://three.test', groupId: null, kind: 'normal', stealth: false },
   ];
   private groups: SimGroup[] = [];
+  private defaultMode: 'normal' | 'stealth' = 'normal';
   isAvailable() { return true; }
-  async newTab(options: { url?: string; kind?: 'normal' | 'incognito' | 'stealth' } = {}) {
-    if (options.kind && options.kind !== 'normal') throw new Error('not built yet');
-    this.tabs.push({ url: options.url ?? 'about:blank', groupId: null, kind: 'normal' });
+  async newTab(options: { url?: string; kind?: 'normal' | 'incognito'; stealth?: boolean } = {}) {
+    const kind = options.kind ?? 'normal';
+    this.tabs.push({ url: options.url ?? 'about:blank', groupId: null, kind, stealth: options.stealth ?? this.defaultMode === 'stealth' });
     return this.state();
   }
   async createGroup({ name, tabIndexes }: { name: string; tabIndexes?: number[] }) {
@@ -43,10 +44,12 @@ class GroupBrowser {
   }
   async closeGroup({ groupId }: { groupId: string }) {
     const group = this.group(groupId); this.tabs = this.tabs.filter(tab => tab.groupId !== group.id);
-    if (!this.tabs.length) this.tabs.push({ url: 'about:blank', groupId: null, kind: 'normal' });
+    if (!this.tabs.length) this.tabs.push({ url: 'about:blank', groupId: null, kind: 'normal', stealth: false });
     this.groups = this.groups.filter(item => item.id !== group.id); return this.state();
   }
   async listGroups() { return { groups: this.groups.map(group => ({ ...group, tabIndexes: this.tabs.flatMap((tab, index) => tab.groupId === group.id ? [index] : []) })) }; }
+  async getSettings() { return { defaultMode: this.defaultMode, multiProfileSupported: true }; }
+  async setDefaultMode({ defaultMode }: { defaultMode: 'normal' | 'stealth' }) { this.defaultMode = defaultMode; return this.getSettings(); }
   async switchTab() { return this.state(); }
   async closeTab() { return this.state(); }
   async navigate() { return this.state(); }
@@ -88,8 +91,8 @@ class GroupBrowser {
   tab(index: number) { const tab = this.tabs[index]; if (!tab) throw new Error('Tab index out of range.'); return tab; }
   state() {
     const groups = this.listGroupsSync();
-    return { available: true, tabCount: this.tabs.length, activeIndex: 0, url: this.tabs[0]?.url ?? '', title: '', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: false as const,
-      tabs: this.tabs.map((tab, index) => ({ index, url: tab.url, title: '', groupId: tab.groupId, kind: tab.kind })), groups };
+    return { available: true, tabCount: this.tabs.length, activeIndex: 0, url: this.tabs[0]?.url ?? '', title: '', loading: false, canGoBack: false, canGoForward: false, engine: 'simulated', incognito: this.tabs[0]?.kind === 'incognito', defaultMode: this.defaultMode,
+      tabs: this.tabs.map((tab, index) => ({ index, url: tab.url, title: '', groupId: tab.groupId, kind: tab.kind, stealth: tab.stealth })), groups };
   }
   listGroupsSync() { return this.groups.map(group => ({ ...group, tabIndexes: this.tabs.flatMap((tab, index) => tab.groupId === group.id ? [index] : []) })); }
 }
@@ -155,11 +158,11 @@ test('close group closes only its member tabs', async () => {
   assert.deepEqual(state.groups, []);
 });
 
-test('controller refuses incognito and stealth tab creation as not built', async () => {
-  const { run } = setup();
-  for (const kind of ['incognito', 'stealth']) {
-    const result = await run('tabs.create', { kind });
-    assert.equal(result.ok, false);
-    assert.match((result as { ok: false; message: string }).message, /not built yet/i);
-  }
+test('controller forwards incognito and stealth identity options instead of refusing them as not built', async () => {
+  const { native, run } = setup();
+  const result = await run('tabs.create', { kind: 'incognito', stealth: true });
+  assert.equal(result.ok, true);
+  const state = await native.getState();
+  assert.equal(state.tabs[3].kind, 'incognito');
+  assert.equal(state.tabs[3].stealth, true);
 });

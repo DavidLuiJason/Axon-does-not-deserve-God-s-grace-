@@ -4,8 +4,11 @@ import {
   type BrowserActor,
   type BrowserFunctionId,
   type BrowserGatewayResult,
+  type BrowserSessionGrant,
+  type BrowserTabGrant,
 } from './browserCommandGateway.ts';
 import type { BrowserEngineAdapter } from './browserEngineAdapter.ts';
+import { evaluateBrowserSessionBoundary, type BrowserSessionIdentity } from './browserSessionBoundary.ts';
 
 export type BrowserControllerResult<T = unknown> =
   | Readonly<{ ok: true; value: T }>
@@ -14,7 +17,7 @@ export type BrowserControllerResult<T = unknown> =
 const implemented = new Set<BrowserFunctionId>([
   'address.navigate', 'navigation.back', 'navigation.forward', 'navigation.reload', 'navigation.stop',
   'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup',
-  'tabs.switch', 'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
+  'tabs.switch', 'settings.view', 'settings.defaultMode', 'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
   'bookmarks.list', 'history.search', 'history.clear', 'history.clearBySite', 'readingList.add',
   'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'page.read',
   'navigation.copyUrl', 'navigation.shareUrl', 'navigation.securityDetails', 'downloads.list',
@@ -37,12 +40,22 @@ export class BrowserController {
     tabId?: string;
     args?: Record<string, unknown>;
     approval?: { functionId: BrowserFunctionId; tabId: string | null; approvalId: string };
+    sessionGrant?: BrowserSessionGrant;
+    ownerTabGrant?: BrowserTabGrant;
+    tabKind?: 'normal' | 'incognito';
+    tabStealth?: boolean;
+    selectedByOwner?: boolean;
+    sessionBoundary?: { owner: BrowserSessionIdentity; requested: BrowserSessionIdentity };
   }): Promise<BrowserControllerResult<T>> {
-    if (input.functionId === 'tabs.create' && input.args?.kind !== undefined && input.args.kind !== 'normal') {
-      return { ok: false, code: 'DENIED', message: `Tab kind '${String(input.args.kind)}' is not built yet. Only normal tabs are available.` };
-    }
     if (!implemented.has(input.functionId)) return { ok: false, code: 'NOT_READY', message: 'This browser function is catalogued but not implemented by the current native host.' };
-    if (input.actor === 'AXON') return { ok: false, code: 'DENIED', message: 'AXON has no isolated browser session yet. It cannot use the owner browser session.' };
+    const sensitiveTab = input.tabKind === 'incognito' || input.tabStealth === true;
+    if (input.actor === 'AXON' && sensitiveTab) {
+      const boundary = input.sessionBoundary ? evaluateBrowserSessionBoundary(input.sessionBoundary.owner, input.sessionBoundary.requested) : null;
+      if (!input.tabId || !input.selectedByOwner || !input.ownerTabGrant || input.ownerTabGrant.tabId !== input.tabId || !input.ownerTabGrant.functionIds.includes(input.functionId) || !input.sessionGrant || !input.sessionGrant.functionIds.includes(input.functionId) || !boundary?.allowed) {
+        return { ok: false, code: 'DENIED', message: 'AXON cannot read or control an owner incognito/stealth tab unless the owner explicitly hands over this exact tab and command and the isolated session boundary is verified.' };
+      }
+    }
+    if (input.actor === 'AXON' && !sensitiveTab) return { ok: false, code: 'DENIED', message: 'AXON has no enabled isolated browser session. Owner-tab access is refused.' };
     if (!this.adapter.isAvailable()) return { ok: false, code: 'UNAVAILABLE', message: 'The native AXON Web host is not available in this current preview or host environment.' };
 
     const decision = decideBrowserCommand({
@@ -50,8 +63,10 @@ export class BrowserController {
       actor: input.actor,
       support: 'SUPPORTED',
       session: { id: input.sessionId, owner: 'OWNER' },
+      sessionGrant: input.sessionGrant,
+      ownerTabGrant: input.ownerTabGrant,
       tab: getBrowserFunction(input.functionId)?.surface === 'TAB'
-        ? { id: input.tabId ?? 'owner-active-tab', owner: 'OWNER' }
+        ? { id: input.tabId ?? 'owner-active-tab', owner: 'OWNER', ...(input.selectedByOwner === undefined ? {} : { selectedByOwner: input.selectedByOwner }), ...(input.tabKind === undefined ? {} : { kind: input.tabKind }), ...(input.tabStealth === undefined ? {} : { stealth: input.tabStealth }) }
         : undefined,
       ownerApproval: input.approval,
     });
@@ -74,7 +89,9 @@ export class BrowserController {
         case 'navigation.findInPage': await this.adapter.findInPage({ text: String(a.text ?? '') }); value = null; break;
         case 'navigation.zoom': await this.adapter.zoomBy({ delta: Number(a.delta ?? 0) }); value = null; break;
         case 'navigation.requestDesktopSite': value = await this.adapter.setDesktopSite({ enabled: Boolean(a.enabled) }); break;
-        case 'tabs.create': value = await this.adapter.newTab({ url: String(a.url ?? 'https://www.google.com'), kind: 'normal' }); break;
+        case 'tabs.create': { const kind = a.kind === undefined ? 'normal' : a.kind; if (kind !== 'normal' && kind !== 'incognito') throw new Error('Tab kind must be normal or incognito.'); value = await this.adapter.newTab({ url: String(a.url ?? 'https://www.google.com'), kind, ...(typeof a.stealth === 'boolean' ? { stealth: a.stealth } : {}) }); break; }
+        case 'settings.view': value = await this.adapter.getSettings(); break;
+        case 'settings.defaultMode': { if (a.defaultMode !== 'normal' && a.defaultMode !== 'stealth') throw new Error('defaultMode must be normal or stealth.'); value = await this.adapter.setDefaultMode({ defaultMode: a.defaultMode }); break; }
         case 'tabs.createGroup': value = await this.adapter.createGroup({ name: String(a.name ?? ''), tabIndexes: Array.isArray(a.tabIndexes) ? a.tabIndexes.map(Number) : undefined }); break;
         case 'tabs.renameGroup': value = await this.adapter.renameGroup({ groupId: String(a.groupId ?? ''), name: String(a.name ?? '') }); break;
         case 'tabs.moveToGroup': value = await this.adapter.moveTabToGroup({ index: Number(a.index ?? -1), groupId: String(a.groupId ?? '') }); break;

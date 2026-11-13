@@ -36,9 +36,9 @@ public final class BrowserPlugin extends Plugin {
     @PluginMethod public void stop(PluginCall call) { withActivity(call, a -> {a.stop();call.resolve(js(a.getState()));}); }
     @PluginMethod public void newTab(PluginCall call) {
         String kind=call.getString("kind","normal");
-        if(!"normal".equals(kind)){call.reject("Tab kind '"+kind+"' is not built yet. Only normal tabs are available.");return;}
         String url=call.getString("url","https://www.google.com");
-        withActivity(call, a -> {a.newTab(url);call.resolve(js(a.getState()));});
+        Boolean stealth=call.getData().has("stealth") ? Boolean.valueOf(call.getBoolean("stealth", false)) : null;
+        withActivity(call, a -> {a.newTab(url,kind,stealth);call.resolve(js(a.getState()));});
     }
     @PluginMethod public void createGroup(PluginCall call) {
         String name=call.getString("name"); JSArray indexes=call.getArray("tabIndexes");
@@ -50,6 +50,8 @@ public final class BrowserPlugin extends Plugin {
     @PluginMethod public void deleteGroup(PluginCall call) { String id=call.getString("groupId");withActivity(call,a->call.resolve(js(a.deleteGroup(id)))); }
     @PluginMethod public void closeGroup(PluginCall call) { String id=call.getString("groupId");withActivity(call,a->call.resolve(js(a.closeGroup(id)))); }
     @PluginMethod public void listGroups(PluginCall call) { withActivity(call,a->call.resolve(js(a.listGroups()))); }
+    @PluginMethod public void getSettings(PluginCall call) { withActivity(call,a->call.resolve(js(a.getSettingsState()))); }
+    @PluginMethod public void setDefaultMode(PluginCall call) { String mode=call.getString("defaultMode"); withActivity(call,a->call.resolve(js(a.setDefaultMode(mode)))); }
     @PluginMethod public void switchTab(PluginCall call) { int index=call.getInt("index",-1); withActivity(call, a -> {a.switchTab(index);call.resolve(js(a.getState()));}); }
     @PluginMethod public void closeTab(PluginCall call) { int index=call.getInt("index",-1); withActivity(call, a -> {a.closeTab(index);call.resolve(js(a.getState()));}); }
     @PluginMethod public void getState(PluginCall call) { withActivity(call, a -> call.resolve(js(a.getState()))); }

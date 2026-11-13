@@ -26,6 +26,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import androidx.webkit.ProfileStore;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebBackForwardList;
@@ -63,6 +66,8 @@ public final class BrowserActivity extends Activity {
         Bundle savedState;
         String groupId;
         String kind = "normal";
+        boolean stealth = false;
+        String profileName;
     }
     private static final class BrowserTabGroup {
         String id;
@@ -92,6 +97,7 @@ public final class BrowserActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         instance = this;
+        cleanupOrphanedIncognitoProfiles();
         loadSavedData();
         buildLayout();
         String first = getIntent().getStringExtra(EXTRA_URL);
@@ -169,16 +175,53 @@ public final class BrowserActivity extends Activity {
     private BrowserTab active() { return tabs.isEmpty() ? null : tabs.get(Math.max(0, Math.min(activeIndex, tabs.size() - 1))); }
 
     private void createTabInternal(String url, boolean save) {
+        createTabInternal(url, "normal", null, save);
+    }
+
+    private void createTabInternal(String url, String kind, Boolean stealthChoice, boolean save) {
+        if (!"normal".equals(kind) && !"incognito".equals(kind)) throw new IllegalArgumentException("Tab kind must be normal or incognito.");
+        boolean stealth = stealthChoice == null ? "stealth".equals(getDefaultMode()) : stealthChoice.booleanValue();
+        if (("incognito".equals(kind) || stealth) && !multiProfileSupported()) {
+            throw new IllegalStateException("Incognito and stealth tabs are unavailable because this Android System WebView does not support MULTI_PROFILE. No shared-cookie fallback is allowed.");
+        }
         suspendActiveTab();
         BrowserTab tab = new BrowserTab();
+        tab.kind = kind; tab.stealth = stealth;
+        if ("incognito".equals(kind) || stealth) tab.profileName = ("incognito".equals(kind) ? "axon_incognito_" : "axon_stealth_") + UUID.randomUUID().toString();
         tab.url = normalizeAddress(url == null ? "https://www.google.com" : url);
         tabs.add(tab); activeIndex = tabs.size() - 1;
         ensureWebView(tab);
         attachActiveTab(); updateChrome(); if (save) saveTabs();
     }
 
+    private boolean multiProfileSupported() {
+        return WebViewFeature.isFeatureSupported(WebViewFeature.MULTI_PROFILE);
+    }
+
+    private void cleanupOrphanedIncognitoProfiles() {
+        if (!multiProfileSupported()) return;
+        ProfileStore store = ProfileStore.getInstance();
+        for (String name : new ArrayList<>(store.getAllProfileNames())) {
+            if (name.startsWith("axon_incognito_")) {
+                try { store.deleteProfile(name); }
+                catch (Exception error) { throw new IllegalStateException("Could not clean up an orphaned incognito profile; private browsing is blocked until cleanup succeeds.", error); }
+            }
+        }
+    }
+
+    private void deleteEphemeralProfile(BrowserTab tab) {
+        if (tab == null || !"incognito".equals(tab.kind) || tab.profileName == null || !multiProfileSupported()) return;
+        try { ProfileStore.getInstance().deleteProfile(tab.profileName); }
+        catch (Exception error) { throw new IllegalStateException("Could not delete the incognito profile after its WebView was destroyed.", error); }
+        tab.profileName = null;
+    }
+
     private void createWebView(BrowserTab tab) {
         WebView web = new WebView(this);
+        if (tab.profileName != null) {
+            if (!multiProfileSupported()) { web.destroy(); throw new IllegalStateException("This WebView does not support MULTI_PROFILE; refusing to create an isolated tab."); }
+            WebViewCompat.setProfile(web, tab.profileName);
+        }
         tab.view = web;
         WebSettings settings = web.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -211,7 +254,7 @@ public final class BrowserActivity extends Activity {
             }
             @Override public void onPageFinished(WebView view, String url) {
                 tab.url = url; tab.title = view.getTitle() == null ? url : view.getTitle(); tab.loading = false;
-                addHistory(tab.title, url); if (tab == active()) updateChrome(); saveTabs();
+                if (!"incognito".equals(tab.kind)) addHistory(tab.title, url); if (tab == active()) updateChrome(); saveTabs();
             }
             @Override public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) { handler.cancel(); }
             @Override public void onSafeBrowsingHit(WebView view, WebResourceRequest request, int threatType, SafeBrowsingResponse response) {
@@ -280,7 +323,9 @@ public final class BrowserActivity extends Activity {
 
     private BrowserTab createTabObject() {
         suspendActiveTab();
-        BrowserTab tab = new BrowserTab(); tab.url = "about:blank"; tabs.add(tab); activeIndex = tabs.size() - 1;
+        BrowserTab tab = new BrowserTab(); tab.url = "about:blank"; tab.stealth = "stealth".equals(getDefaultMode());
+        if (tab.stealth) { if (!multiProfileSupported()) throw new IllegalStateException("Stealth tabs are unavailable because this WebView does not support MULTI_PROFILE."); tab.profileName = "axon_stealth_" + UUID.randomUUID().toString(); }
+        tabs.add(tab); activeIndex = tabs.size() - 1;
         ensureWebView(tab); attachActiveTab(); updateChrome(); saveTabs(); return tab;
     }
 
@@ -321,7 +366,16 @@ public final class BrowserActivity extends Activity {
     public void goForward() { BrowserTab t = active(); if (t != null && t.view.canGoForward()) t.view.goForward(); }
     public void reload() { BrowserTab t = active(); if (t != null) t.view.reload(); }
     public void stop() { BrowserTab t = active(); if (t != null) { t.view.stopLoading(); t.loading = false; updateChrome(); } }
-    public void newTab(String url) { createTabInternal(url, true); }
+    public void newTab(String url) { newTab(url, "normal", null); }
+    public void newTab(String url, String kind, Boolean stealth) { createTabInternal(url, kind == null ? "normal" : kind, stealth, true); }
+    public String getDefaultMode() { return getSharedPreferences("axon_web_normal", MODE_PRIVATE).getString("defaultMode", "normal"); }
+    public JSONObject getSettingsState() { JSONObject out = new JSONObject(); try { out.put("defaultMode", getDefaultMode()); out.put("multiProfileSupported", multiProfileSupported()); } catch (JSONException ignored) {} return out; }
+    public JSONObject setDefaultMode(String mode) {
+        if (!"normal".equals(mode) && !"stealth".equals(mode)) throw new IllegalArgumentException("defaultMode must be normal or stealth.");
+        if ("stealth".equals(mode) && !multiProfileSupported()) throw new IllegalStateException("Stealth default is unavailable because this WebView does not support MULTI_PROFILE.");
+        getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString("defaultMode", mode).apply();
+        return getSettingsState();
+    }
     public void switchTab(int index) { if (index >= 0 && index < tabs.size() && index != activeIndex) { suspendActiveTab(); activeIndex = index; attachActiveTab(); saveTabs(); } }
     public void closeTab(int index) {
         if (index < 0 || index >= tabs.size()) return;
@@ -329,6 +383,7 @@ public final class BrowserActivity extends Activity {
         boolean closingActive = index == activeIndex;
         if (closingActive) suspendActiveTab();
         if (removed.view != null) { if (removed.view.getParent() instanceof ViewGroup) ((ViewGroup) removed.view.getParent()).removeView(removed.view); removed.view.stopLoading(); removed.view.destroy(); removed.view = null; }
+        deleteEphemeralProfile(removed);
         tabs.remove(index);
         if (tabs.isEmpty()) { activeIndex = 0; createTabInternal("https://www.google.com", false); }
         else { if (activeIndex >= tabs.size()) activeIndex = tabs.size() - 1; else if (index < activeIndex) activeIndex--; attachActiveTab(); }
@@ -493,12 +548,16 @@ public final class BrowserActivity extends Activity {
     }
     private void toast(String message) { Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }
 
-    private void startDownload(String url, String userAgent, String disposition, String mimeType) {
+    private void startDownload(BrowserTab tab, String url, String userAgent, String disposition, String mimeType) {
+        if (tab != null && "incognito".equals(tab.kind)) { toast("Downloads from incognito tabs are blocked so downloaded files do not outlive the private tab."); return; }
         try {
             String fileName = URLUtil.guessFileName(url, disposition, mimeType);
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setMimeType(mimeType); request.addRequestHeader("User-Agent", userAgent);
-            String cookie = CookieManager.getInstance().getCookie(url); if (cookie != null) request.addRequestHeader("Cookie", cookie);
+            String cookie = tab != null && tab.profileName != null && tab.view != null
+                ? WebViewCompat.getProfile(tab.view).getCookieManager().getCookie(url)
+                : CookieManager.getInstance().getCookie(url);
+            if (cookie != null) request.addRequestHeader("Cookie", cookie);
             request.setTitle(fileName); request.setDescription("Downloading with AXON Web");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Axon/" + fileName);
@@ -519,6 +578,7 @@ public final class BrowserActivity extends Activity {
         return parsed.getHost() != null && ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) && parsed.getUserInfo() == null;
     }
     public void addBookmark(String title, String url) {
+        if (active() != null && "incognito".equals(active().kind)) throw new IllegalStateException("Bookmarks from incognito tabs are not saved.");
         if (!isHttpUrl(url)) throw new IllegalArgumentException("Only valid HTTP(S) page addresses can be bookmarked.");
         for (Iterator<JSONObject> it = bookmarks.iterator(); it.hasNext();) if (url.equals(it.next().optString("url"))) it.remove();
         try { JSONObject row = new JSONObject(); row.put("title", title == null || title.trim().isEmpty() ? url : title.trim()); row.put("url", url); row.put("addedAt", System.currentTimeMillis()); row.put("folder", ""); bookmarks.add(0, row); saveJson("bookmarks", bookmarks); } catch (JSONException ignored) {}
@@ -568,6 +628,7 @@ public final class BrowserActivity extends Activity {
         saveJson("history", history);
     }
     public void addToReadingList(String title, String url) {
+        if (active() != null && "incognito".equals(active().kind)) throw new IllegalStateException("Reading-list entries from incognito tabs are not saved.");
         if (!isHttpUrl(url)) throw new IllegalArgumentException("Only valid HTTP(S) page addresses can be saved.");
         for (JSONObject item : readingList) if (url.equals(item.optString("url"))) { try { item.put("title", title == null || title.trim().isEmpty() ? url : title.trim()); } catch (JSONException ignored) {} saveJson("readingList", readingList); return; }
         try { JSONObject row = new JSONObject(); row.put("title", title == null || title.trim().isEmpty() ? url : title.trim()); row.put("url", url); row.put("addedAt", System.currentTimeMillis()); row.put("read", false); readingList.add(0, row); saveJson("readingList", readingList); } catch (JSONException ignored) {}
@@ -749,9 +810,9 @@ public final class BrowserActivity extends Activity {
 
     public JSONObject getState() {
         JSONObject out = new JSONObject(); BrowserTab t = active();
-        try { out.put("available", true); out.put("tabCount", tabs.size()); out.put("activeIndex", activeIndex); out.put("url", t == null ? "" : t.url); out.put("title", t == null ? "" : t.title); out.put("loading", t != null && t.loading); out.put("canGoBack", t != null && t.view.canGoBack()); out.put("canGoForward", t != null && t.view.canGoForward()); out.put("engine", "android-system-webview"); out.put("incognito", false);
+        try { out.put("available", true); out.put("tabCount", tabs.size()); out.put("activeIndex", activeIndex); out.put("url", t == null ? "" : t.url); out.put("title", t == null ? "" : t.title); out.put("loading", t != null && t.loading); out.put("canGoBack", t != null && t.view.canGoBack()); out.put("canGoForward", t != null && t.view.canGoForward()); out.put("engine", "android-system-webview"); out.put("incognito", t != null && "incognito".equals(t.kind)); out.put("defaultMode", getDefaultMode());
             JSONArray tabRows=new JSONArray();
-            for(int i=0;i<tabs.size();i++){ BrowserTab tab=tabs.get(i); JSONObject row=new JSONObject(); row.put("index",i); row.put("url",tab.url); row.put("title",tab.title); row.put("groupId",tab.groupId==null?JSONObject.NULL:tab.groupId); row.put("kind","normal"); tabRows.put(row); }
+            for(int i=0;i<tabs.size();i++){ BrowserTab tab=tabs.get(i); JSONObject row=new JSONObject(); row.put("index",i); row.put("url",tab.url); row.put("title",tab.title); row.put("groupId",tab.groupId==null?JSONObject.NULL:tab.groupId); row.put("kind",tab.kind); row.put("stealth",tab.stealth); tabRows.put(row); }
             out.put("tabs",tabRows); out.put("groups",getGroupsState().optJSONArray("groups")); } catch (JSONException ignored) {}
         return out;
     }
@@ -769,7 +830,7 @@ public final class BrowserActivity extends Activity {
         android.content.SharedPreferences prefs = getSharedPreferences("axon_web_normal", MODE_PRIVATE);
         try {
             JSONArray savedTabs = new JSONArray(prefs.getString("tabs", "[]")); activeIndex = prefs.getInt("active", 0);
-            for (int i=0;i<savedTabs.length();i++) { JSONObject item=savedTabs.optJSONObject(i); BrowserTab t=new BrowserTab(); t.url=item==null?"https://www.google.com":item.optString("url","https://www.google.com"); t.title=item==null?t.url:item.optString("title",t.url); t.groupId=item==null?null:item.optString("groupId",null); t.kind="normal"; tabs.add(t); }
+            for (int i=0;i<savedTabs.length();i++) { JSONObject item=savedTabs.optJSONObject(i); BrowserTab t=new BrowserTab(); t.url=item==null?"https://www.google.com":item.optString("url","https://www.google.com"); t.title=item==null?t.url:item.optString("title",t.url); t.groupId=item==null?null:item.optString("groupId",null); t.kind="normal"; t.stealth=item!=null && item.optBoolean("stealth", false); t.profileName=t.stealth && item!=null ? item.optString("profileName", null) : null; if(t.stealth && (t.profileName==null || t.profileName.isEmpty())) t.profileName="axon_stealth_"+UUID.randomUUID().toString(); tabs.add(t); }
             JSONArray savedGroups = new JSONArray(prefs.getString("tabGroups", "[]")); for(int i=0;i<savedGroups.length();i++){ JSONObject g=savedGroups.optJSONObject(i); if(g!=null) tabGroups.add(new BrowserTabGroup(g.optString("id"),g.optString("name","Group"))); }
             JSONArray savedHistory = new JSONArray(prefs.getString("history", "[]")); for(int i=0;i<savedHistory.length();i++) history.add(savedHistory.getJSONObject(i));
             JSONArray savedBookmarks = new JSONArray(prefs.getString("bookmarks", "[]")); for(int i=0;i<savedBookmarks.length();i++) bookmarks.add(savedBookmarks.getJSONObject(i));
@@ -781,8 +842,12 @@ public final class BrowserActivity extends Activity {
     }
     private void saveTabs() {
         JSONArray array = new JSONArray();
-        for (BrowserTab t : tabs) { JSONObject item = new JSONObject(); try { item.put("url", t.url); item.put("title", t.title); if(t.groupId!=null) item.put("groupId",t.groupId); item.put("kind","normal"); array.put(item); } catch (JSONException ignored) {} }
-        getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString("tabs", array.toString()).putString("tabGroups", getGroupsJson().toString()).putInt("active", activeIndex).apply();
+        JSONArray savedGroups = new JSONArray();
+        int savedActiveIndex = 0;
+        int savedIndex = 0;
+        for (int i=0;i<tabs.size();i++) { BrowserTab t=tabs.get(i); if ("incognito".equals(t.kind)) continue; if (i==activeIndex) savedActiveIndex=savedIndex; JSONObject item = new JSONObject(); try { item.put("url", t.url); item.put("title", t.title); if(t.groupId!=null) item.put("groupId",t.groupId); item.put("kind","normal"); item.put("stealth",t.stealth); if(t.profileName!=null) item.put("profileName",t.profileName); array.put(item); } catch (JSONException ignored) {} savedIndex++; }
+        for (BrowserTabGroup group : tabGroups) { boolean hasSavedTab=false; for (BrowserTab tab : tabs) if (!"incognito".equals(tab.kind) && group.id.equals(tab.groupId)) { hasSavedTab=true; break; } if (hasSavedTab) { JSONObject row=new JSONObject(); try { row.put("id",group.id); row.put("name",group.name); savedGroups.put(row); } catch (JSONException ignored) {} } }
+        getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString("tabs", array.toString()).putString("tabGroups", savedGroups.toString()).putInt("active", savedActiveIndex < array.length() ? savedActiveIndex : 0).apply();
     }
     private void saveJson(String key, ArrayList<JSONObject> rows) { JSONArray array = new JSONArray(rows); getSharedPreferences("axon_web_normal", MODE_PRIVATE).edit().putString(key, array.toString()).apply(); }
 
@@ -801,7 +866,7 @@ public final class BrowserActivity extends Activity {
     @Override protected void onPause() { super.onPause(); BrowserTab t=active(); if(t!=null && t.view!=null) t.view.onPause(); saveTabs(); }
     @Override protected void onResume() { super.onResume(); BrowserTab t=active(); if(t!=null && t.view!=null) t.view.onResume(); }
     @Override protected void onDestroy() {
-        saveTabs(); for(BrowserTab t:tabs) if(t.view!=null) { if(t.view.getParent() instanceof ViewGroup) ((ViewGroup)t.view.getParent()).removeView(t.view); t.view.stopLoading(); t.view.destroy(); }
+        saveTabs(); for(BrowserTab t:tabs) { if(t.view!=null) { if(t.view.getParent() instanceof ViewGroup) ((ViewGroup)t.view.getParent()).removeView(t.view); t.view.stopLoading(); t.view.destroy(); t.view=null; } try { deleteEphemeralProfile(t); } catch (RuntimeException error) { android.util.Log.e("AxonBrowser", "Incognito profile cleanup failed; startup cleanup will retry.", error); } }
         tabs.clear(); if(instance==this) instance=null; super.onDestroy();
     }
 }

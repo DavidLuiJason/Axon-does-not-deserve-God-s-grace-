@@ -16,7 +16,7 @@ export type BrowserParityRow = Readonly<{
 const ownerCommandImplemented = new Set<BrowserFunctionId>([
   'address.navigate', 'navigation.back', 'navigation.forward', 'navigation.reload', 'navigation.stop',
   'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup',
-  'tabs.switch', 'bookmarks.add', 'bookmarks.list', 'bookmarks.edit', 'bookmarks.remove',
+  'tabs.switch', 'settings.view', 'settings.defaultMode', 'bookmarks.add', 'bookmarks.list', 'bookmarks.edit', 'bookmarks.remove',
   'bookmarks.createFolder', 'bookmarks.move', 'history.search', 'history.clear', 'history.clearBySite',
   'readingList.add', 'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'page.read',
   'navigation.copyUrl', 'navigation.shareUrl', 'navigation.securityDetails', 'downloads.list', 'downloads.open',
@@ -28,7 +28,7 @@ const ownerCommandImplemented = new Set<BrowserFunctionId>([
 const ownerHostImplemented = new Set<BrowserFunctionId>([
   'address.navigate', 'address.search', 'navigation.back', 'navigation.forward', 'navigation.reload',
   'navigation.stop', 'navigation.requestDesktopSite', 'navigation.findInPage', 'navigation.zoom',
-  'tabs.create', 'tabs.close', 'tabs.switch', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup', 'tabs.restoreSession', 'tabs.suspend',
+  'tabs.create', 'tabs.close', 'tabs.switch', 'settings.view', 'settings.defaultMode', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup', 'tabs.restoreSession', 'tabs.suspend',
   'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
   'bookmarks.list', 'history.search', 'history.clear', 'history.clearBySite', 'readingList.add',
   'readingList.remove', 'readingList.open', 'readingList.markRead', 'readingList.list', 'history.openEntry',
