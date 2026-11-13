@@ -1,0 +1,2700 @@
+[
+  {
+    "id": "R1-001",
+    "text": "count words in \"one two three\". count words in \"one two three\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-002",
+    "text": "count characters in \"good morning\". count characters in \"good morning\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the characters in the quoted text.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters (11 without spaces)."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-003",
+    "text": "count letters in \"abc 123\". count letters in \"abc 123\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the letters in the quoted text.",
+      "arguments": {
+        "text": "abc 123",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-004",
+    "text": "count lines in \"a\nb\nc\". count lines in \"a\nb\nc\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the lines in the quoted text.",
+      "arguments": {
+        "text": "a\nb\nc",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-005",
+    "text": "how many words are in \"the quick brown fox\". how many words are in \"the quick brown fox\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "the quick brown fox",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-006",
+    "text": "convert \"hello big world\" to uppercase. convert \"hello big world\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "UPPER"
+      },
+      "outputContains": "HELLO BIG WORLD"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-007",
+    "text": "convert \"Hello BIG World\" to lowercase. convert \"Hello BIG World\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "Hello BIG World",
+        "mode": "lower"
+      },
+      "outputContains": "hello big world"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-008",
+    "text": "convert \"axon brain\" to uppercase. convert \"axon brain\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "axon brain",
+        "mode": "UPPER"
+      },
+      "outputContains": "AXON BRAIN"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-009",
+    "text": "convert \"CALM AND CLEAR\" to lowercase. convert \"CALM AND CLEAR\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "CALM AND CLEAR",
+        "mode": "lower"
+      },
+      "outputContains": "calm and clear"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-010",
+    "text": "convert \"small bright star\" to uppercase. convert \"small bright star\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "small bright star",
+        "mode": "UPPER"
+      },
+      "outputContains": "SMALL BRIGHT STAR"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-011",
+    "text": "sort the lines \"pear\napple\nfig\". sort the lines \"pear\napple\nfig\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "pear\napple\nfig",
+        "mode": "ascending"
+      },
+      "outputContains": "apple\nfig\npear\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-012",
+    "text": "sort the lines \"q\np\". sort the lines \"q\np\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "q\np",
+        "mode": "ascending"
+      },
+      "outputContains": "p\nq\nLine count: 2."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-013",
+    "text": "sort \"ccc\na\nbb\" by length. sort \"ccc\na\nbb\" by length.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines by length.",
+      "arguments": {
+        "text": "ccc\na\nbb",
+        "mode": "length"
+      },
+      "outputContains": "a\nbb\nccc\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-014",
+    "text": "sort \"b\na\nc\" descending. sort \"b\na\nc\" descending.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in descending order.",
+      "arguments": {
+        "text": "b\na\nc",
+        "mode": "descending"
+      },
+      "outputContains": "c\nb\na\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-015",
+    "text": "spell the number 12. spell the number 12.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 12 in English words.",
+      "arguments": {
+        "number": 12
+      },
+      "outputContains": "twelve"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-016",
+    "text": "spell the number 18. spell the number 18.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 18 in English words.",
+      "arguments": {
+        "number": 18
+      },
+      "outputContains": "eighteen"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-017",
+    "text": "write the number 21 in words. write the number 21 in words.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 21 in English words.",
+      "arguments": {
+        "number": 21
+      },
+      "outputContains": "twenty-one"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-018",
+    "text": "convert the number 42 to words. convert the number 42 to words.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 42 in English words.",
+      "arguments": {
+        "number": 42
+      },
+      "outputContains": "forty-two"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-019",
+    "text": "encode \"hello\" as base64. encode \"hello\" as base64.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text as Base64.",
+      "arguments": {
+        "input": "hello",
+        "mode": "encode",
+        "format": "base64"
+      },
+      "outputContains": "aGVsbG8="
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-020",
+    "text": "decode \"aGVsbG8=\" from base64. decode \"aGVsbG8=\" from base64.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted Base64 text.",
+      "arguments": {
+        "input": "aGVsbG8=",
+        "mode": "decode",
+        "format": "base64"
+      },
+      "outputContains": "hello"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-021",
+    "text": "please encode \"abc\" as hex. please encode \"abc\" as hex.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text as hexadecimal.",
+      "arguments": {
+        "input": "abc",
+        "mode": "encode",
+        "format": "hex"
+      },
+      "outputContains": "616263"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-022",
+    "text": "decode \"6869\" from hex. decode \"6869\" from hex.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted hexadecimal text.",
+      "arguments": {
+        "input": "6869",
+        "mode": "decode",
+        "format": "hex"
+      },
+      "outputContains": "hi"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-023",
+    "text": "calculate checksum of \"abc\" using MD5. calculate checksum of \"abc\" using MD5.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate the MD5 checksum of the quoted text.",
+      "arguments": {
+        "input": "abc",
+        "algorithm": "MD5"
+      },
+      "outputContains": "900150983cd24fb0d6963f7d28e17f72"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-024",
+    "text": "calculate checksum of \"hello\" using SHA-256. calculate checksum of \"hello\" using SHA-256.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate the SHA-256 checksum of the quoted text.",
+      "arguments": {
+        "input": "hello",
+        "algorithm": "SHA-256"
+      },
+      "outputContains": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-025",
+    "text": "calculate checksum of \"abc\" using SHA-1. calculate checksum of \"abc\" using SHA-1.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate the SHA-1 checksum of the quoted text.",
+      "arguments": {
+        "input": "abc",
+        "algorithm": "SHA-1"
+      },
+      "outputContains": "a9993e364706816aba3e25717850c26c9cd0d89d"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-026",
+    "text": "calculate checksum of \"123456789\" using CRC32. calculate checksum of \"123456789\" using CRC32.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate the CRC32 checksum of the quoted text.",
+      "arguments": {
+        "input": "123456789",
+        "algorithm": "CRC32"
+      },
+      "outputContains": "cbf43926"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-027",
+    "text": "make a QR code for \"hello\". make a QR code for \"hello\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Make a QR code containing the quoted text.",
+      "arguments": {
+        "text": "hello",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-028",
+    "text": "create QR code containing \"https://example.com\". create QR code containing \"https://example.com\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Make a QR code containing the quoted URL.",
+      "arguments": {
+        "text": "https://example.com",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 25 × 25 modules, error-correction level M."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-029",
+    "text": "create a QR code containing \"hello world\". create a QR code containing \"hello world\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Make a QR code containing the quoted text.",
+      "arguments": {
+        "text": "hello world",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-030",
+    "text": "make a QR code for \"A\". make a QR code for \"A\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Make a QR code containing the quoted letter.",
+      "arguments": {
+        "text": "A",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-031",
+    "text": "Wait. count words in \"one two three\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-032",
+    "text": "count characters in \"good morning\". Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the characters in the quoted text.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters (11 without spaces)."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-033",
+    "text": "Wait. count letters in \"abc 123\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the letters in the quoted text.",
+      "arguments": {
+        "text": "abc 123",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-034",
+    "text": "count lines in \"a\nb\nc\". Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the lines in the quoted text.",
+      "arguments": {
+        "text": "a\nb\nc",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-035",
+    "text": "Wait. how many words are in \"the quick brown fox\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "the quick brown fox",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-036",
+    "text": "convert \"hello big world\" to uppercase. Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "UPPER"
+      },
+      "outputContains": "HELLO BIG WORLD"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-037",
+    "text": "Wait. convert \"Hello BIG World\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "Hello BIG World",
+        "mode": "lower"
+      },
+      "outputContains": "hello big world"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-038",
+    "text": "convert \"axon brain\" to uppercase. Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "axon brain",
+        "mode": "UPPER"
+      },
+      "outputContains": "AXON BRAIN"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-039",
+    "text": "Wait. convert \"CALM AND CLEAR\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "CALM AND CLEAR",
+        "mode": "lower"
+      },
+      "outputContains": "calm and clear"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-040",
+    "text": "convert \"small bright star\" to uppercase. Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "small bright star",
+        "mode": "UPPER"
+      },
+      "outputContains": "SMALL BRIGHT STAR"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-041",
+    "text": "Wait. sort the lines \"pear\napple\nfig\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "pear\napple\nfig",
+        "mode": "ascending"
+      },
+      "outputContains": "apple\nfig\npear\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-042",
+    "text": "sort the lines \"q\np\". Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "q\np",
+        "mode": "ascending"
+      },
+      "outputContains": "p\nq\nLine count: 2."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-043",
+    "text": "Wait. sort \"ccc\na\nbb\" by length.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines by length.",
+      "arguments": {
+        "text": "ccc\na\nbb",
+        "mode": "length"
+      },
+      "outputContains": "a\nbb\nccc\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-044",
+    "text": "sort \"b\na\nc\" descending. Oops.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in descending order.",
+      "arguments": {
+        "text": "b\na\nc",
+        "mode": "descending"
+      },
+      "outputContains": "c\nb\na\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-045",
+    "text": "Wait. spell the number 12.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 12 in English words.",
+      "arguments": {
+        "number": 12
+      },
+      "outputContains": "twelve"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-046",
+    "text": "count words in \"one two three\". Wait. count words in \"one two three\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-047",
+    "text": "count characters in \"good morning\". Oops. count characters in \"good morning\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the characters in the quoted text.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters (11 without spaces)."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-048",
+    "text": "count letters in \"abc 123\". Wait. count letters in \"abc 123\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the letters in the quoted text.",
+      "arguments": {
+        "text": "abc 123",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-049",
+    "text": "count lines in \"a\nb\nc\". Oops. count lines in \"a\nb\nc\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the lines in the quoted text.",
+      "arguments": {
+        "text": "a\nb\nc",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-050",
+    "text": "how many words are in \"the quick brown fox\". Wait. how many words are in \"the quick brown fox\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count the words in the quoted text.",
+      "arguments": {
+        "text": "the quick brown fox",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-051",
+    "text": "convert \"hello big world\" to uppercase. Oops. convert \"hello big world\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "UPPER"
+      },
+      "outputContains": "HELLO BIG WORLD"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-052",
+    "text": "convert \"Hello BIG World\" to lowercase. Wait. convert \"Hello BIG World\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "Hello BIG World",
+        "mode": "lower"
+      },
+      "outputContains": "hello big world"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-053",
+    "text": "convert \"axon brain\" to uppercase. Oops. convert \"axon brain\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "axon brain",
+        "mode": "UPPER"
+      },
+      "outputContains": "AXON BRAIN"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-054",
+    "text": "convert \"CALM AND CLEAR\" to lowercase. Wait. convert \"CALM AND CLEAR\" to lowercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to lowercase.",
+      "arguments": {
+        "text": "CALM AND CLEAR",
+        "mode": "lower"
+      },
+      "outputContains": "calm and clear"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-055",
+    "text": "convert \"small bright star\" to uppercase. Oops. convert \"small bright star\" to uppercase.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert the quoted text to uppercase.",
+      "arguments": {
+        "text": "small bright star",
+        "mode": "UPPER"
+      },
+      "outputContains": "SMALL BRIGHT STAR"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-056",
+    "text": "sort the lines \"pear\napple\nfig\". Wait. sort the lines \"pear\napple\nfig\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "pear\napple\nfig",
+        "mode": "ascending"
+      },
+      "outputContains": "apple\nfig\npear\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-057",
+    "text": "sort the lines \"q\np\". Oops. sort the lines \"q\np\".",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in ascending order.",
+      "arguments": {
+        "text": "q\np",
+        "mode": "ascending"
+      },
+      "outputContains": "p\nq\nLine count: 2."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-058",
+    "text": "sort \"ccc\na\nbb\" by length. Wait. sort \"ccc\na\nbb\" by length.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines by length.",
+      "arguments": {
+        "text": "ccc\na\nbb",
+        "mode": "length"
+      },
+      "outputContains": "a\nbb\nccc\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-059",
+    "text": "sort \"b\na\nc\" descending. Oops. sort \"b\na\nc\" descending.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines in descending order.",
+      "arguments": {
+        "text": "b\na\nc",
+        "mode": "descending"
+      },
+      "outputContains": "c\nb\na\nLine count: 3."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R1-060",
+    "text": "spell the number 12. Wait. spell the number 12.",
+    "kind": "R1",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write the number 12 in English words.",
+      "arguments": {
+        "number": 12
+      },
+      "outputContains": "twelve"
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-001",
+    "text": "how much words are in \"red blue\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "red blue",
+        "unit": "words"
+      },
+      "outputContains": "That text has 2 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-002",
+    "text": "how much words are in \"one two three\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-003",
+    "text": "how much words are in \"the quick brown fox\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "the quick brown fox",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-004",
+    "text": "how much words are in \"hello brave new world\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "hello brave new world",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-005",
+    "text": "how much words are in \"green apples\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "green apples",
+        "unit": "words"
+      },
+      "outputContains": "That text has 2 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-006",
+    "text": "how much words are in \"small bright star\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "small bright star",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-007",
+    "text": "how much words are in \"alpha beta gamma delta epsilon\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "alpha beta gamma delta epsilon",
+        "unit": "words"
+      },
+      "outputContains": "That text has 5 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-008",
+    "text": "how much words are in \"cat dog bird fish\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "cat dog bird fish",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-009",
+    "text": "how much words are in \"north south\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "north south",
+        "unit": "words"
+      },
+      "outputContains": "That text has 2 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-010",
+    "text": "how much words are in \"this is a test\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "this is a test",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-011",
+    "text": "how much words are in \"count these five words\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "count these five words",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-012",
+    "text": "how much words are in \"one\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "one",
+        "unit": "words"
+      },
+      "outputContains": "That text has 1 word."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-013",
+    "text": "how much words are in \"one two\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "one two",
+        "unit": "words"
+      },
+      "outputContains": "That text has 2 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-014",
+    "text": "how much words are in \"one two three four\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "one two three four",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-015",
+    "text": "how much words are in \"red blue green yellow\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many words are in”.",
+      "arguments": {
+        "text": "red blue green yellow",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-016",
+    "text": "how much characters are in \"red blue\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "red blue",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 8 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-017",
+    "text": "how much characters are in \"one two three\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 13 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-018",
+    "text": "how much characters are in \"good morning\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-019",
+    "text": "how much characters are in \"ab cd\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "ab cd",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 5 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-020",
+    "text": "how much characters are in \"AXON brain\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "AXON brain",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 9 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-021",
+    "text": "how much characters are in \"hello\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "hello",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 5 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-022",
+    "text": "how much characters are in \"two words\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "two words",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 9 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-023",
+    "text": "how much characters are in \"longer phrase\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "longer phrase",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 13 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-024",
+    "text": "how much characters are in \"open ai\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "open ai",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 7 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-025",
+    "text": "how much characters are in \"a b c\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "a b c",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 5 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-026",
+    "text": "how much characters are in \"word count\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "word count",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 10 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-027",
+    "text": "how much characters are in \"nice day\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "nice day",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 8 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-028",
+    "text": "how much characters are in \"123 456\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "123 456",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 7 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-029",
+    "text": "how much characters are in \"spaces here\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "spaces here",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 11 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-030",
+    "text": "how much characters are in \"blue sky\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many characters are in”.",
+      "arguments": {
+        "text": "blue sky",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 8 characters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-031",
+    "text": "how much letters in \"abc 123\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "abc 123",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-032",
+    "text": "how much letters in \"hello world\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "hello world",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 10 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-033",
+    "text": "how much letters in \"good morning\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 11 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-034",
+    "text": "how much letters in \"one two\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "one two",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 6 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-035",
+    "text": "how much letters in \"AXON brain\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "AXON brain",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 9 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-036",
+    "text": "how much letters in \"open ai\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "open ai",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 6 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-037",
+    "text": "how much letters in \"red blue\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "red blue",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 7 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-038",
+    "text": "how much letters in \"good day\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "good day",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 7 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-039",
+    "text": "how much letters in \"cat 99\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "cat 99",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-040",
+    "text": "how much letters in \"ABC xyz\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "ABC xyz",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 6 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-041",
+    "text": "how much letters in \"space here\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "space here",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 9 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-042",
+    "text": "how much letters in \"letters\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "letters",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 7 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-043",
+    "text": "how much letters in \"line test\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "line test",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 8 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-044",
+    "text": "how much letters in \"one two three\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 11 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-045",
+    "text": "how much letters in \"alpha beta\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many letters in”.",
+      "arguments": {
+        "text": "alpha beta",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 9 letters."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-046",
+    "text": "how much lines in \"red\nblue\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "red\nblue",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-047",
+    "text": "how much lines in \"one\ntwo\nthree\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "one\ntwo\nthree",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-048",
+    "text": "how much lines in \"first\nsecond\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "first\nsecond",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-049",
+    "text": "how much lines in \"a\nb\nc\nd\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "a\nb\nc\nd",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 4 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-050",
+    "text": "how much lines in \"single line\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "single line",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 1 line."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-051",
+    "text": "how much lines in \"north\nsouth\neast\nwest\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "north\nsouth\neast\nwest",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 4 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-052",
+    "text": "how much lines in \"line one\nline two\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "line one\nline two",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-053",
+    "text": "how much lines in \"1\n2\n3\n4\n5\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "1\n2\n3\n4\n5",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 5 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-054",
+    "text": "how much lines in \"alpha\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "alpha",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 1 line."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-055",
+    "text": "how much lines in \"top\nmiddle\nbottom\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "top\nmiddle\nbottom",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-056",
+    "text": "how much lines in \"x\ny\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "x\ny",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-057",
+    "text": "how much lines in \"up\ndown\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "up\ndown",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-058",
+    "text": "how much lines in \"row1\nrow2\nrow3\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "row1\nrow2\nrow3",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-059",
+    "text": "how much lines in \"a\nb\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "a\nb",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "R2-060",
+    "text": "how much lines in \"one\ntwo\"",
+    "kind": "R2",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Correct the count question to “how many lines in”.",
+      "arguments": {
+        "text": "one\ntwo",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": true
+  },
+  {
+    "id": "CTRL-001",
+    "text": "count words in \"one two three\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count words in the quoted text.",
+      "arguments": {
+        "text": "one two three",
+        "unit": "words"
+      },
+      "outputContains": "That text has 3 words."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-002",
+    "text": "count the words in \"hello brave new world\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count words in the quoted text.",
+      "arguments": {
+        "text": "hello brave new world",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-003",
+    "text": "count characters in \"good morning\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count characters in the quoted text.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters (11 without spaces)."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-004",
+    "text": "count the characters of \"a b c\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count characters in the quoted text.",
+      "arguments": {
+        "text": "a b c",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 5 characters (3 without spaces)."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-005",
+    "text": "count letters in \"abc 123\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count letters in the quoted text.",
+      "arguments": {
+        "text": "abc 123",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 3 letters."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-006",
+    "text": "how many words are in \"the quick brown fox\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count words in the quoted text.",
+      "arguments": {
+        "text": "the quick brown fox",
+        "unit": "words"
+      },
+      "outputContains": "That text has 4 words."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-007",
+    "text": "how many characters are in \"good morning\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count characters in the quoted text.",
+      "arguments": {
+        "text": "good morning",
+        "unit": "characters"
+      },
+      "outputContains": "That text has 12 characters (11 without spaces)."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-008",
+    "text": "how many letters in \"hello\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count letters in the quoted text.",
+      "arguments": {
+        "text": "hello",
+        "unit": "letters"
+      },
+      "outputContains": "That text has 5 letters."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-009",
+    "text": "how many lines in \"x\ny\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count lines in the quoted text.",
+      "arguments": {
+        "text": "x\ny",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 2 lines."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-010",
+    "text": "count lines in \"a\nb\nc\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "text-counter",
+      "reading": "Count lines in the quoted text.",
+      "arguments": {
+        "text": "a\nb\nc",
+        "unit": "lines"
+      },
+      "outputContains": "That text has 3 lines."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-011",
+    "text": "convert \"hello big world\" to uppercase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to UPPER.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "UPPER"
+      },
+      "outputContains": "HELLO BIG WORLD"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-012",
+    "text": "convert \"Hello BIG World\" to lowercase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to lower.",
+      "arguments": {
+        "text": "Hello BIG World",
+        "mode": "lower"
+      },
+      "outputContains": "hello big world"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-013",
+    "text": "convert \"hello big world\" to Title case",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to Title.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "Title"
+      },
+      "outputContains": "Hello Big World"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-014",
+    "text": "convert \"hELLO there. wORLD\" to Sentence case",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to Sentence.",
+      "arguments": {
+        "text": "hELLO there. wORLD",
+        "mode": "Sentence"
+      },
+      "outputContains": "Hello there. World"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-015",
+    "text": "convert \"hello big world\" to camelCase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to camelCase.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "camelCase"
+      },
+      "outputContains": "helloBigWorld"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-016",
+    "text": "convert \"hello big world\" to PascalCase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to PascalCase.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "PascalCase"
+      },
+      "outputContains": "HelloBigWorld"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-017",
+    "text": "convert \"hello big world\" to snake_case",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to snake_case.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "snake_case"
+      },
+      "outputContains": "hello_big_world"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-018",
+    "text": "convert \"hello big world\" to kebab-case",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to kebab-case.",
+      "arguments": {
+        "text": "hello big world",
+        "mode": "kebab-case"
+      },
+      "outputContains": "hello-big-world"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-019",
+    "text": "convert \"wait 5 minutes\" to uppercase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to UPPER.",
+      "arguments": {
+        "text": "wait 5 minutes",
+        "mode": "UPPER"
+      },
+      "outputContains": "WAIT 5 MINUTES"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-020",
+    "text": "convert \"oops\" to uppercase",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "case-converter",
+      "reading": "Convert text to UPPER.",
+      "arguments": {
+        "text": "oops",
+        "mode": "UPPER"
+      },
+      "outputContains": "OOPS"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-021",
+    "text": "sort the lines \"pear\napple\nfig\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "pear\napple\nfig",
+        "mode": "ascending"
+      },
+      "outputContains": "apple\nfig\npear\nLine count: 3."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-022",
+    "text": "sort \"b\na\nc\" descending",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using descending order.",
+      "arguments": {
+        "text": "b\na\nc",
+        "mode": "descending"
+      },
+      "outputContains": "c\nb\na\nLine count: 3."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-023",
+    "text": "sort \"ccc\na\nbb\" by length",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using length order.",
+      "arguments": {
+        "text": "ccc\na\nbb",
+        "mode": "length"
+      },
+      "outputContains": "a\nbb\nccc\nLine count: 3."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-024",
+    "text": "please sort \"b\na\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "b\na",
+        "mode": "ascending"
+      },
+      "outputContains": "a\nb\nLine count: 2."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-025",
+    "text": "sort the lines \"b\na\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "b\na",
+        "mode": "ascending"
+      },
+      "outputContains": "a\nb\nLine count: 2."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-026",
+    "text": "sort \"item10\nitem2\nitem1\" natural",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using natural order.",
+      "arguments": {
+        "text": "item10\nitem2\nitem1",
+        "mode": "natural"
+      },
+      "outputContains": "item1\nitem2\nitem10\nLine count: 3."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-027",
+    "text": "sort \"b\na\" ascending",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "b\na",
+        "mode": "ascending"
+      },
+      "outputContains": "a\nb\nLine count: 2."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-028",
+    "text": "sort \"b\na\" alphabetically",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "b\na",
+        "mode": "ascending"
+      },
+      "outputContains": "a\nb\nLine count: 2."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-029",
+    "text": "alphabetize \"b\na\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using ascending order.",
+      "arguments": {
+        "text": "b\na",
+        "mode": "ascending"
+      },
+      "outputContains": "a\nb\nLine count: 2."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-030",
+    "text": "reverse the lines \"a\nb\nc\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "sort-lines",
+      "reading": "Sort the quoted lines using descending order.",
+      "arguments": {
+        "text": "a\nb\nc",
+        "mode": "descending"
+      },
+      "outputContains": "c\nb\na\nLine count: 3."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-031",
+    "text": "Please spell the number 0",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 0 in English words.",
+      "arguments": {
+        "number": 0
+      },
+      "outputContains": "zero"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-032",
+    "text": "spell the number 12",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 12 in English words.",
+      "arguments": {
+        "number": 12
+      },
+      "outputContains": "twelve"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-033",
+    "text": "write the number 13 in words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 13 in English words.",
+      "arguments": {
+        "number": 13
+      },
+      "outputContains": "thirteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-034",
+    "text": "convert the number 14 to words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 14 in English words.",
+      "arguments": {
+        "number": 14
+      },
+      "outputContains": "fourteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-035",
+    "text": "please spell the number 15",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 15 in English words.",
+      "arguments": {
+        "number": 15
+      },
+      "outputContains": "fifteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-036",
+    "text": "write the number 16 in words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 16 in English words.",
+      "arguments": {
+        "number": 16
+      },
+      "outputContains": "sixteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-037",
+    "text": "convert the number 17 to words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 17 in English words.",
+      "arguments": {
+        "number": 17
+      },
+      "outputContains": "seventeen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-038",
+    "text": "spell the number 18",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 18 in English words.",
+      "arguments": {
+        "number": 18
+      },
+      "outputContains": "eighteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-039",
+    "text": "write the number 19 in words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 19 in English words.",
+      "arguments": {
+        "number": 19
+      },
+      "outputContains": "nineteen"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-040",
+    "text": "convert the number 20 into words",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "number-to-words",
+      "reading": "Write 20 in English words.",
+      "arguments": {
+        "number": 20
+      },
+      "outputContains": "twenty"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-041",
+    "text": "encode \"hello\" as base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text using base64.",
+      "arguments": {
+        "input": "hello",
+        "mode": "encode",
+        "format": "base64"
+      },
+      "outputContains": "aGVsbG8="
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-042",
+    "text": "decode \"aGVsbG8=\" from base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted text using base64.",
+      "arguments": {
+        "input": "aGVsbG8=",
+        "mode": "decode",
+        "format": "base64"
+      },
+      "outputContains": "hello"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-043",
+    "text": "please encode \"abc\" as hex",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text using hex.",
+      "arguments": {
+        "input": "abc",
+        "mode": "encode",
+        "format": "hex"
+      },
+      "outputContains": "616263"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-044",
+    "text": "decode \"6869\" as hex",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted text using hex.",
+      "arguments": {
+        "input": "6869",
+        "mode": "decode",
+        "format": "hex"
+      },
+      "outputContains": "hi"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-045",
+    "text": "can you encode \"a b\" as URL",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text using URL.",
+      "arguments": {
+        "input": "a b",
+        "mode": "encode",
+        "format": "URL"
+      },
+      "outputContains": "a%20b"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-046",
+    "text": "decode \"a%20b\" from URL",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted text using URL.",
+      "arguments": {
+        "input": "a%20b",
+        "mode": "decode",
+        "format": "URL"
+      },
+      "outputContains": "a b"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-047",
+    "text": "kindly encode \"world\" as base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text using base64.",
+      "arguments": {
+        "input": "world",
+        "mode": "encode",
+        "format": "base64"
+      },
+      "outputContains": "d29ybGQ="
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-048",
+    "text": "please decode \"d29ybGQ=\" from base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted text using base64.",
+      "arguments": {
+        "input": "d29ybGQ=",
+        "mode": "decode",
+        "format": "base64"
+      },
+      "outputContains": "world"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-049",
+    "text": "could you encode \"cat\" as base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Encode the quoted text using base64.",
+      "arguments": {
+        "input": "cat",
+        "mode": "encode",
+        "format": "base64"
+      },
+      "outputContains": "Y2F0"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-050",
+    "text": "please decode \"Y2F0\" from base64",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "encoder-decoder",
+      "reading": "Decode the quoted text using base64.",
+      "arguments": {
+        "input": "Y2F0",
+        "mode": "decode",
+        "format": "base64"
+      },
+      "outputContains": "cat"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-051",
+    "text": "calculate checksum of \"abc\" using MD5",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate MD5 for the quoted input.",
+      "arguments": {
+        "input": "abc",
+        "algorithm": "MD5"
+      },
+      "outputContains": "900150983cd24fb0d6963f7d28e17f72"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-052",
+    "text": "calculate checksum of \"hello\" using SHA-256",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate SHA-256 for the quoted input.",
+      "arguments": {
+        "input": "hello",
+        "algorithm": "SHA-256"
+      },
+      "outputContains": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-053",
+    "text": "calculate checksum of \"abc\" using SHA-1",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate SHA-1 for the quoted input.",
+      "arguments": {
+        "input": "abc",
+        "algorithm": "SHA-1"
+      },
+      "outputContains": "a9993e364706816aba3e25717850c26c9cd0d89d"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-054",
+    "text": "calculate checksum of \"123456789\" using CRC32",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate CRC32 for the quoted input.",
+      "arguments": {
+        "input": "123456789",
+        "algorithm": "CRC32"
+      },
+      "outputContains": "cbf43926"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-055",
+    "text": "calculate checksum of \"hello\" using MD5",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "hash-tool",
+      "reading": "Calculate MD5 for the quoted input.",
+      "arguments": {
+        "input": "hello",
+        "algorithm": "MD5"
+      },
+      "outputContains": "5d41402abc4b2a76b9719d911017c592"
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-056",
+    "text": "make a QR code for \"hello\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Create a QR code for the quoted payload.",
+      "arguments": {
+        "text": "hello",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-057",
+    "text": "create QR code containing \"https://example.com\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Create a QR code for the quoted payload.",
+      "arguments": {
+        "text": "https://example.com",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 25 × 25 modules, error-correction level M."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-058",
+    "text": "create a QR code containing \"hello world\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Create a QR code for the quoted payload.",
+      "arguments": {
+        "text": "hello world",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-059",
+    "text": "make a QR code for \"A\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Create a QR code for the quoted payload.",
+      "arguments": {
+        "text": "A",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": false
+  },
+  {
+    "id": "CTRL-060",
+    "text": "create QR code containing \"one\"",
+    "kind": "CONTROL",
+    "expected": {
+      "toolId": "qr-maker",
+      "reading": "Create a QR code for the quoted payload.",
+      "arguments": {
+        "text": "one",
+        "level": "M"
+      },
+      "outputContains": "QR code made: 21 × 21 modules, error-correction level M."
+    },
+    "shouldChange": false
+  }
+]
