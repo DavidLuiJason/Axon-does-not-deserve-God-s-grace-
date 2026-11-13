@@ -1,0 +1,195 @@
+name: Repository File Finder
+
+on:
+workflow_dispatch:
+inputs:
+file_name:
+description: "File name or part of a name to search for (optional)"
+required: false
+type: string
+recent_limit:
+description: "Number of recent file additions to show"
+required: false
+default: "30"
+type: string
+
+permissions:
+contents: read
+
+jobs:
+find-files:
+name: Find current and historical files
+runs-on: ubuntu-latest
+
+steps:
+  - name: Check out repository history
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+
+  - name: Search files and show recent additions
+    shell: bash
+    env:
+      SEARCH_NAME: ${{ inputs.file_name }}
+      RECENT_LIMIT: ${{ inputs.recent_limit }}
+    run: |
+      python3 - <<'PY'
+      import difflib
+      import os
+      import subprocess
+      from pathlib import PurePosixPath
+
+      search = os.environ.get("SEARCH_NAME", "").strip()
+      try:
+          limit = max(1, min(200, int(os.environ.get("RECENT_LIMIT", "30"))))
+      except ValueError:
+          limit = 30
+
+      def git(*args):
+          result = subprocess.run(
+              ["git", *args],
+              check=True,
+              stdout=subprocess.PIPE,
+              stderr=subprocess.PIPE,
+              text=True,
+          )
+          return result.stdout
+
+      current_paths = [
+          path for path in git("ls-files").splitlines()
+          if path.strip()
+      ]
+
+      history = git(
+          "log", "--all", "--diff-filter=A", "--name-only",
+          "--format=@@%H%x09%aI%x09%s"
+      )
+
+      additions = []
+      commit_hash = date = subject = ""
+
+      for line in history.splitlines():
+          if line.startswith("@@"):
+              parts = line[2:].split("\t", 2)
+              commit_hash = parts[0] if len(parts) > 0 else ""
+              date = parts[1] if len(parts) > 1 else ""
+              subject = parts[2] if len(parts) > 2 else ""
+          elif line.strip():
+              additions.append({
+                  "path": line.strip(),
+                  "commit": commit_hash,
+                  "date": date,
+                  "subject": subject,
+              })
+
+      def name_of(path):
+          return PurePosixPath(path).name.casefold()
+
+      def similarity(query, path):
+          q = query.casefold()
+          p = path.casefold()
+          n = name_of(path)
+
+          if q == n or q == p:
+              return 2.0
+
+          if q in n or q in p:
+              return 1.5
+
+          return max(
+              difflib.SequenceMatcher(None, q, n).ratio(),
+              difflib.SequenceMatcher(None, q, p).ratio(),
+          )
+
+      print("=" * 76)
+      print("REPOSITORY FILE FINDER")
+      print("=" * 76)
+      print(f"Current tracked files: {len(current_paths)}")
+      print(f"Historical file-addition events: {len(additions)}")
+      print()
+
+      if search:
+          print(f"SEARCH RESULTS FOR: {search}")
+          print("(Exact, partial, and similar filename/path matches)")
+          print()
+
+          current_matches = [
+              (similarity(search, path), path)
+              for path in current_paths
+              if similarity(search, path) >= 0.45
+          ]
+
+          current_matches.sort(
+              key=lambda item: (-item[0], item[1].casefold())
+          )
+
+          print("CURRENTLY PRESENT:")
+
+          if current_matches:
+              for score, path in current_matches:
+                  label = "MATCH" if score >= 1.5 else "SIMILAR"
+                  print(f"  [{label}] {path} (similarity: {score:.0%})")
+          else:
+              print("  No current exact, partial, or sufficiently similar files found.")
+
+          historical_matches = [
+              (similarity(search, item["path"]), item)
+              for item in additions
+              if similarity(search, item["path"]) >= 0.45
+          ]
+
+          historical_matches.sort(
+              key=lambda pair: (
+                  pair[1]["date"],
+                  pair[1]["commit"],
+                  -pair[0],
+              ),
+              reverse=True,
+          )
+
+          print()
+          print("FOUND IN GIT HISTORY (NEWEST ADDITIONS FIRST):")
+
+          if historical_matches:
+              seen = set()
+
+              for score, item in historical_matches:
+                  key = (item["path"], item["commit"])
+
+                  if key in seen:
+                      continue
+
+                  seen.add(key)
+                  label = "MATCH" if score >= 1.5 else "SIMILAR"
+
+                  print(
+                      f"  [{label}] {item['path']} | "
+                      f"Added: {item['date']} | "
+                      f"Commit: {item['commit'][:10]} | "
+                      f"{item['subject']} | Similarity: {score:.0%}"
+                  )
+          else:
+              print("  No matching or similar file additions found.")
+
+          print()
+
+      print(f"RECENTLY ADDED FILES (NEWEST FIRST; SHOWING UP TO {limit}):")
+      print("-" * 76)
+
+      if additions:
+          for item in additions[:limit]:
+              print(
+                  f"Added: {item['date']} | {item['path']} | "
+                  f"Commit: {item['commit'][:10]} | {item['subject']}"
+              )
+      else:
+          print("No file additions found in the available Git history.")
+
+      print()
+      print("NOTES:")
+      print("- Similarity search includes partial names and approximate spelling matches.")
+      print("- Recent additions are ordered newest first and include the commit timestamp.")
+      print("- Historical results include files later deleted, if their commits remain reachable.")
+      print("- Git history from available branches and tags is searched.")
+      print("- This workflow only reads repository contents and history; it makes no changes.")
+      PY
