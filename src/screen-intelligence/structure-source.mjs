@@ -16,6 +16,13 @@ export function createStructureSource(plugin, defaults = {}) {
       try { return await plugin.openSettings(); }
       catch (error) { return { opened: false, reason: String(error?.message ?? error) }; }
     },
+    async performAction(payload) {
+      if (!plugin?.performAction) return { ok: false, code: 'no-native-plugin' };
+      try {
+        const response = await plugin.performAction({ action: payload });
+        return response?.result ?? { ok: false, code: 'no-result' };
+      } catch (error) { return { ok: false, code: String(error?.message ?? error) }; }
+    },
     async readScreen(options = {}) {
       const status = await this.getStatus();
       if (!status.serviceEnabled) return { ok: false, reason: status.reason ?? 'accessibility-service-off', help: OFF_HELP };

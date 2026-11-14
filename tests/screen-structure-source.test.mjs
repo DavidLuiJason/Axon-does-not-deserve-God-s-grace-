@@ -32,14 +32,15 @@ test('options pass through: blocked apps return nothing, maxNodes reaches the pl
   const r = await src.readScreen({ maxNodes: 50 });
   assert.equal(r.blocked, true); assert.equal(seen.maxNodes, 50);
 });
-test('Java stage is read-only and never sends password text', () => {
+test('Java executor is narrow: no gestures, only Back/Home globally, password never typed or sent', () => {
   const svc = read('android-overlay/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java');
   const plug = read('android-overlay/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java');
-  for (const bad of ['performAction', 'dispatchGesture', 'performGlobalAction', 'ACTION_CLICK', 'ACTION_SET_TEXT']) {
-    assert.ok(!svc.includes(bad) && !plug.includes(bad), `no ${bad}`);
-  }
+  assert.ok(!svc.includes('dispatchGesture')); assert.ok(!plug.includes('performAction(AccessibilityNodeInfo'));
+  assert.deepEqual([...new Set(svc.match(/GLOBAL_ACTION_[A-Z_]+/g))].sort(), ['GLOBAL_ACTION_BACK', 'GLOBAL_ACTION_HOME']);
   assert.match(svc, /if \(!password && text != null\)/);
-  assert.match(plug, /name = "ScreenStructure"/);
+  assert.ok(svc.indexOf('node.isPassword()') < svc.indexOf('ACTION_SET_TEXT, args'));
+  assert.match(svc, /"screen-changed"/); assert.match(svc, /"element-disabled"/);
+  assert.match(plug, /name = "ScreenStructure"/); assert.match(plug, /public void performAction/);
 });
 test('wiring: plugin registered, service declared with the bind permission, files copied', () => {
   assert.match(read('android-overlay/app/src/main/java/com/axon/app/MainActivity.java'), /registerPlugin\(ScreenStructurePlugin\.class\)/);

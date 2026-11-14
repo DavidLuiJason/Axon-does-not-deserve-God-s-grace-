@@ -11,7 +11,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 
 import org.json.JSONObject;
 
-/** Bridge to the read-only accessibility screen reader. The owner enables the service in Android settings. */
+/** Bridge to the accessibility screen reader and executor. The owner enables the service in Android settings. */
 @CapacitorPlugin(name = "ScreenStructure")
 public class ScreenStructurePlugin extends Plugin {
     @PluginMethod
@@ -19,7 +19,7 @@ public class ScreenStructurePlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("platform", "android");
         result.put("serviceEnabled", AxonAccessibilityService.isRunning());
-        result.put("readOnly", true);
+        result.put("canAct", true);
         call.resolve(result);
     }
 
@@ -58,5 +58,21 @@ public class ScreenStructurePlugin extends Plugin {
         } catch (Exception e) {
             call.reject("read-failed", e);
         }
+    }
+
+    @PluginMethod
+    public void performAction(PluginCall call) {
+        JSObject action = call.getObject("action");
+        if (action == null) {
+            call.reject("no-action");
+            return;
+        }
+        if (!AxonAccessibilityService.isRunning()) {
+            call.reject("accessibility-service-off");
+            return;
+        }
+        JSObject result = new JSObject();
+        result.put("result", AxonAccessibilityService.perform(action));
+        call.resolve(result);
     }
 }
