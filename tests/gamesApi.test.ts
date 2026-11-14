@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {
   AXON_GAMES_CATALOG_ENTRY, GAME_TIER_COUNT, checkAnswer, createSeededRandom, gamesInCategory, getGame,
-  levelsInTier, listCategories, listGames, resetRandomSource, setRandomSource, startRound,
+  hubSections, levelsInTier, listCategories, listGames, resetRandomSource, setRandomSource, startRound,
 } from '../src/games';
 
 assert.equal(listGames().length, 171, '171 games');
@@ -12,6 +12,12 @@ assert.equal(categories.reduce((n, c) => n + c.count, 0), 171, 'every game sits 
 assert.ok(categories.every((c) => gamesInCategory(c.category).length === c.count), 'category counts match the lists');
 assert.equal(getGame('no-such-game'), undefined);
 assert.equal(AXON_GAMES_CATALOG_ENTRY.id, 'axon-games');
+const sections = hubSections();
+assert.equal(sections.reduce((n, s) => n + s.games.length, 0), 171, 'the hub shows every game exactly once');
+assert.equal(new Set(sections.flatMap((s) => s.games.map((g) => g.id))).size, 171);
+assert.ok(sections.every((s) => s.games.length >= 3), 'no hub section has fewer than three games');
+assert.equal(new Set(sections.map((s) => s.id)).size, sections.length, 'hub section ids are unique');
+assert.equal(sections[sections.length - 1]?.title, 'More challenges');
 
 let rounds = 0;
 for (const game of listGames()) {

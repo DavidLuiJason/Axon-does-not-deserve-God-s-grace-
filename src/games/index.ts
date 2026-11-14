@@ -16,6 +16,9 @@ import type { GameEntry, Round, TierProfiles } from './types';
 
 export { setRandomSource, resetRandomSource, createSeededRandom } from './random';
 export type { GameEntry, Round } from './types';
+export { screenModel, checkTappedCells, scoreGuess, submitCodeGuess, MASTERMIND_DIGITS, MASTERMIND_MAX_GUESSES, SET_MEMORY_SHOW_MS } from './interactions';
+export type { ScreenModel, GuessScore, CodeGuessResult } from './interactions';
+export { gameNote } from './notes';
 
 export const GAME_TIER_COUNT = 15;
 
@@ -53,6 +56,32 @@ export function gamesInCategory(category: string): GameEntry[] {
   return GAMES.filter((game) => game.category === category);
 }
 
+
+/** Categories with fewer games than this are merged into one "More challenges" section on the hub. */
+export const HUB_MIN_SECTION_SIZE = 3;
+export const HUB_MERGED_SECTION_TITLE = 'More challenges';
+
+export interface HubSection {
+  id: string;
+  title: string;
+  games: GameEntry[];
+}
+
+const slug = (text: string): string => text.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+/** The sections the hub shows, in catalogue order: every category with at least three games, then one merged section for the small ones. */
+export function hubSections(): HubSection[] {
+  const sections: HubSection[] = [];
+  const small: GameEntry[] = [];
+  for (const { category } of listCategories()) {
+    const games = gamesInCategory(category);
+    if (games.length >= HUB_MIN_SECTION_SIZE) sections.push({ id: slug(category), title: category, games });
+    else small.push(...games);
+  }
+  if (small.length > 0) sections.push({ id: 'more-challenges', title: HUB_MERGED_SECTION_TITLE, games: small });
+  return sections;
+}
+
 /** How many levels a tier has for this game (the screen offers levels 1..n). Games without a profile have 3. */
 export function levelsInTier(gameId: string, tier: number): number {
   return PROFILES[gameId] ? getTierProfile(gameId, tier, PROFILES).levels : 3;
@@ -77,9 +106,10 @@ export interface AnswerCheck {
 }
 
 export function checkAnswer(round: Round, input: unknown): AnswerCheck {
+  const typed = Array.isArray(input) ? input.join(' ') : input;
   const expected = Array.isArray(round.answer) ? round.answer.join(' ') : String(round.answer ?? '');
   return {
-    correct: validateAnswer(round, input),
+    correct: validateAnswer(round, typed),
     expected,
     explanation: String(round.explanation ?? round.rule ?? ''),
   };

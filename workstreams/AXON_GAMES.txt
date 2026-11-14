@@ -1,11 +1,10 @@
 WORKSTREAM: AXON GAMES (Director DT3)
 UPDATED: 2026-11-13
-STATE NOW: axon-games/ (audited JavaScript lab, 171 games) merged first; src/games/ (strict TypeScript logic layer, only index.ts is public) merged second; tests/gamesParity.test.ts proves they match; tests/gamesApi.test.ts covers the API.
-OWNER DECISION: games open from the TOOLS MENU. WAITING: new twelfth group "Games" (recommended) or an existing group.
-OWNS: axon-games/, src/games/, tests/games*.test.ts, docs/GAMES_*.md, docs/GAMES2_*.md, workstreams/AXON_GAMES.txt
-MUST NOT TOUCH without a Director merge of its own: src/tools/toolCatalog.ts, src/components/AxonToolsScreen.tsx, tests/tools.test.ts, capability registry, root package.json, tsconfig, brain, AXON Web, AXON Code, AXON Apps.
-NOT MINE: the prompts for AI Studio screens (another Director, not yet named).
-NEXT: GAMES3 (a) screen-readiness list from docs/GAMES_TOOLS_MENU_PLAN.md; (b) one registration merge: catalog entry, capability cap.engine-tools.axon-games, status flip, npm run test:all green.
-THEN: progress rules (tier unlocks) and AXON storage, owner decides rules first; depth waves for the 52 tier-flat games; second reader for the 51 reviewed-only games.
-KEEP: gamesParity must stay green; any change to a game is made in BOTH axon-games/ and src/games/ or the parity test fails.
-LIMITS: board games are rules questions, not playable boards; five grid games share one mechanic.
+STATE NOW: axon-games/ (audited JavaScript lab) and src/games/ (strict TypeScript layer) are merged and proven identical (tests/gamesParity.test.ts). GAMES3 added the typed screen contract: src/games/interactions.ts (screenModel for 9 layouts, grid and code-breaker rules), notes.ts, hubSections().
+OWNER DECISION (2026-11-13): games open from the Tools menu in their OWN group "Games" (Option A).
+OWNS: axon-games/, src/games/, tests/games*.test.ts, docs/GAMES_*.md, docs/GAMES2_*.md, docs/GAMES3_*.md, workstreams/AXON_GAMES.txt
+MUST NOT TOUCH outside the registration merge: src/tools/toolCatalog.ts, src/components/AxonToolsScreen.tsx, tests/tools.test.ts, capability registry, root package.json, tsconfig, brain, AXON Web, AXON Code, AXON Apps.
+NOT MINE: the prompts for AI Studio screens (another Director, not yet named). docs/GAMES_SCREEN_READINESS.md is the hand-over for them.
+NEXT: ONE registration merge written in docs/GAMES_REGISTRATION_EDITS.md; DT3 needs the CURRENT main zip first (stale files must not be overwritten); entry stays coming-soon until the AI Studio screen exists.
+THEN (not part of GAMES3): GAMES4 progress rules and AXON storage (owner decides tier-unlock rules); depth waves for the 52 tier-flat games; second reader for the 51 reviewed-only games; real boards for the eleven rules-only games if the owner wants them.
+KEEP: gamesParity must stay green; a change to a game is made in BOTH axon-games/ and src/games/ or the parity test fails.
