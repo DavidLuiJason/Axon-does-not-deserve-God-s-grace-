@@ -3,6 +3,7 @@ package com.axon.app.screenstructure;
 import android.content.Intent;
 import android.provider.Settings;
 
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -74,5 +75,26 @@ public class ScreenStructurePlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("result", AxonAccessibilityService.perform(action));
         call.resolve(result);
+    }
+
+    @PluginMethod
+    public void recognizeRegions(PluginCall call) {
+        JSArray regions = call.getArray("regions");
+        if (regions == null) {
+            call.reject("no-regions");
+            return;
+        }
+        AxonAccessibilityService service = AxonAccessibilityService.current();
+        if (service == null) {
+            call.reject("accessibility-service-off");
+            return;
+        }
+        try {
+            JSObject result = new JSObject();
+            result.put("result", PictureTextReader.read(service, regions, 12));
+            call.resolve(result);
+        } catch (Exception e) {
+            call.reject("recognize-failed", e);
+        }
     }
 }

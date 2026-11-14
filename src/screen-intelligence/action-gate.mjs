@@ -9,6 +9,7 @@ export const DEFAULT_POLICY = Object.freeze({
   maxPerMinute: 20,
   maxTextLength: 500,
   blockedPackages: [],
+  askPackages: [],          // money, wallet and password apps: always ask before opening or acting (see axon-apps/app-catalog.mjs)
 });
 
 const KINDS = new Set(['tap', 'long-press', 'type', 'toggle', 'scroll', 'back', 'home', 'open-app']);
@@ -41,8 +42,9 @@ export function proposeAction(structure, request, options = {}) {
     const pkg = String(request.packageName ?? '');
     if (!pkg) return refuse('no-package', 'No app was named.');
     if (policy.blockedPackages.includes(pkg)) return refuse('package-blocked', `${pkg} is on the blocked list.`);
+    if (policy.askPackages.includes(pkg)) return { decision: 'ask', code: 'sensitive-app', reason: 'This looks like a money, wallet or password app.', summary: `Open ${pkg}`, action: { kind, packageName: pkg }, proposedAt: now };
     const decision = policy.autonomy === 'ask-everything' ? 'ask' : 'allow';
-    return { decision, code: decision === 'ask' ? 'ask-everything' : 'ok', reason: decision === 'ask' ? 'You asked to approve every action.' : 'Opening an app is allowed.', summary: `Open ${pkg}`, action: { kind, packageName: pkg } };
+    return { decision, code: decision === 'ask' ? 'ask-everything' : 'ok', reason: decision === 'ask' ? 'You asked to approve every action.' : 'Opening an app is allowed.', summary: `Open ${pkg}`, action: { kind, packageName: pkg }, proposedAt: now };
   }
 
   if (!structure?.ok) return refuse('no-screen', 'There is no screen reading to act on. Read the screen first.');
@@ -54,7 +56,7 @@ export function proposeAction(structure, request, options = {}) {
 
   if (GLOBAL.has(kind)) {
     const decision = policy.autonomy === 'ask-everything' ? 'ask' : 'allow';
-    return { decision, code: decision === 'ask' ? 'ask-everything' : 'ok', reason: 'Navigation key.', summary: kind === 'back' ? 'Press Back' : 'Go to the home screen', action: base };
+    return { decision, code: decision === 'ask' ? 'ask-everything' : 'ok', reason: 'Navigation key.', summary: kind === 'back' ? 'Press Back' : 'Go to the home screen', action: base, proposedAt: now };
   }
 
   const element = (structure.elements ?? []).find((e) => e.ref === request.ref);
@@ -80,6 +82,7 @@ export function proposeAction(structure, request, options = {}) {
 
   let ask = null;
   if (policy.autonomy === 'ask-everything') ask = ['ask-everything', 'You asked to approve every action.'];
+  else if (policy.askPackages.includes(structure.packageName) && kind !== 'scroll') ask = ['sensitive-app', 'This looks like a money, wallet or password app.'];
   else if (element.risk === 'ask') ask = ['risky-control', `"${label}" looks like it pays, sends, deletes or signs in.`];
   else if (signIn && kind !== 'scroll') ask = ['sign-in-screen', 'This looks like a sign-in screen.'];
   else if (kind === 'type') ask = ['typing', 'Typing into a field needs your approval.'];

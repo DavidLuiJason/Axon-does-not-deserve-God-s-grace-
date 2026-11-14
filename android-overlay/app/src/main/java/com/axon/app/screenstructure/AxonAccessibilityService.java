@@ -2,9 +2,11 @@ package com.axon.app.screenstructure;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityWindowInfo;
@@ -13,11 +15,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Screen structure reader and ACTION EXECUTOR. The owner turns it on in Android Accessibility settings.
  * It reads the screen, and it carries out ONLY actions the JS action gate already allowed or the owner approved
  * (tap, long-press, type, switch, scroll, Back, Home). It re-checks the app and the element first, never types into
  * a password field, never sends the text of a password field, and uses no screen gestures.
+ * It can also take ONE screenshot on request (Android 11+) for picture-text reading; the pixels stay in memory only.
  */
 public class AxonAccessibilityService extends AccessibilityService {
     private static volatile AxonAccessibilityService instance;
@@ -46,6 +54,63 @@ public class AxonAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() { }
+
+    /** Result of one screenshot request: a software bitmap, or an error code. Memory only, never written anywhere. */
+    static final class ShotResult {
+        Bitmap bitmap;
+        String error;
+    }
+
+    /** The running service, or null when the owner has not switched it on. Used by AXON Apps to start apps from the background. */
+    public static AxonAccessibilityService current() {
+        return instance;
+    }
+
+    ShotResult takeShot(long timeoutMs) {
+        final ShotResult result = new ShotResult();
+        if (Build.VERSION.SDK_INT < 30) {
+            result.error = "screenshot-needs-android-11";
+            return result;
+        }
+        final CountDownLatch latch = new CountDownLatch(1);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            takeScreenshot(Display.DEFAULT_DISPLAY, executor, new TakeScreenshotCallback() {
+                @Override
+                public void onSuccess(ScreenshotResult shot) {
+                    try {
+                        Bitmap hardware = Bitmap.wrapHardwareBuffer(shot.getHardwareBuffer(), shot.getColorSpace());
+                        if (hardware != null) {
+                            result.bitmap = hardware.copy(Bitmap.Config.ARGB_8888, false);
+                            hardware.recycle();
+                        } else {
+                            result.error = "screenshot-failed";
+                        }
+                    } catch (Exception e) {
+                        result.error = "screenshot-failed";
+                    } finally {
+                        try {
+                            shot.getHardwareBuffer().close();
+                        } catch (Exception ignored) { }
+                        latch.countDown();
+                    }
+                }
+
+                @Override
+                public void onFailure(int errorCode) {
+                    result.error = errorCode == ERROR_TAKE_SCREENSHOT_SECURE_WINDOW ? "screen-protected" : "screenshot-failed";
+                    latch.countDown();
+                }
+            });
+            if (!latch.await(timeoutMs, TimeUnit.MILLISECONDS)) result.error = "screenshot-timeout";
+        } catch (Exception e) {
+            result.error = "screenshot-failed";
+        } finally {
+            executor.shutdown();
+        }
+        if (result.bitmap == null && result.error == null) result.error = "screenshot-failed";
+        return result;
+    }
 
     public static boolean isRunning() {
         return instance != null;

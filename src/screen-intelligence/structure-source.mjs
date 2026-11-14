@@ -23,6 +23,13 @@ export function createStructureSource(plugin, defaults = {}) {
         return response?.result ?? { ok: false, code: 'no-result' };
       } catch (error) { return { ok: false, code: String(error?.message ?? error) }; }
     },
+    async recognizeRegions(regions) {
+      if (!plugin?.recognizeRegions) return { ok: false, code: 'no-native-plugin' };
+      try {
+        const response = await plugin.recognizeRegions({ regions });
+        return response?.result ?? { ok: false, code: 'no-result' };
+      } catch (error) { return { ok: false, code: String(error?.message ?? error) }; }
+    },
     async readScreen(options = {}) {
       const status = await this.getStatus();
       if (!status.serviceEnabled) return { ok: false, reason: status.reason ?? 'accessibility-service-off', help: OFF_HELP };

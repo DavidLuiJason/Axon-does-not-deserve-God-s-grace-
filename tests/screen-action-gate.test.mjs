@@ -94,3 +94,13 @@ test('typed text only reaches the payload after approval and is never in the sum
   assert.ok(!p.summary.includes('private words')); assert.match(p.summary, /Type 13 characters/);
   assert.equal(confirmProposal(p, { approved: true }, { now: NOW }).payload.text, 'private words');
 });
+
+test('money and password apps (askPackages) ask before opening and before taps, but not for scrolling or Back', () => {
+  const s = screen();
+  const policy = { askPackages: ['com.example.shop', 'com.bank.app'] };
+  assert.equal(go(s, { kind: 'open-app', packageName: 'com.bank.app' }, { policy }).code, 'sensitive-app');
+  assert.equal(go(s, { kind: 'open-app', packageName: 'com.notes' }, { policy }).decision, 'allow');
+  assert.equal(go(s, { kind: 'tap', ref: ref(s, 'back to list') }, { policy }).code, 'sensitive-app');
+  assert.equal(go(s, { kind: 'scroll', ref: ref(s, 'items') }, { policy }).decision, 'allow');
+  assert.equal(go(s, { kind: 'back' }, { policy }).decision, 'allow');
+});

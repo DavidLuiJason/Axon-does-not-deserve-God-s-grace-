@@ -63,3 +63,13 @@ test('source.performAction fails safe without a plugin or on a thrown error', as
   assert.equal((await createStructureSource({ performAction: async () => { throw new Error('boom'); } }).performAction({})).code, 'boom');
   assert.equal((await createStructureSource({ performAction: async () => ({}) }).performAction({})).code, 'no-result');
 });
+
+test('open-app runs through an apps source when one is given', async () => {
+  const opened = [];
+  const plugin = { getStatus: async () => ({ serviceEnabled: true }), readScreen: async () => ({ snapshot: snapshot() }), performAction: async () => ({ result: { ok: true } }) };
+  const actor = createScreenActor({ source: createStructureSource(plugin), apps: { openApp: async (pkg) => { opened.push(pkg); return { ok: pkg !== 'bad', code: pkg === 'bad' ? 'not-launchable' : 'opened' }; } }, now: () => clock });
+  const good = await actor.execute((await actor.propose({ kind: 'open-app', packageName: 'com.android.settings' })).proposal);
+  assert.deepEqual([good.ok, opened], [true, ['com.android.settings']]);
+  const bad = await actor.execute((await actor.propose({ kind: 'open-app', packageName: 'bad' })).proposal);
+  assert.deepEqual([bad.ok, bad.code], [false, 'not-launchable']);
+});

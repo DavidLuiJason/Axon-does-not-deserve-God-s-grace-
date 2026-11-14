@@ -6,6 +6,7 @@ import com.axon.app.background.BackgroundJobsPlugin;
 import com.axon.app.filesaver.FileSaverPlugin;
 import com.axon.app.screencapture.ScreenCapturePlugin;
 import com.axon.app.browser.BrowserPlugin;
+import com.axon.app.apps.AppsPlugin;
 import com.axon.app.screenstructure.ScreenStructurePlugin;
 
 public class MainActivity extends BridgeActivity {
@@ -16,6 +17,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(ScreenCapturePlugin.class);
         registerPlugin(BrowserPlugin.class);
         registerPlugin(ScreenStructurePlugin.class);
+        registerPlugin(AppsPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

@@ -50,3 +50,6 @@
 
 <!-- Read-only accessibility screen reader (inserted by scripts/apply-android-overlay.sh; the owner turns it on in Android Accessibility settings). -->
 <!-- <service android:name=".screenstructure.AxonAccessibilityService" android:exported="true" android:label="AXON screen reader" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"> with the accessibility intent-filter and @xml/axon_accessibility_service -->
+
+<!-- AXON Apps: a narrow launcher query (inserted by scripts/apply-android-overlay.sh) so the installed-app list works on Android 11+ without the broad all-packages permission. -->
+<!-- <queries><intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent></queries> -->

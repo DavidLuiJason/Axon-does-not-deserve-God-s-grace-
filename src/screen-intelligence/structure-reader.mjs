@@ -57,7 +57,7 @@ export function readScreenStructure(raw, opts = {}) {
   for (const n of flat) {
     if (n.visible === false) { dropped += 1; continue; }
     const role = roleOf(n);
-    const label = String(n.text ?? n.contentDescription ?? n.hint ?? '').trim();
+    const label = String(n.text || n.contentDescription || n.hint || '').trim();
     const typed = role === 'input' && n.text ? String(n.text) : '';
     const redacted = Boolean(n.password) || (typed && !keepTypedText);
     const interactive = Boolean(n.clickable || n.longClickable || n.editable || n.checkable || n.scrollable);
@@ -71,7 +71,7 @@ export function readScreenStructure(raw, opts = {}) {
     if (n.checkable) actions.push('toggle');
     elements.push({
       ref: `e${elements.length + 1}`, role, depth: n.depth, path: n.path,
-      label: redacted ? (n.password ? '[password field]' : (n.hint ?? n.contentDescription ?? '[input]')) : label,
+      label: redacted ? (n.password ? '[password field]' : (n.hint || n.contentDescription || '[input]')) : label,
       redacted: Boolean(redacted), hasValue: Boolean(typed || n.password),
       enabled: n.enabled !== false, focused: Boolean(n.focused), checked: n.checked ?? null,
       bounds: n.bounds ?? null, onScreen: raw.screen ? inside(n.bounds, raw.screen) : null,
