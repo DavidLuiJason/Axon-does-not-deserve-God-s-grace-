@@ -80,7 +80,8 @@ export function readScreenStructure(raw, opts = {}) {
   }
   return {
     ok: true, blocked: false, packageName: pkg, windowTitle: raw.windowTitle ?? null,
-    capturedAt: raw.capturedAt ?? null, elements, dropped, truncated: capped,
+    capturedAt: raw.capturedAt ?? null, screen: raw.screen ?? null, elements, dropped, truncated: capped,
+    imageRegions: listImageRegions(elements, raw.screen),
     outline: describeScreen({ elements, packageName: pkg, windowTitle: raw.windowTitle }),
   };
 }
@@ -111,4 +112,41 @@ export function diffStructures(prev, next) {
   for (const [k, e] of after) { if (!before.has(k)) added.push(e); else if (sig(before.get(k)) !== sig(e)) changed.push({ from: before.get(k), to: e }); }
   for (const [k, e] of before) if (!after.has(k)) removed.push(e);
   return { sameApp: prev.packageName === next.packageName, added, removed, changed, unchanged: !added.length && !removed.length && !changed.length };
+}
+
+// Pictures stay pictures: the reader never recognises an image. It records where each image is, how big,
+// and the label the app itself gave it, so a later stage can cut that region out of a captured frame (SI5).
+export function listImageRegions(elements, screen) {
+  const total = screen ? screen.width * screen.height : 0;
+  const out = [];
+  for (const e of elements ?? []) {
+    if (e.role !== 'image' || !e.bounds) continue;
+    const width = e.bounds.r - e.bounds.l;
+    const height = e.bounds.b - e.bounds.t;
+    if (width <= 0 || height <= 0) continue;
+    out.push({ ref: e.ref, label: e.label, hasLabel: Boolean(e.label), bounds: e.bounds, width, height,
+      onScreen: e.onScreen, screenShare: total ? Math.round((width * height / total) * 1000) / 1000 : null,
+      tappable: e.actions.includes('tap') });
+  }
+  return out;
+}
+
+// Turns image regions into crop rectangles for a captured frame that may be a different size than the screen.
+export function planCrops(structure, { frameWidth, frameHeight, minSize = 48, maxCrops = 20 } = {}) {
+  const screen = structure?.screen;
+  if (!screen?.width || !screen?.height || !frameWidth || !frameHeight) return { crops: [], reason: 'no-screen-size' };
+  const sx = frameWidth / screen.width;
+  const sy = frameHeight / screen.height;
+  const crops = [];
+  for (const r of structure.imageRegions ?? []) {
+    if (r.onScreen === false) continue;
+    const l = Math.max(0, r.bounds.l); const t = Math.max(0, r.bounds.t);
+    const rr = Math.min(screen.width, r.bounds.r); const bb = Math.min(screen.height, r.bounds.b);
+    const x = Math.round(l * sx); const y = Math.round(t * sy);
+    const width = Math.round((rr - l) * sx); const height = Math.round((bb - t) * sy);
+    if (width < minSize || height < minSize) continue;
+    crops.push({ ref: r.ref, x, y, width, height, label: r.label });
+  }
+  crops.sort((a, b) => b.width * b.height - a.width * a.height);
+  return { crops: crops.slice(0, maxCrops), reason: null };
 }
