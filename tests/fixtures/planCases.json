@@ -1,0 +1,1979 @@
+[
+  {
+    "id": "G01_valid",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      }
+    }
+  },
+  {
+    "id": "G02_valid_constraints",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 5,
+      "constraints": [
+        "do not delete"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": [
+          "do not delete"
+        ]
+      }
+    }
+  },
+  {
+    "id": "G03_empty_statement",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "  ",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G04_maxSteps_zero",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 0,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G05_maxSteps_51",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 51,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G06_maxSteps_fraction",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 2.5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G07_value_object",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": {},
+      "maxSteps": 5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G08_value_null",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": null,
+      "maxSteps": 5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G09_missing_key",
+    "fn": "formGoal",
+    "input": {
+      "id": "g",
+      "statement": "s",
+      "successValue": 1,
+      "maxSteps": 3,
+      "constraints": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G10_constraints_not_list",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 5,
+      "constraints": "x"
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G11_constraints_not_strings",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 5,
+      "constraints": [
+        1
+      ]
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G12_null",
+    "fn": "formGoal",
+    "input": null,
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G13_array",
+    "fn": "formGoal",
+    "input": [],
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "G14_maxSteps_50_ok",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": true,
+      "maxSteps": 50,
+      "constraints": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 50,
+        "constraints": []
+      }
+    }
+  },
+  {
+    "id": "G15_number_value_ok",
+    "fn": "formGoal",
+    "input": {
+      "id": "g1",
+      "statement": "Count then sort",
+      "successKey": "sorted",
+      "successValue": 7,
+      "maxSteps": 5,
+      "constraints": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": 7,
+        "maxSteps": 5,
+        "constraints": []
+      }
+    }
+  },
+  {
+    "id": "P01_valid",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "P02_wrong_goal",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "other",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P03_no_steps",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": []
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P04_duplicate_ids",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s1",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "duplicate-step"
+    }
+  },
+  {
+    "id": "P05_unknown_need",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "zz"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "unknown-need"
+    }
+  },
+  {
+    "id": "P06_self_need",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "unknown-need"
+    }
+  },
+  {
+    "id": "P07_cycle",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s2"
+            ],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "cycle"
+    }
+  },
+  {
+    "id": "P08_misses_goal",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "misses-goal"
+    }
+  },
+  {
+    "id": "P09_misses_goal_wrong_value",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": false
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "misses-goal"
+    }
+  },
+  {
+    "id": "P10_too_many_steps",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 1,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "too-many-steps"
+    }
+  },
+  {
+    "id": "P11_object_in_input",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": {
+                "a": 1
+              }
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P12_empty_toolId",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P13_null_plan",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": null
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P14_steps_not_list",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": "x"
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "P15_null_input_value_ok",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": null
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": null
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "P16_three_step_chain_ok",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "sx",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "mid",
+            "expectValue": 1
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "sx"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "sx",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "mid",
+            "expectValue": 1
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "sx"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "P17_three_cycle",
+    "fn": "validatePlan",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "a",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "c"
+            ],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "b",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "a"
+            ],
+            "expectKey": "k2",
+            "expectValue": 1
+          },
+          {
+            "id": "c",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "b"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "cycle"
+    }
+  },
+  {
+    "id": "D01_first_step",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": []
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s1",
+      "toolId": "text-counter",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D02_second_step",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": true
+      },
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s2",
+      "toolId": "sort-lines",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D03_done",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": true,
+        "sorted": true
+      },
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "done"
+    }
+  },
+  {
+    "id": "D04_two_strike_ask",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "Step s1 (text-counter) was tried 2 times and its result is still not confirmed. I will not repeat it a third time. How should I continue?"
+    }
+  },
+  {
+    "id": "D05_one_attempt_retries",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s1",
+      "toolId": "text-counter",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D06_success_state_wins",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "sorted": true
+      },
+      "journal": []
+    },
+    "expected": {
+      "kind": "done"
+    }
+  },
+  {
+    "id": "D07_budget_ask",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": [
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "The step budget of 5 is used up and the goal is not reached. How should I continue?"
+    }
+  },
+  {
+    "id": "D08_input_key_order_same",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "a": 2,
+              "b": 1
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "b": 1,
+            "a": 2
+          }
+        },
+        {
+          "toolId": "text-counter",
+          "input": {
+            "a": 2,
+            "b": 1
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "Step s1 (text-counter) was tried 2 times and its result is still not confirmed. I will not repeat it a third time. How should I continue?"
+    }
+  },
+  {
+    "id": "D09_different_input_not_counted",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "zzz"
+          }
+        },
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "yyy"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s1",
+      "toolId": "text-counter",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D10_all_finished_no_goal",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "x",
+        "successValue": 1,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "y",
+            "expectValue": 2
+          }
+        ]
+      },
+      "state": {
+        "y": 2
+      },
+      "journal": []
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "All planned steps are finished but the goal is not reached. What should happen next?"
+    }
+  },
+  {
+    "id": "D11_blocked_waiting",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s2"
+            ],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": []
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "No step can run yet: s1, s2 are waiting. What should happen next?"
+    }
+  },
+  {
+    "id": "D12_needs_unmet_skips_to_ready",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "sA",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "sB"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          },
+          {
+            "id": "sB",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {},
+      "journal": []
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "sB",
+      "toolId": "text-counter",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D13_state_wrong_type_not_finished",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": "true"
+      },
+      "journal": []
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s1",
+      "toolId": "text-counter",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D14_finished_step_is_skipped",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": true
+      },
+      "journal": []
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s2",
+      "toolId": "sort-lines",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D15_two_attempts_other_tool_ignored",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": true
+      },
+      "journal": [
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "text-counter",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "step",
+      "stepId": "s2",
+      "toolId": "sort-lines",
+      "input": {
+        "text": "b a"
+      }
+    }
+  },
+  {
+    "id": "D16_two_strike_on_second_step",
+    "fn": "decideNext",
+    "input": {
+      "goal": {
+        "id": "g1",
+        "statement": "Count then sort",
+        "successKey": "sorted",
+        "successValue": true,
+        "maxSteps": 5,
+        "constraints": []
+      },
+      "plan": {
+        "goalId": "g1",
+        "steps": [
+          {
+            "id": "s1",
+            "toolId": "text-counter",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [],
+            "expectKey": "counted",
+            "expectValue": true
+          },
+          {
+            "id": "s2",
+            "toolId": "sort-lines",
+            "input": {
+              "text": "b a"
+            },
+            "needs": [
+              "s1"
+            ],
+            "expectKey": "sorted",
+            "expectValue": true
+          }
+        ]
+      },
+      "state": {
+        "counted": true
+      },
+      "journal": [
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        },
+        {
+          "toolId": "sort-lines",
+          "input": {
+            "text": "b a"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "kind": "ask",
+      "question": "Step s2 (sort-lines) was tried 2 times and its result is still not confirmed. I will not repeat it a third time. How should I continue?"
+    }
+  }
+]

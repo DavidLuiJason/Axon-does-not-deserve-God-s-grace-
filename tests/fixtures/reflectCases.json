@@ -1,0 +1,2087 @@
+[
+  {
+    "id": "R01_clean_success",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R02_failed_tool",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "FAILED",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "TOOL_NOTE",
+            "text": "text-counter failed during task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          },
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count words",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R03_success_unverified",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "TOOL_NOTE",
+            "text": "text-counter result was never verified in task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R04_wrong_assumptions",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [
+        "  the tool always works ",
+        "",
+        "x"
+      ],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [
+          {
+            "kind": "MISTAKE",
+            "text": "Wrong assumption: the tool always works",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": true,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          },
+          {
+            "kind": "MISTAKE",
+            "text": "Wrong assumption: x",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": true,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R05_preference_kept",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [
+        "Use short answers"
+      ],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [
+          {
+            "kind": "PREFERENCE",
+            "text": "Use short answers",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R06_preference_dropped",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [
+        "Use short answers"
+      ],
+      "memoryAllowed": false
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [],
+        "dropped": [
+          "1 owner correction(s) not kept: memory is not allowed for this task"
+        ]
+      }
+    }
+  },
+  {
+    "id": "R07_blank_corrections_ignored",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [
+        "  ",
+        ""
+      ],
+      "memoryAllowed": false
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R08_abandoned_no_steps",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "ABANDONED",
+      "steps": [],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count words",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R09_success_no_steps",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R10_dedup_failed_tool",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "FAILED",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        },
+        {
+          "toolId": "text-counter",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "TOOL_NOTE",
+            "text": "text-counter failed during task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          },
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count words",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R11_dedup_assumption",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [
+        "same",
+        "same"
+      ],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [
+          {
+            "kind": "MISTAKE",
+            "text": "Wrong assumption: same",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": true,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R12_mixed_order",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "FAILED",
+      "steps": [
+        {
+          "toolId": "sort-lines",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "text-counter",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [
+        "a"
+      ],
+      "ownerCorrections": [
+        "c"
+      ],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "MISTAKE",
+            "text": "Wrong assumption: a",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": true,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          },
+          {
+            "kind": "TOOL_NOTE",
+            "text": "text-counter failed during task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          },
+          {
+            "kind": "PREFERENCE",
+            "text": "c",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          },
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count words",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R13_goal_trimmed",
+    "input": {
+      "taskId": "t1",
+      "goal": "  Count  ",
+      "status": "FAILED",
+      "steps": [],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R14_success_one_failed_step",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "sort-lines",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "text-counter",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "TOOL_NOTE",
+            "text": "text-counter failed during task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R15_unverified_and_failed_order",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "FAILED",
+      "steps": [
+        {
+          "toolId": "a-tool",
+          "ok": true,
+          "verified": false,
+          "assumption": "a"
+        },
+        {
+          "toolId": "b-tool",
+          "ok": false,
+          "verified": false,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": false,
+        "completed": false,
+        "candidates": [
+          {
+            "kind": "TOOL_NOTE",
+            "text": "b-tool failed during task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          },
+          {
+            "kind": "TOOL_NOTE",
+            "text": "a-tool result was never verified in task:t1",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          },
+          {
+            "kind": "LESSON",
+            "text": "Task did not succeed: Count words",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": false,
+            "expiresAfterDays": 30,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R16_clip_500",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "progressMade": true,
+        "completed": true,
+        "candidates": [
+          {
+            "kind": "MISTAKE",
+            "text": "Wrong assumption: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stage": "CANDIDATE",
+            "needsRegressionTest": true,
+            "expiresAfterDays": null,
+            "source": "task:t1"
+          }
+        ],
+        "dropped": []
+      }
+    }
+  },
+  {
+    "id": "R17_null",
+    "input": null,
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R18_empty_taskId",
+    "input": {
+      "taskId": "",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R19_bad_status",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "DONE",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R20_steps_not_list",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": "x",
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R21_step_missing_verified",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R22_step_empty_tool",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R23_wrong_assumptions_not_strings",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [
+        1
+      ],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R24_corrections_not_list",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": "x",
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R25_memoryAllowed_string",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": "yes"
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R26_too_many_steps",
+    "input": {
+      "taskId": "t1",
+      "goal": "Count words",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        },
+        {
+          "toolId": "t",
+          "ok": true,
+          "verified": true,
+          "assumption": "a"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R27_empty_goal",
+    "input": {
+      "taskId": "t1",
+      "goal": " ",
+      "status": "SUCCESS",
+      "steps": [
+        {
+          "toolId": "text-counter",
+          "ok": true,
+          "verified": true,
+          "assumption": "a1"
+        }
+      ],
+      "wrongAssumptions": [],
+      "ownerCorrections": [],
+      "memoryAllowed": true
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "R28_array_record",
+    "input": [],
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  }
+]
