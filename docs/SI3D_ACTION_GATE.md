@@ -1,0 +1,5 @@
+# SI3d ACTION GATE (D47, 2026-11-12)
+PLAIN: the rulebook for when AXON may act on a screen it has read. It decides ALLOW, ASK or REFUSE and writes the question in plain words. It does not tap or type: a later Android executor (SI3e) will receive only what the gate releases.
+RULES: navigation (tap, scroll, back, home, open app) is allowed; typing, switches, anything that pays, sends, deletes or signs in, and any sign-in screen ASK first (roadmap 7R). Never typed: password fields, card-number-like text. Refused: stale screen reading (older than 5 s), missing/disabled/off-screen targets, blocked apps, more than 20 actions a minute. Unanswered questions expire after 60 s. Autonomy levels: read-only, navigate (default), ask-everything.
+NEW FILES ONLY: src/screen-intelligence/action-gate.mjs, tests/screen-action-gate.test.mjs, docs/SI3D_ACTION_GATE.md.
+STATUS: ISOLATED-TESTED on made-up screens. No executor, no caller. The owner-facing wording of the default autonomy is an OWNER DECISION (navigate is the proposed default).
