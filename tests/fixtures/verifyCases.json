@@ -1,0 +1,7348 @@
+[
+  {
+    "id": "V01",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V02",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "4"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V03",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V04",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V05",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V06",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "4"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "REDESIGN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V07",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a2",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V08",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "done",
+          "check": {
+            "kind": "STATE",
+            "observed": "exists",
+            "expected": "exists"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V09",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "done",
+          "check": {
+            "kind": "STATE",
+            "observed": "missing",
+            "expected": "exists"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V10",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V11",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": true
+        },
+        {
+          "id": "c3",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          },
+          {
+            "id": "c3",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V12",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "zz",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "V13",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "V14",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "GUESS"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "V15",
+    "input": {
+      "clauses": [],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "V16",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "V17",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1",
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I018_empty_equal_recompute",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": ""
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I019_mismatch_recompute",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I020_empty_equal_known_answer",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": ""
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I021_mismatch_known_answer",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I022_empty_equal_state",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "STATE",
+            "observed": "",
+            "expected": ""
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I023_mismatch_state",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "STATE",
+            "observed": "Done",
+            "expected": "done"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I024_retry_success_1",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I025_retry_success_2",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a2",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I026_retry_success_3",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a3",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I027_success_then_failure",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I028_last_assumption_redesign",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a2",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a2"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "REDESIGN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I029_many_1",
+    "input": {
+      "clauses": [
+        {
+          "id": "c0",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c0",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c0",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I030_many_2",
+    "input": {
+      "clauses": [
+        {
+          "id": "c0",
+          "required": true
+        },
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c0",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c0",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I031_many_5",
+    "input": {
+      "clauses": [
+        {
+          "id": "c0",
+          "required": true
+        },
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": true
+        },
+        {
+          "id": "c3",
+          "required": true
+        },
+        {
+          "id": "c4",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c0",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c3",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c4",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c0",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c3",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c4",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I032_many_20",
+    "input": {
+      "clauses": [
+        {
+          "id": "c0",
+          "required": true
+        },
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": true
+        },
+        {
+          "id": "c3",
+          "required": true
+        },
+        {
+          "id": "c4",
+          "required": true
+        },
+        {
+          "id": "c5",
+          "required": true
+        },
+        {
+          "id": "c6",
+          "required": true
+        },
+        {
+          "id": "c7",
+          "required": true
+        },
+        {
+          "id": "c8",
+          "required": true
+        },
+        {
+          "id": "c9",
+          "required": true
+        },
+        {
+          "id": "c10",
+          "required": true
+        },
+        {
+          "id": "c11",
+          "required": true
+        },
+        {
+          "id": "c12",
+          "required": true
+        },
+        {
+          "id": "c13",
+          "required": true
+        },
+        {
+          "id": "c14",
+          "required": true
+        },
+        {
+          "id": "c15",
+          "required": true
+        },
+        {
+          "id": "c16",
+          "required": true
+        },
+        {
+          "id": "c17",
+          "required": true
+        },
+        {
+          "id": "c18",
+          "required": true
+        },
+        {
+          "id": "c19",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c0",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c3",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c4",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c5",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c6",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c7",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c8",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c9",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c10",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c11",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c12",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c13",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c14",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c15",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c16",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c17",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c18",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c19",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c0",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c3",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c4",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c5",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c6",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c7",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c8",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c9",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c10",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c11",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c12",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c13",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c14",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c15",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c16",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c17",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c18",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c19",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I033_required_False_verified",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I034_required_False_unverified",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I035_required_False_mismatch",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I036_required_False_failed",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I037_required_False_missing",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I038_required_True_verified",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I039_required_True_unverified",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I040_required_True_mismatch",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I041_required_True_failed",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I042_required_True_missing",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I043_prior_0_none",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I044_prior_1_a1",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "REDESIGN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I045_prior_2_a1",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1",
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "REDESIGN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I046_prior_1_other",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "other"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I047_optional_failure_no_redesign",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a2",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "bad"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a2"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I048_case_sensitive",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "Done",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": "done"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I049_case_sensitive",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "done",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": "Done"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I050_case_sensitive",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I051_case_sensitive",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "",
+          "check": {
+            "kind": "KNOWN_ANSWER",
+            "value": ""
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I052_extra_top_field_ignored",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [],
+      "extra": "ignored"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I053_missing_clauses",
+    "input": {
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I054_missing_steps",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I055_missing_priorFailedAssumptions",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I056_bad_shape",
+    "input": {
+      "clauses": null,
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I057_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": 1,
+          "required": true
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I058_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": "yes"
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I059_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": null,
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I060_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        null
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I061_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": 4,
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I062_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": 4,
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I063_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "ok",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I064_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": 4,
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I065_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": 4
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I066_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "STATE",
+            "observed": 4,
+            "expected": "x"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I067_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": [
+        3
+      ]
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I068_bad_shape",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "unknown",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input",
+      "message": "Input must match the verification contract."
+    }
+  },
+  {
+    "id": "I069_report_input_order",
+    "input": {
+      "clauses": [
+        {
+          "id": "c0",
+          "required": true
+        },
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": true
+        },
+        {
+          "id": "c3",
+          "required": false
+        },
+        {
+          "id": "c4",
+          "required": true
+        },
+        {
+          "id": "c5",
+          "required": false
+        },
+        {
+          "id": "c6",
+          "required": true
+        },
+        {
+          "id": "c7",
+          "required": false
+        },
+        {
+          "id": "c8",
+          "required": true
+        },
+        {
+          "id": "c9",
+          "required": false
+        },
+        {
+          "id": "c10",
+          "required": true
+        },
+        {
+          "id": "c11",
+          "required": false
+        },
+        {
+          "id": "c12",
+          "required": true
+        },
+        {
+          "id": "c13",
+          "required": false
+        },
+        {
+          "id": "c14",
+          "required": true
+        },
+        {
+          "id": "c15",
+          "required": false
+        },
+        {
+          "id": "c16",
+          "required": true
+        },
+        {
+          "id": "c17",
+          "required": false
+        },
+        {
+          "id": "c18",
+          "required": true
+        },
+        {
+          "id": "c19",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c19",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c18",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c17",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c16",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c15",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c14",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c13",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c12",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c11",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c10",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c9",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c8",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c7",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c6",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c5",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c4",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c3",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        },
+        {
+          "clauseId": "c0",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c0",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c3",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c4",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c5",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c6",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c7",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c8",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c9",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c10",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c11",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c12",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c13",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c14",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c15",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c16",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c17",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c18",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c19",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I070_mixed_matrix_69",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I071_mixed_matrix_70",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I072_mixed_matrix_71",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I073_mixed_matrix_72",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I074_mixed_matrix_73",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I075_mixed_matrix_74",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I076_mixed_matrix_75",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I077_mixed_matrix_76",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I078_mixed_matrix_77",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I079_mixed_matrix_78",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I080_mixed_matrix_79",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I081_mixed_matrix_80",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I082_mixed_matrix_81",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I083_mixed_matrix_82",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I084_mixed_matrix_83",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I085_mixed_matrix_84",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I086_mixed_matrix_85",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I087_mixed_matrix_86",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I088_mixed_matrix_87",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I089_mixed_matrix_88",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I090_mixed_matrix_89",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I091_mixed_matrix_90",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I092_mixed_matrix_91",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I093_mixed_matrix_92",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I094_mixed_matrix_93",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I095_mixed_matrix_94",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I096_mixed_matrix_95",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I097_mixed_matrix_96",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I098_mixed_matrix_97",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I099_mixed_matrix_98",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I100_mixed_matrix_99",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I101_mixed_matrix_100",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I102_mixed_matrix_101",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I103_mixed_matrix_102",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I104_mixed_matrix_103",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I105_mixed_matrix_104",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I106_mixed_matrix_105",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I107_mixed_matrix_106",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I108_mixed_matrix_107",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I109_mixed_matrix_108",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I110_mixed_matrix_109",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I111_mixed_matrix_110",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I112_mixed_matrix_111",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I113_mixed_matrix_112",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I114_mixed_matrix_113",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I115_mixed_matrix_114",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I116_mixed_matrix_115",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I117_mixed_matrix_116",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I118_mixed_matrix_117",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I119_mixed_matrix_118",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I120_mixed_matrix_119",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I121_mixed_matrix_120",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I122_mixed_matrix_121",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I123_mixed_matrix_122",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I124_mixed_matrix_123",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I125_mixed_matrix_124",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I126_mixed_matrix_125",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I127_mixed_matrix_126",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I128_mixed_matrix_127",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I129_mixed_matrix_128",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I130_mixed_matrix_129",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I131_mixed_matrix_130",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I132_mixed_matrix_131",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I133_mixed_matrix_132",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I134_mixed_matrix_133",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I135_mixed_matrix_134",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I136_mixed_matrix_135",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I137_mixed_matrix_136",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I138_mixed_matrix_137",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I139_mixed_matrix_138",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I140_mixed_matrix_139",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I141_mixed_matrix_140",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I142_mixed_matrix_141",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I143_mixed_matrix_142",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I144_mixed_matrix_143",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I145_mixed_matrix_144",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I146_mixed_matrix_145",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I147_mixed_matrix_146",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I148_mixed_matrix_147",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I149_mixed_matrix_148",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I150_mixed_matrix_149",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I151_mixed_matrix_150",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I152_mixed_matrix_151",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I153_mixed_matrix_152",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I154_mixed_matrix_153",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I155_mixed_matrix_154",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I156_mixed_matrix_155",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I157_mixed_matrix_156",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I158_mixed_matrix_157",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I159_mixed_matrix_158",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I160_mixed_matrix_159",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": []
+      }
+    }
+  },
+  {
+    "id": "I161_mixed_matrix_160",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I162_mixed_matrix_161",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I163_mixed_matrix_162",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "wrong"
+          }
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I164_mixed_matrix_163",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": false
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "PASSED",
+        "mayClaimSuccess": true,
+        "nextAction": "CONTINUE",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "I165_mixed_matrix_164",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [],
+      "priorFailedAssumptions": []
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "D84_01_incomplete_with_prior_still_recover",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "5"
+          }
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "INCOMPLETE",
+        "mayClaimSuccess": false,
+        "nextAction": "RECOVER",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "VERIFIED",
+            "evidence": "VERIFIED"
+          },
+          {
+            "id": "c2",
+            "status": "MISSING",
+            "evidence": "UNKNOWN"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "D84_02_unclear_with_prior_still_abstain",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "success",
+          "output": "5",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "UNCLEAR",
+        "mayClaimSuccess": false,
+        "nextAction": "ABSTAIN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "UNVERIFIED",
+            "evidence": "REPORTED"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "D84_03_non_required_failing_assumption_triggers_redesign",
+    "input": {
+      "clauses": [
+        {
+          "id": "c1",
+          "required": true
+        },
+        {
+          "id": "c2",
+          "required": false
+        }
+      ],
+      "steps": [
+        {
+          "clauseId": "c1",
+          "toolId": "text-counter",
+          "assumption": "a2",
+          "reported": "success",
+          "output": "5",
+          "check": {
+            "kind": "RECOMPUTE",
+            "value": "4"
+          }
+        },
+        {
+          "clauseId": "c2",
+          "toolId": "text-counter",
+          "assumption": "a1",
+          "reported": "failure",
+          "output": "",
+          "check": null
+        }
+      ],
+      "priorFailedAssumptions": [
+        "a1"
+      ]
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "overall": "FAILED",
+        "mayClaimSuccess": false,
+        "nextAction": "REDESIGN",
+        "clauses": [
+          {
+            "id": "c1",
+            "status": "MISMATCH",
+            "evidence": "DISPUTED"
+          },
+          {
+            "id": "c2",
+            "status": "FAILED",
+            "evidence": "OBSERVED"
+          }
+        ]
+      }
+    }
+  }
+]
