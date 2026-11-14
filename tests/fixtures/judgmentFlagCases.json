@@ -1,0 +1,447 @@
+[
+  {
+    "id": "F01_delete_irreversible",
+    "input": {
+      "id": "p",
+      "actionKind": "DELETE",
+      "reversible": false,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "OBSERVED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "FAILURE",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "TIME",
+        "MEDIUM",
+        "INFERRED",
+        false,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F02_write_low_interp_inferred",
+    "input": {
+      "id": "p",
+      "actionKind": "WRITE",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "LOW",
+      "evidence": "INFERRED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "PURPOSE",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "CRITIC",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F03_send_irreversible_others",
+    "input": {
+      "id": "p",
+      "actionKind": "SEND",
+      "reversible": false,
+      "affectsOthers": true,
+      "interpretation": "HIGH",
+      "evidence": "VERIFIED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "FAILURE",
+        "BLOCKING",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "CRITIC",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "TIME",
+        "MEDIUM",
+        "INFERRED",
+        false,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F04_read_disputed",
+    "input": {
+      "id": "p",
+      "actionKind": "READ",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "DISPUTED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "CRITIC",
+        "HIGH",
+        "DISPUTED",
+        true,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F05_write_reported_deps_medium",
+    "input": {
+      "id": "p",
+      "actionKind": "WRITE",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "MEDIUM",
+      "evidence": "REPORTED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": false,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "METHOD",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "RECHECK"
+      ],
+      [
+        "CRITIC",
+        "MEDIUM",
+        "REPORTED",
+        true,
+        "RECHECK"
+      ],
+      [
+        "PURPOSE",
+        "LOW",
+        "INFERRED",
+        true,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F06_send_missing_irreversible",
+    "input": {
+      "id": "p",
+      "actionKind": "SEND",
+      "reversible": false,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "VERIFIED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [
+        "recipient"
+      ],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "GAPS",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "FAILURE",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "TIME",
+        "MEDIUM",
+        "INFERRED",
+        false,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F07_spend_unknown",
+    "input": {
+      "id": "p",
+      "actionKind": "SPEND",
+      "reversible": false,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "UNKNOWN",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "CRITIC",
+        "HIGH",
+        "UNKNOWN",
+        true,
+        "ASK"
+      ],
+      [
+        "FAILURE",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ],
+      [
+        "TIME",
+        "MEDIUM",
+        "INFERRED",
+        false,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F08_read_departs",
+    "input": {
+      "id": "p",
+      "actionKind": "READ",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "VERIFIED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": true,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "ADVOCATE",
+        "HIGH",
+        "INFERRED",
+        true,
+        "ASK"
+      ]
+    ]
+  },
+  {
+    "id": "F09_write_unknown",
+    "input": {
+      "id": "p",
+      "actionKind": "WRITE",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "UNKNOWN",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "CRITIC",
+        "HIGH",
+        "UNKNOWN",
+        true,
+        "ASK"
+      ]
+    ]
+  },
+  {
+    "id": "F10_two_critic_flags",
+    "input": {
+      "id": "p",
+      "actionKind": "RUN",
+      "reversible": true,
+      "affectsOthers": true,
+      "interpretation": "HIGH",
+      "evidence": "INFERRED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "CRITIC",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "RECHECK"
+      ],
+      [
+        "CRITIC",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "ASK"
+      ]
+    ]
+  },
+  {
+    "id": "F11_read_undefined_terms",
+    "input": {
+      "id": "p",
+      "actionKind": "READ",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "VERIFIED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [
+        "x",
+        "y"
+      ],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "OUTSIDER",
+        "LOW",
+        "INFERRED",
+        true,
+        "RECHECK"
+      ]
+    ]
+  },
+  {
+    "id": "F12_write_disputed_others",
+    "input": {
+      "id": "p",
+      "actionKind": "WRITE",
+      "reversible": true,
+      "affectsOthers": true,
+      "interpretation": "HIGH",
+      "evidence": "DISPUTED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "CRITIC",
+        "HIGH",
+        "DISPUTED",
+        true,
+        "RECHECK"
+      ],
+      [
+        "CRITIC",
+        "MEDIUM",
+        "INFERRED",
+        true,
+        "ASK"
+      ]
+    ]
+  },
+  {
+    "id": "F13_read_unknown_no_flag",
+    "input": {
+      "id": "p",
+      "actionKind": "READ",
+      "reversible": true,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "UNKNOWN",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": []
+  },
+  {
+    "id": "F14_write_irreversible_only_time",
+    "input": {
+      "id": "p",
+      "actionKind": "WRITE",
+      "reversible": false,
+      "affectsOthers": false,
+      "interpretation": "HIGH",
+      "evidence": "VERIFIED",
+      "permission": "ALLOW",
+      "departsFromStatedGoal": false,
+      "missingInputs": [],
+      "undefinedTerms": [],
+      "dependenciesMet": true,
+      "costOfDoingNothing": "NONE"
+    },
+    "expected": [
+      [
+        "TIME",
+        "MEDIUM",
+        "INFERRED",
+        false,
+        "RECHECK"
+      ]
+    ]
+  }
+]
