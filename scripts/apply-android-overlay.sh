@@ -34,6 +34,26 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
+# Ensure AndroidX WebKit Multi-Profile API dependency is present exactly once.
+GRADLE="$ANDROID/app/build.gradle"
+if [[ -f "$GRADLE" ]]; then
+  if ! grep -Eq "androidx\.webkit:webkit:[0-9.]+" "$GRADLE"; then
+    if grep -q '^dependencies[[:space:]]*{' "$GRADLE"; then
+      sed -i '/^dependencies[[:space:]]*{/a\    implementation "androidx.webkit:webkit:1.12.1"' "$GRADLE"
+    else
+      printf '\ndependencies {\n    implementation "androidx.webkit:webkit:1.12.1"\n}\n' >> "$GRADLE"
+    fi
+  fi
+  COUNT=$(grep -Ec 'androidx\.webkit:webkit:' "$GRADLE" || true)
+  if [[ "$COUNT" -ne 1 ]]; then
+    echo "ERROR: expected exactly one androidx.webkit:webkit dependency, found $COUNT"
+    exit 1
+  fi
+else
+  echo "ERROR: $GRADLE missing; cannot install the approved WebKit dependency"
+  exit 1
+fi
+
 echo "==> Copying notification icon"
 mkdir -p "$ANDROID/app/src/main/res/drawable"
 cp -f "$OVERLAY/app/src/main/res/drawable/ic_notification.xml" \
