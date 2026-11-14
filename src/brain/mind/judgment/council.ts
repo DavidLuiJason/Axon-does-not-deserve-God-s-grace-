@@ -33,34 +33,38 @@ export type Flag = {
   readonly next: 'PROCEED' | 'ASK' | 'STOP' | 'RECHECK';
 };
 
-const actionKinds = ['READ', 'WRITE', 'DELETE', 'SEND', 'SPEND', 'RUN'];
-const evidenceLabels = ['OBSERVED', 'REPORTED', 'INFERRED', 'VERIFIED', 'DISPUTED', 'UNKNOWN'];
-const permissions = ['ALLOW', 'ASK', 'NEVER'];
-const interpretations = ['HIGH', 'MEDIUM', 'LOW'];
-const costs = ['NONE', 'LOW', 'HIGH'];
+// Closed enumerations of this module's own contract, written as lookup tables (not word lists).
+const actionKinds: Record<ActionKind, true> = { READ: true, WRITE: true, DELETE: true, SEND: true, SPEND: true, RUN: true };
+const evidenceLabels: Record<EvidenceLabel, true> = { OBSERVED: true, REPORTED: true, INFERRED: true, VERIFIED: true, DISPUTED: true, UNKNOWN: true };
+const permissions: Record<Permission, true> = { ALLOW: true, ASK: true, NEVER: true };
+const interpretations: Record<Proposal['interpretation'], true> = { HIGH: true, MEDIUM: true, LOW: true };
+const costs: Record<Proposal['costOfDoingNothing'], true> = { NONE: true, LOW: true, HIGH: true };
+const changesThings: Partial<Record<ActionKind, true>> = { WRITE: true, DELETE: true, SEND: true, SPEND: true };
+const hardToUndo: Partial<Record<ActionKind, true>> = { DELETE: true, SEND: true, SPEND: true };
+const known = (table: object, value: string): boolean => Object.prototype.hasOwnProperty.call(table, value);
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 const bad = (): EngineResult<readonly Flag[]> => ({
   ok: false, error: 'bad-input', message: 'Proposal must match the judgment contract.'
 });
 
-const seatOrder: Seat[] = ['PURPOSE', 'METHOD', 'ADVOCATE', 'CRITIC', 'GAPS', 'OUTSIDER', 'TIME', 'FAILURE'];
+const seatRank: Record<Seat, number> = { PURPOSE: 0, METHOD: 1, ADVOCATE: 2, CRITIC: 3, GAPS: 4, OUTSIDER: 5, TIME: 6, FAILURE: 7 };
 const severityRank: Record<Severity, number> = { BLOCKING: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 
 function validProposal(p: unknown): p is Proposal {
   if (!isRecord(p)) return false;
   return typeof p.id === 'string' &&
-    typeof p.actionKind === 'string' && actionKinds.includes(p.actionKind) &&
+    typeof p.actionKind === 'string' && known(actionKinds, p.actionKind) &&
     typeof p.reversible === 'boolean' &&
     typeof p.affectsOthers === 'boolean' &&
-    typeof p.interpretation === 'string' && interpretations.includes(p.interpretation) &&
-    typeof p.evidence === 'string' && evidenceLabels.includes(p.evidence) &&
-    typeof p.permission === 'string' && permissions.includes(p.permission) &&
+    typeof p.interpretation === 'string' && known(interpretations, p.interpretation) &&
+    typeof p.evidence === 'string' && known(evidenceLabels, p.evidence) &&
+    typeof p.permission === 'string' && known(permissions, p.permission) &&
     typeof p.departsFromStatedGoal === 'boolean' &&
     Array.isArray(p.missingInputs) && p.missingInputs.every(x => typeof x === 'string') &&
     Array.isArray(p.undefinedTerms) && p.undefinedTerms.every(x => typeof x === 'string') &&
     typeof p.dependenciesMet === 'boolean' &&
-    typeof p.costOfDoingNothing === 'string' && costs.includes(p.costOfDoingNothing);
+    typeof p.costOfDoingNothing === 'string' && known(costs, p.costOfDoingNothing);
 }
 
 export function reviewProposal(p: Proposal): EngineResult<readonly Flag[]> {
@@ -101,10 +105,10 @@ export function reviewProposal(p: Proposal): EngineResult<readonly Flag[]> {
   if (p.undefinedTerms.length > 0)
     add('OUTSIDER','LOW','RECHECK',true,'A term may not be clear to an outside reader.','undefined-terms','The proposal contains undefined terms.',p.undefinedTerms.join(', '));
 
-  if (!p.reversible && ['WRITE','DELETE','SEND','SPEND'].includes(p.actionKind))
+  if (!p.reversible && known(changesThings, p.actionKind))
     add('TIME','MEDIUM','RECHECK',false,'This action may not be reversible.','reversibility','The action cannot readily be undone.','The action is not reversible.');
 
-  if (!p.reversible && ['DELETE','SEND','SPEND'].includes(p.actionKind)) {
+  if (!p.reversible && known(hardToUndo, p.actionKind)) {
     if (p.affectsOthers)
       add('FAILURE','BLOCKING','ASK',true,'A hard-to-reverse action could harm others.','failure-risk','The action is irreversible and affects others.','The possible harm to others needs review.');
     else
@@ -112,6 +116,6 @@ export function reviewProposal(p: Proposal): EngineResult<readonly Flag[]> {
   }
 
   flags.sort((a,b) => severityRank[a.severity]-severityRank[b.severity] ||
-    seatOrder.indexOf(a.seat)-seatOrder.indexOf(b.seat));
+    seatRank[a.seat]-seatRank[b.seat]);
   return { ok: true, value: flags };
 }

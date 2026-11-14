@@ -1,3 +1,5 @@
+import { isCountNoun, isRiskyVerb } from '../../knowledge/repairWords';
+
 export type EngineSuccess<T> = { readonly ok: true; readonly value: T };
 export type EngineFailure = { readonly ok: false; readonly error: string; readonly message: string };
 export type EngineResult<T> = EngineSuccess<T> | EngineFailure;
@@ -34,8 +36,59 @@ const quoteState = (text: string): { balanced: boolean; outside: string } => {
   return { balanced: quote === null && !unmatchedClose, outside };
 };
 
-const normalForm = (sentence: string): string =>
-  sentence.toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!?]+$/, '').trim();
+const isSpace = (char: string): boolean => char.trim() === '';
+const isWordChar = (char: string | undefined): boolean => char !== undefined &&
+  ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || (char >= '0' && char <= '9') || char === '_');
+const isEndMark = (char: string): boolean => char === '.' || char === '!' || char === '?';
+
+/** The sentence in lower case, whitespace runs collapsed to one space, trailing . ! ? removed. */
+const normalForm = (sentence: string): string => {
+  const words: string[] = [];
+  let word = '';
+  for (const char of sentence.toLowerCase()) {
+    if (isSpace(char)) { if (word) words.push(word); word = ''; } else word += char;
+  }
+  if (word) words.push(word);
+  let text = words.join(' ');
+  while (text.length > 0 && isEndMark(text[text.length - 1])) text = text.slice(0, -1);
+  return text.trim();
+};
+
+const readSpaces = (text: string, from: number): number => {
+  let end = from;
+  while (end < text.length && isSpace(text[end])) end++;
+  return end;
+};
+
+type HowMuch = { how: string; gapOne: string; much: string; gapTwo: string; noun: string; end: number };
+
+/** "how much" + a counted noun, starting exactly at `at` (any letter case, any whitespace between the words). */
+const matchHowMuch = (text: string, at: number): HowMuch | null => {
+  if (text.slice(at, at + 3).toLowerCase() !== 'how') return null;
+  const gapOneEnd = readSpaces(text, at + 3);
+  if (gapOneEnd === at + 3) return null;
+  const muchEnd = gapOneEnd + 4;
+  if (text.slice(gapOneEnd, muchEnd).toLowerCase() !== 'much') return null;
+  const gapTwoEnd = readSpaces(text, muchEnd);
+  if (gapTwoEnd === muchEnd) return null;
+  let nounEnd = gapTwoEnd;
+  while (isWordChar(text[nounEnd])) nounEnd++;
+  const noun = text.slice(gapTwoEnd, nounEnd);
+  if (!isCountNoun(noun)) return null;
+  return {
+    how: text.slice(at, at + 3), gapOne: text.slice(at + 3, gapOneEnd), much: text.slice(gapOneEnd, muchEnd),
+    gapTwo: text.slice(muchEnd, gapTwoEnd), noun, end: nounEnd
+  };
+};
+
+const hasRiskyVerb = (text: string): boolean => {
+  let word = '';
+  for (const char of text) {
+    if (isWordChar(char)) word += char;
+    else { if (word && isRiskyVerb(word)) return true; word = ''; }
+  }
+  return word !== '' && isRiskyVerb(word);
+};
 
 const sentencesOf = (text: string): string[] => {
   const sentences: string[] = [];
@@ -80,14 +133,14 @@ const grammarFix = (sentence: string): { text: string; edits: RepairEdit[] } => 
       quote = null;
     }
     if (quote === null) {
-      const match = /^(how)(\s+)(much)(\s+)(words|letters|characters|lines|sentences|paragraphs|numbers|digits|vowels|items)\b/i.exec(sentence.slice(index));
-      if (match && (index === 0 || !/[A-Za-z0-9_]/.test(sentence[index - 1]))) {
-        const much = match[3];
+      const match = index === 0 || !isWordChar(sentence[index - 1]) ? matchHowMuch(sentence, index) : null;
+      if (match) {
+        const much = match.much;
         const replacement = [...'many'].map((letter, position) =>
           much[position] === much[position].toUpperCase() ? letter.toUpperCase() : letter
         ).join('');
-        const before = match[0];
-        const after = match[1] + match[2] + replacement + match[4] + match[5];
+        const before = sentence.slice(index, match.end);
+        const after = match.how + match.gapOne + replacement + match.gapTwo + match.noun;
         edits.push({ kind: 'GRAMMAR_PAIR', from: before, to: after });
         result += after;
         index += before.length;
@@ -164,7 +217,7 @@ export function repairMessage(input: { readonly text: string }): EngineResult<Re
 
   const reading = repairedSentences.join(' ').trim();
   if (!reading) return keep();
-  const risky = /\b(delete|remove|erase|overwrite|send|pay|transfer|format)\b/i.test(quotes.outside);
+  const risky = hasRiskyVerb(quotes.outside);
   return {
     ok: true,
     value: {

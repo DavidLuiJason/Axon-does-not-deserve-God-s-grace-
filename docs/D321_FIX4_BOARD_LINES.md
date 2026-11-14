@@ -1,0 +1,20 @@
+# D321-FIX4 board lines (owner appends; no shared ledger file is touched except DIRECTOR_NAP.txt, whole file, see below)
+
+WHAT: cloud run #222 (Java compile, 3 errors) and its test list: meaningNoPhrases, mindPipeline, valuesGuard, screen-structure-source.
+
+CAUSES (MEASURED on the repository zip of 2026-11-14):
+1. D321-FIX3 was UNDONE. scripts/apply-android-overlay.sh and android-overlay/.../browser/BrowserActivity.java in the repository are byte-for-byte the files from before FIX3 (compared with cmp). The AXON_WEB_D204_ROUND7 merge ("changed files: 2") carried whole copies from an older snapshot over them. The same three Java errors and the screen-structure-source test came back. FIX3's own board file is still in docs/, so the merge itself landed first. FIX4 puts the same two fixes back on the current files (the current files equal the old originals, so nothing newer was lost). D204 must start its next round from the files in the newest zip, or this will repeat.
+2. New code under src/brain/mind (judgment/council.ts, repair/repair.ts; nobody's MERGE_TAG line mentions it; no other file uses it, only tests/judgment, repair and verify) breaks two standing laws: no regex literal under src/brain/mind (mindPipeline, meaningNoPhrases) and no array of three or more string literals outside the allowed files (meaningNoPhrases, valuesGuard). council.ts had 8 such arrays, repair.ts 5 regex literals.
+
+FIX:
+- council.ts: the closed enumerations of its own contract (action kinds, evidence labels, permissions, interpretations, costs, seat order, the two "changes things" groups) are now lookup tables (Record objects) and a hasOwnProperty check; same checks, same order.
+- repair.ts: no regex. Whitespace collapse, trailing . ! ?, the "how much <counted noun>" to "how many" rewrite and the risky-verb test are plain code. The two word lists (counted nouns, risky verbs) moved to NEW src/brain/knowledge/repairWords.ts, the knowledge folder where the project keeps vocabulary (like conversationWords.ts); closedSets.ts was NOT used because its header allows grammar classes only.
+- Apply-android-overlay.sh and BrowserActivity.java: the FIX3 versions again.
+- DIRECTOR_NAP.txt (WHOLE FILE, under 5,000 characters): D321 line updated (law 8 estimate added), N18 rewritten to add the lesson about shared files. If another Director edited the NAP after the zip you gave me, do not overwrite it: tell D321 and the two lines will be re-sent.
+
+MEASURED: judgment 179, repair 200, verify 168 checks, 0 failed; meaningNoPhrases 163 checks OK (79 files); mindPipeline 182; valuesGuard 157; screen-structure-source 6/6; screen-structure-reader 12/12; browserRuntime150 155/155; browserOverlayApply.test.py OK; engineTruth 285, liveFacts 681, sortModeWords 36, resolveOptionsRunner 769, directorNap 7, brainGolden 79 messages 242 checks, brainBoundary, guard OK. Old repair.ts against new repair.ts on 60,000 generated messages (quotes, odd spacing, letter cases, the noun list, risky verbs, markers): 0 differences (11,963 repaired, 2,550 ask-first). strict tsc on the three brain files clean.
+NOT RUN: the real Android compile (no Android SDK here); the cloud suite; the full project tsc (no node_modules); the four jszip tests ran with a stub for jszip.
+
+OPEN FOR THE OWNER (design, not a bug): repair.ts still carries English vocabulary (the counted nouns and risky verbs). It now sits in the knowledge folder where the rules allow it, but the project's stronger rule is that vocabulary comes from the dictionary. Whoever owns the repair module should decide whether to feed these two lists from the dictionary later. "AXON Code verify and vendor pack (manual) #1" is still undiagnosed (no log given).
+
+MERGE_TAG line: 2026-11-14 | D321-FIX4 [scripts/apply-android-overlay.sh, android-overlay/.../browser/BrowserActivity.java (FIX3 restored), src/brain/mind/judgment/council.ts, src/brain/mind/repair/repair.ts, src/brain/knowledge/repairWords.ts (new), DIRECTOR_NAP.txt, docs/D321_FIX4_BOARD_LINES.md] | cloud #222: Java errors back (FIX3 undone by D204 R7) + 4 failing tests | MEASURED as above | NOT RUN: real Android compile, cloud suite
