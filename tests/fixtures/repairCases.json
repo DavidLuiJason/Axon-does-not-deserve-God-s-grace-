@@ -1,0 +1,4586 @@
+[
+  {
+    "id": "W01",
+    "input": {
+      "text": "count words in \"one two three\". count words in \"one two three\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"one two three\". count words in \"one two three\".",
+        "reading": "count words in \"one two three\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "count words in \"one two three\".",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "count words in \"one two three\". count words in \"one two three\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W02",
+    "input": {
+      "text": "Wait. count letters in \"abc 123\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Wait. count letters in \"abc 123\".",
+        "reading": "count letters in \"abc 123\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "Wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Wait. count letters in \"abc 123\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W03",
+    "input": {
+      "text": "count words in \"a b\". oops. count letters in \"c d\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"a b\". oops. count letters in \"c d\".",
+        "reading": "count letters in \"c d\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "count words in \"a b\". oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "count words in \"a b\". oops. count letters in \"c d\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W04",
+    "input": {
+      "text": "wait 5 minutes"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait 5 minutes",
+        "reading": "wait 5 minutes",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W05",
+    "input": {
+      "text": "how much words are in \"red blue\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words are in \"red blue\"",
+        "reading": "how many words are in \"red blue\"",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words are in \"red blue\""
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W06",
+    "input": {
+      "text": "how much money is in the till"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much money is in the till",
+        "reading": "how much money is in the till",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W07",
+    "input": {
+      "text": "how much words are in \"how much words\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words are in \"how much words\"",
+        "reading": "how many words are in \"how much words\"",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words are in \"how much words\""
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W08",
+    "input": {
+      "text": "Delete the file. Delete the file."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Delete the file. Delete the file.",
+        "reading": "Delete the file.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "Delete the file.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Delete the file. Delete the file."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"Delete the file.\"?"
+      }
+    }
+  },
+  {
+    "id": "W09",
+    "input": {
+      "text": "sort these lines: b a c"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "sort these lines: b a c",
+        "reading": "sort these lines: b a c",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W10",
+    "input": {
+      "text": "COUNT WORDS IN \"x y\". count words in \"x y\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "COUNT WORDS IN \"x y\". count words in \"x y\".",
+        "reading": "COUNT WORDS IN \"x y\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "count words in \"x y\".",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "COUNT WORDS IN \"x y\". count words in \"x y\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W11",
+    "input": {
+      "text": "Oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Oops.",
+        "reading": "Oops.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W12",
+    "input": {
+      "text": "hi. hi. hi."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "hi. hi. hi.",
+        "reading": "hi.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "hi.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "hi.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "hi. hi. hi."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W13",
+    "input": {
+      "text": "How Much Words are in \"a\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much Words are in \"a\"",
+        "reading": "How Many Words are in \"a\"",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much Words",
+            "to": "How Many Words"
+          }
+        ],
+        "alternatives": [
+          "How Much Words are in \"a\""
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W14",
+    "input": {
+      "text": "how much time is left"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much time is left",
+        "reading": "how much time is left",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W15",
+    "input": {
+      "text": "count words in \"go go. go go.\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"go go. go go.\"",
+        "reading": "count words in \"go go. go go.\"",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W16",
+    "input": {
+      "text": "count words in \"abc"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"abc",
+        "reading": "count words in \"abc",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W17",
+    "input": {
+      "text": "Wait. Wait. count letters in \"q\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Wait. Wait. count letters in \"q\".",
+        "reading": "count letters in \"q\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "Wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "Wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Wait. Wait. count letters in \"q\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "W18",
+    "input": {
+      "text": ""
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "W19",
+    "input": {
+      "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "expected": {
+      "ok": false,
+      "error": "too-long"
+    }
+  },
+  {
+    "id": "W20",
+    "input": {
+      "text": 5
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I001_repeat",
+    "input": {
+      "text": "alpha. alpha."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "alpha. alpha.",
+        "reading": "alpha.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "alpha. alpha."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I002_repeat",
+    "input": {
+      "text": "alpha. alpha. alpha. alpha."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "alpha. alpha. alpha. alpha.",
+        "reading": "alpha.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "alpha. alpha. alpha. alpha."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I003_repeat",
+    "input": {
+      "text": "Alpha. alpha."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Alpha. alpha.",
+        "reading": "Alpha.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Alpha. alpha."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I004_repeat",
+    "input": {
+      "text": "alpha.  alpha."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "alpha.  alpha.",
+        "reading": "alpha.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "alpha.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "alpha.  alpha."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I005_repeat",
+    "input": {
+      "text": "start. middle. start."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. middle. start.",
+        "reading": "start. middle. start.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I006_repeat",
+    "input": {
+      "text": "same. same word."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "same. same word.",
+        "reading": "same. same word.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I007_repeat",
+    "input": {
+      "text": "A. a. A."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "A. a. A.",
+        "reading": "A.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "a.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "A.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "A. a. A."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I008_repeat",
+    "input": {
+      "text": "first! first!"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first! first!",
+        "reading": "first!",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "first!",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first! first!"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I009_repeat",
+    "input": {
+      "text": "one? one?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "one? one?",
+        "reading": "one?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "one?",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "one? one?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I010_repeat",
+    "input": {
+      "text": "begin. repeated. end. repeated."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "begin. repeated. end. repeated.",
+        "reading": "begin. repeated. end. repeated.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I011_repeat",
+    "input": {
+      "text": "hello. Hello."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "hello. Hello.",
+        "reading": "hello.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "Hello.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "hello. Hello."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I012_repeat",
+    "input": {
+      "text": "x. x ."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "x. x .",
+        "reading": "x.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "x .",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "x. x ."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I013_repeat",
+    "input": {
+      "text": "first. second. first."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. second. first.",
+        "reading": "first. second. first.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I014_repeat",
+    "input": {
+      "text": "word. word. word."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "word. word. word.",
+        "reading": "word.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "word.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "word.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "word. word. word."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I015_repeat",
+    "input": {
+      "text": "keep. keep. other."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "keep. keep. other.",
+        "reading": "keep. other.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "keep.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "keep. keep. other."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I016_repeat",
+    "input": {
+      "text": "red blue. red green."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "red blue. red green.",
+        "reading": "red blue. red green.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I017_repeat",
+    "input": {
+      "text": "A  B. a b."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "A  B. a b.",
+        "reading": "A  B.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "a b.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "A  B. a b."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I018_repeat",
+    "input": {
+      "text": "same.  same."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "same.  same.",
+        "reading": "same.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "same.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "same.  same."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I019_repeat",
+    "input": {
+      "text": "one. two. one. two."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "one. two. one. two.",
+        "reading": "one. two. one. two.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I020_repeat",
+    "input": {
+      "text": "repeat. repeat!"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "repeat. repeat!",
+        "reading": "repeat.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "repeat!",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "repeat. repeat!"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I021_repeat",
+    "input": {
+      "text": "done? DONE."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "done? DONE.",
+        "reading": "done?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "DONE.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "done? DONE."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I022_repeat",
+    "input": {
+      "text": "a. b. a."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "a. b. a.",
+        "reading": "a. b. a.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I023_repeat",
+    "input": {
+      "text": "hello. hello there."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "hello. hello there.",
+        "reading": "hello. hello there.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I024_repeat",
+    "input": {
+      "text": "yes. yes. yes. no."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "yes. yes. yes. no.",
+        "reading": "yes. no.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "yes.",
+            "to": ""
+          },
+          {
+            "kind": "REPEAT",
+            "from": "yes.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "yes. yes. yes. no."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I025_marker",
+    "input": {
+      "text": "wait. keep going."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait. keep going.",
+        "reading": "keep going.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait. keep going."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I026_marker",
+    "input": {
+      "text": "oops. continue."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops. continue.",
+        "reading": "continue.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "oops. continue."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I027_marker",
+    "input": {
+      "text": "start. wait."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. wait.",
+        "reading": "start. wait.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I028_marker",
+    "input": {
+      "text": "start. oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. oops.",
+        "reading": "start. oops.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I029_marker",
+    "input": {
+      "text": "first. wait. second."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. wait. second.",
+        "reading": "second.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "first. wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first. wait. second."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I030_marker",
+    "input": {
+      "text": "first. oops. second."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. oops. second.",
+        "reading": "second.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "first. oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first. oops. second."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I031_marker",
+    "input": {
+      "text": "wait. oops. keep."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait. oops. keep.",
+        "reading": "keep.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait. oops. keep."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I032_marker",
+    "input": {
+      "text": "oops. wait. keep."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops. wait. keep.",
+        "reading": "keep.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "oops. wait. keep."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I033_marker",
+    "input": {
+      "text": "Wait! text."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Wait! text.",
+        "reading": "text.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "Wait!",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Wait! text."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I034_marker",
+    "input": {
+      "text": "OOPS? text."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "OOPS? text.",
+        "reading": "text.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "OOPS?",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "OOPS? text."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I035_marker",
+    "input": {
+      "text": "please wait here."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "please wait here.",
+        "reading": "please wait here.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I036_marker",
+    "input": {
+      "text": "we should wait 5 minutes."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "we should wait 5 minutes.",
+        "reading": "we should wait 5 minutes.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I037_marker",
+    "input": {
+      "text": "wait 5 minutes. continue."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait 5 minutes. continue.",
+        "reading": "wait 5 minutes. continue.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I038_marker",
+    "input": {
+      "text": "start. wait. oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. wait. oops.",
+        "reading": "start. wait. oops.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I039_marker",
+    "input": {
+      "text": "wait. wait. end."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait. wait. end.",
+        "reading": "end.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait. wait. end."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I040_marker",
+    "input": {
+      "text": "oops. oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops. oops.",
+        "reading": "oops. oops.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I041_marker",
+    "input": {
+      "text": "one. wait. two. oops. three."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "one. wait. two. oops. three.",
+        "reading": "three.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "one. wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "two. oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "one. wait. two. oops. three."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I042_marker",
+    "input": {
+      "text": "wait"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait",
+        "reading": "wait",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I043_marker",
+    "input": {
+      "text": "oops"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops",
+        "reading": "oops",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I044_marker",
+    "input": {
+      "text": "Wait."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Wait.",
+        "reading": "Wait.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I045_marker",
+    "input": {
+      "text": "oops!"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops!",
+        "reading": "oops!",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I046_marker",
+    "input": {
+      "text": "start. WAIT. finish."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. WAIT. finish.",
+        "reading": "finish.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "start. WAIT.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "start. WAIT. finish."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I047_marker",
+    "input": {
+      "text": "start. Oops. finish."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "start. Oops. finish.",
+        "reading": "finish.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "start. Oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "start. Oops. finish."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I048_marker",
+    "input": {
+      "text": "a. wait 5 minutes. a."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "a. wait 5 minutes. a.",
+        "reading": "a. wait 5 minutes. a.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I049_grammar",
+    "input": {
+      "text": "how much words are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words are here",
+        "reading": "how many words are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I050_grammar",
+    "input": {
+      "text": "how much letters are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much letters are here",
+        "reading": "how many letters are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much letters",
+            "to": "how many letters"
+          }
+        ],
+        "alternatives": [
+          "how much letters are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I051_grammar",
+    "input": {
+      "text": "how much characters are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much characters are here",
+        "reading": "how many characters are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much characters",
+            "to": "how many characters"
+          }
+        ],
+        "alternatives": [
+          "how much characters are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I052_grammar",
+    "input": {
+      "text": "how much lines are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much lines are here",
+        "reading": "how many lines are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much lines",
+            "to": "how many lines"
+          }
+        ],
+        "alternatives": [
+          "how much lines are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I053_grammar",
+    "input": {
+      "text": "how much sentences are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much sentences are here",
+        "reading": "how many sentences are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much sentences",
+            "to": "how many sentences"
+          }
+        ],
+        "alternatives": [
+          "how much sentences are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I054_grammar",
+    "input": {
+      "text": "how much paragraphs are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much paragraphs are here",
+        "reading": "how many paragraphs are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much paragraphs",
+            "to": "how many paragraphs"
+          }
+        ],
+        "alternatives": [
+          "how much paragraphs are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I055_grammar",
+    "input": {
+      "text": "how much numbers are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much numbers are here",
+        "reading": "how many numbers are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much numbers",
+            "to": "how many numbers"
+          }
+        ],
+        "alternatives": [
+          "how much numbers are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I056_grammar",
+    "input": {
+      "text": "how much digits are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much digits are here",
+        "reading": "how many digits are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much digits",
+            "to": "how many digits"
+          }
+        ],
+        "alternatives": [
+          "how much digits are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I057_grammar",
+    "input": {
+      "text": "how much vowels are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much vowels are here",
+        "reading": "how many vowels are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much vowels",
+            "to": "how many vowels"
+          }
+        ],
+        "alternatives": [
+          "how much vowels are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I058_grammar",
+    "input": {
+      "text": "how much items are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much items are here",
+        "reading": "how many items are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much items",
+            "to": "how many items"
+          }
+        ],
+        "alternatives": [
+          "how much items are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I059_grammar",
+    "input": {
+      "text": "How Much words are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much words are here",
+        "reading": "How Many words are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much words",
+            "to": "How Many words"
+          }
+        ],
+        "alternatives": [
+          "How Much words are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I060_grammar",
+    "input": {
+      "text": "How Much letters are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much letters are here",
+        "reading": "How Many letters are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much letters",
+            "to": "How Many letters"
+          }
+        ],
+        "alternatives": [
+          "How Much letters are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I061_grammar",
+    "input": {
+      "text": "How Much characters are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much characters are here",
+        "reading": "How Many characters are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much characters",
+            "to": "How Many characters"
+          }
+        ],
+        "alternatives": [
+          "How Much characters are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I062_grammar",
+    "input": {
+      "text": "How Much lines are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much lines are here",
+        "reading": "How Many lines are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much lines",
+            "to": "How Many lines"
+          }
+        ],
+        "alternatives": [
+          "How Much lines are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I063_grammar",
+    "input": {
+      "text": "How Much sentences are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much sentences are here",
+        "reading": "How Many sentences are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much sentences",
+            "to": "How Many sentences"
+          }
+        ],
+        "alternatives": [
+          "How Much sentences are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I064_grammar",
+    "input": {
+      "text": "How Much paragraphs are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much paragraphs are here",
+        "reading": "How Many paragraphs are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much paragraphs",
+            "to": "How Many paragraphs"
+          }
+        ],
+        "alternatives": [
+          "How Much paragraphs are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I065_grammar",
+    "input": {
+      "text": "How Much numbers are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much numbers are here",
+        "reading": "How Many numbers are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much numbers",
+            "to": "How Many numbers"
+          }
+        ],
+        "alternatives": [
+          "How Much numbers are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I066_grammar",
+    "input": {
+      "text": "How Much digits are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much digits are here",
+        "reading": "How Many digits are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much digits",
+            "to": "How Many digits"
+          }
+        ],
+        "alternatives": [
+          "How Much digits are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I067_grammar",
+    "input": {
+      "text": "How Much vowels are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much vowels are here",
+        "reading": "How Many vowels are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much vowels",
+            "to": "How Many vowels"
+          }
+        ],
+        "alternatives": [
+          "How Much vowels are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I068_grammar",
+    "input": {
+      "text": "How Much items are here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How Much items are here",
+        "reading": "How Many items are here",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How Much items",
+            "to": "How Many items"
+          }
+        ],
+        "alternatives": [
+          "How Much items are here"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I069_grammar",
+    "input": {
+      "text": "HOW MUCH WORDS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH WORDS ARE HERE",
+        "reading": "HOW MANY WORDS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH WORDS",
+            "to": "HOW MANY WORDS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH WORDS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I070_grammar",
+    "input": {
+      "text": "HOW MUCH LETTERS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH LETTERS ARE HERE",
+        "reading": "HOW MANY LETTERS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH LETTERS",
+            "to": "HOW MANY LETTERS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH LETTERS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I071_grammar",
+    "input": {
+      "text": "HOW MUCH CHARACTERS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH CHARACTERS ARE HERE",
+        "reading": "HOW MANY CHARACTERS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH CHARACTERS",
+            "to": "HOW MANY CHARACTERS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH CHARACTERS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I072_grammar",
+    "input": {
+      "text": "HOW MUCH LINES ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH LINES ARE HERE",
+        "reading": "HOW MANY LINES ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH LINES",
+            "to": "HOW MANY LINES"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH LINES ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I073_grammar",
+    "input": {
+      "text": "HOW MUCH SENTENCES ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH SENTENCES ARE HERE",
+        "reading": "HOW MANY SENTENCES ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH SENTENCES",
+            "to": "HOW MANY SENTENCES"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH SENTENCES ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I074_grammar",
+    "input": {
+      "text": "HOW MUCH PARAGRAPHS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH PARAGRAPHS ARE HERE",
+        "reading": "HOW MANY PARAGRAPHS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH PARAGRAPHS",
+            "to": "HOW MANY PARAGRAPHS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH PARAGRAPHS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I075_grammar",
+    "input": {
+      "text": "HOW MUCH NUMBERS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH NUMBERS ARE HERE",
+        "reading": "HOW MANY NUMBERS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH NUMBERS",
+            "to": "HOW MANY NUMBERS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH NUMBERS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I076_grammar",
+    "input": {
+      "text": "HOW MUCH DIGITS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH DIGITS ARE HERE",
+        "reading": "HOW MANY DIGITS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH DIGITS",
+            "to": "HOW MANY DIGITS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH DIGITS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I077_grammar",
+    "input": {
+      "text": "HOW MUCH VOWELS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH VOWELS ARE HERE",
+        "reading": "HOW MANY VOWELS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH VOWELS",
+            "to": "HOW MANY VOWELS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH VOWELS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I078_grammar",
+    "input": {
+      "text": "HOW MUCH ITEMS ARE HERE"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW MUCH ITEMS ARE HERE",
+        "reading": "HOW MANY ITEMS ARE HERE",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW MUCH ITEMS",
+            "to": "HOW MANY ITEMS"
+          }
+        ],
+        "alternatives": [
+          "HOW MUCH ITEMS ARE HERE"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I079_grammar",
+    "input": {
+      "text": "how much money?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much money?",
+        "reading": "how much money?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I080_grammar",
+    "input": {
+      "text": "how much time?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much time?",
+        "reading": "how much time?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I081_grammar",
+    "input": {
+      "text": "how much water?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much water?",
+        "reading": "how much water?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I082_grammar",
+    "input": {
+      "text": "how many words?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how many words?",
+        "reading": "how many words?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I083_grammar",
+    "input": {
+      "text": "How many letters are there?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How many letters are there?",
+        "reading": "How many letters are there?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I084_grammar",
+    "input": {
+      "text": "how much word is this?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much word is this?",
+        "reading": "how much word is this?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I085_grammar",
+    "input": {
+      "text": "how much digits are here?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much digits are here?",
+        "reading": "how many digits are here?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much digits",
+            "to": "how many digits"
+          }
+        ],
+        "alternatives": [
+          "how much digits are here?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I086_grammar",
+    "input": {
+      "text": "HOW much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "HOW much words",
+        "reading": "HOW many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "HOW much words",
+            "to": "HOW many words"
+          }
+        ],
+        "alternatives": [
+          "HOW much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I087_grammar",
+    "input": {
+      "text": "How MUCH words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "How MUCH words",
+        "reading": "How MANY words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "How MUCH words",
+            "to": "How MANY words"
+          }
+        ],
+        "alternatives": [
+          "How MUCH words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I088_grammar",
+    "input": {
+      "text": "how Much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how Much words",
+        "reading": "how Many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how Much words",
+            "to": "how Many words"
+          }
+        ],
+        "alternatives": [
+          "how Much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I089_grammar",
+    "input": {
+      "text": "how much words, really"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words, really",
+        "reading": "how many words, really",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words, really"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I090_grammar",
+    "input": {
+      "text": "ask: how much items? and how much vowels?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "ask: how much items? and how much vowels?",
+        "reading": "ask: how many items? and how many vowels?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much items",
+            "to": "how many items"
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much vowels",
+            "to": "how many vowels"
+          }
+        ],
+        "alternatives": [
+          "ask: how much items? and how much vowels?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I091_grammar",
+    "input": {
+      "text": "\"how much words\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"how much words\"",
+        "reading": "\"how much words\"",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I092_grammar",
+    "input": {
+      "text": "“how much letters”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "“how much letters”",
+        "reading": "“how much letters”",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I093_grammar",
+    "input": {
+      "text": "how much words in “how much words”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words in “how much words”",
+        "reading": "how many words in “how much words”",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words in “how much words”"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I094_quote",
+    "input": {
+      "text": "\"wait. how much words. send.\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"wait. how much words. send.\"",
+        "reading": "\"wait. how much words. send.\"",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I095_quote",
+    "input": {
+      "text": "“oops. how much letters. delete.”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "“oops. how much letters. delete.”",
+        "reading": "“oops. how much letters. delete.”",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I096_quote",
+    "input": {
+      "text": "count \"a. b. a.\" now."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count \"a. b. a.\" now.",
+        "reading": "count \"a. b. a.\" now.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I097_quote",
+    "input": {
+      "text": "say \"wait\" then continue."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "say \"wait\" then continue.",
+        "reading": "say \"wait\" then continue.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I098_quote",
+    "input": {
+      "text": "text \"oops.\" here."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "text \"oops.\" here.",
+        "reading": "text \"oops.\" here.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I099_quote",
+    "input": {
+      "text": "\"how much money\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"how much money\"",
+        "reading": "\"how much money\"",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I100_quote",
+    "input": {
+      "text": "\"\""
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"\"",
+        "reading": "\"\"",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I101_quote",
+    "input": {
+      "text": "“”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "“”",
+        "reading": "“”",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I102_quote",
+    "input": {
+      "text": "count \"abc. def\" now."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count \"abc. def\" now.",
+        "reading": "count \"abc. def\" now.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I103_quote",
+    "input": {
+      "text": "\"delete\" then."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"delete\" then.",
+        "reading": "\"delete\" then.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I104_quote",
+    "input": {
+      "text": "“send” then."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "“send” then.",
+        "reading": "“send” then.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I105_quote",
+    "input": {
+      "text": "how much words in \"delete send\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words in \"delete send\".",
+        "reading": "how many words in \"delete send\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words in \"delete send\"."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I106_quote",
+    "input": {
+      "text": "wait. \"oops.\" continue."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait. \"oops.\" continue.",
+        "reading": "\"oops.\" continue.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait. \"oops.\" continue."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I107_quote",
+    "input": {
+      "text": "how much words in “red blue”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words in “red blue”",
+        "reading": "how many words in “red blue”",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words in “red blue”"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I108_quote",
+    "input": {
+      "text": "\"unbalanced wait."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"unbalanced wait.",
+        "reading": "\"unbalanced wait.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I109_quote",
+    "input": {
+      "text": "unbalanced “oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "unbalanced “oops.",
+        "reading": "unbalanced “oops.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I110_quote",
+    "input": {
+      "text": "plain \"quoted with . punctuation\" text."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "plain \"quoted with . punctuation\" text.",
+        "reading": "plain \"quoted with . punctuation\" text.",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I111_quote",
+    "input": {
+      "text": "\"how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"how much words",
+        "reading": "\"how much words",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I112_quote",
+    "input": {
+      "text": "“how much words”"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "“how much words”",
+        "reading": "“how much words”",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I113_risk",
+    "input": {
+      "text": "delete this. delete this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "delete this. delete this.",
+        "reading": "delete this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "delete this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "delete this. delete this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"delete this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I114_risk",
+    "input": {
+      "text": "\"delete\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"delete\". how much words",
+        "reading": "\"delete\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"delete\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I115_risk",
+    "input": {
+      "text": "delete this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "delete this",
+        "reading": "delete this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I116_risk",
+    "input": {
+      "text": "remove this. remove this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "remove this. remove this.",
+        "reading": "remove this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "remove this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "remove this. remove this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"remove this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I117_risk",
+    "input": {
+      "text": "\"remove\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"remove\". how much words",
+        "reading": "\"remove\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"remove\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I118_risk",
+    "input": {
+      "text": "remove this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "remove this",
+        "reading": "remove this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I119_risk",
+    "input": {
+      "text": "erase this. erase this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "erase this. erase this.",
+        "reading": "erase this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "erase this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "erase this. erase this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"erase this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I120_risk",
+    "input": {
+      "text": "\"erase\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"erase\". how much words",
+        "reading": "\"erase\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"erase\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I121_risk",
+    "input": {
+      "text": "erase this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "erase this",
+        "reading": "erase this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I122_risk",
+    "input": {
+      "text": "overwrite this. overwrite this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "overwrite this. overwrite this.",
+        "reading": "overwrite this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "overwrite this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "overwrite this. overwrite this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"overwrite this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I123_risk",
+    "input": {
+      "text": "\"overwrite\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"overwrite\". how much words",
+        "reading": "\"overwrite\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"overwrite\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I124_risk",
+    "input": {
+      "text": "overwrite this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "overwrite this",
+        "reading": "overwrite this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I125_risk",
+    "input": {
+      "text": "send this. send this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "send this. send this.",
+        "reading": "send this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "send this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "send this. send this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"send this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I126_risk",
+    "input": {
+      "text": "\"send\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"send\". how much words",
+        "reading": "\"send\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"send\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I127_risk",
+    "input": {
+      "text": "send this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "send this",
+        "reading": "send this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I128_risk",
+    "input": {
+      "text": "pay this. pay this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "pay this. pay this.",
+        "reading": "pay this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "pay this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "pay this. pay this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"pay this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I129_risk",
+    "input": {
+      "text": "\"pay\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"pay\". how much words",
+        "reading": "\"pay\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"pay\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I130_risk",
+    "input": {
+      "text": "pay this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "pay this",
+        "reading": "pay this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I131_risk",
+    "input": {
+      "text": "transfer this. transfer this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "transfer this. transfer this.",
+        "reading": "transfer this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "transfer this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "transfer this. transfer this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"transfer this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I132_risk",
+    "input": {
+      "text": "\"transfer\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"transfer\". how much words",
+        "reading": "\"transfer\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"transfer\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I133_risk",
+    "input": {
+      "text": "transfer this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "transfer this",
+        "reading": "transfer this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I134_risk",
+    "input": {
+      "text": "format this. format this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "format this. format this.",
+        "reading": "format this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "format this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "format this. format this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"format this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I135_risk",
+    "input": {
+      "text": "\"format\". how much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "\"format\". how much words",
+        "reading": "\"format\". how many words",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "\"format\". how much words"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I136_risk",
+    "input": {
+      "text": "format this"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "format this",
+        "reading": "format this",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I137_input",
+    "input": {
+      "text": " "
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I138_input",
+    "input": {
+      "text": "   \n\t"
+    },
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I139_input",
+    "input": {
+      "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "reading": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I140_input",
+    "input": {
+      "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "expected": {
+      "ok": false,
+      "error": "too-long"
+    }
+  },
+  {
+    "id": "I141_input",
+    "input": {
+      "text": "ok"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "ok",
+        "reading": "ok",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I142_input",
+    "input": {
+      "text": " clean  spacing "
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": " clean  spacing ",
+        "reading": " clean  spacing ",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I143_input",
+    "input": {
+      "text": "line\nbreak. line\nbreak."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "line\nbreak. line\nbreak.",
+        "reading": "line\nbreak.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "line\nbreak.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "line\nbreak. line\nbreak."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I144_mix",
+    "input": {
+      "text": "Wait. how much words?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Wait. how much words?",
+        "reading": "how many words?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "Wait.",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "Wait. how much words?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I145_mix",
+    "input": {
+      "text": "how much words. how much words."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much words. how much words.",
+        "reading": "how many words.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "how much words.",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much words",
+            "to": "how many words"
+          }
+        ],
+        "alternatives": [
+          "how much words. how much words."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I146_mix",
+    "input": {
+      "text": "Delete. wait. continue."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Delete. wait. continue.",
+        "reading": "continue.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "Delete. wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "Delete. wait. continue."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"continue.\"?"
+      }
+    }
+  },
+  {
+    "id": "I147_mix",
+    "input": {
+      "text": "send this. send this."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "send this. send this.",
+        "reading": "send this.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "send this.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "send this. send this."
+        ],
+        "verdict": "ASK",
+        "askQuestion": "Did you mean: \"send this.\"?"
+      }
+    }
+  },
+  {
+    "id": "I148_mix",
+    "input": {
+      "text": "alpha. wait. how many words?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "alpha. wait. how many words?",
+        "reading": "how many words?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "alpha. wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "alpha. wait. how many words?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I149_mix",
+    "input": {
+      "text": "first. first. how much lines"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. first. how much lines",
+        "reading": "first. how many lines",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "first.",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much lines",
+            "to": "how many lines"
+          }
+        ],
+        "alternatives": [
+          "first. first. how much lines"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I150_mix",
+    "input": {
+      "text": "oops. how much digits?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops. how much digits?",
+        "reading": "how many digits?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much digits",
+            "to": "how many digits"
+          }
+        ],
+        "alternatives": [
+          "oops. how much digits?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I151_mix",
+    "input": {
+      "text": "one. two. two. how much vowels?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "one. two. two. how much vowels?",
+        "reading": "one. two. how many vowels?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "two.",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much vowels",
+            "to": "how many vowels"
+          }
+        ],
+        "alternatives": [
+          "one. two. two. how much vowels?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I152_mix",
+    "input": {
+      "text": "count \"a b\". count \"a b\". how much characters"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count \"a b\". count \"a b\". how much characters",
+        "reading": "count \"a b\". how many characters",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "count \"a b\".",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much characters",
+            "to": "how many characters"
+          }
+        ],
+        "alternatives": [
+          "count \"a b\". count \"a b\". how much characters"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I153_mix",
+    "input": {
+      "text": "wait. wait. oops. oops. final."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait. wait. oops. oops. final.",
+        "reading": "final.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait. wait. oops. oops. final."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I154_mix",
+    "input": {
+      "text": "no changes here"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "no changes here",
+        "reading": "no changes here",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I155_mix",
+    "input": {
+      "text": "  odd   spacing stays  "
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "  odd   spacing stays  ",
+        "reading": "  odd   spacing stays  ",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I156_mix",
+    "input": {
+      "text": "Hi there!"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Hi there!",
+        "reading": "Hi there!",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I157_mix",
+    "input": {
+      "text": "one sentence?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "one sentence?",
+        "reading": "one sentence?",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I158_mix",
+    "input": {
+      "text": "A sentence. another sentence!"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "A sentence. another sentence!",
+        "reading": "A sentence. another sentence!",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I159_mix",
+    "input": {
+      "text": "how much items and how much items"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much items and how much items",
+        "reading": "how many items and how many items",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much items",
+            "to": "how many items"
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much items",
+            "to": "how many items"
+          }
+        ],
+        "alternatives": [
+          "how much items and how much items"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I160_mix",
+    "input": {
+      "text": "the word deletion is not delete"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "the word deletion is not delete",
+        "reading": "the word deletion is not delete",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I161_mix",
+    "input": {
+      "text": "sender sends money"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "sender sends money",
+        "reading": "sender sends money",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I162_mix",
+    "input": {
+      "text": "formatting. format"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "formatting. format",
+        "reading": "formatting. format",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I163_mix",
+    "input": {
+      "text": "how much letters? how much letters?"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how much letters? how much letters?",
+        "reading": "how many letters?",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "how much letters?",
+            "to": ""
+          },
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how much letters",
+            "to": "how many letters"
+          }
+        ],
+        "alternatives": [
+          "how much letters? how much letters?"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I164_mix",
+    "input": {
+      "text": "wait 5 minutes. wait 5 minutes."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "wait 5 minutes. wait 5 minutes.",
+        "reading": "wait 5 minutes.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "REPEAT",
+            "from": "wait 5 minutes.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "wait 5 minutes. wait 5 minutes."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I165_mix",
+    "input": {
+      "text": "oops. oops. wait. wait. remain."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "oops. oops. wait. wait. remain.",
+        "reading": "remain.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "oops. oops. wait. wait. remain."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I166_mix",
+    "input": {
+      "text": "first. oops. second. oops. third."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. oops. second. oops. third.",
+        "reading": "third.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "first. oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "second. oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first. oops. second. oops. third."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I167_mix",
+    "input": {
+      "text": "first. wait. wait. second."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. wait. wait. second.",
+        "reading": "second.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "first. wait.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "wait.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first. wait. wait. second."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I168_mix",
+    "input": {
+      "text": "first. oops. oops. second."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "first. oops. oops. second.",
+        "reading": "second.",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "first. oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "first. oops. oops. second."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I189_missing_text",
+    "input": {},
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I190_null_input",
+    "input": null,
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I191_number_input",
+    "input": 7,
+    "expected": {
+      "ok": false,
+      "error": "bad-input"
+    }
+  },
+  {
+    "id": "I192_mixed_case",
+    "input": {
+      "text": "how mUcH words are there"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "how mUcH words are there",
+        "reading": "how mAnY words are there",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "GRAMMAR_PAIR",
+            "from": "how mUcH words",
+            "to": "how mAnY words"
+          }
+        ],
+        "alternatives": [
+          "how mUcH words are there"
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I193_word_boundary",
+    "input": {
+      "text": "somehow much words"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "somehow much words",
+        "reading": "somehow much words",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "I194_unmatched_curly_close",
+    "input": {
+      "text": "text ” wait. text"
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "text ” wait. text",
+        "reading": "text ” wait. text",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_01_closed_markers",
+    "input": {
+      "text": "Hold. count letters in \"x\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Hold. count letters in \"x\".",
+        "reading": "Hold. count letters in \"x\".",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_02_closed_markers",
+    "input": {
+      "text": "Stop. count words in \"a b\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Stop. count words in \"a b\".",
+        "reading": "Stop. count words in \"a b\".",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_03_closed_markers",
+    "input": {
+      "text": "Never mind. count words in \"q\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "Never mind. count words in \"q\".",
+        "reading": "Never mind. count words in \"q\".",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_04_marker_in_quotes",
+    "input": {
+      "text": "count words in \"wait\". count words in \"oops\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"wait\". count words in \"oops\".",
+        "reading": "count words in \"wait\". count words in \"oops\".",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_05_second_marker_removes_only_itself",
+    "input": {
+      "text": "count words in \"z\". sort lines: b a. oops. oops."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "count words in \"z\". sort lines: b a. oops. oops.",
+        "reading": "count words in \"z\".",
+        "changed": true,
+        "edits": [
+          {
+            "kind": "MARKER",
+            "from": "sort lines: b a. oops.",
+            "to": ""
+          },
+          {
+            "kind": "MARKER",
+            "from": "oops.",
+            "to": ""
+          }
+        ],
+        "alternatives": [
+          "count words in \"z\". sort lines: b a. oops. oops."
+        ],
+        "verdict": "REPAIRED",
+        "askQuestion": null
+      }
+    }
+  },
+  {
+    "id": "D84_06_newline_is_not_a_sentence_end",
+    "input": {
+      "text": "sort lines: b a\ncount words in \"q\"."
+    },
+    "expected": {
+      "ok": true,
+      "value": {
+        "original": "sort lines: b a\ncount words in \"q\".",
+        "reading": "sort lines: b a\ncount words in \"q\".",
+        "changed": false,
+        "edits": [],
+        "alternatives": [],
+        "verdict": "KEEP",
+        "askQuestion": null
+      }
+    }
+  }
+]
