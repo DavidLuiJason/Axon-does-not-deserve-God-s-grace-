@@ -51,7 +51,7 @@ test('UI server: normal Host is served, a foreign Host is refused (421), travers
 });
 
 test('NEGATIVE (real mutant): the managed preview without the Host check serves a foreign Host', async () => {
-  const mutant = await mutantOf('src/preview/managedPreviewServer.mjs', 'if(hostHeader!==`127.0.0.1:${localPort}`&&hostHeader!==`localhost:${localPort}`)', 'if(false)');
+  const mutant = await mutantOf('src/preview/managedPreviewServer.mjs', 'if (hostHeader !== `127.0.0.1:${port}` && hostHeader !== `localhost:${port}`) {', 'if (false) {');
   try {
     const preview = mutant.module.createManagedPreview({ files: { 'index.html': 'x' } });
     const port = await preview.start();

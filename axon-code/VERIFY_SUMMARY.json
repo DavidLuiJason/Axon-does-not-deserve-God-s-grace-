@@ -1,103 +1,552 @@
 {
   "schemaVersion": 1,
-  "status": "BLOCKED",
   "commands": [
     {
-      "command": "npm ci --ignore-scripts --dry-run",
+      "label": "strict TypeScript typecheck",
+      "command": "npm run typecheck",
       "exitCode": 0,
-      "status": "PASS",
-      "note": "Dry-run only; does not install package files."
+      "durationMs": 2689,
+      "stdoutTail": "\n> axon-code@1.0.0 typecheck\n> tsc --noEmit\n\n",
+      "stderrTail": ""
     },
     {
-      "command": "npm ci --offline --ignore-scripts (isolated package-only directory)",
-      "exitCode": 1,
-      "status": "BLOCKED",
-      "reason": "ENOTCACHED for https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz; TypeScript 5.8.3 lock entry also lacks verified integrity hash."
-    },
-    {
+      "label": "clean TypeScript build",
       "command": "npm run build",
       "exitCode": 0,
-      "status": "PASS"
+      "durationMs": 2823,
+      "stdoutTail": "\n> axon-code@1.0.0 build\n> tsc -p tsconfig.build.json\n\n",
+      "stderrTail": ""
     },
     {
-      "command": "node --test tests/*.test.mjs (background runner)",
+      "label": "Node suite tests/foundation.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/foundation.test.mjs",
       "exitCode": 0,
-      "status": "PASS",
-      "tests": 1313,
-      "passed": 1313,
-      "failed": 0,
-      "skipped": 0,
-      "durationMs": 68945
+      "durationMs": 443,
+      "stdoutTail": "✔ project analysis finds local dependency links and entry points (302.680912ms)\n✔ JSON diagnostics report a source location (1.693363ms)\n✔ structural scanner locates unclosed delimiters (0.70358ms)\n✔ unsafe project paths are rejected (0.114509ms)\n✔ selective execution refuses unproven isolation (1.800832ms)\n✔ selective execution can plan a declared, complete, side-effect-free component (1.338468ms)\n✔ runtime planner prefers declared streaming before refusing for memory (0.278852ms)\n✔ resource classifier identifies thermal pressure and low memory (0.135451ms)\n✔ auto-fix modes are non-mutating and patch application checks its base (0.592175ms)\n✔ runtime registry refuses duplicate ids and resolves only available adapters (0.415534ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 412.640376\n",
+      "stderrTail": ""
     },
     {
-      "command": "node tools/run-r14-full-regression.mjs (sequential per-file)",
+      "label": "Node suite tests/prer4-completion.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/prer4-completion.test.mjs",
       "exitCode": 0,
-      "status": "PASS",
-      "testFiles": 49,
-      "tests": 1313,
-      "passed": 1313,
-      "failed": 0,
-      "skipped": 0,
-      "durationMs": 79746
+      "durationMs": 512,
+      "stdoutTail": "✔ lag control starts in AUTO and hard safety is always declared enabled (1.946006ms)\n✔ AXON can suspend all managed work and disable optional telemetry (1.07577ms)\n✔ REDUCED mode lowers telemetry frequency and background concurrency (0.336157ms)\n✔ AUTO releases only the manager-owned pause and clears its cap (0.234557ms)\n✔ non-Brain callers cannot change lag-control mode (0.537314ms)\n✔ bounded suspension duration is mandatory (0.211963ms)\n✔ suspension expires automatically when the manager is next reconciled (0.280715ms)\n✔ startup reconciliation reapplies a currently active suspension to host adapters (0.215238ms)\n✔ AXON lag-control override persists and is reapplied before managed work after restart (0.725673ms)\n✔ expired persisted lag-control override returns to AUTO during startup (0.597914ms)\n✔ corrupt persisted lag-control state blocks startup reconciliation (0.244631ms)\n✔ AXON suspension is not confirmed when a managed task cannot pause safely (0.221387ms)\n✔ telemetry adapter failure does not claim suspension succeeded (0.234326ms)\n✔ ZIP parser reads actual stored archive bytes (1.276336ms)\n✔ ZIP extractor writes and verifies stored file contents (0.785491ms)\n✔ ZIP extractor handles raw DEFLATE using host DecompressionStream (17.223966ms)\n✔ ZIP parser rejects path traversal (1.642478ms)\n✔ ZIP parser rejects duplicate normalized names (0.388975ms)\n✔ ZIP parser rejects case-colliding names (0.219154ms)\n✔ ZIP parser rejects encrypted entries (0.20291ms)\n✔ ZIP parser rejects symlink entries (0.269168ms)\n✔ ZIP parser rejects unsupported compression methods (0.173867ms)\n✔ ZIP parser rejects oversized expansion ratio based on actual central metadata (3.541784ms)\n✔ ZIP extractor rejects content that expands beyond its declared file size and rolls back (6.327872ms)\n✔ ZIP extractor rejects CRC mismatch and rolls back (0.376867ms)\n✔ ZIP extractor respects in-flight cancellation and rolls back (0.256049ms)\n✔ ZIP parser rejects truncated archive bytes (3.557878ms)\n✔ ZIP extractor validates signed data descriptors (2.352467ms)\n✔ ZIP parser rejects non-canonical dot-segment paths (0.273475ms)\n✔ ZIP extractor preserves previous committed snapshot when a new extraction fails (0.414413ms)\n✔ IndexedDB project sink commits complete snapshots and reader sees committed files (1.148807ms)\n✔ IndexedDB project sink rollback preserves previously committed project version (0.502202ms)\n✔ startup recovery marks an active job interrupted and validates its checkpoint (4.443147ms)\n✔ recovery refuses missing checkpoint (0.481672ms)\n✔ recovery refuses project/runtime mismatch (1.110792ms)\n✔ checkpoint size and state length are bounded and exact (0.29729ms)\n✔ working copy creates an isolated project snapshot (0.425679ms)\n✔ working copy rejects traversal paths (0.180647ms)\n✔ mechanical patch applies against exact source and supports durable-journal undo (0.8522ms)\n✔ logic-changing patch requires explicit user approval reference (0.241026ms)\n✔ working copy rejects stale source snapshot (0.212133ms)\n✔ working copy refuses undo after later manual modification (0.31769ms)\n✔ platform registry distinguishes registered adapters from target platforms (0.141158ms)\n✔ runtime requirement evaluator reports missing host toolchains (0.137312ms)\n✔ runtime requirement evaluator does not disguise unimplemented runtimes as available (0.069433ms)\n✔ JavaScript Worker adapter refuses provider without security attestations (0.62917ms)\n✔ JavaScript Worker adapter executes protocol and bounds messages (315.263352ms)\n✔ JavaScript Worker adapter times out and terminates unresponsive worker (5.662339ms)\n✔ JavaScript Worker adapter cancels on AbortSignal (1.045075ms)\n✔ JavaScript Worker adapter rejects output above request limit (0.618754ms)\n✔ JavaScript Worker adapter rejects requested network or file access (0.099938ms)\n✔ JavaScript Worker adapter rejects source exceeding its source-size cap (0.158865ms)\n✔ Android APK service blocks without SDK and Gradle toolchain (0.236249ms)\n✔ Android APK service requires post-build package identity and hash verification (0.143402ms)\n✔ host process runtime is unavailable until host probe confirms OS-level isolation (0.298632ms)\n✔ host process runtime validates paths and network policy before dispatch (0.227877ms)\n✔ host process runtime dispatches only with a confirmed sandbox and bounded output (0.362235ms)\n✔ host process runtime rejects no-isolation adapters even when host says available (0.15571ms)\n✔ diagnostic registry rejects adapter locations that name another file (0.252853ms)\n✔ diagnostic registry deduplicates identical findings from adapters (1.374271ms)\n✔ parser measurement reports precision, recall, duration and declared package size (0.363617ms)\nℹ tests 61\nℹ suites 0\nℹ pass 61\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 483.43225\n",
+      "stderrTail": ""
     },
     {
-      "command": "clean-base ordered delta reapply; npm run build; node --test tests/*.test.mjs",
+      "label": "Node suite tests/prer4-remediation.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/prer4-remediation.test.mjs",
       "exitCode": 0,
-      "status": "PASS",
-      "tests": 1313,
-      "passed": 1313,
-      "failed": 0,
-      "skipped": 0,
-      "durationMs": 78618
+      "durationMs": 4841,
+      "stdoutTail": "selects conservative scheduling when not charging (0.085456ms)\n✔ charging device at low battery is not battery-throttled solely by percentage (0.073108ms)\n✔ power saver selects conservative scheduling (0.105076ms)\n✔ high CPU load constrains worker count (0.090364ms)\n✔ foreground responsiveness pause blocks background workload (0.065617ms)\n✔ foreground task is not rejected solely because background work is paused (0.067941ms)\n✔ unknown responsiveness blocks background work (0.062723ms)\n✔ unknown responsiveness permits only one cooperative foreground worker (0.07462ms)\n✔ governor rejects NaN memory telemetry (0.071796ms)\n✔ governor rejects available RAM greater than total RAM (0.105916ms)\n✔ governor rejects zero CPU cores (0.072578ms)\n✔ governor rejects CPU load outside 0..100 (0.059838ms)\n✔ governor respects workload max parallelism (0.069352ms)\n✔ non-parallel workload is restricted to one worker (0.101891ms)\n✔ insufficient storage blocks workload (0.085657ms)\n✔ GPU-required workload blocks without GPU (0.077405ms)\n✔ cache and prefetch grow with useful normal-mode headroom (0.092907ms)\n✔ lag controller starts in UNKNOWN and pauses background work on invalid telemetry (0.350849ms)\n✔ healthy host telemetry allows normal scheduling (0.178133ms)\n✔ moderate latency enters WATCH state (0.197341ms)\n✔ high input latency throttles background work (0.082242ms)\n✔ high event-loop delay throttles background work (0.089642ms)\n✔ high frame overrun ratio throttles background work (0.076654ms)\n✔ critical input latency pauses background work (0.095331ms)\n✔ critical event-loop delay pauses background work (0.073068ms)\n✔ critical frame overrun pauses background work (0.114068ms)\n✔ long tasks contribute to throttling (0.094319ms)\n✔ lag controller uses hysteresis before recovering from pause (0.138455ms)\n✔ lag controller recovers from throttle only after healthy streak (0.098907ms)\n✔ invalid frame ratio is rejected (0.069283ms)\n✔ negative event loop latency is rejected (0.824628ms)\n✔ lag policy requires recovery thresholds below throttle thresholds (0.333453ms)\n✔ pause decision requests a yield before next chunk (0.07426ms)\n✔ cooperative runner processes every item in original order (30.305469ms)\n✔ cooperative runner does not skip remainder when a time slice expires (88.910913ms)\n✔ cooperative runner reports monotonic progress (2.783895ms)\n✔ cooperative runner rejects zero chunk size (0.441733ms)\n✔ cooperative runner observes cancellation (1.539675ms)\n✔ cooperative runner handles empty workloads (0.113398ms)\n✔ job creation persists an initial version and event (0.329327ms)\n✔ duplicate job ID is rejected (0.199715ms)\n✔ job state transitions follow the state machine (0.484085ms)\n✔ illegal job transition is rejected (0.156701ms)\n✔ job progress cannot move backwards (0.179185ms)\n✔ job progress cannot exceed one (0.193286ms)\n✔ completed unit is idempotent and recorded once (0.174197ms)\n✔ job event journal appends on every update (0.190201ms)\n✔ stale job version is rejected (0.477336ms)\n✔ active jobs are marked interrupted after recovery scan (0.48751ms)\n✔ completed jobs are not marked interrupted (0.586046ms)\n✔ checkpoint saves SHA-256 integrity metadata (6.767587ms)\n✔ checkpoint resumes only when project and runtime match (0.802126ms)\n✔ checkpoint rejects changed project fingerprint (0.6291ms)\n✔ checkpoint rejects changed runtime identity (0.991986ms)\n✔ checkpoint rejects non-resumable runtime state (0.190232ms)\n✔ checkpoint corruption is detected (4.293891ms)\n✔ checkpoint missing is not treated as resumable (0.124714ms)\n✔ IndexedDB adapter reports unavailable host instead of pretending persistence (0.209109ms)\n✔ archive manifest accepts ordinary safe entries (0.690611ms)\n✔ archive manifest rejects parent traversal (0.088471ms)\n✔ archive manifest rejects absolute paths (0.099066ms)\n✔ archive manifest rejects Windows absolute paths (0.111584ms)\n✔ archive manifest rejects backslash paths (0.285883ms)\n✔ archive manifest detects duplicate normalized entries (0.300884ms)\n✔ archive manifest detects case collisions (0.221187ms)\n✔ archive manifest enforces entry count cap (0.20306ms)\n✔ archive manifest enforces per-entry size (0.169902ms)\n✔ archive manifest enforces total uncompressed size (0.21665ms)\n✔ archive manifest detects zip-bomb-like compression ratio (0.222469ms)\n✔ archive manifest rejects symbolic links by default (0.164873ms)\n✔ archive manifest rejects encrypted entries by default (0.194317ms)\n✔ archive manifest rejects NaN size metadata (0.249239ms)\n✔ archive manifest rejects invalid safety policy (0.396646ms)\n✔ compile workloads are required to use a worker or process adapter (2.074907ms)\n✔ small analysis tasks can use cooperative bounded scheduling (1.401311ms)\n✔ adaptive execution admission applies host reserve after the raw planner (17.746087ms)\n✔ adaptive execution allows a safe plan when both planners admit it (0.650741ms)\n✔ adaptive execution respects a foreground pause signal for background requests (0.12873ms)\n✔ patch application refuses a patch without an exact source snapshot (0.532167ms)\n✔ archive manifest rejects Windows alternate data stream paths (0.558916ms)\n✔ archive manifest rejects Windows reserved device names (0.082141ms)\n✔ archive manifest rejects trailing dots and spaces in path segments (0.068851ms)\n✔ project analyser rejects duplicate normalized paths (355.811258ms)\n✔ project analyser retains only the first normalized duplicate for deterministic graphs (2.026866ms)\n✔ with equal CPU, additional RAM can admit more workers for a memory-bound workload (0.159806ms)\n✔ pause state limits foreground work to one worker (0.086167ms)\n✔ archive manifest rejects parent segments even when they normalize inside the project (0.095261ms)\n✔ job event history has a bounded rolling window and monotonic sequence (34.048521ms)\n✔ tracked completed-unit identifiers have a hard storage bound (4133.679961ms)\nℹ tests 101\nℹ suites 0\nℹ pass 101\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4807.027084\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/prer5-expansion.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/prer5-expansion.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1280,
+      "stdoutTail": "✔ R5P-001 TypeScript entry transpiles and resolves a multi-file relative import (349.743497ms)\n✔ R5P-002 TSX JSX transforms through the declared local React package (13.448987ms)\n✔ R5P-003 JSX file is transpiled and package exports browser condition is resolved (5.467932ms)\n✔ R5P-004 JSON module is included as data without evaluating source text (4.457785ms)\n✔ R5P-005 missing external packages are refused instead of installed from the network (2.922361ms)\n✔ R5P-006 Node built-in imports are not exposed to browser bundles (4.6163ms)\n✔ R5P-007 import traversal outside the project is rejected (4.876055ms)\n✔ R5P-008 package.json invalid JSON is surfaced accurately (2.115865ms)\n✔ R5P-009 bundled entry source provider preserves the canonical entry path (1.975978ms)\n✔ R5P-010 bundle file count and byte limits fail closed (0.887175ms)\n✔ R5P-011 TypeScript compiler reports semantic type errors with source location (490.245276ms)\n✔ R5P-012 TypeScript checker reports a clean small project (215.685747ms)\n✔ R5P-013 pure WebAssembly module validates with bounded policy and exports executable entry (0.35095ms)\n✔ R5P-014 malformed WebAssembly magic is rejected (0.095852ms)\n✔ R5P-015 WebAssembly imports are denied (0.151545ms)\n✔ R5P-016 WebAssembly memory without an explicit maximum is rejected (0.185424ms)\n✔ R5P-017 WebAssembly memory maximum above policy is rejected (0.165394ms)\n✔ R5P-018 WebAssembly invalid policy is rejected (0.073508ms)\n✔ R5P-019 process execution remains blocked without network isolation attestation (0.293994ms)\n✔ R5P-020 process execution remains blocked without filesystem isolation (0.187216ms)\n✔ R5P-021 process execution remains blocked without memory and time limits (0.119927ms)\n✔ R5P-022 process execution remains blocked without unprivileged identity (0.114139ms)\n✔ R5P-023 strict process bridge permits only policy-compliant host requests (0.241727ms)\n✔ R5P-024 language runtime suite is not advertised until strict bridge is initialized (0.287505ms)\n✔ R5P-025 arbitrary root/administrator execution is always denied (0.078175ms)\n✔ R5P-026 Android project recognizer finds app module and manifest identity (1.063872ms)\n✔ R5P-027 Android missing manifest is blocked (0.376096ms)\n✔ R5P-028 Android inspection does not claim a build toolchain is available (0.23621ms)\n✔ R5P-029 Unity project is identified from project, package and assets markers (0.310829ms)\n✔ R5P-030 Unreal project is identified without claiming engine execution (0.190221ms)\n✔ R5P-031 remote execution requires HTTPS (0.139296ms)\n✔ R5P-032 remote execution requires explicit owner approval (0.065016ms)\n✔ R5P-033 remote execution rejects URL-embedded credentials (0.066559ms)\n✔ R5P-034 remote execution accepts HTTPS only as a preliminary policy check (0.136973ms)\n✔ R5P-035 remote attestation rejects nonce, hash and expiry mismatches (26.757303ms)\n✔ R5P-036 Android APK build is blocked when toolchain is absent (0.48658ms)\n✔ R5P-037 Native C++/Rust build refuses unsafe source paths and privilege escalation (0.280734ms)\n✔ R5P-038 circular local imports are included once and do not recurse indefinitely (5.543254ms)\n✔ R5P-039 a non-literal require is reported and bundle completeness is false (1.448351ms)\n✔ R5P-040 wildcard package exports are not guessed or expanded unsafely (1.865418ms)\n✔ R5P-041 total source byte cap covers transitive project files (1.296837ms)\n✔ R5P-042 package metadata cannot point outside the project root (1.309515ms)\n✔ R5P-043 host runtime fails closed when security probe throws (0.384198ms)\n✔ R5P-044 Android build requires explicit user approval before probing (0.106358ms)\n✔ R5P-045 Android build bridge requires isolation, network denial and bounded execution (0.12175ms)\n✔ R5P-046 Android device installation requires approval, verified hash and package identity (0.369867ms)\n✔ R5P-047 Android device bridge hash mismatch is rejected (0.252784ms)\n✔ R5P-048 Unity/Unreal build is blocked unless all strict host controls are attested (0.273685ms)\n✔ R5P-049 native C++ build requires every isolation guarantee (0.230861ms)\n✔ R5P-050 native source list must match the requested compiler family (0.146367ms)\n✔ R5P-051 factory connects TypeScript/JSX workspace bundling to the guarded Worker adapter (0.346792ms)\n✔ R5P-052 raw JavaScript adapter still rejects TypeScript when no compiler/bundler provider is attached (0.427222ms)\n✔ R5P-053 browser host probe classifies an Android WebView user agent as provisional (0.423395ms)\n✔ R5P-054 remote attestation rejects a signature after result digest tampering (3.773118ms)\n✔ R5P-055 TypeScript semantic checker enforces per-file and aggregate source limits (0.340072ms)\n✔ R5P-056 Android APK build forwards approval and verifies manifest, signature, digest and size (0.248587ms)\n✔ R5P-057 native C++ build service verifies a bounded artifact under strict host policy (0.201798ms)\n✔ R5P-058 Unity build service requires approval and forwards non-root/network-denied policy (0.184953ms)\n✔ R5P-059 remote endpoint query tokens are refused (0.087039ms)\nℹ tests 59\nℹ suites 0\nℹ pass 59\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1249.087132\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-director-host-header.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-director-host-header.test.mjs",
+      "exitCode": 0,
+      "durationMs": 362,
+      "stdoutTail": "✔ managed preview: normal and localhost Host headers are served, a foreign Host is refused (421) (21.54511ms)\n✔ UI server: normal Host is served, a foreign Host is refused (421), traversal still refused (9.367888ms)\n✔ NEGATIVE (real mutant): the managed preview without the Host check serves a foreign Host (5.86486ms)\n✔ NEGATIVE (real mutant): the UI server without the Host check serves a foreign Host (4.93828ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 333.620476\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p10-services.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p10-services.test.mjs",
+      "exitCode": 0,
+      "durationMs": 535,
+      "stdoutTail": "✔ P10 literal search returns confined text matches (5.170603ms)\n✔ P10 rejects unsafe patterns (0.487741ms)\n✔ P10 skips symlinks that point outside the project (2.806769ms)\n✔ P10 skips binary files (1.766662ms)\n✔ P10 enforces file-count and size limits (3.303653ms)\n✔ P10 TypeScript language service reports actual semantic diagnostics (35.991286ms)\n✔ P10 TypeScript language service refuses missing and outside files (0.586877ms)\n✔ P10 project test execution is explicitly blocked without OS confinement (0.21631ms)\n✔ P10 formatter reports missing package honestly (0.299062ms)\n✔ P10 TypeScript symbol references and rename preview use the real language service (18.688266ms)\n✔ P10 rename preview refuses an existing declaration conflict (9.052142ms)\n✔ P10 search refuses deeply nested hostile project trees (27.154998ms)\n✔ P10 search skips oversized files and names with control characters (6.15901ms)\n✔ P10 compiled-module mutant removing unsafe-query refusal is caught (26.190487ms)\nℹ tests 14\nℹ suites 0\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 504.624863\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p11-lsp.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p11-lsp.test.mjs",
+      "exitCode": 0,
+      "durationMs": 6770,
+      "stdoutTail": "✔ P11 real TypeScript language server initializes and serves completion/hover/definition (1416.561228ms)\n✔ P11 refuses oversized outbound LSP messages (5.694708ms)\n✔ P11 process is killed on stop (1.125434ms)\n✔ P11 restarts a crashed real language-server process once (5198.206979ms)\n✔ P11 request refuses use before server starts (0.421374ms)\n✔ P11 compiled-module mutant removing outbound size guard is caught (52.316423ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 6732.118827\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p12-gateway.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p12-gateway.test.mjs",
+      "exitCode": 0,
+      "durationMs": 296,
+      "stdoutTail": "✔ P12 submit creates persistent job with AXON origin and owner (6.480362ms)\n✔ P12 user submit records user origin (0.621951ms)\n✔ P12 exact-request approval cannot be replayed (0.45932ms)\n✔ P12 approval is bound to the complete caller, request and scope (0.183853ms)\n✔ P12 wrong project and wrong approval scope are refused (0.295618ms)\n✔ P12 expired approval is refused (0.20961ms)\n✔ P12 permission denial and malformed caller are refused (0.265132ms)\n✔ P12 pause either suspends a queued job or honestly reports unsupported for an active worker (3.629372ms)\n✔ P12 resume reports NOT_SUPPORTED without a checkpoint adapter (0.809228ms)\n✔ P12 oversized submit payload is rejected (0.490316ms)\n✔ P12 restart sees persisted jobs through a shared store adapter (0.639357ms)\n✔ P12 audit records successful operations (0.243491ms)\n✔ P12 wrong owner cannot read job results (0.650843ms)\n✔ P12 unknown or terminal jobs cannot be cancelled (0.193436ms)\n✔ P12 cancelling a running job aborts the actual executor signal (5.575553ms)\n✔ P12 executor output cap is enforced by the actual job worker (26.21502ms)\n✔ P12 one approval cannot be consumed concurrently twice (0.384739ms)\n✔ P12 user can cancel an AXON-origin job in the same workspace without AXON management permission (0.936266ms)\n✔ P12 recovery marks a running job interrupted after service restart (0.779143ms)\n✔ P12 deadline fails a job whose provider never returns (52.17243ms)\n✔ P12 file-backed store persists job and audit across a new store instance (48.167733ms)\n✔ P12 refused operations are written to the audit trail (0.279554ms)\n✔ P12 compiled-module mutant removing permission guard is caught (34.91663ms)\nℹ tests 23\nℹ suites 0\nℹ pass 23\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 262.924401\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p13-android-source.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p13-android-source.test.mjs",
+      "exitCode": 0,
+      "durationMs": 84,
+      "stdoutTail": "✔ P13 Gradle and Capacitor Android source skeleton files exist (4.37851ms)\n✔ P13 host plugin exposes SAF workspace selection and persistable permission handling (1.704643ms)\n✔ P13 process and compiler providers remain explicitly unavailable on Android (0.880644ms)\n✔ P13 source-only skeleton does not claim a built APK (0.843278ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 54.824926\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p7-ui-packaging.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p7-ui-packaging.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1313,
+      "stdoutTail": "✔ P7 rejects encoded dot and traversal paths (1.128158ms)\n✔ P7 rejects malformed encodings and backslashes (0.131314ms)\n✔ P7 refuses non-loopback binding (0.297309ms)\n✔ P7 resolves only files under the configured root (0.161569ms)\n✔ P7 rejects dot segments in nested paths (0.156501ms)\n✔ P7 rejects null-byte path (0.13532ms)\n✔ P7 generated HTML contains every workbench control id and no import map or inline scripts (116.321638ms)\n✔ P7 build report contains sha256 hashes and remains within budget (2.100836ms)\n✔ P7 HTTP server refuses symlinks that resolve outside its root (24.530911ms)\n✔ P7 compiled-module mutant removing symlink confinement is caught (31.705658ms)\n✔ P7 two clean esbuild runs produce identical asset hashes (356.647975ms)\n✔ P7 bundled workbench scripts contain no bare package imports (6.888174ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1284.672236\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p8-wasm.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p8-wasm.test.mjs",
+      "exitCode": 0,
+      "durationMs": 551,
+      "stdoutTail": "(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 executes a real minimal WASM module (37.960557ms)\n✔ P8 rejects invalid WASM bytes (30.579483ms)\n✔ P8 enforces module size limit (1.077082ms)\n✔ P8 enforces bounded timeout configuration (0.217702ms)\n✔ P8 rejects a non-directory workspace (1.169599ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 worker terminates within bounded wall time (32.262883ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 kills a genuinely non-terminating WASM function at the CPU deadline (104.366592ms)\n✔ P8 enforces declared WebAssembly memory maximum before instantiation (32.079722ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 denies a module requesting an arbitrary host import (30.687703ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 executes a real WASI fd_write hello-world module through the WASI provider (30.013007ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 enforces the WASI output cap (31.07104ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 isolates two WASM executions in separate workers (37.843809ms)\n(node:113021) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ P8 compiled-module mutant removing module-size guard is caught (90.723415ms)\n✔ P8 refuses unsafe memory and output quota configuration (0.461933ms)\nℹ tests 14\nℹ suites 0\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 520.657157\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-p9-preview.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-p9-preview.test.mjs",
+      "exitCode": 0,
+      "durationMs": 190,
+      "stdoutTail": "✔ P9 serves virtual project files with fixed security headers and MIME (23.51584ms)\n✔ P9 refuses traversal and encoded traversal (7.615851ms)\n✔ P9 refuses absolute and dot-segment project paths (0.402936ms)\n✔ P9 caps file count and total bytes (0.423997ms)\n✔ P9 captures bounded console and error events (0.408184ms)\n✔ P9 cleanly handles repeated start and stop (1.720684ms)\n✔ P9 refuses control characters and encoded traversal in virtual project names (0.361574ms)\n✔ P9 refuses a preview that exceeds the per-project file cap (0.2297ms)\n✔ P9 compiled-module mutant removing project-size cap is caught (46.958791ms)\nℹ tests 9\nℹ suites 0\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 160.355595\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q1-job-service.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q1-job-service.test.mjs",
+      "exitCode": 0,
+      "durationMs": 12010,
+      "stdoutTail": "✔ Q1 user can cancel an AXON-origin job in the same workspace (6.812353ms)\n✔ Q1 AXON cannot cancel a user job without explicit manage permission (0.992026ms)\n✔ Q1 real Linux child stops consuming CPU while SIGSTOPped and resumes with SIGCONT (420.062012ms)\n✔ Q1 paused child is killed and recorded interrupted after service restart (17.364434ms)\n✔ Q1 process host refuses unapproved executable, shell injection and workspace escape (8.349224ms)\n✔ Q1 background queue enforces concurrency, per-owner quota and global cap (23.40816ms)\n✔ Q1 background queue rotates owners fairly and prioritises within an owner (16.682867ms)\n✔ Q1 queue survives 1,000 start/stop cycles without retaining active jobs (96.201329ms)\n✔ Q1 rejects queue work after shutdown and duplicate process ids (11.870421ms)\n✔ Q1 real compiled queue mutant removing per-owner quota is caught (13.852772ms)\n✔ Q1 gateway submissions enter the bounded background queue and enforce owner quota (2.503682ms)\n✔ Q1 user can pause and resume an AXON-origin child-process job in the same workspace (13.188389ms)\n✔ Q1 AXON can manage a user job only with explicit permission and an audit record (12.482716ms)\n✔ Q1 queue prunes terminal history and accepts more than its concurrent job cap over time (122.69355ms)\n✔ Q1 Linux child host completes 1,000 real spawn/cancel cycles without retained children (11094.689407ms)\n✔ Q1 gateway restart interruption is not overwritten when the killed child exits (43.05827ms)\nℹ tests 16\nℹ suites 0\nℹ pass 16\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 11977.824161\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q2-confined-project-tests.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q2-confined-project-tests.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1692,
+      "stdoutTail": "✔ Q2 Node permission runner executes a harmless real node --test project (106.13029ms)\n✔ Q2 hostile project cannot read /etc/passwd (98.055945ms)\n✔ Q2 hostile project cannot spawn a child process (134.841119ms)\n✔ Q2 hostile project cannot write outside the one scratch directory (96.570799ms)\n✔ Q2 hostile infinite loop is cut off by the outer wall-clock timeout (277.359521ms)\n✔ Q2 hostile endless output is cut off by the output cap (147.871907ms)\n✔ Q2 hostile project receives no inherited environment secrets (101.005512ms)\n✔ Q2 runner rejects empty projects and does not grant child-process or worker permissions (25.660009ms)\n✔ Q2 real compiled runner mutant removing --permission is caught (13.900765ms)\n✔ Q2 project services now route real project tests through the confined runner (518.706366ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1628.088598\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q3-lsp-hostile-frames.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q3-lsp-hostile-frames.test.mjs",
+      "exitCode": 0,
+      "durationMs": 273,
+      "stdoutTail": "✔ Q3 strict decoder accepts a valid response for the oldest outstanding request (2.21096ms)\n✔ Q3 malformed headers and duplicate Content-Length are refused (0.745723ms)\n✔ Q3 oversized Content-Length is refused before body allocation (0.333483ms)\n✔ Q3 truncated body is reported when the server closes the stream (0.251903ms)\n✔ Q3 out-of-order and duplicate responses are rejected (0.472759ms)\n✔ Q3 notification flood is stopped at the configured count (0.488742ms)\n✔ Q3 oversized and unterminated headers remain bounded (0.442905ms)\n✔ Q3 real client times out and can terminate a server that never answers (117.012715ms)\n✔ Q3 real compiled decoder mutant removing Content-Length bounds is caught (12.592049ms)\nℹ tests 9\nℹ suites 0\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 229.103488\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q4-preview-console-bridge.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q4-preview-console-bridge.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1035,
+      "stdoutTail": "preview-warning\nError: preview-failure\n    at http://127.0.0.1:44231/index.html:1:40\n    at Script.runInContext (node:vm:149:12)\n    at Object.runInContext (node:vm:301:6)\n    at runClassicScript (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:408:8)\n    at #execute (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:297:9)\n    at Object.execute (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:174:57)\n    at /mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/browser/parser/html.js:393:20\n    at #withInsertionPoint (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/browser/parser/html.js:373:16)\n    at #prepareScript (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/browser/parser/html.js:384:29)\n    at #pump (/mnt/data/r14c5/base/axon-code/node_modules/jsdom/lib/jsdom/browser/parser/html.js:445:28)\n✔ Q4 real preview server injects the console bridge and sends console/error events in jsdom (173.654843ms)\n✔ Q4 bridge rejects forged source, foreign origin and wrong token (41.895691ms)\n✔ Q4 bridge accepts only the iframe origin and source and caps event count (36.442893ms)\n✔ Q4 bridge caps aggregate event bytes and truncates individual messages (32.959047ms)\n✔ Q4 bridge refuses malformed messages and closes its listener (37.193518ms)\n✔ Q4 preview server refuses foreign Host header rebinding (6.753918ms)\n✔ Q4 real compiled bridge mutant removing source/origin validation is caught (32.001229ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 971.329768\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q5-integration-screen-contract.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q5-integration-screen-contract.test.mjs",
+      "exitCode": 0,
+      "durationMs": 240,
+      "stdoutTail": "✔ Q5 every documented gateway example executes against the real gateway and matches its result contract (24.702673ms)\n✔ Q5 screen contract includes every source and built UI element id and all status states (3.323836ms)\n✔ Q5 integration contract documents all lifecycle states, errors and OPEN capability mappings (1.025997ms)\n✔ Q5 integration examples cannot replay an approval or alter a documented request payload (0.503915ms)\n✔ Q5 real compiled gateway mutant removing approval scope binding is caught (35.298461ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 144.225911\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q6-performance-budgets.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q6-performance-budgets.test.mjs",
+      "exitCode": 0,
+      "durationMs": 291,
+      "stdoutTail": "(node:119317) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ Q6 real WASM provider startup stays below the 3-second Node budget (43.246318ms)\n(node:119317) ExperimentalWarning: WASI is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ Q6 per-job WASM guest memory stays within the 2 MiB budget (35.13882ms)\n✔ Q6 deterministic UI bundle stays below its 16 MiB packaging budget (1.930234ms)\n✔ Q6 background queue throughput stays above 100 completed jobs per second (73.558937ms)\n✔ Q6 rejects out-of-budget WASM memory configuration and queue overload (1.180405ms)\n✔ Q6 real compiled queue mutant removing the global job cap is caught (16.70386ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 251.753442\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q7-android-background-source.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q7-android-background-source.test.mjs",
+      "exitCode": 0,
+      "durationMs": 136,
+      "stdoutTail": "✔ Q7 Kotlin source declares a foreground job service and notification action intents (4.451622ms)\n✔ Q7 manifest declares foreground-service permissions and a non-exported service (1.585785ms)\n✔ Q7 SAF source retains persistable workspace grants and scoped document operations (0.780544ms)\n✔ Q7 FAKE_HOST exercises notification pause/cancel and SAF grant lifecycle without claiming provider proof (1.290929ms)\n✔ Q7 contract refuses a missing host and missing required methods (0.50042ms)\n✔ Q7 malformed SAF grants and absent capabilities remain NOT RUN (0.23618ms)\n✔ Q7 real compiled contract mutant removing required-method validation is caught (16.604397ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 104.543909\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-q8-round15-handover.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-q8-round15-handover.test.mjs",
+      "exitCode": 0,
+      "durationMs": 127,
+      "stdoutTail": "✔ Q8 handover verifier reports exact capability registry counts (6.212486ms)\n✔ Q8 checklist must contain PASS and FAIL recording fields and all competitor names (2.764628ms)\n✔ Q8 handover refuses missing device evidence and unsupported competitor superiority claims (1.988351ms)\n✔ Q8 real compiled verifier mutant removing Android NOT RUN guard is caught (13.968565ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.912219\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp00-baseline.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp00-baseline.test.mjs",
+      "exitCode": 0,
+      "durationMs": 91,
+      "stdoutTail": "✔ R14 WP0 pins TypeScript as an exact production dependency (0.79109ms)\n✔ R14 WP0 lockfile resolves the same exact TypeScript version (0.17546ms)\n✔ R14 WP0 rejects a dependency/lockfile version mismatch (1.091223ms)\n✔ R14 WP0 PTY environment is constructed from an allow-list, not inherited wholesale (0.229449ms)\n✔ R14 WP0 exit protocol separates a terminating signal from a numeric exit code (0.191133ms)\n✔ R14 WP0 catches the deliberately broken null/negative-exit mutant (0.867012ms)\n✔ R14 WP0 WebSocket bridge binds only to loopback and uses a one-time cryptographic token (0.156471ms)\n✔ R14 WP0 WebSocket bridge rejects Host and Origin mismatches and limits frames/rate (0.096613ms)\n✔ R14 WP0 WebSocket bridge dependency is pinned and shell environment is allow-listed (0.352942ms)\n✔ R14 WP0 catches a deliberately broken WebSocket Host-check mutant (0.46053ms)\n✔ R14 C1 dependency migration is documented with a rollback path (0.514822ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 62.432969\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp01-gateway-registry.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp01-gateway-registry.test.mjs",
+      "exitCode": 0,
+      "durationMs": 116,
+      "stdoutTail": "✔ R14 WP1 accepts a complete JSON gateway envelope (3.933096ms)\n✔ R14 WP1 rejects missing approval references (0.171804ms)\n✔ R14 WP1 rejects unknown operations (0.14835ms)\n✔ R14 WP1 rejects malformed caller identity and scope (0.106858ms)\n✔ R14 WP1 rejects requests without an explicit payload property (0.155761ms)\n✔ R14 WP1 catches the deliberately broken approval-bypass mutant (1.137872ms)\n✔ R14 WP1 gateway source has no import into the AXON main application (1.700595ms)\n✔ R14 WP1 gateway returns capability status only from the supplied registry (4.011111ms)\n✔ R14 WP1 gateway refuses malformed registry and missing read scope (0.372281ms)\n✔ R14 WP1 UI reads the generated registry instead of hardcoding capability statuses (0.660527ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 85.118435\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp02-workspace.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp02-workspace.test.mjs",
+      "exitCode": 0,
+      "durationMs": 130,
+      "stdoutTail": "✔ R14 WP2 persists workspace records across adapter reconstruction (1.477154ms)\n✔ R14 WP2 workspace compare-and-write refuses stale content (0.350909ms)\n✔ R14 WP2 atomic write-if-absent prevents accidental overwrite (0.382766ms)\n✔ R14 WP2 tombstones hide deleted files from listings and reads (5.796691ms)\n✔ R14 WP2 rejects traversal and malformed workspace paths (0.614458ms)\n✔ R14 WP2 journal records an intent before file mutation (8.84591ms)\n✔ R14 WP2 journal recognizes an already-applied transaction after interruption (1.698762ms)\n✔ R14 WP2 journal detects external modification instead of overwriting it (1.282286ms)\n✔ R14 WP2 journal refuses duplicate transaction IDs and double finalization (1.083362ms)\n✔ R14 WP2 catches a deliberately broken recovery mutant that auto-overwrites conflicts (1.872249ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 90.900744\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp02-wp05-wp12-storage-recovery.test.mjs",
+      "exitCode": 0,
+      "durationMs": 238,
+      "stdoutTail": "✔ P6 file-backed KeyValueStore persists structured values and Uint8Array across reconstruction (15.617048ms)\n✔ P6 kill-during-save recovery keeps the previous atomic file record after a real SIGKILL (40.494724ms)\n✔ P6 fake-indexeddb interrupted project import leaves the last committed project version visible (6.618567ms)\n✔ P6 fake-indexeddb two-tab compare-and-write rejects the stale second tab (2.836845ms)\n✔ P6 NEGATIVE: file-backed store enforces its configured total-byte quota without replacing prior data (4.884513ms)\n✔ P6 NEGATIVE: concurrent file-store writes serialize quota checks across different keys (3.520145ms)\n✔ P6 NEGATIVE: file-backed store detects a corrupted record using its stored SHA-256 (5.917279ms)\n✔ P6 NEGATIVE: unknown and mismatched workspace trust records default to Restricted (0.368405ms)\n✔ P6 NEGATIVE: single-use approval refuses replay, cross-project use and changed request use (1.443104ms)\n✔ P6 secrets corpus is redacted across logs, diagnostics, exports and crash reports (2.234564ms)\n✔ P6 NEGATIVE: malformed file-store record is rejected instead of silently returning data (1.04092ms)\n✔ P6 NEGATIVE (real mutant): removing the compiled file-store hash guard permits a corrupted record (6.408917ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 207.653417\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-android-host-contract.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-android-host-contract.test.mjs",
+      "exitCode": 0,
+      "durationMs": 94,
+      "stdoutTail": "✔ C3 validates Android API/ABI capability contract (0.910687ms)\n✔ C3 rejects malformed and below-floor Android host claims (1.41978ms)\n✔ C3 reads bytes only through a named persisted grant and bounded URI token (0.781265ms)\n✔ C3 denies missing grants and invalid read limits (0.295837ms)\n✔ C3 refuses forged byte count and over-limit host read (0.237672ms)\n✔ C3 writes exact bytes and rejects host byte-count mismatch (0.273364ms)\n✔ C3 rejects unbounded or non-byte-array writes (0.325ms)\n✔ C3 lists bounded child document entries under a persisted SAF grant (0.133878ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 61.187767\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-control-wiring.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-control-wiring.test.mjs",
+      "exitCode": 0,
+      "durationMs": 5087,
+      "stdoutTail": "✔ WP3 real UI workflow: project, import, edit, save, reopen, file actions, clipboard, export/share/download (759.050868ms)\n✔ WP3 NEGATIVE: stale save conflict refuses to overwrite an externally changed file (126.431164ms)\n✔ WP3 NEGATIVE: delete of a missing file reports failure and does not recreate it (68.868557ms)\n✔ WP3 NEGATIVE: rename onto an existing file is refused without changing either stored file (211.56083ms)\n✔ WP3 real CodeMirror 6 editor is mounted in the actual workbench DOM (50.608969ms)\n✔ WP3 NEGATIVE: import skips traversal, binary content and oversize files (52.159854ms)\n✔ WP3 NEGATIVE: clipboard denial is surfaced without changing source (96.951302ms)\n✔ WP3 NEGATIVE: cancelling Clear leaves the real editor document unchanged (103.369602ms)\n✔ WP3 NEGATIVE: switching projects with dirty buffers is refused when confirmation is denied (136.589124ms)\n✔ WP3 NEGATIVE: editor size limit refuses oversized save and preserves stored version (170.510684ms)\n✔ WP3 share falls back to the real ZIP exporter when the native share sheet is unavailable (57.564551ms)\n✔ WP3 export serializes the real project and file content to JSON (92.516464ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5055.885972\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-editor-engine-contract.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-editor-engine-contract.test.mjs",
+      "exitCode": 0,
+      "durationMs": 83,
+      "stdoutTail": "✔ C5 accepts only a CodeMirror 6 mounting adapter (0.715388ms)\n✔ C5 refuses a missing editor module rather than silently falling back to textarea (0.3449ms)\n✔ C5 accepts only xterm.js with fit support (0.119507ms)\n✔ C5 refuses fake terminal adapters (0.812672ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 52.891651\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-file-operations-director.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-file-operations-director.test.mjs",
+      "exitCode": 0,
+      "durationMs": 92,
+      "stdoutTail": "✔ good rename and move are planned (1.891066ms)\n✔ a case-only rename of the file itself is allowed (0.767485ms)\n✔ NEGATIVE: traversal, absolute, drive, backslash, encoded and control characters are refused (0.651904ms)\n✔ NEGATIVE: non-string and oversize destinations are refused (0.199585ms)\n✔ NEGATIVE: collisions, including letter-case-only collisions, are refused (0.13561ms)\n✔ NEGATIVE: missing source, identical paths and unknown operations are refused (0.165414ms)\n✔ NEGATIVE (real mutant): the real compiled module with the case check removed lets the collision through (7.023706ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 62.455107\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-file-operations.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-file-operations.test.mjs",
+      "exitCode": 0,
+      "durationMs": 107,
+      "stdoutTail": "✔ WP3 accepts same-directory rename (2.82013ms)\n✔ WP3 accepts directory move preserving filename (0.50044ms)\n✔ WP3 rejects unsafe traversal destination (0.839342ms)\n✔ WP3 rejects absolute destination (0.244912ms)\n✔ WP3 rejects backslash paths (0.272533ms)\n✔ WP3 rejects a missing source (0.124204ms)\n✔ WP3 rejects destination collision (0.158014ms)\n✔ WP3 rejects no-op rename (0.10864ms)\n✔ WP3 rejects cross-directory rename (0.340153ms)\n✔ WP3 NEGATIVE (real mutant): removing the real compiled operation guard is detected (16.806596ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 76.426021\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-import-map-resolves.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-import-map-resolves.test.mjs",
+      "exitCode": 0,
+      "durationMs": 109,
+      "stdoutTail": "✔ the editor and terminal module graph resolves completely through the import map (10.34727ms)\n✔ every import map target exists on disk (0.300444ms)\n✔ NEGATIVE: a broken import map target is detected (mutant) (6.138818ms)\n✔ NEGATIVE: a missing mapping is detected (mutant) (5.800477ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 73.784065\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp03-workbench-engines.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp03-workbench-engines.test.mjs",
+      "exitCode": 0,
+      "durationMs": 87,
+      "stdoutTail": "✔ WP3 uses exact pinned CodeMirror 6, xterm.js and Pyodide package dependencies (0.936094ms)\n✔ editor and terminal mounts use the real engines with no presented textarea fallback (0.204312ms)\n✔ PTY connection requires trusted host service and loopback WebSocket endpoint (0.570694ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 57.992474\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp04-pyodide-provider.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp04-pyodide-provider.test.mjs",
+      "exitCode": 0,
+      "durationMs": 102,
+      "stdoutTail": "✔ C4 verifies each offline Pyodide asset by exact size and SHA-256 (6.366654ms)\n✔ C4 rejects missing, modified, oversized and path-traversal pack files (1.127357ms)\n✔ C4 rejects a remote base URL for an offline-only runtime pack (0.174298ms)\n✔ C4 refuses execution when no offline pack is installed (0.53443ms)\n✔ C4 requires a verified pack, offline request, Python file and bounded policy (1.836115ms)\n✔ C4 rejects a malformed Pyodide worker base URL (0.489534ms)\n✔ C4 installs only verified offline packs and supports explicit removal (3.745859ms)\n✔ C4 does not install a tampered optional pack (0.464748ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 69.389787\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp04-pyodide-vendor.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp04-pyodide-vendor.test.mjs",
+      "exitCode": 0,
+      "durationMs": 78,
+      "stdoutTail": "✔ WP4 Pyodide provider required assets match the real vendored CPython-WASM distribution (1.429233ms)\n✔ WP4 remains an actual CPython WebAssembly Worker adapter and never an imitation (0.226395ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 50.183456\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp05-security-completion.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp05-security-completion.test.mjs",
+      "exitCode": 0,
+      "durationMs": 87,
+      "stdoutTail": "✔ C10 redacts credentials recursively from structured logger records (2.11646ms)\n✔ C10 redacts secrets from crash message, stack and nested context (0.411829ms)\n✔ C10 redacts diagnostic messages, explanations and related fields before returning them (0.52784ms)\n✔ C10 redacts diagnostic export payloads and private-key blocks (0.170633ms)\n✔ C10 rejects malformed crash report metadata instead of serializing it (0.362305ms)\n✔ C10 detects the deliberately broken no-redaction mutant (0.134949ms)\n✔ C10 routes every telemetry channel through the redaction boundary before persistence (5.445562ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 57.127474\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp05-security.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp05-security.test.mjs",
+      "exitCode": 0,
+      "durationMs": 105,
+      "stdoutTail": "✔ R14 WP5 redacts common provider tokens and bearer credentials (1.530243ms)\n✔ R14 WP5 redacts GitHub and AWS key patterns (0.219174ms)\n✔ R14 WP5 redacts private-key blocks and URL passwords (0.890987ms)\n✔ R14 WP5 recursively redacts sensitive object keys in exports (0.871358ms)\n✔ R14 WP5 redacts case and separator variants of secret field names (0.587549ms)\n✔ R14 WP5 preserves ordinary prose that only mentions a secret concept (0.301486ms)\n✔ R14 WP5 handles cycles without recursion failure (0.2096ms)\n✔ R14 WP5 rejects non-text input to the text redactor (0.316018ms)\n✔ R14 WP5 applies the same redaction contract to all four output contexts (0.289518ms)\n✔ R14 WP5 catches a deliberately broken no-op redaction mutant (1.116692ms)\n✔ R14 WP5 actual project export redacts credential-like literals and reports affected paths (10.849624ms)\n✔ R14 WP5 evidence ledger redacts credential-bearing diagnostics before persistence (1.316396ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 70.808095\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp05-trust.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp05-trust.test.mjs",
+      "exitCode": 0,
+      "durationMs": 102,
+      "stdoutTail": "✔ R14 WP5 unknown projects open Restricted by default (1.63649ms)\n✔ R14 WP5 a current fingerprint-matched trust record is accepted (0.169511ms)\n✔ R14 WP5 trust records do not transfer across project fingerprints (0.092227ms)\n✔ R14 WP5 expired and future-dated trust records are restricted (0.099718ms)\n✔ R14 WP5 reading and editing remain available in Restricted Mode (0.183131ms)\n✔ R14 WP5 script execution is blocked without a single-use approval (0.213145ms)\n✔ R14 WP5 exact approved request is accepted once (9.363415ms)\n✔ R14 WP5 replayed approval tokens are rejected (1.436985ms)\n✔ R14 WP5 approvals reject cross-project and cross-action use (1.783157ms)\n✔ R14 WP5 request tampering invalidates approval (1.198742ms)\n✔ R14 WP5 expired one-time approvals are rejected (1.37924ms)\n✔ R14 WP5 catches a deliberately broken approval-bypass mutant (1.201346ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 68.666968\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp06-package-manager.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp06-package-manager.test.mjs",
+      "exitCode": 0,
+      "durationMs": 8397,
+      "stdoutTail": "✔ WP6 real npm installs from a local registry and writes a verified package lock (1728.74862ms)\n✔ WP6 NEGATIVE: npm install scripts remain disabled even when a package declares preinstall (387.492056ms)\n✔ WP6 real npm offline reinstall restores a clean environment from its local cache (945.752911ms)\n✔ WP6 real npm removes an installed package and updates package metadata (915.176204ms)\n✔ WP6 NEGATIVE: PackagePlanService blocks npm because the host has no OS process confinement (148.778188ms)\n✔ WP6 NEGATIVE: npm refuses a tampered tarball before starting the package manager (6.567772ms)\n✔ WP6 NEGATIVE: npm refuses a tarball URL redirected outside the approved registry (2.450503ms)\n✔ WP6 real npm rolls back an install when the registry serves a tampered tarball after preflight (949.681918ms)\n✔ WP6 NEGATIVE: npm rejects floating versions, unpinned hashes, duplicate requirements and foreign sources (4.494206ms)\n✔ WP6 NEGATIVE (real mutant): removing the real compiled tarball SHA guard allows a tampered artifact into staging (3.618331ms)\n✔ WP6 T2 real pip installs a hash-pinned wheel from a local PEP 503 index (2037.992861ms)\n✔ WP6 NEGATIVE: real pip rejects a wheel whose hash does not match the approved requirement (1091.693728ms)\n✔ WP6 NEGATIVE: pip T2 adapter refuses a non-loopback index and malformed requirements (0.330359ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 8367.233148\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp10-typescript-debugger.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp10-typescript-debugger.test.mjs",
+      "exitCode": 0,
+      "durationMs": 8008,
+      "stdoutTail": "✔ WP10 TypeScript golden project 01-clean (644.193117ms)\n✔ WP10 TypeScript golden project 02-type-mismatch (265.667284ms)\n✔ WP10 TypeScript golden project 03-missing-property (316.293685ms)\n✔ WP10 TypeScript golden project 04-unknown-name (302.71755ms)\n✔ WP10 TypeScript golden project 05-argument-count (264.713183ms)\n✔ WP10 TypeScript golden project 06-return-type (215.40095ms)\n✔ WP10 TypeScript golden project 07-generic-constraint (210.96192ms)\n✔ WP10 TypeScript golden project 08-strict-null (202.973898ms)\n✔ WP10 TypeScript golden project 09-implicit-any (198.52507ms)\n✔ WP10 TypeScript golden project 10-no-overload (212.600624ms)\n✔ WP10 TypeScript golden project 11-missing-module (206.750789ms)\n✔ WP10 TypeScript golden project 12-duplicate-identifier (187.160535ms)\n✔ WP10 TypeScript golden project 13-readonly-assignment (183.057569ms)\n✔ WP10 TypeScript golden project 14-index-signature (219.158356ms)\n✔ WP10 TypeScript golden project 15-enum-mismatch (175.258018ms)\n✔ WP10 TypeScript golden project 16-syntax-error (189.39843ms)\n✔ WP10 TypeScript golden project 17-union-narrowing (172.110528ms)\n✔ WP10 TypeScript golden project 18-tuple-index (189.000482ms)\n✔ WP10 TypeScript golden project 19-excess-property (189.868996ms)\n✔ WP10 TypeScript golden project 20-function-variance (166.011128ms)\n✔ WP10 TypeScript golden project 21-invalid-spread (179.384212ms)\n✔ WP10 TypeScript golden project 22-jsx-intrinsic (192.240594ms)\n✔ WP10 TypeScript golden project 23-cross-file-missing-export (216.820929ms)\n✔ WP10 TypeScript golden project 24-cross-file-type-mismatch (237.710289ms)\n✔ WP10 TypeScript golden project 25-cross-file-missing-module (242.734869ms)\n✔ WP10 TypeScript golden project 26-tsconfig-invalid-target (197.068392ms)\n✔ WP10 TypeScript golden project 27-tsconfig-missing-extends (173.520071ms)\n✔ WP10 TypeScript golden project 28-tsconfig-malformed-json (172.371974ms)\n✔ WP10 TypeScript golden project 29-tsconfig-no-input-files (0.770129ms)\n✔ WP10 TypeScript golden project 30-tsconfig-unknown-option (167.519278ms)\n✔ WP10 NEGATIVE: virtual TypeScript compiler refuses path traversal (0.539468ms)\n✔ WP10 NEGATIVE: virtual TypeScript compiler refuses more than 256 files (0.596632ms)\n✔ WP10 NEGATIVE: virtual TypeScript compiler refuses a source file above 2 MiB (5.805414ms)\n✔ WP10 NEGATIVE: virtual TypeScript compiler refuses oversized tsconfig (0.215949ms)\n✔ WP10 NEGATIVE (real mutant): removing the compiled source-size guard accepts oversized project input (246.532153ms)\n✔ WP10 real Node Inspector: breakpoint, step over/in/out, stack, variables, evaluate and stop (485.869047ms)\n✔ WP10 real Node Inspector reports a crashed target process (210.32916ms)\n✔ WP10 NEGATIVE: Node Inspector refuses a target path outside the approved workspace (0.655359ms)\n✔ WP10 NEGATIVE: Node Inspector refuses invalid breakpoint lines and evaluation payloads (129.429826ms)\nℹ tests 39\nℹ suites 0\nℹ pass 39\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 7978.711897\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp12-recovery.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp12-recovery.test.mjs",
+      "exitCode": 0,
+      "durationMs": 116,
+      "stdoutTail": "✔ R14 WP12 new jobs start QUEUED with an auditable first event (0.946971ms)\n✔ R14 WP12 rejects illegal state transitions (0.664102ms)\n✔ R14 WP12 progress is monotonic and bounded (0.307404ms)\n✔ R14 WP12 stale concurrent updates fail version checks (0.22975ms)\n✔ R14 WP12 restart marks live work INTERRUPTED but preserves completed jobs (1.458737ms)\n✔ R14 WP12 valid checkpoint can be recovered after manager reconstruction (8.332401ms)\n✔ R14 WP12 changed project fingerprints prevent automatic checkpoint resume (1.068891ms)\n✔ R14 WP12 corrupted checkpoint state is detected by its digest (0.626216ms)\n✔ R14 WP12 no-checkpoint interrupted jobs require manual intervention (0.624734ms)\n✔ R14 WP12 governor pauses background work under unknown responsiveness (0.572756ms)\n✔ R14 WP12 governor protects foreground work but throttles on thermal pressure (0.167036ms)\n✔ R14 WP12 catches a deliberately broken mutant that auto-resumes without a checkpoint (1.342335ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 81.358784\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp13-git-config-director.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp13-git-config-director.test.mjs",
+      "exitCode": 0,
+      "durationMs": 325,
+      "stdoutTail": "✔ NEGATIVE: a repository with fsmonitor configuration is blocked and no command runs (34.609877ms)\n✔ NEGATIVE: a repository with filterOnCommit configuration is blocked and no command runs (26.397744ms)\n✔ NEGATIVE: a repository with externalDiff configuration is blocked and no command runs (24.226364ms)\n✔ NEGATIVE: a repository with includedFile configuration is blocked and no command runs (24.918131ms)\n✔ NEGATIVE: a repository with worktreeConfig configuration is blocked and no command runs (23.04722ms)\n✔ NEGATIVE: a repository with editor configuration is blocked and no command runs (25.054151ms)\n✔ an ordinary repository (user, remote, branch settings) still works: status, commit, log (48.910774ms)\n✔ NEGATIVE (real mutant): the compiled provider with the audit removed lets the repository run its program (34.497205ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 292.344751\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/r14-wp13-git.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/r14-wp13-git.test.mjs",
+      "exitCode": 0,
+      "durationMs": 485,
+      "stdoutTail": "✔ WP13 real Git status, diff, log and branch queries report repository state (55.491284ms)\n✔ WP13 real Git commit creates a commit, branch creation and checkout use the real repository (49.889491ms)\n✔ WP13 real Git reports an actual merge conflict without inventing a resolution (81.929133ms)\n✔ WP13 real Git check-ignore identifies ignored files using the repository .gitignore (27.437917ms)\n✔ WP13 real Git commits a bounded large file and records it in the real object database (51.362724ms)\n✔ WP13 NEGATIVE: Git commit refuses files above the configured size budget (10.896322ms)\n✔ WP13 NEGATIVE: repository outside the approved workspace is refused before Git runs (18.752028ms)\n✔ WP13 NEGATIVE: Git hooks are disabled by default during commit (19.483621ms)\n✔ WP13 NEGATIVE: Git host does not forward askpass, SSH-agent or credential environment values (12.841073ms)\n✔ WP13 NEGATIVE: Git checkout refuses dirty workspaces and unsafe branch names (14.248078ms)\n✔ WP13 NEGATIVE: Git refuses traversal paths and invalid log limits (7.946661ms)\n✔ WP13 NEGATIVE (real mutant): removing the compiled workspace-boundary guard lets Git inspect an outside repository (28.080302ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 454.699838\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round1-150.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round1-150.test.mjs",
+      "exitCode": 0,
+      "durationMs": 551,
+      "stdoutTail": "] invalid JSON 10 (0.086618ms)\n✔ R1-051 [JSON] invalid JSON 11 (0.064686ms)\n✔ R1-052 [JSON] invalid JSON 12 (0.06078ms)\n✔ R1-053 [JSON] invalid JSON 13 (0.058957ms)\n✔ R1-054 [JSON] invalid JSON 14 (0.061981ms)\n✔ R1-055 [JSON] invalid JSON 15 (0.112516ms)\n✔ R1-056 [SCANNER] balanced source 1 (0.572376ms)\n✔ R1-057 [SCANNER] balanced source 2 (0.19599ms)\n✔ R1-058 [SCANNER] balanced source 3 (0.075692ms)\n✔ R1-059 [SCANNER] balanced source 4 (0.058997ms)\n✔ R1-060 [SCANNER] balanced source 5 (0.043364ms)\n✔ R1-061 [SCANNER] balanced source 6 (0.039769ms)\n✔ R1-062 [SCANNER] balanced source 7 (0.080048ms)\n✔ R1-063 [SCANNER] balanced source 8 (0.04721ms)\n✔ R1-064 [SCANNER] balanced source 9 (0.045918ms)\n✔ R1-065 [SCANNER] balanced source 10 (0.068241ms)\n✔ R1-066 [SCANNER] broken source 1 (0.132085ms)\n✔ R1-067 [SCANNER] broken source 2 (0.061811ms)\n✔ R1-068 [SCANNER] broken source 3 (0.054721ms)\n✔ R1-069 [SCANNER] broken source 4 (0.160888ms)\n✔ R1-070 [SCANNER] broken source 5 (0.117333ms)\n✔ R1-071 [SCANNER] broken source 6 (0.140007ms)\n✔ R1-072 [SCANNER] broken source 7 (0.073148ms)\n✔ R1-073 [SCANNER] broken source 8 (0.059388ms)\n✔ R1-074 [SCANNER] broken source 9 (0.089272ms)\n✔ R1-075 [SCANNER] broken source 10 (0.170642ms)\n✔ R1-076 [HTML] balanced HTML 1 (0.566388ms)\n✔ R1-077 [HTML] balanced HTML 2 (0.064605ms)\n✔ R1-078 [HTML] balanced HTML 3 (0.036855ms)\n✔ R1-079 [HTML] balanced HTML 4 (0.090214ms)\n✔ R1-080 [HTML] balanced HTML 5 (0.045097ms)\n✔ R1-081 [HTML] unbalanced HTML 1 (0.103233ms)\n✔ R1-082 [HTML] unbalanced HTML 2 (1.038045ms)\n✔ R1-083 [HTML] unbalanced HTML 3 (0.199525ms)\n✔ R1-084 [HTML] unbalanced HTML 4 (0.119387ms)\n✔ R1-085 [HTML] unbalanced HTML 5 (0.059277ms)\n✔ R1-086 [PROJECT] entry point detection 1 (363.706872ms)\n✔ R1-087 [PROJECT] entry point detection 2 (1.016543ms)\n✔ R1-088 [PROJECT] entry point detection 3 (0.429485ms)\n✔ R1-089 [PROJECT] entry point detection 4 (0.256079ms)\n✔ R1-090 [PROJECT] local dependency resolution 1 (1.723799ms)\n✔ R1-091 [PROJECT] local dependency resolution 2 (0.617373ms)\n✔ R1-092 [PROJECT] local dependency resolution 3 (0.764942ms)\n✔ R1-093 [PROJECT] local dependency resolution 4 (0.480801ms)\n✔ R1-094 [PROJECT] local dependency resolution 5 (0.433101ms)\n✔ R1-095 [PROJECT] dynamic import is marked incomplete (0.77078ms)\n✔ R1-096 [PROJECT] missing local import is reported (0.367203ms)\n✔ R1-097 [PROJECT] binary file is metadata-only (0.140508ms)\n✔ R1-098 [PROJECT] per-file byte cap is enforced (0.171784ms)\n✔ R1-099 [PROJECT] file-count cap is enforced (0.259573ms)\n✔ R1-100 [PROJECT] provider read failure is reported (0.173847ms)\n✔ R1-101 [PROJECT] external dependency names are collected (0.786783ms)\n✔ R1-102 [SELECTIVE] missing entry is rejected (0.437747ms)\n✔ R1-103 [SELECTIVE] side effects prevent isolation (0.400643ms)\n✔ R1-104 [SELECTIVE] undeclared dynamic imports prevent isolation (0.353292ms)\n✔ R1-105 [SELECTIVE] transitive dependencies are included (1.098014ms)\n✔ R1-106 [SELECTIVE] cycles terminate safely (0.360393ms)\n✔ R1-107 [SELECTIVE] unresolved dependency prevents isolation (0.3111ms)\n✔ R1-108 [SELECTIVE] uninspected dependency prevents isolation (0.233665ms)\n✔ R1-109 [SELECTIVE] unrelated file may be omitted only with complete graph (0.425289ms)\n✔ R1-110 [SELECTIVE] empty component id rejected (0.300474ms)\n✔ R1-111 [SELECTIVE] all entry files included (0.438769ms)\n✔ R1-112 [RESOURCE] sufficient resources select full local (0.365781ms)\n✔ R1-113 [RESOURCE] insufficient storage waits (0.169541ms)\n✔ R1-114 [RESOURCE] streaming strategy selected when supported (0.134298ms)\n✔ R1-115 [RESOURCE] streaming not selected if runtime lacks support (0.11484ms)\n✔ R1-116 [RESOURCE] chunking selected for declared independent work (0.108991ms)\n✔ R1-117 [RESOURCE] reduced quality is explicitly labelled (0.133056ms)\n✔ R1-118 [RESOURCE] no matching runtime is unsupported (0.089032ms)\n✔ R1-119 [RESOURCE] remote fallback requires network permission (0.107068ms)\n✔ R1-120 [RESOURCE] remote fallback used when permitted (0.115821ms)\n✔ R1-121 [RESOURCE] GPU requirement blocks without GPU (0.111134ms)\n✔ R1-122 [RESOURCE] NaN memory classified unknown (0.138084ms)\n✔ R1-123 [RESOURCE] hot thermal state takes priority (0.089583ms)\n✔ R1-124 [RESOURCE] low storage identified (0.088071ms)\n✔ R1-125 [RESOURCE] low memory identified (0.082302ms)\n✔ R1-126 [RESOURCE] healthy sample classified ready (0.099908ms)\n✔ R1-127 [AUTOFIX] OFF emits no patch (0.145295ms)\n✔ R1-128 [AUTOFIX] SUGGEST offers final newline (0.147047ms)\n✔ R1-129 [AUTOFIX] SAFE_AUTO_FIX does not mutate (0.086978ms)\n✔ R1-130 [AUTOFIX] empty file is not patched (0.071295ms)\n✔ R1-131 [AUTOFIX] existing LF is not patched (0.065487ms)\n✔ R1-132 [AUTOFIX] existing CR is not patched (0.061111ms)\n✔ R1-133 [AUTOFIX] patch applies at end (0.127048ms)\n✔ R1-134 [AUTOFIX] stale patch rejected (0.415064ms)\n✔ R1-135 [AUTOFIX] out-of-range patch rejected (0.12159ms)\n✔ R1-136 [AUTOFIX] patch cannot replace wrong source segment (0.117304ms)\n✔ R1-137 [RUNTIME] register and retrieve runtime 1 (0.16236ms)\n✔ R1-138 [RUNTIME] register and retrieve runtime 2 (0.062583ms)\n✔ R1-139 [RUNTIME] register and retrieve runtime 3 (0.048392ms)\n✔ R1-140 [RUNTIME] register and retrieve runtime 4 (0.041481ms)\n✔ R1-141 [RUNTIME] register and retrieve runtime 5 (0.038617ms)\n✔ R1-142 [RUNTIME] duplicate runtime id rejected (0.123523ms)\n✔ R1-143 [RUNTIME] blank runtime id rejected (0.171974ms)\n✔ R1-144 [RUNTIME] unavailable runtime does not resolve (0.126617ms)\n✔ R1-145 [RUNTIME] canHandle false prevents resolution (0.110974ms)\n✔ R1-146 [RUNTIME] list returns descriptor copy (0.279023ms)\n✔ R1-147 [RUNTIME] missing runtime returns undefined (0.059809ms)\n✔ R1-148 [RUNTIME] registry lists registered adapters (0.070274ms)\n✔ R1-149 [RUNTIME] resolve does not execute adapter (0.142811ms)\n✔ R1-150 [RUNTIME] descriptor platform metadata preserved (0.077495ms)\nℹ tests 150\nℹ suites 0\nℹ pass 150\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 521.59841\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round10-direct-user.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round10-direct-user.test.mjs",
+      "exitCode": 0,
+      "durationMs": 139,
+      "stdoutTail": "✔ R10-U01 direct user can use AXON Code command gateway without constructing or calling AXON Brain (2.253082ms)\n✔ R10-U02 direct user access is not dependent on BrainRequestGate or a Brain result sink (0.285762ms)\n✔ R10-U03 expired or invalid user session blocks direct operation (0.244191ms)\n✔ R10-U04 a user cannot operate on a project outside their verified session (0.163191ms)\n✔ R10-U05 missing user scope blocks command before dispatch (0.232454ms)\n✔ R10-U06 direct user requests are one-time and replay is rejected (0.219325ms)\n✔ R10-U07 destructive direct-user command requires project-specific explicit confirmation (0.366322ms)\n✔ R10-U08 unavailable UI command is reported instead of pretended operational (0.267937ms)\n✔ R10-U09 audit must record STARTED before any direct user side effect (0.438989ms)\n✔ R10-U10 oversized or non-serialisable user command input is refused (0.389706ms)\n✔ R10-U11 user can open, type into, save and reopen a project document without Brain involvement (0.972388ms)\n✔ R10-U12 user cannot save a document without write scope and explicit save approval (0.494571ms)\nℹ tests 12\nℹ suites 0\nℹ pass 12\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 110.680586\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round10-project-workloads.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round10-project-workloads.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1624,
+      "stdoutTail": "✔ R10-P01 website environment intelligence identifies a mixed Node/Web project (1.779752ms)\n✔ R10-P02 website source is analysed with no diagnostics and a complete static dependency graph (413.306605ms)\n✔ R10-P03 multi-file commerce logic type-checks and bundles for the supported JavaScript Worker runtime (552.361558ms)\n✔ R10-P04 deterministic AI-tool integration fixture is typed and bundleable but clearly marked as a test double (290.412448ms)\n✔ R10-P05 actual AXON Code source subset can be analysed and bundled for execution by its own JS runtime (0.247546ms)\n✔ R10-P06 full AXON Code TypeScript source self-checks with the trusted toolchain declaration provider (0.110604ms)\n✔ R10-P07 superseded parser findings are absent after Round 12 compiler-backed analysis (0.236399ms)\n✔ R10-P08 game project HTML and script are recognised as a Web project without claiming a game engine (0.449685ms)\n✔ R10-P09 malformed TypeScript fixture is diagnosed at the injected type mismatch (217.835069ms)\n✔ R10-P10 Unity and Unreal inspection reports engine execution not ready in this host (0.701838ms)\n✔ R10-P11 Android project inspection does not claim an APK build solely from manifest presence (1.218312ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1594.62734\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round12.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round12.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1018,
+      "stdoutTail": "✔ R12-A01 compiler AST does not report delimiters inside regex, template strings, comments or nested expressions (331.216545ms)\n✔ R12-A02 TypeScript NodeNext .js import specifier resolves to the .ts source file (1.951736ms)\n✔ R12-A03 JSX, generic types and nested delimiters are parsed without heuristic errors (2.390184ms)\n✔ R12-A04 genuine malformed TypeScript receives a compiler parser diagnostic and source location (1.344388ms)\n✔ R12-A05 dynamic nonliteral imports remain explicitly uncertain (0.890457ms)\n✔ R12-B01 bundler supports top-level await and NodeNext .js-to-.ts module substitution (564.426526ms)\n✔ R12-B02 composed source map maps a generated source line back to its original file and line (16.727248ms)\n✔ R12-B03 invalid and out-of-range source map positions are not fabricated (0.158985ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 981.894277\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round2-complex.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round2-complex.test.mjs",
+      "exitCode": 0,
+      "durationMs": 756,
+      "stdoutTail": "768MB (0.029894ms)\n✔ R2-096 RAM simulation streaming ladder 512MB (0.032959ms)\n✔ R2-097 RAM simulation streaming ladder 384MB (0.04067ms)\n✔ R2-098 RAM simulation streaming ladder 256MB (0.032168ms)\n✔ R2-099 RAM simulation streaming ladder 192MB (0.031116ms)\n✔ R2-100 RAM simulation streaming ladder 128MB (0.034752ms)\n✔ R2-101 RAM simulation streaming ladder 96MB (0.031576ms)\n✔ R2-102 RAM simulation streaming ladder 64MB (0.027491ms)\n✔ R2-103 RAM simulation streaming ladder 48MB (0.134299ms)\n✔ R2-104 RAM simulation streaming ladder 32MB (0.065798ms)\n✔ R2-105 RAM simulation streaming ladder 24MB (0.036364ms)\n✔ R2-106 RAM simulation streaming ladder 16MB (0.170893ms)\n✔ R2-107 RAM simulation streaming ladder 10MB (0.037836ms)\n✔ R2-108 RAM simulation streaming ladder 5MB (0.025528ms)\n✔ R2-109 RAM simulation streaming ladder 1MB (0.031056ms)\n✔ R2-110 RAM simulation streaming ladder 1MB (0.024847ms)\n✔ R2-111 RAM simulation streaming ladder 0MB (0.026068ms)\n✔ R2-112 RAM simulation streaming ladder 0MB (0.058026ms)\n✔ R2-113 RAM simulation streaming ladder 0MB (0.046408ms)\n✔ R2-114 RAM simulation streaming ladder 0MB (0.027161ms)\n✔ R2-115 RAM simulation streaming ladder 0MB (0.025698ms)\n✔ R2-116 RAM simulation chunk ladder 3072MB (0.093769ms)\n✔ R2-117 RAM simulation chunk ladder 2048MB (0.034671ms)\n✔ R2-118 RAM simulation chunk ladder 1536MB (0.028472ms)\n✔ R2-119 RAM simulation chunk ladder 1024MB (0.023765ms)\n✔ R2-120 RAM simulation chunk ladder 768MB (0.024856ms)\n✔ R2-121 RAM simulation chunk ladder 512MB (0.024476ms)\n✔ R2-122 RAM simulation chunk ladder 384MB (0.030926ms)\n✔ R2-123 RAM simulation chunk ladder 256MB (0.02667ms)\n✔ R2-124 RAM simulation chunk ladder 192MB (0.02656ms)\n✔ R2-125 RAM simulation chunk ladder 128MB (0.029504ms)\n✔ R2-126 RAM simulation chunk ladder 96MB (0.027691ms)\n✔ R2-127 RAM simulation chunk ladder 64MB (0.025228ms)\n✔ R2-128 RAM simulation chunk ladder 48MB (0.023094ms)\n✔ R2-129 RAM simulation chunk ladder 32MB (0.026039ms)\n✔ R2-130 RAM simulation chunk ladder 24MB (0.024166ms)\n✔ R2-131 RAM simulation chunk ladder 16MB (0.022293ms)\n✔ R2-132 RAM simulation chunk ladder 10MB (0.021982ms)\n✔ R2-133 RAM simulation chunk ladder 5MB (0.022764ms)\n✔ R2-134 RAM simulation chunk ladder 1MB (0.047951ms)\n✔ R2-135 RAM simulation chunk ladder 1MB (0.024316ms)\n✔ R2-136 RAM simulation chunk ladder 0MB (0.117704ms)\n✔ R2-137 RAM simulation chunk ladder 0MB (0.120398ms)\n✔ R2-138 RAM simulation chunk ladder 0MB (0.04108ms)\n✔ R2-139 RAM simulation chunk ladder 0MB (0.027811ms)\n✔ R2-140 RAM simulation chunk ladder 0MB (0.024997ms)\n✔ R2-141 RAM ladder reduced quality is explicit (0.178514ms)\n✔ R2-142 RAM ladder remote fallback (0.098216ms)\n✔ R2-143 RAM ladder remote denied without network (0.055663ms)\n✔ R2-144 RAM ladder GPU required and absent (0.067981ms)\n✔ R2-145 RAM ladder storage insufficient (0.080669ms)\n✔ R2-146 RAM ladder unknown runtime (0.122591ms)\n✔ R2-147 RAM ladder exact full threshold (0.092557ms)\n✔ R2-148 RAM ladder just below full threshold (0.063504ms)\n✔ R2-149 RAM ladder exact stream threshold (0.054711ms)\n✔ R2-150 RAM ladder just below stream threshold (0.045498ms)\n✔ R2-151 RAM ladder resource classification 10MB (0.085176ms)\n✔ R2-152 RAM ladder thermal priority (0.08832ms)\n✔ R2-153 RAM ladder low storage (0.050405ms)\n✔ R2-154 RAM ladder unknown NaN (0.039639ms)\n✔ R2-155 RAM ladder battery metadata does not change planner (0.049793ms)\n✔ R2-156 RAM ladder warm device remains eligible (0.04744ms)\n✔ R2-157 RAM ladder 10MB never claims full quality (0.071836ms)\n✔ R2-158 RAM ladder low-memory mode marks estimate (0.043695ms)\n✔ R2-159 RAM ladder streaming requires runtime support (0.056093ms)\n✔ R2-160 RAM ladder chunking requires declared independent work (0.047149ms)\n✔ R2-161 RAM ladder storage exact threshold (0.078186ms)\n✔ R2-162 RAM ladder storage one byte short (0.049794ms)\n✔ R2-163 project type browser app (0.578455ms)\n✔ R2-164 project type frontend TS (0.391468ms)\n✔ R2-165 project type node service (0.229839ms)\n✔ R2-166 project type css-heavy (0.231753ms)\n✔ R2-167 project type json config (0.148199ms)\n✔ R2-168 project type python project (0.04769ms)\n✔ R2-169 project type android kotlin (0.035102ms)\n✔ R2-170 project type android java (0.03385ms)\n✔ R2-171 project type native cpp (0.111394ms)\n✔ R2-172 project type unity project (0.068772ms)\n✔ R2-173 project type unreal project (0.035653ms)\n✔ R2-174 project type wasm artifact (0.032278ms)\n✔ R2-175 project type large generated js (84.355395ms)\n✔ R2-176 project type SVG asset (0.120318ms)\n✔ R2-177 project type mixed app (0.573047ms)\n✔ R2-178 adversarial source 1 (0.145204ms)\n✔ R2-179 adversarial source 2 (0.055482ms)\n✔ R2-180 adversarial source 3 (0.179816ms)\n✔ R2-181 adversarial source 4 (2.00271ms)\n✔ R2-182 adversarial source 5 (0.93302ms)\n✔ R2-183 adversarial source 6 (0.568781ms)\n✔ R2-184 adversarial source 7 (0.253675ms)\n✔ R2-185 adversarial source 8 (1.638532ms)\n✔ R2-186 adversarial source 9 (1.712111ms)\n✔ R2-187 adversarial source 10 (9.974676ms)\n✔ R2-188 adversarial source 11 (2.599303ms)\n✔ R2-189 adversarial source 12 (1.856614ms)\n✔ R2-190 adversarial source 13 (3.959964ms)\n✔ R2-191 adversarial source 14 (13.96836ms)\n✔ R2-192 adversarial source 15 (64.436278ms)\n✔ R2-193 render profiles are diagnostic-only (0.16216ms)\n✔ R2-194 project path rejects backslash (0.051316ms)\n✔ R2-195 project path rejects null byte (0.0406ms)\n✔ R2-196 project path rejects drive prefix (0.04062ms)\n✔ R2-197 CSS malformed delimiters surfaced (1.555971ms)\n✔ R2-198 JSON malformed nested object surfaced (0.290539ms)\n✔ R2-199 resource planner rejects negative available RAM (0.086447ms)\n✔ R2-200 resource planner rejects NaN available RAM (0.117744ms)\n✔ R2-201 resource planner rejects negative workload estimate (0.083764ms)\n✔ R2-202 resource planner rejects infinite storage requirement (0.090053ms)\n✔ R2-203 R2 generated test count is 203 (0.042863ms)\nℹ tests 203\nℹ suites 0\nℹ pass 203\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 726.354411\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round3-adaptive-and-usecases.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round3-adaptive-and-usecases.test.mjs",
+      "exitCode": 0,
+      "durationMs": 531,
+      "stdoutTail": "ad (0.062082ms)\n✔ R3-047 network disabled blocks remote fallback (0.151233ms)\n✔ R3-048 network enabled permits declared remote fallback (0.099747ms)\n✔ R3-049 end-user project: personal website (2.219982ms)\n✔ R3-050 end-user project: portfolio site (329.50863ms)\n✔ R3-051 end-user project: e-commerce frontend (1.847021ms)\n✔ R3-052 end-user project: blog CMS frontend (0.618855ms)\n✔ R3-053 end-user project: dashboard (0.903827ms)\n✔ R3-054 end-user project: REST API (1.405167ms)\n✔ R3-055 end-user project: GraphQL service (0.326212ms)\n✔ R3-056 end-user project: CLI tool (0.691151ms)\n✔ R3-057 end-user project: npm library (1.1905ms)\n✔ R3-058 end-user project: browser extension (0.651744ms)\n✔ R3-059 end-user project: VS Code extension (0.361805ms)\n✔ R3-060 end-user project: Electron desktop app (0.575721ms)\n✔ R3-061 end-user project: Tauri web frontend (0.41987ms)\n✔ R3-062 end-user project: PWA service worker (0.317279ms)\n✔ R3-063 end-user project: form validation (0.614538ms)\n✔ R3-064 end-user project: chat application (0.310839ms)\n✔ R3-065 end-user project: real-time collaboration (0.328746ms)\n✔ R3-066 end-user project: data visualization (0.712023ms)\n✔ R3-067 end-user project: game browser client (0.342135ms)\n✔ R3-068 end-user project: test suite (0.928563ms)\n✔ R3-069 end-user project: build configuration (0.307004ms)\n✔ R3-070 end-user project: JSON app config (0.265723ms)\n✔ R3-071 end-user project: CSS design system (0.309858ms)\n✔ R3-072 end-user project: HTML email template (0.262658ms)\n✔ R3-073 end-user project: Python data science (0.088882ms)\n✔ R3-074 end-user project: Android Kotlin app (0.056113ms)\n✔ R3-075 end-user project: Android Java app (0.129722ms)\n✔ R3-076 end-user project: C++ native library (0.068771ms)\n✔ R3-077 end-user project: Rust command line (0.143012ms)\n✔ R3-078 end-user project: C# Unity game (0.105105ms)\n✔ R3-079 end-user project: Unreal C++ game (0.095962ms)\n✔ R3-080 end-user project: Swift macOS app (0.08114ms)\n✔ R3-081 end-user project: Go service (0.086488ms)\n✔ R3-082 end-user project: PHP website (0.082632ms)\n✔ R3-083 end-user project: Ruby service (0.140518ms)\n✔ R3-084 end-user project: Jupyter notebook export (0.082442ms)\n✔ R3-085 end-user project: WASM module (0.069572ms)\n✔ R3-086 multi-file web app topology 1 (1.458987ms)\n✔ R3-087 multi-file web app topology 2 (1.094628ms)\n✔ R3-088 multi-file web app topology 3 (0.87267ms)\n✔ R3-089 multi-file web app topology 4 (0.755807ms)\n✔ R3-090 multi-file web app topology 5 (0.691623ms)\n✔ R3-091 multi-file web app topology 6 (0.528972ms)\n✔ R3-092 multi-file web app topology 7 (0.456084ms)\n✔ R3-093 multi-file web app topology 8 (0.5003ms)\n✔ R3-094 multi-file web app topology 9 (0.613887ms)\n✔ R3-095 multi-file web app topology 10 (0.759693ms)\n✔ R3-096 multi-file web app topology 11 (0.561931ms)\n✔ R3-097 multi-file web app topology 12 (0.450426ms)\n✔ R3-098 multi-file web app topology 13 (0.477245ms)\n✔ R3-099 multi-file web app topology 14 (0.650001ms)\n✔ R3-100 multi-file web app topology 15 (0.526328ms)\n✔ R3-101 user mistake diagnostic: unclosed function (1.592024ms)\n✔ R3-102 user mistake diagnostic: unclosed array (0.119516ms)\n✔ R3-103 user mistake diagnostic: unclosed object (0.08119ms)\n✔ R3-104 user mistake diagnostic: unclosed string (0.086578ms)\n✔ R3-105 user mistake diagnostic: extra close (0.0739ms)\n✔ R3-106 user mistake diagnostic: bad JSON trailing comma (0.158324ms)\n✔ R3-107 user mistake diagnostic: bad JSON missing quote (0.158284ms)\n✔ R3-108 user mistake diagnostic: bad JSON missing value (0.081039ms)\n✔ R3-109 user mistake diagnostic: bad CSS brace (0.133527ms)\n✔ R3-110 user mistake diagnostic: empty JS (0.044906ms)\n✔ R3-111 runtime adapter platform route desktop (0.078236ms)\n✔ R3-112 runtime adapter platform route web (0.033229ms)\n✔ R3-113 runtime adapter platform route server (0.02746ms)\n✔ R3-114 registry lists platform metadata (0.183722ms)\n✔ R3-115 registry does not claim runtime execution by registration alone (0.154769ms)\n✔ R3-116 RAM fit boundary monotonic 1 (0.12856ms)\n✔ R3-117 RAM fit boundary monotonic 2 (0.036604ms)\n✔ R3-118 RAM fit boundary monotonic 3 (0.03429ms)\n✔ R3-119 RAM fit boundary monotonic 4 (0.02747ms)\n✔ R3-120 RAM fit boundary monotonic 5 (0.02698ms)\n✔ R3-121 RAM fit boundary monotonic 6 (0.029784ms)\n✔ R3-122 RAM fit boundary monotonic 7 (0.026609ms)\n✔ R3-123 RAM fit boundary monotonic 8 (0.028973ms)\n✔ R3-124 RAM fit boundary monotonic 9 (0.028172ms)\n✔ R3-125 RAM fit boundary monotonic 10 (0.030265ms)\n✔ R3-126 RAM fit boundary monotonic 11 (0.029554ms)\n✔ R3-127 storage boundary 1 (0.072577ms)\n✔ R3-128 storage boundary 2 (0.042052ms)\n✔ R3-129 storage boundary 3 (0.027901ms)\n✔ R3-130 storage boundary 4 (0.02692ms)\n✔ R3-131 storage boundary 5 (0.027641ms)\n✔ R3-132 storage boundary 6 (0.026469ms)\n✔ R3-133 storage boundary 7 (0.025227ms)\n✔ R3-134 storage boundary 8 (0.024826ms)\n✔ R3-135 storage boundary 9 (0.040059ms)\n✔ R3-136 resource planner keeps estimates labelled estimated at 32 GB (0.063754ms)\n✔ R3-137 resource classifier unknown for NaN RAM (0.058406ms)\n✔ R3-138 resource classifier unknown for negative storage (0.050155ms)\n✔ R3-139 safe project path src/main.js (0.049763ms)\n✔ R3-140 safe project path src/components/Button.tsx (0.031957ms)\n✔ R3-141 safe project path assets/icons/logo.svg (0.024637ms)\n✔ R3-142 safe project path public/index.html (0.025788ms)\n✔ R3-143 safe project path packages/core/src/index.ts (0.028882ms)\n✔ R3-144 safe project path test/fixtures/a.json (0.131394ms)\n✔ R3-145 unsafe project path \"../outside.js\" (0.287195ms)\n✔ R3-146 unsafe project path \"../../etc/passwd\" (0.221027ms)\n✔ R3-147 unsafe project path \"/root/.ssh/id_rsa\" (0.048412ms)\n✔ R3-148 unsafe project path \"C:/Windows/system.ini\" (0.028863ms)\n✔ R3-149 unsafe project path \"a\\\\..\\\\b.js\" (0.047801ms)\n✔ R3-150 unsafe project path \"a\\u0000b.js\" (0.023344ms)\n✔ R3-151 R3 generated test count is 150 (0.086759ms)\nℹ tests 151\nℹ suites 0\nℹ pass 151\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 500.31216\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round4-foundation.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round4-foundation.test.mjs",
+      "exitCode": 0,
+      "durationMs": 98,
+      "stdoutTail": "✔ R4-FOUND-001 valid class constructor is not mistaken for a closing delimiter (1.78561ms)\n✔ R4-FOUND-002 object property named constructor is accepted (0.253544ms)\n✔ R4-FOUND-003 inherited toString property access is accepted (0.1354ms)\n✔ R4-FOUND-004 inherited constructor property access is accepted (0.115531ms)\n✔ R4-FOUND-005 missing assignment value includes exact source position (1.675737ms)\n✔ R4-FOUND-006 unclosed comment is identified at its opening position (0.206825ms)\n✔ R4-FOUND-007 unclosed string is identified (0.217902ms)\n✔ R4-FOUND-008 malformed JSON is identified with a location (0.35211ms)\n✔ R4-FOUND-009 unclosed HTML element is reported as a warning (0.585966ms)\n✔ R4-FOUND-010 valid TypeScript structural sample retains balanced delimiters (0.974401ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 66.389681\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round5-resource-recovery.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round5-resource-recovery.test.mjs",
+      "exitCode": 0,
+      "durationMs": 244,
+      "stdoutTail": "✔ R5-RES-001 available RAM increase expands safe worker budget for parallel workload (1.322705ms)\n✔ R5-RES-002 more RAM grows eligible cache and batch budgets (0.194958ms)\n✔ R5-RES-003 serial workloads do not acquire extra workers with more RAM (0.348195ms)\n✔ R5-RES-004 task maxParallelism remains a hard cap on high-RAM hosts (0.129992ms)\n✔ R5-RES-005 governor preserves declared system headroom on high-RAM hosts (0.116442ms)\n✔ R5-RES-006 high RAM does not override critical thermal state (0.120969ms)\n✔ R5-RES-007 high RAM does not override critical CPU saturation (0.10827ms)\n✔ R5-RES-008 high RAM does not override storage shortage (0.130192ms)\n✔ R5-RES-009 high RAM does not override missing GPU for GPU-required work (0.271491ms)\n✔ R5-RES-010 low battery and power saver keep resource policy conservative (0.360212ms)\n✔ R5-RES-011 unknown responsiveness does not admit background work (0.211793ms)\n✔ R5-RES-012 pause-background allows only a foreground task to be considered (0.102371ms)\n✔ R5-RES-013 adaptive plan combines runtime feasibility and device budget (0.346002ms)\n✔ R5-RES-014 invalid live measurements fail closed at high total RAM (0.083002ms)\n✔ R5-RES-015 impossible free RAM greater than total RAM is rejected (0.064625ms)\n✔ R5-REC-001 new job manager instance sees persisted completed units after restart simulation (1.012687ms)\n✔ R5-REC-002 recovery coordinator resumes a valid checkpoint through a new manager instance (11.407084ms)\n✔ R5-REC-002B durable checkpoint survives a separate Node process restart (89.355568ms)\n✔ R5-REC-003 recovery rejects a project changed since checkpoint (1.179343ms)\n✔ R5-REC-004 recovery rejects a checkpoint created by a different runtime (0.937807ms)\n✔ R5-REC-005 corrupt checkpoint is never automatically resumed (2.681014ms)\n✔ R5-REC-006 a non-resumable runtime state cannot be recorded as a checkpoint (0.497816ms)\n✔ R5-REC-007 duplicate job identity is rejected after restart-visible record exists (0.199725ms)\n✔ R5-REC-008 completed units cannot be recorded twice (0.224182ms)\n✔ R5-REC-009 progress cannot decrease after interruption recovery (0.227476ms)\n✔ R5-REC-010 illegal state transition is rejected (0.171894ms)\n✔ R5-LAG-001 SUSPENDED mode requests zero workers and disables optional sampling (0.752623ms)\n✔ R5-LAG-002 REDUCED mode caps concurrency and slows optional sampling (0.3046ms)\n✔ R5-LAG-003 only AXON Brain may change the lag-control mode (0.139116ms)\n✔ R5-LAG-004 partial suspension is rejected rather than falsely reported as complete (0.306413ms)\n✔ R5-LAG-005 persisted SUSPENDED intent is restored by a new manager instance (0.841064ms)\n✔ R5-LAG-006 expired persisted override returns to AUTO (1.748895ms)\n✔ R5-LAG-007 user/manual pause ownership is not removed by AXON release contract (0.314735ms)\n✔ R5-LAG-008 invalid persisted policy prevents managed work from being admitted (0.159446ms)\nℹ tests 34\nℹ suites 0\nℹ pass 34\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 214.262739\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round5-toolchain-diagnostics.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round5-toolchain-diagnostics.test.mjs",
+      "exitCode": 0,
+      "durationMs": 147,
+      "stdoutTail": "✔ R5-DIAG-001 parses a Python NameError traceback and preserves a known source line (1.741325ms)\n✔ R5-DIAG-002 does not invent a column for a Python runtime traceback (0.279232ms)\n✔ R5-DIAG-003 parses a Python SyntaxError position when a caret is supplied (0.533459ms)\n✔ R5-DIAG-004 maps Python module import failures to a runtime error (0.161499ms)\n✔ R5-DIAG-005 does not expose an absolute host path from Python traceback output (0.257121ms)\n✔ R5-DIAG-006 rejects a requested path traversal before parsing (0.361715ms)\n✔ R5-DIAG-007 parses GCC error code location and severity (0.794024ms)\n✔ R5-DIAG-008 parses GCC warnings distinctly from errors (0.193766ms)\n✔ R5-DIAG-009 parses compiler fatal errors (0.326573ms)\n✔ R5-DIAG-010 ignores GCC locations that cannot be mapped to the requested workspace file (0.463806ms)\n✔ R5-DIAG-011 parses rustc diagnostic code and source position (0.569111ms)\n✔ R5-DIAG-012 parses Rust warnings as warnings (0.300825ms)\n✔ R5-DIAG-013 handles Rust diagnostics without location without inventing one (0.130092ms)\n✔ R5-DIAG-014 bounds diagnostic output input (0.110313ms)\n✔ R5-DIAG-015 caps output before parsing and does not return unbounded content (0.110704ms)\n✔ R5-DIAG-016 diagnostic IDs are stable for the same compiler finding (0.125566ms)\n✔ R5-DIAG-017 deduplicates repeated compiler diagnostics (0.107028ms)\n✔ R5-READY-001 blocks Python when toolchain is absent (0.410407ms)\n✔ R5-READY-002 blocks C++ when the compiler exists but no execution provider is connected (0.100579ms)\n✔ R5-READY-003 blocks Rust even with a provider when no rustc is available (0.216691ms)\n✔ R5-READY-004 blocks execution when network denial is not attested (0.131915ms)\n✔ R5-READY-005 blocks execution when filesystem isolation is not attested (0.207166ms)\n✔ R5-READY-006 blocks execution when RAM and time limits are not both enforced (0.122922ms)\n✔ R5-READY-007 distinguishes ready-for-validation from available (0.076663ms)\n✔ R5-READY-008 requires implementation and all gates before availability (1.223428ms)\n✔ R5-READY-009 only complete isolated end-to-end provider can become available (0.091245ms)\n✔ R5-READY-010 rejects empty runtime identity (0.089482ms)\nℹ tests 27\nℹ suites 0\nℹ pass 27\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 116.039159\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round6-end-to-end.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round6-end-to-end.test.mjs",
+      "exitCode": 0,
+      "durationMs": 1371,
+      "stdoutTail": "✔ R6-E2E-001 project analysis identifies entry point and complete local dependency edges (398.724059ms)\n✔ R6-E2E-002 TypeScript semantic checker accepts the complete typed entry and helper (512.062321ms)\n✔ R6-E2E-003 semantic type error is attributed to the correct project file and source line (267.235594ms)\n✔ R6-E2E-004 multi-file bundler includes only the reachable project and browser package export (24.91999ms)\n✔ R6-E2E-005 unresolved package fails closed and records a dependency diagnostic (3.513604ms)\n✔ R6-E2E-006 dynamic module specifier prevents a false claim of complete bundle (2.030021ms)\n✔ R6-E2E-007 malformed local package metadata is reported, not silently ignored (1.658712ms)\n✔ R6-E2E-008 project path attack is rejected before bundle work (0.60155ms)\n✔ R6-E2E-009 Android application inspection detects project metadata without claiming a build (1.245731ms)\n✔ R6-E2E-010 incomplete Android project is identified with explicit blockers (0.619476ms)\n✔ R6-E2E-011 Unity project structure is recognized but execution remains unready (0.333643ms)\n✔ R6-E2E-012 Unreal project structure is recognized but execution remains unready (0.18288ms)\n✔ R6-E2E-013 toolchain presence without a strict sandbox never marks Python available (0.184092ms)\n✔ R6-E2E-014 compiler plus connected bridge remains blocked if network isolation is not attested (0.176692ms)\n✔ R6-E2E-015 runtime stays READY_FOR_VALIDATION without end-to-end proof (0.110393ms)\n✔ R6-E2E-016 runtime can become AVAILABLE only with strict host gates and end-to-end evidence (0.071556ms)\n✔ R6-E2E-017 arbitrary root or administrator execution is always denied (0.063644ms)\n✔ R6-E2E-018 remote execution requires HTTPS and explicit user approval (0.126998ms)\n✔ R6-E2E-019 remote execution rejects endpoint credentials and query strings (0.091485ms)\n✔ R6-E2E-020 native build bridge is never invoked when strict isolation is absent (0.322577ms)\n✔ R6-E2E-021 Android installation fails closed when no authorized device bridge is connected (0.272183ms)\n✔ R6-E2E-022 Unity and Unreal build bridge refuses missing strict isolation (0.224412ms)\n✔ R6-E2E-023 remote attestation mismatch is rejected before any result is trusted (12.928663ms)\n✔ R6-E2E-024 file analysis ignores untrusted absolute paths instead of normalizing them into the workspace (0.790308ms)\n✔ R6-E2E-025 Android/WebView or desktop host label alone cannot be used as runtime evidence (0.198324ms)\nℹ tests 25\nℹ suites 0\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1339.663925\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round7-deep-forensic.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round7-deep-forensic.test.mjs",
+      "exitCode": 0,
+      "durationMs": 463,
+      "stdoutTail": "✔ R7-FUZZ-001 300 deterministic path mutations are either rejected or remain canonical (2.764748ms)\n✔ R7-FUZZ-002 project diagnostic scanner survives 250 deterministic source mutations without uncaught failure (24.196671ms)\n✔ R7-FUZZ-003 150 random malformed byte streams fail ZIP parsing without crashing the test process (4.337132ms)\n✔ R7-ZIP-001 CRC corruption fails extraction and preserves pre-existing committed sink files (2.73958ms)\n✔ R7-ZIP-002 local/central path disagreement is rejected before writing (0.547299ms)\n✔ R7-ZIP-003 truncated and unsupported Zip64-like archives fail closed (0.54741ms)\n✔ R7-ZIP-004 unsupported encryption and methods never reach committed extraction (0.406171ms)\n✔ R7-CONC-001 simultaneous identical patches allow exactly one atomic winner (2.113775ms)\n✔ R7-CONC-002 concurrent patches to different files do not lose undo-journal entries (0.465638ms)\n✔ R7-CONC-003 simultaneous undo of one patch cannot report two successes (0.695538ms)\n✔ R7-CONC-004 concurrent working-copy creation cannot overwrite existing files (0.377398ms)\n✔ R7-CONC-005 journal failure safely rolls back patch bytes when the compare operation still matches (0.226175ms)\n✔ R7-RES-001 resource governor fails closed for NaN, infinity and negative measurements (0.356668ms)\n✔ R7-RES-002 high RAM does not force unlimited worker concurrency (0.136311ms)\n✔ R7-RES-003 zero available RAM prevents workload admission (0.09477ms)\n✔ R7-CAP-001 Python/C++/Rust/native project recognition is not execution evidence (0.146457ms)\n✔ R7-CAP-002 no report can treat host probes or interface contracts as actual user runtime execution (0.082222ms)\n✔ R7-STORE-001 persistent workspace adapter isolates workspace IDs and lists only active files (0.802105ms)\n✔ R7-STORE-002 atomic create-if-absent permits only one concurrent writer (0.411999ms)\n✔ R7-STORE-003 compare-and-write rejects a stale base without changing current content (0.847413ms)\n✔ R7-STORE-004 compare-and-delete refuses changed data and removes exact matching data atomically (0.335696ms)\n✔ R7-STORE-005 deleted tombstones can be safely recreated by an explicit new write (0.174989ms)\n✔ R7-STORE-006 persistent adapter refuses traversal, bidi and Windows-reserved paths (0.298822ms)\n✔ R7-STORE-007 persistent workspace adapter integrates with select and source ZIP export (24.407623ms)\n✔ R7-STORE-008 malformed persistent file identity is rejected instead of trusted (0.238412ms)\n✔ R7-STORE-009 list rejects a storage key that does not match its stored path (0.207126ms)\n✔ R7-LIFE-013 new manager instance recovers a durable PREPARED removal after a restart boundary (7.834152ms)\n✔ R7-LIFE-014 inability to journal PREPARED state prevents any file deletion (1.642668ms)\n✔ R7-RES-004 2,000 changing resource samples never exceed governor worker cap or produce invalid decisions (4.032081ms)\n✔ R7-SOAK-001 500 repeated select/capture operations stay deterministic and bounded (243.788592ms)\nℹ tests 30\nℹ suites 0\nℹ pass 30\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 429.959455\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round7-workspace-actions.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round7-workspace-actions.test.mjs",
+      "exitCode": 0,
+      "durationMs": 309,
+      "stdoutTail": "✔ R7-SEL-001 ALL selects the whole workspace and fingerprints exact contents (21.946945ms)\n✔ R7-SEL-002 AUTO selects source/config but excludes generated and dependency folders (1.257439ms)\n✔ R7-SEL-003 AUTO excludes tests by default and includes them only on request (2.013226ms)\n✔ R7-SEL-004 EXPLICIT selection preserves exact requested files and rejects unknown paths (2.030301ms)\n✔ R7-SEL-005 EXPLICIT selection rejects duplicate paths and traversal (0.345381ms)\n✔ R7-SEL-006 AUTO can select all supported text extensions deterministically (1.144832ms)\n✔ R7-SEL-007 sensitive-file recognition handles nested secret paths (0.747034ms)\n✔ R7-SEL-008 explicit sensitive inclusion is visible and auto inclusion requires opt-in (1.517794ms)\n✔ R7-SEL-014 common credential stores are treated as sensitive paths (0.432079ms)\n✔ R7-SEL-015 export independently rechecks secret paths even if selection warnings are altered (3.129536ms)\n✔ R7-SEL-016 selection fingerprint is bound to its workspace identity (1.026918ms)\n✔ R7-SEL-017 workspace identifiers reject control characters and excessive length (0.426851ms)\n✔ R7-SEL-009 selection snapshot becomes invalid after a file changes (1.331809ms)\n✔ R7-SEL-010 selection is bounded by file and total-byte limits (0.362926ms)\n✔ R7-SEL-011 case-insensitive collisions are refused (0.204963ms)\n✔ R7-SEL-012 non-portable Unicode bidi and reserved paths are refused (0.384839ms)\n✔ R7-SEL-013 selection controller can select, toggle and clear without touching files (0.258592ms)\n✔ R7-EXP-001 TXT export includes every file path and exact contents (6.64931ms)\n✔ R7-EXP-002 Markdown export expands fences to avoid code-content injection (1.357166ms)\n✔ R7-EXP-003 JSON export preserves all selected paths and text exactly (1.021169ms)\n✔ R7-EXP-004 ZIP export parses, extracts and CRC-verifies with independent readers (11.18827ms)\n✔ R7-EXP-005 ZIP export refuses collision with reserved manifest path (1.002662ms)\n✔ R7-EXP-005B ZIP export rejects case-insensitive collision with reserved manifest path (4.028074ms)\n✔ R7-EXP-006 PDF export is accepted by independent PDF tools and preserves the file label (32.073246ms)\n✔ R7-EXP-007 PDF output makes non-base-font Unicode explicit instead of dropping it (16.831223ms)\n✔ R7-EXP-008 secret-bearing exports require explicit opt-in (1.500208ms)\n✔ R7-EXP-009 changed project cannot be exported using a stale selection fingerprint (1.046608ms)\n✔ R7-EXP-010 huge output is refused before a download payload is returned (2.693692ms)\n✔ R7-EXP-010B PDF Unicode is not split when a surrogate pair lies at a wrap boundary (17.16504ms)\n✔ R7-EXP-011 filename generation strips path and control injection (0.867242ms)\n✔ R7-EXP-012 output format type is validated (0.905088ms)\n✔ R7-HOST-001 clipboard writes complete TXT export through supplied adapter (0.71029ms)\n✔ R7-HOST-002 clipboard byte cap directs large project to file export (1.310097ms)\n✔ R7-HOST-003 BrowserClipboardAdapter refuses insecure or unavailable clipboard APIs (0.701617ms)\n✔ R7-HOST-004 BrowserClipboardAdapter calls host clipboard only after capability is supplied (0.119887ms)\n✔ R7-HOST-005 BrowserShareAdapter reports unsupported when share API is absent (0.320624ms)\n✔ R7-HOST-006 BrowserShareAdapter distinguishes cancellation from success (1.45759ms)\n✔ R7-HOST-006B BrowserShareAdapter distinguishes denied permission from user cancellation (0.481822ms)\n✔ R7-HOST-007 BrowserShareAdapter attaches a ZIP as a file when host permits it (0.633286ms)\n✔ R7-HOST-008 BrowserShareAdapter refuses file share when host says it cannot share files (0.279313ms)\n✔ R7-HOST-009 BrowserDownloadAdapter creates download URL and revokes it after click (0.536123ms)\n✔ R7-HOST-010 BrowserDownloadAdapter refuses unsafe filename (0.569252ms)\n✔ R7-HOST-011 facade clearSelection clears only selection state (7.533808ms)\n✔ R7-HOST-012 facade refuses actions when no selection is active (0.456345ms)\n✔ R7-LIFE-001 preview identifies whole-workspace removal and exact phrase (4.730844ms)\n✔ R7-LIFE-002 preview identifies partial removal accurately (0.999427ms)\n✔ R7-LIFE-003 removal cannot proceed without explicit approval reference (0.705974ms)\n✔ R7-LIFE-004 removal requires exact confirmation phrase (0.641799ms)\n✔ R7-LIFE-005 preview cannot remove files changed after preview (5.83816ms)\n✔ R7-LIFE-006 removal is soft and undo restores exact bytes (1.577182ms)\n✔ R7-LIFE-007 removal can be recovered after interrupted PREPARED journal state (0.631683ms)\n✔ R7-LIFE-008 undo never overwrites a file recreated after removal (1.164381ms)\n✔ R7-LIFE-009 removal preview expires and must be recreated (0.898198ms)\n✔ R7-LIFE-010 injected second-file delete failure restores earlier deleted file (1.446819ms)\n✔ R7-LIFE-011 separate lifecycle instances coordinate through durable workspace lease (2.04984ms)\n✔ R7-LIFE-012 lifecycle rejects a store without atomic delete/restore primitives (0.321906ms)\nℹ tests 56\nℹ suites 0\nℹ pass 56\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 277.201918\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round9-environment.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round9-environment.test.mjs",
+      "exitCode": 0,
+      "durationMs": 223,
+      "stdoutTail": "✔ R9 EnvironmentIntelligence detects mixed Node, Python, C++, Rust, Android, Unity and Unreal projects (9.110832ms)\n✔ R9 EnvironmentIntelligence reads manifests without executing scripts (0.39205ms)\n✔ R9 EnvironmentIntelligence rejects malformed entries, duplicate paths and case collisions (0.531105ms)\n✔ R9 EnvironmentIntelligence bounds project files and aggregate content size (0.214367ms)\n✔ R9 EnvironmentCompatibilityService reports missing host toolchains and conservative resources (0.417668ms)\n✔ R9 package planning pins versions, sources, hashes and bounded download sizes (8.382554ms)\n✔ R9 package planner blocks floating versions, missing hashes, unapproved sources and no size estimate (1.024895ms)\n✔ R9 package planner rejects install-time lifecycle scripts and invalid budgets (0.429796ms)\n✔ R9 verified package cache checks bytes and content-addressed digest (2.037843ms)\n✔ R9 package execution rejects tampered plans and missing approval before host access (1.412409ms)\n✔ R9 package execution installs only through an attested manager with scripts disabled (1.136621ms)\n✔ R9 environment locks are deterministic and detect tampering (1.027279ms)\n✔ R9 EnvironmentManager blocks missing child-process confinement (0.88651ms)\n✔ R9 EnvironmentManager prepares and records an approved, attested environment (0.848134ms)\n✔ R9 EnvironmentManager rolls back a created environment when persistence fails (0.767465ms)\n✔ R9 toolchain catalogue explicitly marks provider-required and unavailable game engines (0.160357ms)\nℹ tests 16\nℹ suites 0\nℹ pass 16\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 193.378706\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round9-execution.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round9-execution.test.mjs",
+      "exitCode": 0,
+      "durationMs": 143,
+      "stdoutTail": "✔ R9 TerminalSessionManager requires all host isolation guarantees before launch (1.677801ms)\n✔ R9 TerminalSessionManager controls approved PTY sessions, input, resize and close (0.961932ms)\n✔ R9 TerminalSessionManager streams bounded output and records process exit (0.377258ms)\n✔ R9 TerminalSessionManager rejects unapproved shell, forbidden environment and excess sessions (0.359612ms)\n✔ R9 BuildOrchestrator runs a dependency DAG using exact toolchain identity and verifies artifacts (1.212452ms)\n✔ R9 BuildOrchestrator blocks missing sandbox, executable mismatch, version mismatch and output truncation (0.30435ms)\n✔ R9 BuildOrchestrator rejects cycles, missing dependencies, unsafe artifact identifiers and unapproved tasks (0.236009ms)\n✔ R9 Python, C++ and Rust runtime profiles remain blocked without concrete strict host providers (0.438739ms)\n✔ R9 Python runtime adapter uses a per-run isolated overlay and enforces cleanup (2.168116ms)\n✔ R9 C++ runtime does not execute after failed or truncated compilation (0.766363ms)\n✔ R9 DebugSessionManager requires an isolated adapter and validates command sequence (0.768987ms)\n✔ R9 DebugSessionManager blocks unregistered, unapproved and non-isolated debug providers (0.352532ms)\n✔ R9 DebugSessionManager marks a session failed when adapter sequence is inconsistent (0.251672ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.115466\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round9-intelligence.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round9-intelligence.test.mjs",
+      "exitCode": 0,
+      "durationMs": 193,
+      "stdoutTail": "✔ R9 Content-Length codec handles fragmented headers and UTF-8 bodies (1.679143ms)\n✔ R9 Content-Length codec accepts multiple frames in a single larger chunk (0.423726ms)\n✔ R9 Content-Length codec rejects malformed, duplicate and oversized headers (0.522663ms)\n✔ R9 Content-Length codec rejects malformed UTF-8 and oversized unterminated headers (0.264461ms)\n✔ R9 LanguageServiceClient matches request IDs and handles protocol errors (0.924767ms)\n✔ R9 LanguageServiceClient supports timeout, cancellation and close rejection (20.635253ms)\n✔ R9 LanguageServiceClient handles server requests and isolates notification handler faults (1.465978ms)\n✔ R9 LanguageServiceSession negotiates, tracks document versions and closes documents (1.203499ms)\n✔ R9 LanguageServiceRegistry does not claim availability from language recognition alone (0.35777ms)\n✔ R9 incremental analysis scales concurrency to RAM and CPU, with conservative unknown thermal state (0.598215ms)\n✔ R9 incremental analysis prioritises foreground work and preserves latest revisions (10.855722ms)\n✔ R9 incremental analysis bounds queue and does not stale an active revision for rejected work (11.08448ms)\n✔ R9 incremental analysis suspends background indexing in REDUCED and all work in SUSPENDED (21.087026ms)\n✔ R9 incremental analysis rejects malformed task and resource samples (0.434913ms)\nℹ tests 14\nℹ suites 0\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 159.693309\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round9-routing-evidence.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round9-routing-evidence.test.mjs",
+      "exitCode": 0,
+      "durationMs": 145,
+      "stdoutTail": "✔ R9 target router prefers a verified local sandbox without remote transfer (1.315585ms)\n✔ R9 target router only selects remote after policy and explicit cost approval (0.25061ms)\n✔ R9 target router refuses SECRET data and over-budget remote execution (0.333033ms)\n✔ R9 target router requires separate approval for CONFIDENTIAL data (0.157192ms)\n✔ R9 routed execution does not run an unapproved remote provider (0.395144ms)\n✔ R9 routed execution binds the approved remote provider and bounds its output (0.454462ms)\n✔ R9 evidence ledger creates verifiable append-only hash chains (10.266211ms)\n✔ R9 evidence ledger detects record tampering (0.976794ms)\n✔ R9 evidence store prevents concurrent ledgers from creating a fork (1.027229ms)\n✔ R9 key-value evidence store uses atomic compare-and-append across independent writers (1.523172ms)\n✔ R9 quality gate requires evidence for PASS and separates incomplete from blocked (0.634848ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 116.585518\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "Node suite tests/round9-workbench.test.mjs",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node --test --test-reporter=spec tests/round9-workbench.test.mjs",
+      "exitCode": 0,
+      "durationMs": 140,
+      "stdoutTail": "✔ R9 workbench host profiles and initial explorer state are explicit (1.678872ms)\n✔ R9 workbench blocks switching projects while dirty tabs exist (0.417408ms)\n✔ R9 workbench validates paths, bounds tabs and tracks panel visibility (0.580799ms)\n✔ R9 command catalogue refuses to dispatch unbound host controls (0.721868ms)\n✔ R9 document buffers require externally supplied source and explicit save approval (0.790159ms)\n✔ R9 document buffers reject stale writes and dirty discard without permission (0.340023ms)\n✔ R9 document buffers enforce per-document and open-document limits (0.266073ms)\n✔ R9 Brain request gate validates authority, project scope and request lifetime (0.518937ms)\n✔ R9 Brain request gate rejects malformed runtime shapes and oversized supplied patches (0.657612ms)\n✔ R9 Brain request gate prevents request replay with a claimed request ID (0.694657ms)\n✔ R9 ApprovedPatchService applies only the exact user-supplied patch to the authorised workspace (2.209768ms)\n✔ R9 ApprovedPatchService rejects project/workspace mismatch and stale source (0.444998ms)\n✔ R9 AXON Code boundary has no source-authoring operation in its request contract (0.224863ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 109.085201\n",
+      "stderrTail": ""
+    },
+    {
+      "label": "derive capability registry from result files",
+      "command": "/opt/nvm/versions/node/v22.16.0/bin/node tools/derive-capability-status.mjs",
+      "exitCode": 0,
+      "durationMs": 50,
+      "stdoutTail": "Derived 77 capability statuses from 247 result records.\n",
+      "stderrTail": ""
     }
   ],
   "checks": {
-    "ratchet": {
-      "minimum": 1231,
-      "actual": 1313,
-      "passed": true
-    },
     "mergeSet": {
-      "files": 270,
-      "bytes": 1975744,
+      "files": 312,
+      "bytes": 2208162,
       "missing": [],
       "forbidden": []
     },
+    "ratchet": {
+      "minimum": 1231,
+      "actual": 1381,
+      "passed": true
+    },
+    "importBoundary": {
+      "passed": true
+    },
+    "honesty": {
+      "sandboxClaimHasExplicitOSBoundary": true,
+      "unsupportedTermsChecked": [
+        "sandbox",
+        "secure",
+        "supported",
+        "isolated"
+      ],
+      "note": "Only the current UI/gateway boundary is scanned; the iframe wording explicitly disclaims OS sandboxing."
+    },
     "manifest": {
-      "entries": 271,
+      "entries": 313,
       "missing": []
     },
     "hashes": {
-      "entries": 271,
+      "entries": 314,
       "bad": []
     },
     "registry": {
-      "capabilities": 57,
+      "capabilities": 77,
       "allStatusesValid": true
     },
-    "packageSuites": {
-      "tests": 82,
-      "passed": 82,
-      "failed": 0,
-      "skipped": 0,
-      "negativeTests": 55,
-      "realCompiledModuleMutantsCaught": 6,
-      "P13CompiledMutant": "NOT RUN \u2014 Android toolchain unavailable"
-    },
-    "cleanReapply": {
-      "sourceTreeMatchesWorkingTree": true,
-      "sha256Entries": 271,
-      "mergeSetFiles": 270,
-      "workflowFilesIncluded": false
+    "budget": {
+      "mergeFiles": 312,
+      "maxFiles": 600,
+      "mergeBytes": 2208162,
+      "maxBytes": 8388608,
+      "passed": true
     },
     "cleanInstall": {
       "status": "BLOCKED",
-      "reason": "Offline npm cache lacks xmlchars-2.2.0.tgz; TypeScript integrity hash not verified."
+      "reason": "Offline npm ci failed ENOTCACHED because the TypeScript 5.8.3 tarball has no cached response. Online registry probe failed DNS resolution: Could not resolve host: registry.npmjs.org. No verified integrity hash or clean-install proof is available."
     }
   },
-  "notes": [
-    "All Node build/test and clean-base reapply checks pass.",
-    "A clean npm ci could not be completed offline; exact ENOTCACHED blocker recorded.",
-    "Chromium, Android, native compiler, OS sandbox, project test-runner and device evidence are not claimed."
-  ]
+  "counts": {
+    "nodeTests": 1381,
+    "passed": 1381,
+    "failed": 0,
+    "skipped": 0,
+    "testFiles": 58
+  },
+  "startedAt": "2026-11-14T09:01:43.400Z",
+  "finishedAt": "2026-11-14T09:02:54.112Z",
+  "status": "BLOCKED"
 }

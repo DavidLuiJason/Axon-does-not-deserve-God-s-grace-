@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "host": "linux x64 Node v22.16.0",
+  "measurements": {
+    "providerStartMs": 39.56,
+    "guestWasmMemoryBytes": 65536,
+    "uiBundleBytes": 14795325,
+    "uiBundleBudgetBytes": 16777216,
+    "queueJobs": 500,
+    "queueElapsedMs": 47.77,
+    "queueThroughputPerSecond": 10466.19
+  },
+  "budgets": {
+    "providerStartMs": 3000,
+    "guestWasmMemoryBytes": 2097152,
+    "uiBundleBytes": 16777216,
+    "queueThroughputPerSecondMinimum": 100
+  },
+  "phonePerformance": "NOT RUN — no physical Android device was used.",
+  "memoryScope": "WASM guest linear memory only; this is not total process RSS or Android memory."
+}

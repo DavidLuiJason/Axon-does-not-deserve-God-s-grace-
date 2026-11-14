@@ -1,0 +1,50 @@
+[
+  {
+    "id": "R14-C5-Q8-01",
+    "capability": "axon-code-round15-handover-verifier",
+    "status": "TESTED",
+    "suite": "tests/r14-q8-round15-handover.test.mjs",
+    "command": "node --test tests/r14-q8-round15-handover.test.mjs",
+    "exitCode": 0,
+    "durationMs": 111.000495,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "NODE_DOCUMENT_VERIFICATION",
+    "summary": "Handover and device checklist sections, status honesty, registry counts and competitor fields validated.",
+    "tests": 4,
+    "passed": 4,
+    "negativeTests": 3,
+    "realCompiledModuleMutantCaught": true
+  },
+  {
+    "id": "R14-C5-Q8-02",
+    "capability": "axon-code-android-device-proof",
+    "status": "NOT RUN",
+    "suite": "tests/r14-q8-round15-handover.test.mjs",
+    "command": "Not run in this environment; source-only or device-gated capability.",
+    "exitCode": null,
+    "durationMs": 0,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "NOT_RUN",
+    "summary": "Device proof checklist prepared; no signed APK or Android device run.",
+    "tests": 0,
+    "passed": 0,
+    "negativeTests": 0,
+    "realCompiledModuleMutantCaught": false
+  },
+  {
+    "id": "R14-C5-Q8-03",
+    "capability": "axon-code-competitor-trials",
+    "status": "NOT RUN",
+    "suite": "tests/r14-q8-round15-handover.test.mjs",
+    "command": "Not run in this environment; source-only or device-gated capability.",
+    "exitCode": null,
+    "durationMs": 0,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "NOT_RUN",
+    "summary": "Termux, Pydroid 3 and Acode comparisons were not run.",
+    "tests": 0,
+    "passed": 0,
+    "negativeTests": 0,
+    "realCompiledModuleMutantCaught": false
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "R14-C5-Q2-01",
+    "capability": "axon-code-confined-project-test-runner-v2",
+    "status": "TESTED",
+    "suite": "tests/r14-q2-confined-project-tests.test.mjs",
+    "command": "node --test tests/r14-q2-confined-project-tests.test.mjs",
+    "exitCode": 0,
+    "durationMs": 1364.13,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "PROCESS_PERMISSION_CONFINEMENT_NOT_OS_SANDBOX",
+    "summary": "Node v22.16.0 permission model; project read, scratch-only write, child process/worker/addon denied; sanitized env, time and output limits.",
+    "tests": 10,
+    "passed": 10,
+    "negativeTests": 7,
+    "realCompiledModuleMutantCaught": true
+  }
+]

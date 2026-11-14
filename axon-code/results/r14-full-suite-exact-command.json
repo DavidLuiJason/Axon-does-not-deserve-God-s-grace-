@@ -1,18 +1,21 @@
 {
-  "id": "R14-C4-EXACT-FULL-SUITE",
+  "id": "R14-C5-EXACT-FULL-SUITE",
   "suite": "full-node-regression-exact-command",
   "capability": "full-retained-node-regression",
   "status": "PASS",
-  "command": "node --test tests/*.test.mjs (nohup background runner; output captured to /tmp/r14-final-suite2.tap)",
+  "command": "nohup node --test tests/*.test.mjs > /tmp/r14c5-final-full.txt 2>&1; read exit code from /tmp/r14c5-final-full.exit",
   "exitCode": 0,
-  "durationMs": 68945,
+  "durationMs": 61402.204,
   "hostFingerprint": "73fc35ab4e5c9a30",
-  "tests": 1313,
-  "passed": 1313,
+  "testFiles": 58,
+  "tests": 1381,
+  "passed": 1381,
   "failed": 0,
   "skipped": 0,
   "grade": "T1",
   "notes": [
-    "The exact globbed Node command and the independent sequential per-file runner both report 1,313 passing tests across 49 files."
+    "Exact globbed full suite was run in the background after the final Q1-Q8 changes.",
+    "The 1,317-test Director-approved start baseline grew by 64 new Q1-Q8 tests to 1,381.",
+    "No test was skipped."
   ]
 }

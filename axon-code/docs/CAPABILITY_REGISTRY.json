@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "e942ea65ff28e43c49423ae7a96ed36d6084fdb45cdc0ced0aa786f1c3dca57b",
-  "capabilityCount": 57,
+  "resultSetSha256": "a34c1aea0ac3e5cca6ac5c98a2e487248f1a4ee5eee2e455515350e324ffb793",
+  "capabilityCount": 77,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -60,6 +60,17 @@
       ]
     },
     {
+      "id": "axon-code-android-background-fake-host-contract",
+      "status": "TESTED",
+      "grade": "FAKE_HOST_ONLY",
+      "evidenceIds": [
+        "R14-C5-Q7-02"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q7.json"
+      ]
+    },
+    {
       "id": "axon-code-android-capacitor-saf-source-skeleton",
       "status": "BUILT",
       "grade": "SOURCE_ONLY",
@@ -79,6 +90,61 @@
       ],
       "resultFiles": [
         "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-android-device-proof",
+      "status": "NOT RUN",
+      "grade": "NOT_RUN",
+      "evidenceIds": [
+        "R14-C5-Q8-02"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q8.json"
+      ]
+    },
+    {
+      "id": "axon-code-android-foreground-service-device",
+      "status": "NOT RUN",
+      "grade": "NOT_RUN",
+      "evidenceIds": [
+        "R14-C5-Q7-03"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q7.json"
+      ]
+    },
+    {
+      "id": "axon-code-android-foreground-service-source",
+      "status": "BUILT",
+      "grade": "ANDROID_SOURCE_ONLY",
+      "evidenceIds": [
+        "R14-C5-Q7-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q7.json"
+      ]
+    },
+    {
+      "id": "axon-code-app-integration-contract",
+      "status": "TESTED",
+      "grade": "REAL_GATEWAY_EXAMPLES",
+      "evidenceIds": [
+        "R14-C5-Q5-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q5.json"
+      ]
+    },
+    {
+      "id": "axon-code-bounded-background-queue",
+      "status": "TESTED",
+      "grade": "IN_PROCESS_QUEUE",
+      "evidenceIds": [
+        "R14-C5-Q1-02"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q1.json"
       ]
     },
     {
@@ -124,6 +190,29 @@
       ]
     },
     {
+      "id": "axon-code-clean-base-reapply-continuation5",
+      "status": "TESTED",
+      "grade": "MIXED",
+      "evidenceIds": [
+        "R14-C5-CLEAN-BASE-REAPPLY",
+        "R14-C5-CLEAN-BASE-REAPPLY-FINAL"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-clean-reapply.json"
+      ]
+    },
+    {
+      "id": "axon-code-competitor-trials",
+      "status": "NOT RUN",
+      "grade": "NOT_RUN",
+      "evidenceIds": [
+        "R14-C5-Q8-03"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q8.json"
+      ]
+    },
+    {
       "id": "axon-code-confined-project-test-runner",
       "status": "BLOCKED",
       "grade": "UNSPECIFIED",
@@ -132,6 +221,39 @@
       ],
       "resultFiles": [
         "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-confined-project-test-runner-v2",
+      "status": "TESTED",
+      "grade": "PROCESS_PERMISSION_CONFINEMENT_NOT_OS_SANDBOX",
+      "evidenceIds": [
+        "R14-C5-Q2-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q2.json"
+      ]
+    },
+    {
+      "id": "axon-code-continuation5-typecheck-build",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C5-TYPECHECK-BUILD"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-build.json"
+      ]
+    },
+    {
+      "id": "axon-code-deterministic-ui-bundle",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C5-UI-DETERMINISM"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-build.json"
       ]
     },
     {
@@ -157,6 +279,28 @@
       ]
     },
     {
+      "id": "axon-code-job-workspace-owner-policy",
+      "status": "TESTED",
+      "grade": "WORKSPACE_SCOPED_AUTHORITY",
+      "evidenceIds": [
+        "R14-C5-Q1-03"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q1.json"
+      ]
+    },
+    {
+      "id": "axon-code-linux-child-process-sigstop-sigcont",
+      "status": "TESTED",
+      "grade": "LINUX_SIGSTOP_SIGCONT",
+      "evidenceIds": [
+        "R14-C5-Q1-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q1.json"
+      ]
+    },
+    {
       "id": "axon-code-loopback-ui-static-server",
       "status": "TESTED",
       "grade": "T1",
@@ -165,6 +309,17 @@
       ],
       "resultFiles": [
         "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-lsp-hostile-frame-validation",
+      "status": "TESTED",
+      "grade": "BOUNDED_LSP_PROTOCOL",
+      "evidenceIds": [
+        "R14-C5-Q3-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q3.json"
       ]
     },
     {
@@ -190,6 +345,17 @@
       ]
     },
     {
+      "id": "axon-code-node-performance-budgets",
+      "status": "TESTED",
+      "grade": "NODE_MEASURED",
+      "evidenceIds": [
+        "R14-C5-Q6-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q6.json"
+      ]
+    },
+    {
       "id": "axon-code-offline-ui-bundle",
       "status": "TESTED",
       "grade": "T1",
@@ -212,6 +378,28 @@
       ]
     },
     {
+      "id": "axon-code-preview-console-bridge",
+      "status": "TESTED",
+      "grade": "JSDOM_ORIGIN_SOURCE_CHECKED",
+      "evidenceIds": [
+        "R14-C5-Q4-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q4.json"
+      ]
+    },
+    {
+      "id": "axon-code-preview-webview-console-bridge",
+      "status": "NOT RUN",
+      "grade": "NOT_RUN",
+      "evidenceIds": [
+        "R14-C5-Q4-02"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q4.json"
+      ]
+    },
+    {
       "id": "axon-code-project-formatter",
       "status": "BLOCKED",
       "grade": "UNSPECIFIED",
@@ -231,6 +419,28 @@
       ],
       "resultFiles": [
         "results/r14-continuation4.json"
+      ]
+    },
+    {
+      "id": "axon-code-round15-handover-verifier",
+      "status": "TESTED",
+      "grade": "NODE_DOCUMENT_VERIFICATION",
+      "evidenceIds": [
+        "R14-C5-Q8-01"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q8.json"
+      ]
+    },
+    {
+      "id": "axon-code-screen-contract",
+      "status": "TESTED",
+      "grade": "BUILT_UI_ID_CONFORMANCE",
+      "evidenceIds": [
+        "R14-C5-Q5-02"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-q5.json"
       ]
     },
     {
@@ -402,6 +612,7 @@
       "grade": "T1",
       "evidenceIds": [
         "R14-C4-CLEAN-BASE-REAPPLY",
+        "R14-C5-EXACT-FULL-SUITE",
         "R14-FULL-FOUNDATION",
         "R14-FULL-PRER4-COMPLETION",
         "R14-FULL-PRER4-REMEDIATION",
@@ -452,10 +663,11 @@
         "R14-FULL-ROUND9-ROUTING-EVIDENCE",
         "R14-FULL-ROUND9-WORKBENCH",
         "R14-FULL-REGRESSION-SUMMARY",
-        "R14-C4-EXACT-FULL-SUITE"
+        "R14-C5-EXACT-FULL-SUITE"
       ],
       "resultFiles": [
         "results/r14-clean-reapply.json",
+        "results/r14-continuation5-full-suite.json",
         "results/r14-full-regression-per-file.json",
         "results/r14-full-regression-summary.json",
         "results/r14-full-suite-exact-command.json"
@@ -674,6 +886,17 @@
       ],
       "resultFiles": [
         "results/r14-wp04-pyodide-vendor.json"
+      ]
+    },
+    {
+      "id": "r14-continuation5-start-gate",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C5-START-GATE"
+      ],
+      "resultFiles": [
+        "results/r14-continuation5-start-gate.json"
       ]
     },
     {

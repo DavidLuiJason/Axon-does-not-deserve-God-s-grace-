@@ -1,0 +1,1820 @@
+{
+  "schemaVersion": 1,
+  "sourceHtml": "ui/index.html",
+  "builtHtml": "build/ui/index.html",
+  "stateRules": {
+    "TESTED": {
+      "state": "enabled",
+      "reason": null
+    },
+    "BUILT": {
+      "state": "disabled",
+      "reason": "Source is present, but this capability does not yet have a real-provider test result."
+    },
+    "BLOCKED": {
+      "state": "disabled",
+      "reason": "The provider or required host capability is blocked; see the capability registry."
+    },
+    "NOT RUN": {
+      "state": "disabled",
+      "reason": "Host/device/browser validation has not been run; see the capability registry."
+    },
+    "NOT IMPLEMENTED": {
+      "state": "hidden",
+      "reason": "This capability is not implemented."
+    }
+  },
+  "elements": [
+    {
+      "id": "capabilitiesPanel",
+      "command": "view.capabilities",
+      "capabilityId": "axon-code-brain-gateway-contract",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "capabilityList",
+      "command": "capability.list",
+      "capabilityId": "axon-code-brain-gateway-contract",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "clearEditorButton",
+      "command": "editor.clear",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "copyButton",
+      "command": "editor.copy",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "createFileConfirm",
+      "command": "file.create.confirm",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "createProjectConfirm",
+      "command": "project.create.confirm",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "cursorStatus",
+      "command": "editor.cursor.status",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "cutButton",
+      "command": "editor.cut",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "deleteButton",
+      "command": "file.delete",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "downloadButton",
+      "command": "file.download",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "editor",
+      "command": "editor.edit",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "editorHost",
+      "command": "editor.host",
+      "capabilityId": "codemirror6-xtermjs-workbench",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "editorStatus",
+      "command": "editor.status",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "encodingStatus",
+      "command": "editor.encoding.status",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "explorerProject",
+      "command": "project.explorer",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "exportButton",
+      "command": "project.export.open",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "exportConfirm",
+      "command": "project.export.confirm",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "exportDialog",
+      "command": "project.export.dialog",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "exportFormat",
+      "command": "project.export.format",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "fileInput",
+      "command": "file.import.input",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "fileTree",
+      "command": "project.file-tree",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "importFilesButton",
+      "command": "file.import",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "importProjectInput",
+      "command": "project.import.input",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "infoDialog",
+      "command": "settings.dialog",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "languageStatus",
+      "command": "editor.language.status",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "lineNumbers",
+      "command": "editor.line-numbers",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "moveButton",
+      "command": "file.move",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "newFileButton",
+      "command": "file.create.open",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "newFileDialog",
+      "command": "file.create.dialog",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "newFilePath",
+      "command": "file.create.path",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "newProjectButton",
+      "command": "project.create.open",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "openProjectButton",
+      "command": "project.open",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "outputPanel",
+      "command": "view.output",
+      "capabilityId": "axon-code-brain-gateway-job-lifecycle-core",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "outputText",
+      "command": "view.output.content",
+      "capabilityId": "axon-code-brain-gateway-job-lifecycle-core",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "paletteButton",
+      "command": "command.palette.open",
+      "capabilityId": "codemirror6-xtermjs-package-wiring",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "paletteCommands",
+      "command": "command.palette.list",
+      "capabilityId": "codemirror6-xtermjs-package-wiring",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "paletteDialog",
+      "command": "command.palette.dialog",
+      "capabilityId": "codemirror6-xtermjs-package-wiring",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "paletteSearch",
+      "command": "command.palette.search",
+      "capabilityId": "codemirror6-xtermjs-package-wiring",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "pasteButton",
+      "command": "editor.paste",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "previewButton",
+      "command": "preview.open",
+      "capabilityId": "axon-code-managed-preview-server",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "previewFrame",
+      "command": "preview.frame",
+      "capabilityId": "axon-code-managed-preview-server",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "previewPanel",
+      "command": "view.preview",
+      "capabilityId": "axon-code-managed-preview-server",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "problemsPanel",
+      "command": "view.problems",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "problemsText",
+      "command": "view.problems.content",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "projectDialog",
+      "command": "project.create.dialog",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "projectName",
+      "command": "project.name",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "projectNameInput",
+      "command": "project.name.input",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "refreshButton",
+      "command": "project.refresh",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "renameButton",
+      "command": "file.rename",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "resourceText",
+      "command": "resources.view",
+      "capabilityId": "persistent-jobs-and-crash-recovery",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "resourcesPanel",
+      "command": "view.resources",
+      "capabilityId": "persistent-jobs-and-crash-recovery",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "saveAllButton",
+      "command": "project.save-all",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "saveButton",
+      "command": "file.save",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "selectAllButton",
+      "command": "editor.select-all",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "settingsButton",
+      "command": "settings.open",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "shareButton",
+      "command": "project.share",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "tabs",
+      "command": "editor.tabs",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "terminalHost",
+      "command": "terminal.host",
+      "capabilityId": "linux-pty-provider",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "terminalPanel",
+      "command": "view.terminal",
+      "capabilityId": "linux-pty-provider",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "terminalStatus",
+      "command": "terminal.status",
+      "capabilityId": "linux-pty-provider",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "toast",
+      "command": "notification.toast",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "trustBadge",
+      "command": "workspace.trust.status",
+      "capabilityId": "workspace-trust-and-secret-redaction",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "undoDeleteButton",
+      "command": "file.undo-delete",
+      "capabilityId": "workbench-file-operations-and-editor-controls",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    }
+  ],
+  "commands": [
+    {
+      "id": "project.create.open",
+      "elementId": "newProjectButton"
+    },
+    {
+      "id": "project.open",
+      "elementId": "openProjectButton"
+    },
+    {
+      "id": "file.create.open",
+      "elementId": "newFileButton"
+    },
+    {
+      "id": "file.save",
+      "elementId": "saveButton"
+    },
+    {
+      "id": "project.save-all",
+      "elementId": "saveAllButton"
+    },
+    {
+      "id": "file.rename",
+      "elementId": "renameButton"
+    },
+    {
+      "id": "file.move",
+      "elementId": "moveButton"
+    },
+    {
+      "id": "editor.clear",
+      "elementId": "clearEditorButton"
+    },
+    {
+      "id": "editor.select-all",
+      "elementId": "selectAllButton"
+    },
+    {
+      "id": "editor.copy",
+      "elementId": "copyButton"
+    },
+    {
+      "id": "editor.cut",
+      "elementId": "cutButton"
+    },
+    {
+      "id": "editor.paste",
+      "elementId": "pasteButton"
+    },
+    {
+      "id": "file.download",
+      "elementId": "downloadButton"
+    },
+    {
+      "id": "project.share",
+      "elementId": "shareButton"
+    },
+    {
+      "id": "preview.open",
+      "elementId": "previewButton"
+    },
+    {
+      "id": "project.export.open",
+      "elementId": "exportButton"
+    },
+    {
+      "id": "view.output",
+      "elementId": "outputPanel"
+    },
+    {
+      "id": "view.problems",
+      "elementId": "problemsPanel"
+    },
+    {
+      "id": "view.preview",
+      "elementId": "previewPanel"
+    },
+    {
+      "id": "view.resources",
+      "elementId": "resourcesPanel"
+    },
+    {
+      "id": "view.terminal",
+      "elementId": "terminalPanel"
+    },
+    {
+      "id": "view.capabilities",
+      "elementId": "capabilitiesPanel"
+    }
+  ]
+}

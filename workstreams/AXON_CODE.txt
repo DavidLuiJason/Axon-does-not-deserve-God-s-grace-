@@ -1,20 +1,19 @@
-WORKSTREAM: AXON CODE (Round 14 Continuation 4 delivered; Director review pending)
+WORKSTREAM: AXON CODE (Round 14 Continuation 5 / Round 15 handover)
 ACCOUNT / ROLE: Claude = Director/verifier; ChatGPT = builder
-UPDATED: 2026-11-13
-STATE NOW: Continuation 4 P7–P13 source packages delivered as separate deltas; 1,313/1,313 exact-command tests pass; sequential per-file: 1,313/1,313. Seven package suites: 82/82; 55 negative tests; six real compiled-module mutants caught (P13 source-only has no compiled mutant).
-BASE TO START FROM: AXON_CODE_R14_DIRECTOR_BASE_2.zip + vendor V2 dependencies; ratchet minimum 1,231; current full suite 1,313.
-OWNS: axon-code/ and workstreams/AXON_CODE.txt only.
-MUST NOT TOUCH: AXON main app root src/, tests/, tools/, public/, .github/workflows, root package files, NOW.txt, MERGE_TAG.txt, docs/JOB_BOARD.md, or any other workstream.
-PARALLEL WORKSTREAMS: AXON Web; Tools-to-Brain; AI Studio screens; AXON Apps and Games.
-NOT BEING DONE HERE: AXON Web, Tools-to-Brain, AI Studio screens, Apps, Games, or registering AXON tools.
-P7: PARTIAL; Node bundle/server and jsdom controls tested; Chromium mount NOT RUN.
-P8: PARTIAL; real WASM/WASI worker tested at T1; native compiler provider BLOCKED; no OS sandbox.
-P9: PARTIAL; managed preview server tested; iframe console bridge and Chromium/WebView NOT RUN.
-P10: PARTIAL; search and TypeScript services tested; confined project test runner and formatter BLOCKED.
-P11: PARTIAL; real TypeScript LSP tested; direct malformed/out-of-order hostile-frame fixtures incomplete.
-P12: PARTIAL; scoped gateway, approvals, audit and persistent jobs tested; provider dispatch incomplete; pause/resume NOT_SUPPORTED.
-P13: SOURCE ONLY; Capacitor/SAF and Gradle skeleton; Gradle, Android SDK, APK and device tests NOT RUN.
-SCREEN-READY NOW: Node-proven bundle build, capability registry, project search and TypeScript symbol/rename service; all host limitations remain visible.
-SCREEN NOT READY: Android execution/background service, phone terminal/debugger, browser preview mount, OS sandbox, native compiler, project test runner.
-NEXT: Director to inspect the seven ordered deltas and accept or return specific gaps; no further scope without ruling.
-WAITING ON THE OWNER: Director merge approval, npm registry artifact/integrity for clean install, and Chromium/Android host evidence.
+UPDATED: 2026-11-14
+STATE NOW: Continuation 5 Q1–Q8 implemented; Q0 skipped because CI results ZIP was not attached.
+TEST EVIDENCE: start gate 1,317/1,317; final suite 1,381/1,381 PASS, 0 fail/skip; typecheck/build pass.
+CLEAN REAPPLY: fresh Base 3 + C5 delta; BASE_HASHES, typecheck/build/UI build and 1,381/1,381 full suite PASS.
+VERIFY: serial 1,381/1,381 pass; 314 hashes and 313 manifest entries valid. Overall BLOCKED only by clean npm ci ENOTCACHED / registry DNS.
+BASE: AXON_CODE_R14_DIRECTOR_BASE_3.zip + AXON_CODE_VENDOR_PACK_V2.zip; vendor extraction preserved esbuild executable permissions.
+OWNS: axon-code/ and this board file only.
+PARALLEL WORKSTREAMS: AXON Web, Tools-to-Brain, AI Studio screens, Apps, Games.
+MUST NOT TOUCH: AXON main app, other workstream files, shared root files, .github/workflows, other owners' source.
+Q1: Linux SIGSTOP/SIGCONT, user workspace control of AXON jobs, explicit AXON permission/audit, bounded fair queue.
+Q2–Q4: Node permission-confined project tests; hostile LSP frames; jsdom preview console/error bridge.
+Q5–Q6: executable gateway/screen contracts; Node performance budgets and raw measurements.
+Q7–Q8: Android foreground-service/SAF source only; Round 15 handover and device proof checklist.
+NOT RUN: Android build/device, WebView, phone performance, Termux/Pydroid 3/Acode comparison; no APK produced.
+OPEN: exact AXON Tools screen-routing ID and AXON-side background dispatcher mapping for the other Directors.
+NEXT: Director review, then owner-supplied signed build and physical Android proof.
+WAITING ON OWNER: optional axon-code-ci-results.zip and an installable signed Android build for device validation.

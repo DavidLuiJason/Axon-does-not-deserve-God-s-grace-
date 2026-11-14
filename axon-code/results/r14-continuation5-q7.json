@@ -1,0 +1,50 @@
+[
+  {
+    "id": "R14-C5-Q7-01",
+    "capability": "axon-code-android-foreground-service-source",
+    "status": "BUILT",
+    "suite": "tests/r14-q7-android-background-source.test.mjs",
+    "command": "node --test tests/r14-q7-android-background-source.test.mjs",
+    "exitCode": 0,
+    "durationMs": 91.81,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "ANDROID_SOURCE_ONLY",
+    "summary": "Foreground service, notification channel/actions and manifest permissions are source-only; Android compilation/device execution NOT RUN.",
+    "tests": 7,
+    "passed": 7,
+    "negativeTests": 3,
+    "realCompiledModuleMutantCaught": false
+  },
+  {
+    "id": "R14-C5-Q7-02",
+    "capability": "axon-code-android-background-fake-host-contract",
+    "status": "TESTED",
+    "suite": "tests/r14-q7-android-background-source.test.mjs",
+    "command": "node --test tests/r14-q7-android-background-source.test.mjs",
+    "exitCode": 0,
+    "durationMs": 91.81,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "FAKE_HOST_ONLY",
+    "summary": "Notification pause/cancel and SAF grant lifecycle contract exercised against FAKE_HOST only; not provider evidence.",
+    "tests": 7,
+    "passed": 7,
+    "negativeTests": 3,
+    "realCompiledModuleMutantCaught": true
+  },
+  {
+    "id": "R14-C5-Q7-03",
+    "capability": "axon-code-android-foreground-service-device",
+    "status": "NOT RUN",
+    "suite": "tests/r14-q7-android-background-source.test.mjs",
+    "command": "Not run in this environment; source-only or device-gated capability.",
+    "exitCode": null,
+    "durationMs": 0,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "NOT_RUN",
+    "summary": "No Android Gradle build, APK, physical device or notification action test was performed.",
+    "tests": 0,
+    "passed": 0,
+    "negativeTests": 0,
+    "realCompiledModuleMutantCaught": false
+  }
+]

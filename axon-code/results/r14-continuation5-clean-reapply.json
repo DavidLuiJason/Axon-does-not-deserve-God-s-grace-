@@ -1,0 +1,50 @@
+[
+  {
+    "id": "R14-C5-CLEAN-BASE-REAPPLY",
+    "suite": "continuation5-clean-base-reapply",
+    "capability": "axon-code-clean-base-reapply-continuation5",
+    "status": "PASS",
+    "command": "verify BASE_HASHES.txt; apply C5 delta to clean AXON_CODE_R14_DIRECTOR_BASE_3; cp -a vendor node_modules; npm run typecheck; npm run build; node tools/build-ui.mjs; nohup node --test tests/*.test.mjs",
+    "exitCode": 0,
+    "durationMs": 61734.62,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "tests": 1381,
+    "passed": 1381,
+    "failed": 0,
+    "skipped": 0,
+    "grade": "T1_CLEAN_REAPPLY",
+    "baseHashesVerified": true,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "uiBuild": "PASS",
+    "notes": [
+      "Vendor esbuild executable mode 755 was preserved.",
+      "Clean-base full suite completed with 1,381 pass, 0 fail, 0 skipped."
+    ]
+  },
+  {
+    "id": "R14-C5-CLEAN-BASE-REAPPLY-FINAL",
+    "suite": "continuation5-final-delta-clean-base-reapply",
+    "capability": "axon-code-clean-base-reapply-continuation5",
+    "status": "PASS",
+    "command": "verify final BASE_HASHES.txt; apply final C5 delta to fresh AXON_CODE_R14_DIRECTOR_BASE_3; copy vendor node_modules; npm run typecheck; npm run build; node tools/build-ui.mjs; nohup node --test tests/*.test.mjs",
+    "exitCode": 0,
+    "durationMs": 62391.2,
+    "hostFingerprint": "73fc35ab4e5c9a30",
+    "tests": 1381,
+    "passed": 1381,
+    "failed": 0,
+    "skipped": 0,
+    "grade": "T1_FINAL_CLEAN_REAPPLY",
+    "baseHashesVerified": true,
+    "replacedFilesHashCount": 16,
+    "vendorEsbuildMode": 755,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "uiBuild": "PASS",
+    "notes": [
+      "Final Continuation 5 delta was reapplied to a fresh Director Base 3 extraction.",
+      "Exact full suite passed 1,381/1,381 with 0 failures and 0 skipped tests."
+    ]
+  }
+]

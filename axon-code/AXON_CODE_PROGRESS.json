@@ -521,7 +521,7 @@
       "reason": "The command did not complete within the 120-second execution limit; prior attempts document Chromium navigation blocked by ERR_BLOCKED_BY_ADMINISTRATOR."
     }
   },
-  "lastCommand": "npm run build; node --test tests/*.test.mjs (background runner; captured output)",
+  "lastCommand": "nohup node --test tests/*.test.mjs > /tmp/r14c5-final-full.txt 2>&1",
   "resumeRule": "Director review next. Do not claim browser or Android validation. Next close preview iframe event bridge and inbound LSP hostile-frame tests; wire gateway to real providers only after explicit provider/host acceptance, and implement pause/resume only with real host suspension or checkpoint support.",
   "directorVerification": {
     "date": "2026-11-09",
@@ -581,10 +581,31 @@
       ],
       "designDecisionOpen": "the gateway refuses a USER cancelling a job that AXON started (OWNER_MISMATCH); the product vision says the user can pause or cancel anything running on their device, so the rule should let a USER with the permission cancel and pause AXON-origin jobs, while AXON still cannot cancel user jobs without permission",
       "stillNotRun": "jsdom UI smoke of the bundle, real language server, golden corpus on 5.8.3, browser mount, Android"
+    },
+    "continuation5": {
+      "date": "2026-11-13",
+      "baseHashes": "BASE_HASHES.txt matched the Director base 3 for all 16 replaced files",
+      "reproduced": "Director sandbox: build and typecheck clean; 58 test files; failures only where jsdom, the real language server or TypeScript 5.8.3 are missing (36 known plus the Q4 console-bridge file, which needs jsdom); everything else passes",
+      "findings": [
+        "SECURITY: the Node permission model does not stop process.kill. A hostile project test killed an unrelated process of the same user (and killed the Director probe itself) while the confined runner reported TESTED. Fixed in src/services/confinedProjectTestRunner.mjs: the child runs in its own user and PID namespace (unshare) when the system allows it; otherwise the run is BLOCKED (NO_SIGNAL_ISOLATION) unless the caller passes signalRisk accept for a trusted project; the result states signalIsolation and isolationDetail. tests/r14-q2-signal-isolation-director.test.mjs (4 tests, a real mutant). The builder q2 tests now pass signalRisk accept because they exercise the permission confinement itself.",
+        "BUG: cancelling a PAUSED job sent SIGTERM to a stopped process, which cannot act on it until continued, so the process stayed alive and the job never settled; a process ignoring SIGTERM could never be cancelled. Fixed in src/jobs/linuxChildProcessHost.mjs: cancel continues a paused process and hard-kills after a grace period. tests/r14-q1-cancel-paused-director.test.mjs (4 tests, a real mutant)."
+      ],
+      "heldUnderAttack": [
+        "real SIGSTOP pause: cpu ticks 38 while running, 0 while paused (state T), 40 after resume",
+        "new cancel rule: USER cancels an AXON-origin job, AXON cancelling a USER job is refused, pause of a cancelled job refused, unknown job refused",
+        "confined runner refused reads of /etc/passwd and outside paths, writes outside scratch, child processes, workers, network, native addons, environment secrets (none visible), infinite loops and endless output",
+        "Android manifest: service not exported, three permissions, no backup"
+      ],
+      "notes": [
+        "workers cannot be paused: honestly NOT_SUPPORTED",
+        "dataSync foreground service type has a time limit on newer Android versions; a different service type may be needed (Android, NOT RUN)",
+        "Q4 console bridge and the Q5 UI-id checks need jsdom and the built UI: cloud run is the proof"
+      ],
+      "stillNotRun": "any browser mount, any Android code, real language server, golden corpus on 5.8.3 here"
     }
   },
   "phaseB": "IN PROGRESS \u2014 Continuation 4 P7\u2013P13 Node-provable scope implemented. Full Node regression 1,312/1,312 passes. Browser/Android validation, native process confinement, full provider dispatch and pause/resume remain incomplete.",
-  "lastResult": "Continuation 4 P7\u2013P13: 81 new targeted tests passed (0 failed, 0 skipped); full regression 1,312/1,312 PASS, 0 failed, 0 skipped. npm run build PASS. Browser/Android/native sandbox limitations remain as documented.",
+  "lastResult": "Continuation 5 Q1-Q8: 64/64 package tests; exact full suite 1,381/1,381 pass, 0 fail, 0 skipped; typecheck/build and deterministic UI build pass.",
   "continuation3": {
     "P1": {
       "state": "DONE",
@@ -766,6 +787,188 @@
       "mergeSetFiles": 270,
       "sourceTreeMatchesWorkingTree": true,
       "workflowFilesIncluded": false
+    }
+  },
+  "continuation5": {
+    "date": "2026-11-14",
+    "directorRuling": "Start gate accepted after preserving executable permissions in vendor node_modules. Baseline is 1,317, not 1,306. No ratchet change.",
+    "startGate": {
+      "build": "PASS",
+      "command": "npm run build",
+      "fullSuiteCommand": "nohup node --test tests/*.test.mjs > /tmp/full.txt 2>&1",
+      "tests": 1317,
+      "passed": 1317,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 44740.54,
+      "esbuildMode": 755,
+      "status": "PASS"
+    },
+    "q0": {
+      "state": "SKIPPED",
+      "reason": "Optional axon-code-ci-results.zip was not attached."
+    },
+    "packages": {
+      "Q1": {
+        "state": "PARTIAL",
+        "tests": 16,
+        "passed": 16,
+        "negativeTests": 5,
+        "mutantCaught": true,
+        "summary": "Gateway-integrated bounded fair queue; real Linux child SIGSTOP/SIGCONT; workspace user authority over AXON-origin jobs; explicit AXON manage permission/audit; 1,000 queue cycles and 1,000 real child spawn/cancel cycles. Android and Pyodide/WASM pause remain NOT RUN/NOT_SUPPORTED."
+      },
+      "Q2": {
+        "state": "PARTIAL",
+        "tests": 10,
+        "passed": 10,
+        "negativeTests": 7,
+        "mutantCaught": true,
+        "summary": "runProjectTests now uses Node v22.16 permission model, project read/scratch write, no child/worker/addon grants, sanitized environment and time/output caps. Process-level permission confinement only, not an OS sandbox."
+      },
+      "Q3": {
+        "state": "TESTED",
+        "tests": 9,
+        "passed": 9,
+        "negativeTests": 8,
+        "mutantCaught": true,
+        "summary": "Bounded strict LSP framing rejects malformed, oversized, truncated, out-of-order, duplicate and flood frames; no-answer server times out and is terminated."
+      },
+      "Q4": {
+        "state": "PARTIAL",
+        "tests": 7,
+        "passed": 7,
+        "negativeTests": 5,
+        "mutantCaught": true,
+        "summary": "Real loopback preview server injects nonce-bound console/error bridge; jsdom verifies source/origin/token checks and caps. Android WebView NOT RUN."
+      },
+      "Q5": {
+        "state": "PARTIAL",
+        "tests": 5,
+        "passed": 5,
+        "negativeTests": 2,
+        "mutantCaught": true,
+        "summary": "Nine gateway operation examples execute against real gateway; screen contract enumerates every built UI element ID. AXON Tools screen-routing and background dispatcher IDs remain OPEN."
+      },
+      "Q6": {
+        "state": "PARTIAL",
+        "tests": 6,
+        "passed": 6,
+        "negativeTests": 2,
+        "mutantCaught": true,
+        "summary": "Node budgets pass: provider start 39.56 ms; WASM guest memory 65,536 bytes; UI bundle 14,795,325 bytes; queue throughput 10,466.19 jobs/s. Phone performance NOT RUN."
+      },
+      "Q7": {
+        "state": "PARTIAL_SOURCE_ONLY",
+        "tests": 7,
+        "passed": 7,
+        "negativeTests": 3,
+        "mutantCaught": true,
+        "summary": "Foreground service, notification channel/pause/cancel actions and SAF source; FAKE_HOST contract only. No Gradle build/APK/device run; dispatcher registration still open."
+      },
+      "Q8": {
+        "state": "PARTIAL",
+        "tests": 4,
+        "passed": 4,
+        "negativeTests": 3,
+        "mutantCaught": true,
+        "summary": "Round15 handover verifier and device checklist with ten named tasks, pause/resume, background, kill/reopen, and Termux/Pydroid 3/Acode comparison protocol. Device and competitor trials NOT RUN."
+      }
+    },
+    "packageTotals": {
+      "tests": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0,
+      "negativeTests": 35,
+      "realCompiledModuleMutantsCaught": 8
+    },
+    "fullRegression": {
+      "exactCommand": "nohup node --test tests/*.test.mjs > /tmp/r14c5-final-full.txt 2>&1",
+      "testFiles": 58,
+      "tests": 1381,
+      "passed": 1381,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 61402.204,
+      "status": "PASS",
+      "sequentialPerFileC5": "PASS: 1,381/1,381 across 58 files. npm run verify:director returned BLOCKED only because cleanInstall is BLOCKED (ENOTCACHED and registry DNS failure); no test failures or skips."
+    },
+    "performance": {
+      "schemaVersion": 1,
+      "host": "linux x64 Node v22.16.0",
+      "measurements": {
+        "providerStartMs": 39.56,
+        "guestWasmMemoryBytes": 65536,
+        "uiBundleBytes": 14795325,
+        "uiBundleBudgetBytes": 16777216,
+        "queueJobs": 500,
+        "queueElapsedMs": 47.77,
+        "queueThroughputPerSecond": 10466.19
+      },
+      "budgets": {
+        "providerStartMs": 3000,
+        "guestWasmMemoryBytes": 2097152,
+        "uiBundleBytes": 16777216,
+        "queueThroughputPerSecondMinimum": 100
+      },
+      "phonePerformance": "NOT RUN \u2014 no physical Android device was used.",
+      "memoryScope": "WASM guest linear memory only; this is not total process RSS or Android memory."
+    },
+    "limitations": [
+      "Node permission confinement is process-level and is not an OS sandbox.",
+      "Android Gradle build, APK, physical device, foreground-service runtime, notification actions and SAF grants are NOT RUN.",
+      "Android WebView preview behaviour is NOT RUN.",
+      "Phone performance is NOT RUN; WASM memory is guest linear memory, not total RSS.",
+      "Termux, Pydroid 3 and Acode competitor trials are NOT RUN.",
+      "Q0 cloud browser CI results were not attached.",
+      "AXON Tools screen routing and AXON-side background dispatcher IDs remain OPEN."
+    ],
+    "registryCounts": {
+      "resultRecords": 247,
+      "capabilities": 77,
+      "TESTED": 44,
+      "BUILT": 2,
+      "BLOCKED": 12,
+      "NOT RUN": 19,
+      "NOT IMPLEMENTED": 0
+    },
+    "cleanBaseReapply": {
+      "base": "AXON_CODE_R14_DIRECTOR_BASE_3.zip",
+      "passes": 3,
+      "finalDeltaReapplied": true,
+      "baseHashesVerified": true,
+      "replacedFilesHashCount": 16,
+      "vendorEsbuildMode": 755,
+      "typecheck": "PASS",
+      "build": "PASS",
+      "uiBuild": "PASS",
+      "tests": 1381,
+      "passed": 1381,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 62391.2,
+      "status": "PASS"
+    },
+    "verificationSummary": {
+      "status": "BLOCKED",
+      "reason": "cleanInstall only: offline npm ci ENOTCACHED and online registry DNS resolution failed",
+      "sequentialTests": 1381,
+      "passed": 1381,
+      "failed": 0,
+      "skipped": 0,
+      "testFiles": 58,
+      "hashesChecked": 314,
+      "badHashes": 0,
+      "manifestEntries": 313,
+      "missingManifestEntries": 0,
+      "mergeFiles": 312,
+      "mergeBytes": 2208162,
+      "forbiddenMergePaths": 0,
+      "ratchetMinimum": 1231,
+      "ratchetPassed": true,
+      "registryCapabilities": 77,
+      "registryStatusesValid": true,
+      "budgetPassed": true
     }
   }
 }

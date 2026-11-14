@@ -1,0 +1,50 @@
+[
+  {
+    "id": "R14-C5-Q1-01",
+    "capability": "axon-code-linux-child-process-sigstop-sigcont",
+    "status": "TESTED",
+    "suite": "tests/r14-q1-job-service.test.mjs",
+    "command": "node --test tests/r14-q1-job-service.test.mjs",
+    "exitCode": 0,
+    "durationMs": 11773.628986,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "LINUX_SIGSTOP_SIGCONT",
+    "summary": "Real child CPU ticks stopped while SIGSTOPped, resumed after SIGCONT; restart interruption and 1,000 real spawn/cancel cycles tested.",
+    "tests": 16,
+    "passed": 16,
+    "negativeTests": 5,
+    "realCompiledModuleMutantCaught": true
+  },
+  {
+    "id": "R14-C5-Q1-02",
+    "capability": "axon-code-bounded-background-queue",
+    "status": "TESTED",
+    "suite": "tests/r14-q1-job-service.test.mjs",
+    "command": "node --test tests/r14-q1-job-service.test.mjs",
+    "exitCode": 0,
+    "durationMs": 11773.628986,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "IN_PROCESS_QUEUE",
+    "summary": "Concurrency, per-owner quota, global cap, priority, fairness, terminal-history pruning and 1,000-job queue lifecycle tested.",
+    "tests": 16,
+    "passed": 16,
+    "negativeTests": 5,
+    "realCompiledModuleMutantCaught": true
+  },
+  {
+    "id": "R14-C5-Q1-03",
+    "capability": "axon-code-job-workspace-owner-policy",
+    "status": "TESTED",
+    "suite": "tests/r14-q1-job-service.test.mjs",
+    "command": "node --test tests/r14-q1-job-service.test.mjs",
+    "exitCode": 0,
+    "durationMs": 11773.628986,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "WORKSPACE_SCOPED_AUTHORITY",
+    "summary": "User control of AXON-origin jobs and AXON control of user jobs with explicit permission/audit tested.",
+    "tests": 16,
+    "passed": 16,
+    "negativeTests": 5,
+    "realCompiledModuleMutantCaught": true
+  }
+]

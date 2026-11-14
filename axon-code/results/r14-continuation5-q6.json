@@ -1,0 +1,18 @@
+[
+  {
+    "id": "R14-C5-Q6-01",
+    "capability": "axon-code-node-performance-budgets",
+    "status": "TESTED",
+    "suite": "tests/r14-q6-performance-budgets.test.mjs",
+    "command": "node --test tests/r14-q6-performance-budgets.test.mjs",
+    "exitCode": 0,
+    "durationMs": 213.865865,
+    "hostFingerprint": "linux-x64-node-v22.16.0",
+    "grade": "NODE_MEASURED",
+    "summary": "Provider startup, WASM guest memory, UI bundle bytes and background queue throughput measured on Linux Node; phone performance NOT RUN.",
+    "tests": 6,
+    "passed": 6,
+    "negativeTests": 2,
+    "realCompiledModuleMutantCaught": true
+  }
+]
