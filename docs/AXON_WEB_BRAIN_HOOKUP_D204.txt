@@ -1,0 +1,29 @@
+AXON WEB: HOW THE BRAIN AND TOOLS USE IT (written by Director 204, lane AXON Web, 2026-11-13)
+For: the Director connecting tools to the brain, and the Director building the screens.
+
+1. THE ONE ENTRY POINT
+src/web/axonWebAgent.ts: createAxonWebAgent({ engine }) returns TWO handles.
+ - agent: for the brain/tools. Methods: search(query), open(url), read(), snapshot(), click(id), type(id, text), select(id, value), scroll(dy), state(), release().
+ - owner: for the OWNER'S SCREEN ONLY. Methods: pending(), approve(approvalId), deny(approvalId), allowMore(steps), takeOver(). Never give this handle to the brain or to a tool.
+The engine for Android is new AndroidAxonSessionEngine() from src/web/androidAxonSession.ts.
+AXON_WEB_TOOL_SPECS (same file) lists the tool names and help text: web.search, web.open, web.read, web.snapshot, web.click, web.type, web.select, web.scroll, web.release. A tool wrapper only calls the matching agent method.
+
+2. WHAT EVERY CALL RETURNS
+{ ok: true, value } or { ok: false, code, message, approvalId?, functionId? }. Codes: UNAVAILABLE, NO_SESSION, BAD_INPUT, REFUSED, NEEDS_OWNER, HANDOFF, BUDGET, STALE, FAILED.
+ - NEEDS_OWNER: a send/submit step. The screen shows the owner the waiting step (owner.pending()) and calls owner.approve(id) on Allow. The brain just tells the user "waiting for your approval".
+ - HANDOFF: payment and sign-in. AXON never does these; tell the owner to do it.
+ - STALE: take a new snapshot() first. Element ids belong to one page; any click or page change makes them stale.
+ - BUDGET: AXON used its step budget (default 40). The owner calls owner.allowMore(n).
+
+3. WHAT AXON CAN AND CANNOT DO
+AXON browses in its OWN private tab (a throwaway browser profile, no owner cookies, no saved passwords). It cannot read the owner's tabs. It never types passwords, card numbers or codes. It cannot pay or sign in. The tab and profile are deleted on release() or owner.takeOver().
+
+4. THE "AXON IS IN CONTROL" INDICATOR (for the screens)
+ - agent.state() returns { active, actionCount, lastAction, url, title, identity }. Show the indicator while active is true.
+ - The native browser also shows "AXON is browsing" in its own status line and marks the tab with axon: true in getState().tabs.
+ - A Stop button calls owner.takeOver().
+
+5. LIMITS TODAY
+ - The native browser screen must be able to open (it opens itself when AXON asks, if the app is in front).
+ - Not tested on a phone yet. Not tested on live sites. The Java is compiled only by the cloud build.
+ - Needs the Android WebView multi-profile feature; if the phone's WebView lacks it, AXON's tab is refused (no fake private tab).

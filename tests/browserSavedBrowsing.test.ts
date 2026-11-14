@@ -79,7 +79,7 @@ test('all saved-browsing executors are marked implemented in the parity matrix',
     assert.equal(getBrowserParity(functionId as never)?.ownerHost, 'IMPLEMENTED');
     assert.equal(getBrowserParity(functionId as never)?.ownerCommand, 'IMPLEMENTED');
   }
-  assert.equal(BROWSER_PARITY_MATRIX.length, 122);
+  assert.equal(BROWSER_PARITY_MATRIX.length, 130);
 });
 
 test('AXON is denied all saved-browsing operations on the owner session', async () => {

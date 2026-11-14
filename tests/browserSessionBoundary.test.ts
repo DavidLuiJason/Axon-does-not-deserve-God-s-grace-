@@ -5,7 +5,7 @@ import { AXON_BROWSER_SESSION_ENABLED, evaluateBrowserSessionBoundary } from '..
 const owner = Object.freeze({ owner: 'OWNER' as const, sessionId: 'owner-default', engineContextId: 'android-webview-owner', cookiePartitionId: 'owner-cookies', storagePartitionId: 'owner-storage', credentialStoreId: 'owner-credentials', isolationKind: 'SHARED_WEBVIEW_PROCESS' as const, isolationVerified: false });
 const axonIsolated = Object.freeze({ owner: 'AXON' as const, sessionId: 'axon-task-17', engineContextId: 'android-webview-axon-process', cookiePartitionId: 'axon-cookie-store', storagePartitionId: 'axon-storage', credentialStoreId: null, isolationKind: 'ANDROID_WEBVIEW_DATA_SUFFIX' as const, isolationVerified: true });
 
-test('AXON session route remains disabled in current implementation', () => assert.equal(AXON_BROWSER_SESSION_ENABLED, false));
+test('AXON session route is on, but only the boundary check can open it', () => assert.equal(AXON_BROWSER_SESSION_ENABLED, true));
 test('distinct labels alone do not establish isolation', () => {
   const fake = { ...axonIsolated, isolationKind: 'SHARED_WEBVIEW_PROCESS' as const, isolationVerified: false };
   const result = evaluateBrowserSessionBoundary(owner, fake);

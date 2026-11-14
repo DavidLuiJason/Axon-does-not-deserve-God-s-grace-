@@ -59,6 +59,8 @@ def run_case(manifest_text: str, name: str) -> None:
             "com/axon/app/MainActivity.java",
         ]:
             assert (tmp / "android/app/src/main/java" / java_file).is_file(), f"{name}: missing {java_file}"
+        agent_asset = tmp / "android/app/src/main/assets/axon_page_agent.js"
+        assert agent_asset.is_file() and "__axonAgent" in agent_asset.read_text(encoding="utf-8"), f"{name}: AXON page agent asset missing"
 
 
 run_case(
@@ -81,4 +83,4 @@ run_case(
 """,
     "multi-line-application",
 )
-print("BROWSER_OVERLAY_APPLY_OK: 2 manifest layouts, twice each, XML valid, no duplicate declarations, WebKit dependency exactly once")
+print("BROWSER_OVERLAY_APPLY_OK: 2 manifest layouts, twice each, XML valid, no duplicate declarations, WebKit dependency exactly once, AXON page agent asset copied")

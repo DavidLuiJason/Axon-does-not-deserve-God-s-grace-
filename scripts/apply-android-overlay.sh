@@ -34,6 +34,11 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
+# AXON page agent script (read by the native browser from the app assets).
+mkdir -p "$ANDROID/app/src/main/assets"
+cp -f "$OVERLAY/app/src/main/assets/axon_page_agent.js" \
+      "$ANDROID/app/src/main/assets/"
+
 # Ensure AndroidX WebKit Multi-Profile API dependency is present exactly once.
 GRADLE="$ANDROID/app/build.gradle"
 if [[ -f "$GRADLE" ]]; then
@@ -152,67 +157,6 @@ if ! grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST"; then
   echo "    + added BrowserActivity"
 else
   echo "    = BrowserActivity already present"
-fi
-
-echo "==> Screen structure reader (accessibility service, read-only)"
-mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screenstructure" "$ANDROID/app/src/main/res/xml" "$ANDROID/app/src/main/res/values"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java" \
-      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java" \
-      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/PictureTextReader.java" \
-      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
-# On-device text recognition (ML Kit, Latin script, model bundled so it works offline)
-APP_GRADLE="$ANDROID/app/build.gradle"
-if [ -f "$APP_GRADLE" ]; then
-  if ! grep -q "com.google.mlkit:text-recognition" "$APP_GRADLE"; then
-    sed -i '0,/^dependencies {/s//dependencies {\n    implementation "com.google.mlkit:text-recognition:16.0.1"/' "$APP_GRADLE"
-    grep -q "com.google.mlkit:text-recognition" "$APP_GRADLE" || { echo "ERROR: ML Kit dependency insertion failed"; exit 1; }
-    echo "    + added ML Kit text recognition dependency"
-  else
-    echo "    = ML Kit text recognition dependency already present"
-  fi
-else
-  echo "    ! $APP_GRADLE not found: ML Kit dependency NOT added (picture text reading will not compile)"
-fi
-cp -f "$OVERLAY/app/src/main/res/xml/axon_accessibility_service.xml" "$ANDROID/app/src/main/res/xml/"
-cp -f "$OVERLAY/app/src/main/res/values/axon_accessibility_strings.xml" "$ANDROID/app/src/main/res/values/"
-if ! grep -q "AxonAccessibilityService" "$MANIFEST"; then
-  A11Y_XML='        <service
-            android:name=".screenstructure.AxonAccessibilityService"
-            android:exported="true"
-            android:label="AXON screen reader"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/axon_accessibility_service" />
-        </service>'
-  awk -v svc="$A11Y_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
-  grep -q "AxonAccessibilityService" "$MANIFEST" || { echo "ERROR: AxonAccessibilityService declaration insertion failed"; exit 1; }
-  echo "    + added AxonAccessibilityService"
-else
-  echo "    = AxonAccessibilityService already present"
-fi
-
-echo "==> AXON Apps (installed apps list, open app)"
-mkdir -p "$ANDROID/app/src/main/java/com/axon/app/apps"
-cp -f "$OVERLAY/app/src/main/java/com/axon/app/apps/AppsPlugin.java" "$ANDROID/app/src/main/java/com/axon/app/apps/"
-if ! grep -q "AXON_APPS_QUERY" "$MANIFEST"; then
-  APPS_QUERY_XML='    <!-- AXON_APPS_QUERY: lets AXON Apps list launchable apps without the broad all-packages permission -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-    </queries>'
-  awk -v q="$APPS_QUERY_XML" '/<\/manifest>/ { print q } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
-  grep -q "AXON_APPS_QUERY" "$MANIFEST" || { echo "ERROR: AXON Apps launcher query insertion failed"; exit 1; }
-  echo "    + added launcher query"
-else
-  echo "    = launcher query already present"
 fi
 
 echo "==> Overlay applied successfully."

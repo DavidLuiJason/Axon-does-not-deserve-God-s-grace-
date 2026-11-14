@@ -95,7 +95,7 @@ test('AXON sensitive-tab handoff fails closed when the profile boundary is share
   assert.equal(result.ok, false); assert.equal(result.code, 'DENIED'); assert.equal(adapter.calls.length, 0);
 });
 
-test('the AXON browser session feature flag remains disabled', () => assert.equal(AXON_BROWSER_SESSION_ENABLED, false));
+test('the AXON session route is on, but only the boundary check can open it', () => assert.equal(AXON_BROWSER_SESSION_ENABLED, true));
 
 test('native host uses AndroidX Multi-Profile and assigns the profile before WebView settings or navigation', async () => {
   const fs = await import('node:fs');

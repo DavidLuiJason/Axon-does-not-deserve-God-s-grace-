@@ -31,6 +31,7 @@ export type BrowserFunctionId =
   | 'files.open' | 'files.print' | 'files.savePdf'
   // Page reading and convenience tools
   | 'page.read' | 'page.extract' | 'page.followLink' | 'page.capture'
+  | 'page.snapshot' | 'page.click' | 'page.type' | 'page.select' | 'page.scroll' | 'page.submit' | 'page.signIn' | 'page.pay'
   | 'page.translate' | 'page.readerMode' | 'page.listen' | 'page.spellcheck'
   | 'page.selectText' | 'page.copyText' | 'page.shareContent' | 'page.accessibility'
   | 'page.installWebApp' | 'page.mediaPlayPause' | 'page.mediaSeek' | 'page.mediaVolume'
@@ -138,6 +139,15 @@ const definitions: readonly BrowserFunctionDefinition[] = [
   { id: 'page.spellcheck', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Use supported spell-check assistance.' },
   { id: 'page.selectText', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Select text on the page.' },
   { id: 'page.copyText', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Copy selected or extracted page text.' },
+  // AXON page interaction (works only inside AXON's own isolated tab)
+  { id: 'page.snapshot', group: 'Page tools', surface: 'TAB', effect: 'READ', description: 'List the visible interactive controls of the page with stable element ids.' },
+  { id: 'page.click', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Click a harmless control or link by element id.' },
+  { id: 'page.type', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Type text into a non-sensitive text field by element id; never passwords, card or code fields.' },
+  { id: 'page.select', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Choose a value in a drop-down list by element id.' },
+  { id: 'page.scroll', group: 'Page tools', surface: 'TAB', effect: 'READ', description: 'Scroll the page up or down.' },
+  { id: 'page.submit', group: 'Page tools', surface: 'TAB', effect: 'OWNER_CONFIRM', description: 'Submit a form or press a send-type button; needs the owner approval for that exact step.' },
+  { id: 'page.signIn', group: 'Page tools', surface: 'TAB', effect: 'OWNER_HANDOFF', description: 'Sign in or create an account; always done by the owner.' },
+  { id: 'page.pay', group: 'Page tools', surface: 'TAB', effect: 'OWNER_HANDOFF', description: 'Pay, buy or confirm a purchase; always done by the owner.' },
   { id: 'page.shareContent', group: 'Page tools', surface: 'TAB', effect: 'OWNER_CONFIRM', description: 'Share page content outside the browser.' },
   { id: 'page.accessibility', group: 'Page tools', surface: 'TAB', effect: 'REVERSIBLE', description: 'Use supported page accessibility controls.' },
   { id: 'page.installWebApp', group: 'Page tools', surface: 'TAB', effect: 'OWNER_CONFIRM', description: 'Install a supported progressive web app.' },

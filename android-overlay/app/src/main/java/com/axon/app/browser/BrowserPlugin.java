@@ -90,6 +90,39 @@ public final class BrowserPlugin extends Plugin {
         catch (JSONException e) { return new JSObject(); }
     }
 
+    @PluginMethod public void axonOpen(PluginCall call) {
+        String url = call.getString("url");
+        if (url == null || url.trim().isEmpty()) { call.reject("url is required"); return; }
+        if (BrowserActivity.getInstance() == null) {
+            Intent intent = new Intent(getContext(), BrowserActivity.class);
+            intent.putExtra(BrowserActivity.EXTRA_AXON_URL, url);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                getContext().startActivity(intent);
+                JSObject out = new JSObject(); out.put("active", false); out.put("pending", true);
+                call.resolve(out);
+            } catch (Exception e) { call.reject("AXON Web could not open: " + e.getMessage(), e); }
+            return;
+        }
+        withActivity(call, act -> call.resolve(js(act.axonOpen(url))));
+    }
+    @PluginMethod public void axonState(PluginCall call) {
+        BrowserActivity activity = BrowserActivity.getInstance();
+        if (activity == null) { JSObject out = new JSObject(); out.put("active", false); out.put("actionCount", 0); out.put("lastAction", ""); call.resolve(out); return; }
+        withActivity(call, act -> call.resolve(js(act.axonState())));
+    }
+    @PluginMethod public void axonSnapshot(PluginCall call) { withActivity(call, act -> act.axonSnapshot(value -> call.resolve(js(value)))); }
+    @PluginMethod public void axonAct(PluginCall call) {
+        JSObject action = call.getObject("action");
+        if (action == null) { call.reject("action is required"); return; }
+        withActivity(call, act -> act.axonAct(action, value -> call.resolve(js(value))));
+    }
+    @PluginMethod public void axonRelease(PluginCall call) {
+        BrowserActivity activity = BrowserActivity.getInstance();
+        if (activity == null) { JSObject out = new JSObject(); out.put("active", false); out.put("actionCount", 0); out.put("lastAction", "release"); call.resolve(out); return; }
+        withActivity(call, act -> call.resolve(js(act.axonRelease())));
+    }
+
     private void withActivity(PluginCall call, Action action) {
         BrowserActivity activity=BrowserActivity.getInstance();
         if(activity==null){call.reject("AXON Web is not open");return;}

@@ -1,7 +1,7 @@
 AXON WEB (= AXON BROWSER) - SCREEN READINESS
-From: Director 204 (D204), lane AXON Web. Date: 2026-11-12.
+From: Director 204 (D204), lane AXON Web. Date: 2026-11-13 (updated after WEB6, WEB7 and WEB8).
 For: whoever directs the screens (AI Studio screens prompt). D204 knows screens are being built and wrote this so screens are built only on parts that exist.
-Base: repo of 2026-11-11 plus D204 rounds 3 to 3c. D204 has no newer copy.
+Base: repo of 2026-11-11 plus D204 rounds up to WEB8. D204 has no newer copy.
 
 1. WHAT AXON WEB IS
 AXON Web and AXON Browser are one thing. It is a real browser, and AXON must be able to drive it like a person (open, read, scroll, click, type) under permission rules. Sign-in and payment steps always ask the owner.
@@ -15,19 +15,21 @@ AXON Web and AXON Browser are one thing. It is a real browser, and AXON must be 
 - One shared, visible but quiet indicator for when AXON itself controls the screen. It must match the design and be the same for AXON Web, AXON Apps, AutoClicker and anything else where AXON takes over.
 
 3. WHAT EXISTS TODAY (state honestly)
-REAL, compiled in the cloud, NEVER run on a phone:
+REAL, compiled by the cloud (WEB6, WEB7) or written and tested only in simulation (WEB8), NEVER run on a phone:
  - A native Android browser screen (BrowserActivity) started by the Open browser button on the Web tab (src/components/browser/BrowserHomeScreen.tsx).
- - 34 plugin methods a screen can call (src/web/axonBrowserPlugin.ts): open, navigate, back, forward, reload, stop, newTab, switchTab, closeTab, getState, getPageText, findInPage, zoomBy, setDesktopSite, bookmarks (add, edit, remove, folder, move, list), history (search, clear, clear by site), reading list (add, remove, open, mark read, list), downloads (list, open, share, cancel, delete), copy and share URL, print, save PDF, getSecurityDetails, getSitePermissions.
-REAL LOGIC, tested only with a simulated browser (248 tests): the permission gateway (src/web/browserCommandGateway.ts, 118 commands in 8 groups: Navigation, Tabs, Saved browsing, Files, Page tools, Site security, Accounts, Settings; each is READ, REVERSIBLE, OWNER_CONFIRM or OWNER_HANDOFF); page-to-text, link analysis, saved sources, step guard.
-NOT BUILT:
- - Tab groups: the commands are named in the rules but no native method exists.
- - Incognito: the state always reports incognito=false. Stealth: nothing.
- - AXON driving the browser: AXON_BROWSER_SESSION_ENABLED is false in src/web/browserSessionBoundary.ts; no isolated AXON session; no click, type or scroll on live pages; no brain hookup.
- - The "AXON is in control" indicator, the floating-button behaviour, the 3-dot menu content, Settings pages for Web.
- - Most of the 118 commands have no native method yet (34 of 118 have one).
+ - Tab groups: create, rename, move in, move out, delete (tabs stay), close, list.
+ - Incognito tabs (nothing kept), a stealth flag (a separate identity per tab: saved on normal tabs, wiped on incognito tabs), and the default-mode setting normal or stealth (getSettings / setDefaultMode). Needs the Android multi-profile WebView feature; refused honestly if missing. Stealth is isolation only: no IP, user-agent or fingerprint changes.
+ - 34+ plugin methods for browsing, bookmarks, history, reading list, downloads, security details (src/web/browserPluginTypes.ts).
+ - AXON's own browsing tab (WEB8): src/web/axonWebAgent.ts with an owner panel (approvals, extra steps, take-over). See docs/AXON_WEB_BRAIN_HOOKUP_D204.txt. The native tab shows "AXON is browsing" and tabs carry axon: true.
+REAL LOGIC, tested with simulated engines: the permission gateway (130 commands), page-to-text, link analysis, saved sources, step guard, the AXON agent (about 300 tests in all).
+NOT BUILT / NOT PROVEN:
+ - Every screen (the owner screens for approvals, the indicator, tab groups, stealth settings, the floating button behaviour, the 3-dot menu, Web settings).
+ - The brain/tool hookup (the tools Director registers the web.* tools; the agent is ready).
+ - Any test on a phone or on live sites. Tab groups and incognito are not saved across restarts for incognito by design.
+ - Most of the 130 catalogued commands still have no native method.
 
 4. WHAT A SCREEN MAY SAFELY CALL NOW
-Anything in the 34 methods above, through the gateway so the permission result is shown. Show a disabled or "coming soon" state for everything in the NOT BUILT list; do not pretend it works.
+Anything in the real list above, through the gateway so the permission result is shown. For AXON's tab use only the owner panel handle (owner.pending, approve, deny, allowMore, takeOver) and agent.state() for the indicator. Show a disabled or "coming soon" state for everything in the NOT BUILT list; do not pretend it works.
 
 5. WHAT THE SCREEN DIRECTOR SHOULD ASK D204
 The exact result shape of any method (src/web/browserPluginTypes.ts) and when a missing part will exist.

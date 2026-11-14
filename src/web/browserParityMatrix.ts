@@ -1,7 +1,7 @@
 import { BROWSER_FUNCTIONS, type BrowserFunctionDefinition, type BrowserFunctionId } from './browserCommandGateway.ts';
 
 export type ParityStatus = 'IMPLEMENTED' | 'PARTIAL' | 'NOT_IMPLEMENTED';
-export type AxonAccessStatus = 'BLOCKED_NO_ISOLATED_SESSION';
+export type AxonAccessStatus = 'BLOCKED_NO_ISOLATED_SESSION' | 'OWN_SESSION_ONLY';
 export type BrowserParityRow = Readonly<{
   functionId: BrowserFunctionId;
   group: string;
@@ -43,7 +43,14 @@ const ownerHostPartial = new Set<BrowserFunctionId>([
   'tabs.restoreSession', 'tabs.suspend', 'history.openEntry',
 ]);
 
+// Functions AXON can run, and only inside its own isolated tab (axonWebAgent). The owner's tabs stay blocked.
+export const AXON_OWN_SESSION_FUNCTIONS: ReadonlySet<BrowserFunctionId> = new Set<BrowserFunctionId>([
+  'address.navigate', 'address.search', 'page.read', 'page.snapshot', 'page.click', 'page.type', 'page.select',
+  'page.scroll', 'page.submit', 'page.signIn', 'page.pay',
+]);
+
 const evidenceFor = (id: BrowserFunctionId, ownerHost: ParityStatus, ownerCommand: ParityStatus): string => {
+  if (ownerCommand !== 'IMPLEMENTED' && AXON_OWN_SESSION_FUNCTIONS.has(id)) return 'AXON agent -> typed plugin -> native AXON session tab; the owner UI has no command for it.';
   if (ownerCommand === 'IMPLEMENTED') return 'BrowserController executor -> typed Capacitor plugin -> native host method.';
   if (id === 'files.upload') return 'Native WebView file chooser -> Android ACTION_OPEN_DOCUMENT; no BrowserController executor.';
   if (id === 'downloads.pause' || id === 'downloads.resume' || id === 'downloads.retry' || id === 'downloads.openFolder') return 'The Android DownloadManager host does not expose this control in the current implementation.';
@@ -65,8 +72,8 @@ export const BROWSER_PARITY_MATRIX: readonly BrowserParityRow[] = Object.freeze(
     effect: definition.effect,
     ownerHost,
     ownerCommand,
-    // AXON is intentionally not connected to the owner's session. This is not parity yet.
-    axonAccess: 'BLOCKED_NO_ISOLATED_SESSION' as const,
+    // AXON is never connected to the owner's session; it gets its own isolated tab for these functions only.
+    axonAccess: (AXON_OWN_SESSION_FUNCTIONS.has(definition.id) ? 'OWN_SESSION_ONLY' : 'BLOCKED_NO_ISOLATED_SESSION') as AxonAccessStatus,
     evidence: evidenceFor(definition.id, ownerHost, ownerCommand),
   });
 }));
@@ -79,7 +86,7 @@ export const BROWSER_PARITY_GROUPS = Object.freeze([...new Set(BROWSER_PARITY_MA
     ownerHostImplemented: rows.filter((row) => row.ownerHost === 'IMPLEMENTED').length,
     ownerHostPartial: rows.filter((row) => row.ownerHost === 'PARTIAL').length,
     ownerCommandImplemented: rows.filter((row) => row.ownerCommand === 'IMPLEMENTED').length,
-    axonEnabled: 0,
+    axonEnabled: rows.filter((row) => row.axonAccess !== 'BLOCKED_NO_ISOLATED_SESSION').length,
     notReady: rows.filter((row) => row.ownerHost === 'NOT_IMPLEMENTED').length,
   });
 }));

@@ -42,9 +42,13 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -55,6 +59,7 @@ import java.util.UUID;
  */
 public final class BrowserActivity extends Activity {
     public static final String EXTRA_URL = "com.axon.app.browser.URL";
+    public static final String EXTRA_AXON_URL = "com.axon.app.browser.AXON_URL";
     private static final int FILE_CHOOSER_REQUEST = 4817;
     private static volatile BrowserActivity instance;
 
@@ -68,6 +73,7 @@ public final class BrowserActivity extends Activity {
         String kind = "normal";
         boolean stealth = false;
         String profileName;
+        boolean axon = false;
     }
     private static final class BrowserTabGroup {
         String id;
@@ -106,6 +112,8 @@ public final class BrowserActivity extends Activity {
             ensureWebView(active());
             attachActiveTab();
         }
+        String axonUrl = getIntent().getStringExtra(EXTRA_AXON_URL);
+        if (axonUrl != null) { try { axonOpen(axonUrl); } catch (Exception ignored) { } }
         updateChrome();
     }
 
@@ -290,7 +298,7 @@ public final class BrowserActivity extends Activity {
                 return true;
             }
         });
-        web.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> startDownload(tab, url, userAgent, contentDisposition, mimeType));
+        web.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> startDownload(url, userAgent, contentDisposition, mimeType));
     }
 
     /** Keep only the selected tab's renderer alive; other tabs retain navigation state only. */
@@ -389,6 +397,134 @@ public final class BrowserActivity extends Activity {
         else { if (activeIndex >= tabs.size()) activeIndex = tabs.size() - 1; else if (index < activeIndex) activeIndex--; attachActiveTab(); }
         saveTabs(); updateChrome();
     }
+    // ---- AXON own browsing session (WEB8): an isolated, throwaway incognito tab that only AXON drives ----
+    public interface JsonDone { void done(JSONObject value); }
+    private String axonScript = null;
+    private String axonLastAction = "";
+    private int axonActionCount = 0;
+
+    private int axonTabIndex() {
+        for (int i = 0; i < tabs.size(); i++) { if (tabs.get(i).axon) return i; }
+        return -1;
+    }
+
+    private String axonAgentScript() {
+        if (axonScript != null) return axonScript;
+        try (InputStream in = getAssets().open("axon_page_agent.js"); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = in.read(buffer)) > 0) out.write(buffer, 0, n);
+            axonScript = out.toString("UTF-8");
+        } catch (IOException e) { axonScript = null; }
+        return axonScript;
+    }
+
+    public JSONObject axonOpen(String url) {
+        int index = axonTabIndex();
+        if (index < 0) {
+            createTabInternal(url, "incognito", Boolean.FALSE, false);
+            index = activeIndex;
+            tabs.get(index).axon = true;
+            axonActionCount = 0;
+        } else {
+            if (index != activeIndex) switchTab(index);
+            navigate(url);
+        }
+        axonLastAction = "open";
+        updateChrome();
+        return axonState();
+    }
+
+    public JSONObject axonState() {
+        JSONObject out = new JSONObject();
+        int index = axonTabIndex();
+        try {
+            out.put("active", index >= 0);
+            out.put("tabIndex", index);
+            out.put("actionCount", axonActionCount);
+            out.put("lastAction", axonLastAction);
+            if (index >= 0) {
+                BrowserTab t = tabs.get(index);
+                String profile = t.profileName == null ? "" : t.profileName;
+                out.put("url", t.view != null && t.view.getUrl() != null ? t.view.getUrl() : t.url);
+                out.put("title", t.view != null && t.view.getTitle() != null ? t.view.getTitle() : t.title);
+                JSONObject identity = new JSONObject();
+                identity.put("owner", "AXON");
+                identity.put("sessionId", profile);
+                identity.put("engineContextId", profile);
+                identity.put("cookiePartitionId", profile);
+                identity.put("storagePartitionId", profile);
+                identity.put("credentialStoreId", JSONObject.NULL);
+                identity.put("isolationKind", "ENGINE_PROFILE");
+                identity.put("isolationVerified", multiProfileSupported() && !profile.isEmpty());
+                out.put("identity", identity);
+            }
+        } catch (JSONException ignored) { }
+        return out;
+    }
+
+    public JSONObject axonRelease() {
+        int index = axonTabIndex();
+        if (index >= 0) closeTab(index);
+        axonLastAction = "release";
+        axonActionCount = 0;
+        return axonState();
+    }
+
+    public void axonSnapshot(JsonDone done) { axonRun("window.__axonAgent.snapshot()", "snapshot", done); }
+
+    public void axonAct(JSONObject action, JsonDone done) {
+        String type = action == null ? "" : action.optString("type", "");
+        if (!(type.equals("click") || type.equals("type") || type.equals("select") || type.equals("scroll"))) {
+            done.done(axonFail("bad-action", "Action type must be click, type, select or scroll."));
+            return;
+        }
+        if (type.equals("type") && looksLikeCardNumber(action.optString("text", ""))) {
+            done.done(axonFail("card-number-refused", "AXON never types what looks like a card number."));
+            return;
+        }
+        axonRun("window.__axonAgent.act(" + JSONObject.quote(action.toString()) + ")", type, done);
+    }
+
+    private void axonRun(String call, String label, JsonDone done) {
+        int index = axonTabIndex();
+        if (index < 0) { done.done(axonFail("no-axon-session", "No AXON browsing session is open.")); return; }
+        String script = axonAgentScript();
+        if (script == null) { done.done(axonFail("agent-script-missing", "The page agent script is missing from the app assets.")); return; }
+        if (index != activeIndex) switchTab(index);
+        BrowserTab tab = tabs.get(index);
+        ensureWebView(tab);
+        if (tab.view == null) { done.done(axonFail("no-page", "The AXON page is not available.")); return; }
+        axonLastAction = label;
+        axonActionCount++;
+        tab.view.evaluateJavascript(script + "\n;" + call, value -> done.done(axonParse(value)));
+    }
+
+    private JSONObject axonParse(String value) {
+        try {
+            Object decoded = new JSONTokener(value == null ? "null" : value).nextValue();
+            if (decoded instanceof String) return new JSONObject((String) decoded);
+            if (decoded instanceof JSONObject) return (JSONObject) decoded;
+        } catch (JSONException ignored) { }
+        return axonFail("bad-agent-result", "The page returned no readable result.");
+    }
+
+    private JSONObject axonFail(String code, String message) {
+        JSONObject out = new JSONObject();
+        try { out.put("ok", false); out.put("error", code); out.put("message", message); } catch (JSONException ignored) { }
+        return out;
+    }
+
+    private boolean looksLikeCardNumber(String text) {
+        int digits = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c >= '0' && c <= '9') digits++;
+            else if (c != ' ' && c != '-') return false;
+        }
+        return digits >= 13 && digits <= 19;
+    }
+
     public void findInPage(String text) { BrowserTab t = active(); if (t != null && text != null) t.view.findAllAsync(text); }
     public void zoomBy(int delta) { BrowserTab t = active(); if (t != null) t.view.zoomBy(delta); }
     public void setDesktopSite(boolean enabled) {
@@ -404,7 +540,7 @@ public final class BrowserActivity extends Activity {
         BrowserTab t = active(); if (t == null || address == null) return;
         if (!address.hasFocus()) address.setText(t.url.startsWith("about:") ? "" : t.url);
         if (tabsButton != null) tabsButton.setText("Tabs " + tabs.size());
-        if (status != null) status.setText(t.loading ? "Loading…" : (t.title == null ? safeHost(t.url) : t.title));
+        if (status != null) status.setText(t.axon ? "AXON is browsing" : (t.loading ? "Loading…" : (t.title == null ? safeHost(t.url) : t.title)));
     }
     private void hideKeyboard() { try { ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(address.getWindowToken(), 0); address.clearFocus(); } catch (Exception ignored) {} }
 
@@ -812,7 +948,7 @@ public final class BrowserActivity extends Activity {
         JSONObject out = new JSONObject(); BrowserTab t = active();
         try { out.put("available", true); out.put("tabCount", tabs.size()); out.put("activeIndex", activeIndex); out.put("url", t == null ? "" : t.url); out.put("title", t == null ? "" : t.title); out.put("loading", t != null && t.loading); out.put("canGoBack", t != null && t.view.canGoBack()); out.put("canGoForward", t != null && t.view.canGoForward()); out.put("engine", "android-system-webview"); out.put("incognito", t != null && "incognito".equals(t.kind)); out.put("defaultMode", getDefaultMode());
             JSONArray tabRows=new JSONArray();
-            for(int i=0;i<tabs.size();i++){ BrowserTab tab=tabs.get(i); JSONObject row=new JSONObject(); row.put("index",i); row.put("url",tab.url); row.put("title",tab.title); row.put("groupId",tab.groupId==null?JSONObject.NULL:tab.groupId); row.put("kind",tab.kind); row.put("stealth",tab.stealth); tabRows.put(row); }
+            for(int i=0;i<tabs.size();i++){ BrowserTab tab=tabs.get(i); JSONObject row=new JSONObject(); row.put("index",i); row.put("axon",tab.axon); row.put("url",tab.url); row.put("title",tab.title); row.put("groupId",tab.groupId==null?JSONObject.NULL:tab.groupId); row.put("kind",tab.kind); row.put("stealth",tab.stealth); tabRows.put(row); }
             out.put("tabs",tabRows); out.put("groups",getGroupsState().optJSONArray("groups")); } catch (JSONException ignored) {}
         return out;
     }

@@ -61,8 +61,7 @@ public class AxonAccessibilityService extends AccessibilityService {
         String error;
     }
 
-    /** The running service, or null when the owner has not switched it on. Used by AXON Apps to start apps from the background. */
-    public static AxonAccessibilityService current() {
+    static AxonAccessibilityService current() {
         return instance;
     }
 

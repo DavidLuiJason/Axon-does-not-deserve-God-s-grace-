@@ -44,4 +44,8 @@ export function evaluateBrowserSessionBoundary(
   return Object.freeze({ allowed: true, reason: 'The AXON context has distinct verified session, engine, cookie, and storage partitions and no credential store.', mayAccessOwnerCredentials: false });
 }
 
-export const AXON_BROWSER_SESSION_ENABLED = false as const;
+/**
+ * AXON may browse only in its own tab. That route stays closed unless the native engine reports a
+ * verified separate profile and evaluateBrowserSessionBoundary() accepts it; the flag itself is no gate.
+ */
+export const AXON_BROWSER_SESSION_ENABLED = true as const;

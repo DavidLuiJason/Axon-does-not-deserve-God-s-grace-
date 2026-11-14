@@ -30,9 +30,11 @@ test('only the currently implemented command executors are marked as such', () =
   assert.deepEqual(new Set(BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'IMPLEMENTED').map((row) => row.functionId)), expected);
 });
 
-test('AXON is blocked from every owner-session command until isolated session exists', () => {
-  assert.ok(BROWSER_PARITY_MATRIX.every((row) => row.axonAccess === 'BLOCKED_NO_ISOLATED_SESSION'));
-  assert.equal(getBrowserParitySummary().axonEnabled, 0);
+test('AXON reaches only its own-session functions; every other command stays blocked', () => {
+  const own = new Set(BROWSER_PARITY_MATRIX.filter((row) => row.axonAccess === 'OWN_SESSION_ONLY').map((row) => row.functionId));
+  assert.deepEqual(own, new Set(['address.navigate', 'address.search', 'page.read', 'page.snapshot', 'page.click', 'page.type', 'page.select', 'page.scroll', 'page.submit', 'page.signIn', 'page.pay']));
+  assert.ok(BROWSER_PARITY_MATRIX.filter((row) => !own.has(row.functionId)).every((row) => row.axonAccess === 'BLOCKED_NO_ISOLATED_SESSION'));
+  assert.equal(getBrowserParitySummary().axonEnabled, own.size);
 });
 
 test('owner host partials are not silently counted as complete', () => {
