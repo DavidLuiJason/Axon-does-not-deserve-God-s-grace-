@@ -12,11 +12,13 @@ if [[ ! -d "$ANDROID/app" ]]; then
   exit 1
 fi
 
-echo "==> Copying Java sources (background jobs, file saver, screen capture, MainActivity)"
+echo "==> Copying Java sources (background jobs, file saver, screen capture, browser, apps, screen structure, MainActivity)"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/background"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/filesaver"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screencapture"
 mkdir -p "$ANDROID/app/src/main/java/com/axon/app/browser"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/apps"
+mkdir -p "$ANDROID/app/src/main/java/com/axon/app/screenstructure"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobService.java" \
       "$ANDROID/app/src/main/java/com/axon/app/background/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/background/BackgroundJobsPlugin.java" \
@@ -31,6 +33,14 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserPlugin.java" \
       "$ANDROID/app/src/main/java/com/axon/app/browser/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/browser/BrowserActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/browser/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/apps/AppsPlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/apps/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
+cp -f "$OVERLAY/app/src/main/java/com/axon/app/screenstructure/PictureTextReader.java" \
+      "$ANDROID/app/src/main/java/com/axon/app/screenstructure/"
 cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
       "$ANDROID/app/src/main/java/com/axon/app/"
 
@@ -59,10 +69,31 @@ else
   exit 1
 fi
 
+# Ensure the ML Kit on-device text recognition (Latin) dependency is present exactly once (PictureTextReader).
+if ! grep -Eq "com\.google\.mlkit:text-recognition:[0-9.]+" "$GRADLE"; then
+  if grep -q '^dependencies[[:space:]]*{' "$GRADLE"; then
+    sed -i '/^dependencies[[:space:]]*{/a\    implementation "com.google.mlkit:text-recognition:16.0.1"' "$GRADLE"
+  else
+    printf '\ndependencies {\n    implementation "com.google.mlkit:text-recognition:16.0.1"\n}\n' >> "$GRADLE"
+  fi
+fi
+MLCOUNT=$(grep -Ec 'com\.google\.mlkit:text-recognition:' "$GRADLE" || true)
+if [[ "$MLCOUNT" -ne 1 ]]; then
+  echo "ERROR: expected exactly one com.google.mlkit:text-recognition dependency, found $MLCOUNT"
+  exit 1
+fi
+
 echo "==> Copying notification icon"
 mkdir -p "$ANDROID/app/src/main/res/drawable"
 cp -f "$OVERLAY/app/src/main/res/drawable/ic_notification.xml" \
       "$ANDROID/app/src/main/res/drawable/"
+
+echo "==> Copying accessibility service resources"
+mkdir -p "$ANDROID/app/src/main/res/xml" "$ANDROID/app/src/main/res/values"
+cp -f "$OVERLAY/app/src/main/res/xml/axon_accessibility_service.xml" \
+      "$ANDROID/app/src/main/res/xml/"
+cp -f "$OVERLAY/app/src/main/res/values/axon_accessibility_strings.xml" \
+      "$ANDROID/app/src/main/res/values/"
 
 MANIFEST="$ANDROID/app/src/main/AndroidManifest.xml"
 if [[ ! -f "$MANIFEST" ]]; then
@@ -157,6 +188,42 @@ if ! grep -q 'android:name=".browser.BrowserActivity"' "$MANIFEST"; then
   echo "    + added BrowserActivity"
 else
   echo "    = BrowserActivity already present"
+fi
+
+echo "==> Ensuring AXON screen reader (accessibility service) declaration"
+if ! grep -q "AxonAccessibilityService" "$MANIFEST"; then
+  SERVICE_XML='        <service
+            android:name=".screenstructure.AxonAccessibilityService"
+            android:exported="true"
+            android:label="AXON screen reader"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/axon_accessibility_service" />
+        </service>'
+  awk -v svc="$SERVICE_XML" '/<\/application>/ { print svc } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  echo "    + added AxonAccessibilityService"
+else
+  echo "    = AxonAccessibilityService already present"
+fi
+
+echo "==> Ensuring AXON Apps launcher query (narrow package visibility)"
+if ! grep -q "AXON_APPS_QUERY" "$MANIFEST"; then
+  QUERY_XML='    <!-- AXON_APPS_QUERY -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>'
+  awk -v q="$QUERY_XML" '/<\/manifest>/ { print q } { print }' "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$MANIFEST"
+  grep -q "AXON_APPS_QUERY" "$MANIFEST" || { echo "ERROR: launcher query insertion failed"; exit 1; }
+  echo "    + added launcher query"
+else
+  echo "    = launcher query already present"
 fi
 
 echo "==> Overlay applied successfully."

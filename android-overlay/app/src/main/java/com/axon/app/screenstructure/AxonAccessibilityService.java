@@ -61,7 +61,7 @@ public class AxonAccessibilityService extends AccessibilityService {
         String error;
     }
 
-    static AxonAccessibilityService current() {
+    public static AxonAccessibilityService current() {
         return instance;
     }
 
