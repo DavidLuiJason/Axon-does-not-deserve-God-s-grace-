@@ -1,0 +1,7 @@
+AXON Web merge zip (Director). Unzip over the repo root. 42 new files + 4 small edits to existing files:
+src/App.tsx (Web tab shows BrowserHomeScreen), MainActivity.java (registers BrowserPlugin),
+manifest-additions.xml (one commented line), scripts/apply-android-overlay.sh (copies browser Java, adds BrowserActivity).
+NOT included (Director-owned or stale): package.json, package-lock.json, tsconfig.json, .nvmrc, BUILD.md, NOW.txt, MERGE_TAG.txt,
+DIRECTOR_NAP.txt, INTAKE_LOG.md, roadmaps, SHA256SUMS.txt, FILE_MANIFEST.md, artifacts/.
+Test: node --experimental-strip-types --experimental-loader=./tests/ts-extension-loader.mjs --test tests/browser*.test.ts tests/browser*.test.mjs
+Not proven: real Android build, device, live sites, Chromium simulation.

@@ -1,0 +1,57 @@
+CHROMIUM SIMULATION: 56 PASS, 0 FAIL
+PASS search: title renders
+PASS search: input accepts text
+PASS search: submit handler runs
+PASS search: result link resolves
+PASS search: result list is readable
+PASS cloud: title renders
+PASS cloud: email input is email type
+PASS cloud: password input is masked type
+PASS cloud: simulated sign-in submits
+PASS cloud: file input supports multiple selection
+PASS cloud: file picker selection event
+PASS docs: contenteditable editor exists
+PASS docs: editor can be edited
+PASS docs: save action persists displayed content
+PASS docs: textbox accessibility role exists
+PASS docs: heading is discoverable
+PASS shop: product page title
+PASS shop: product heading visible
+PASS shop: add-to-cart click updates count
+PASS shop: second cart click increments
+PASS shop: checkout required field enforced
+PASS video: title renders
+PASS video: HTML video element exists
+PASS video: controls enabled
+PASS video: inline playback attribute
+PASS video: audio element exists
+PASS news: article heading
+PASS news: author byline
+PASS news: publication time metadata
+PASS news: article body text
+PASS news: source section link
+PASS forms: file input exists
+PASS forms: required upload control
+PASS forms: file can be selected
+PASS forms: text field accepts data
+PASS forms: submit handler runs
+PASS platform: same-document anchor navigation
+PASS platform: iframe content renders
+PASS platform: canvas context available
+PASS platform: canvas can render a pixel
+PASS platform: contenteditable updates
+PASS download: anchor exists
+PASS download: filename attribute retained
+PASS download: downloadable URL present
+PASS download: link text readable
+PASS download: copy control can receive click
+PASS layout: mobile viewport width applied
+PASS layout: main landmark exists
+PASS layout: navigation landmark exists
+PASS layout: accessible menu button exists
+PASS layout: search input accessible name
+PASS history: pushState changes fragment
+PASS history: state object stored
+PASS history: replaceState changes fragment
+PASS history: replace state object stored
+PASS history: document title remains readable
