@@ -20,6 +20,10 @@
 #   - A file that is identical to an OLDER version of the same file in this repository (or a file deleted on
 #     purpose): a STALE COPY. It is NOT applied, because it would undo later work (this is what erased fixes
 #     again and again). A copy is kept in .axon-held/ so nothing is lost.   Upload as force-NAME.zip to apply it anyway.
+#   - A file the zip made from an OLDER copy of the repository's file plus its own edits: it is THREE-WAY MERGED.
+#     Only the zip's own edits are added to the newer file, so later fixes stay (an overwrite erased them again and
+#     again). If the zip and a later change edited the same lines it is a CONFLICT: not applied, the zip's copy is
+#     kept in .axon-held/, reported under NEEDS ATTENTION, no conflict markers are ever written.
 #   - A zip that cannot be unpacked safely: reported as REFUSED, it stays, the other zips still run.
 #   RUN WORKFLOW (Actions tab) also offers: allow_duplicates, allow_stale, and audit_history (lists files
 #   that came in some zip but never reached the repository; restore_lost puts them back, never overwriting).
@@ -100,7 +104,7 @@ jobs:
           # AXON unpack. Newest zip first. Knows duplicates. Never undoes later work.
           #   python3 axon_unpack.py unpack /tmp/zips.txt     unpack the listed zips (newest first)
           #   python3 axon_unpack.py audit                    report (and with RESTORE_LOST=true restore) files lost from old zips
-          import hashlib, os, stat, subprocess, sys, time, zipfile
+          import difflib, hashlib, os, stat, subprocess, sys, tempfile, time, zipfile
           from datetime import datetime, timezone
           from pathlib import PurePosixPath
 
@@ -116,6 +120,7 @@ jobs:
           HELD_DIR, HELD_LIMIT = '.axon-held', 20 * 1024 * 1024
           BOT_SUBJECT = 'AXON: unpack and update'
           SHOW = 25
+          MERGE_MAX_BYTES, MERGE_MAX_LINES, MERGE_CANDIDATES, MERGE_MIN_SIMILARITY = 2 * 1024 * 1024, 6000, 40, 0.6
 
 
           class Refuse(Exception):
@@ -181,6 +186,50 @@ jobs:
               return adds, dels
 
 
+          def is_text(data):
+              if b'\x00' in data[:8192]:
+                  return False
+              try:
+                  data.decode('utf-8')
+                  return True
+              except UnicodeDecodeError:
+                  return False
+
+
+          def three_way(rel, current, theirs):
+              """The zip's file was probably made from an OLDER version of this file plus the zip's own edits.
+              Find that older version (the most similar earlier revision) and add ONLY the zip's edits to the newer file.
+              Returns ('merged', bytes, base_commit) | ('conflict', None, base_commit) | None (cannot tell)."""
+              if len(current) > MERGE_MAX_BYTES or len(theirs) > MERGE_MAX_BYTES or not (is_text(current) and is_text(theirs)):
+                  return None
+              their_lines = theirs.decode('utf-8').splitlines()
+              if len(their_lines) > MERGE_MAX_LINES:
+                  return None
+              best = None
+              for commit in git('log', '--format=%H', '--', rel).split()[:MERGE_CANDIDATES]:
+                  r = subprocess.run(['git', 'show', '%s:%s' % (commit, rel)], capture_output=True)
+                  if r.returncode != 0 or not is_text(r.stdout):
+                      continue
+                  ratio = difflib.SequenceMatcher(None, r.stdout.decode('utf-8').splitlines(), their_lines, autojunk=False).ratio()
+                  if best is None or ratio >= best[0]:   # a tie goes to the OLDER revision: the careful choice (a doubtful merge becomes a conflict, never a silent overwrite)
+                      best = (ratio, commit, r.stdout)
+              if best is None or best[0] < MERGE_MIN_SIMILARITY:
+                  return None
+              with tempfile.TemporaryDirectory() as d:
+                  paths = []
+                  for name, content in (('current', current), ('base', best[2]), ('theirs', theirs)):
+                      p = os.path.join(d, name)
+                      with open(p, 'wb') as f:
+                          f.write(content)
+                      paths.append(p)
+                  r = subprocess.run(['git', 'merge-file', '-p'] + paths, capture_output=True)
+              if r.returncode == 0:
+                  return ('merged', r.stdout, best[1])
+              if 0 < r.returncode < 128:
+                  return ('conflict', None, best[1])
+              return None
+
+
           def read_entries(z):
               infos = [i for i in z.infolist() if not i.is_dir()]
               if not infos:
@@ -230,7 +279,7 @@ jobs:
 
 
           def apply_zip(z, written):
-              r = {'new': [], 'changed': [], 'same': [], 'skipped': [], 'kept_newer': [], 'stale': [], 'held': 0, 'prefix': ''}
+              r = {'new': [], 'changed': [], 'same': [], 'skipped': [], 'kept_newer': [], 'stale': [], 'merged': [], 'conflict': [], 'held': 0, 'prefix': ''}
               zf = zipfile.ZipFile(z['path'])
               entries, prefix = read_entries(zf)
               r['prefix'] = prefix
@@ -250,14 +299,26 @@ jobs:
                       if current == data:
                           r['same'].append(rel)
                           continue
-                      if rel in written:
-                          r['kept_newer'].append('%s (kept the version of %s)' % (rel, written[rel]))
-                          continue
                       if not z['allow_stale'] and blob_of(data) in history_of(rel)[0]:
                           r['stale'].append(rel)
                           r['held'] += 1 if hold(stem, rel, data, budget) else 0
                           continue
-                      r['changed'].append(rel)
+                      m = None if z['allow_stale'] else three_way(rel, current, data)
+                      if m and m[0] == 'merged':
+                          if m[1] == current:
+                              r['same'].append(rel + ' (its edits are already in the repository)')
+                              continue
+                          r['merged'].append('%s (older base %s)' % (rel, m[2][:7]))
+                          data = m[1]
+                      elif m and m[0] == 'conflict':
+                          r['conflict'].append('%s (older base %s)' % (rel, m[2][:7]))
+                          r['held'] += 1 if hold(stem, rel, data, budget) else 0
+                          continue
+                      elif rel in written:
+                          r['kept_newer'].append('%s (kept the version of %s)' % (rel, written[rel]))
+                          continue
+                      else:
+                          r['changed'].append(rel)
                   else:
                       blobs, deleted = history_of(rel)
                       if deleted and blobs and not z['allow_stale']:
@@ -325,11 +386,17 @@ jobs:
                       continue
                   print('UNPACK OK: %s' % z['path'])
                   print('  wrapper folder removed: %s' % (r['prefix'] or 'none'))
-                  print('  new files: %d, changed files: %d, identical (left alone): %d, skipped: %d' % (len(r['new']), len(r['changed']), len(r['same']), len(r['skipped'])))
+                  print('  new files: %d, changed files: %d, merged with newer work: %d, identical (left alone): %d, skipped: %d' % (len(r['new']), len(r['changed']), len(r['merged']), len(r['same']), len(r['skipped'])))
                   if r['same']:
                       print('  IDENTICAL, NOT MERGED (the repository already has exactly this): ' + shown(r['same']))
                   if r['kept_newer']:
                       print('  KEPT THE NEWER ZIP\'S VERSION (this older zip did not overwrite it): ' + shown(r['kept_newer']))
+                  if r['merged']:
+                      print('  MERGED, NOT OVERWRITTEN (this zip was made from an OLDER version of the file; only its own edits were added to the newer repository version, later fixes kept): ' + shown(r['merged']))
+                  if r['conflict']:
+                      print('  CONFLICT, NOT APPLIED (this zip and a later change edited the same lines; the repository version stays and the zip\'s copy is saved under %s/%s/): ' % (HELD_DIR, safe_stem(z['name'])) + shown(r['conflict']))
+                      print('    A Director must redo these edits on top of the file in the newest zip.')
+                      attention.append('%s: %d file(s) conflict with later changes and were NOT applied: %s' % (z['name'], len(r['conflict']), shown(r['conflict'][:5])))
                   if r['stale']:
                       print('  STALE COPY NOT APPLIED (identical to an OLDER version of the file in this repository; applying it would undo later work): ' + shown(r['stale']))
                       print('    %d of them saved under %s/%s/ so nothing is lost. To apply stale copies on purpose: upload the zip again named force-%s, or Run workflow with allow_stale ticked.' % (r['held'], HELD_DIR, safe_stem(z['name']), z['name']))
