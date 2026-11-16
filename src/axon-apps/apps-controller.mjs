@@ -12,7 +12,7 @@ const brief = (e) => ({ ref: e.ref, label: e.label, role: e.role });
 // Returned to callers and shown to the owner: typed text is never repeated.
 const publicProposal = (p) => ({ ...p, action: { ...p.action, ...(p.action?.text ? { text: '[hidden]' } : {}) } });
 
-export function createAppsController({ screen, apps, policy = {}, now = () => Date.now(), wait = (ms) => new Promise((r) => setTimeout(r, ms)), maxSteps = 30 }) {
+export function createAppsController({ screen, apps, profiles = null, policy = {}, now = () => Date.now(), wait = (ms) => new Promise((r) => setTimeout(r, ms)), maxSteps = 30 }) {
   let catalog = []; let actor = null; let pending = null; let queue = []; let carried = []; let stopped = false;
   const log = [];
   const note = (text, outcome) => { log.push({ at: now(), text, outcome }); if (log.length > 200) log.shift(); };
@@ -120,7 +120,9 @@ export function createAppsController({ screen, apps, policy = {}, now = () => Da
   async function open(query) {
     const r0 = await ready();
     if (!r0.ok) return { ok: false, status: 'failed', code: r0.code, text: `AXON cannot list apps (${r0.code}).` };
-    const hit = resolveApp(catalog, query);
+    const aliasPackage = profiles?.lookup?.(query);
+    const aliased = aliasPackage ? catalog.find((a) => a.packageName === aliasPackage) : null;
+    const hit = aliased ? { status: 'found', app: aliased } : resolveApp(catalog, query);
     if (hit.status === 'none') return { ok: false, status: 'not-found', text: `No installed app matches "${query}".` };
     if (hit.status === 'ambiguous') return { ok: false, status: 'ambiguous', text: `More than one app matches "${query}".`, candidates: hit.candidates.map((a) => ({ label: a.label, packageName: a.packageName })) };
     return act({ kind: 'open-app', packageName: hit.app.packageName });
@@ -163,6 +165,9 @@ export function createAppsController({ screen, apps, policy = {}, now = () => Da
     toggle: (label, o = {}) => act({ kind: 'toggle' }, { label, ...o }),
     type: (label, text, o = {}) => act({ kind: 'type', text }, { label, role: 'input', ...o }),
     scroll: (direction = 'down', o = {}) => act({ kind: 'scroll', direction }, o),
+    tapPoint: (x, y, durationMs) => act({ kind: 'tap-point', x, y, durationMs }),
+    longPressPoint: (x, y, durationMs) => act({ kind: 'long-press-point', x, y, durationMs }),
+    swipe: (x, y, x2, y2, durationMs) => act({ kind: 'swipe', x, y, x2, y2, durationMs }),
     back: () => act({ kind: 'back' }),
     home: () => act({ kind: 'home' }),
     approve,

@@ -1,6 +1,8 @@
-// Action gate (SI3d). Pure policy engine: decides whether AXON may act on a screen it has read.
+// Action gate (SI3d, extended for coordinate taps and swipes in AC1). Pure policy engine: decides whether AXON may act on a screen it has read.
 // It does not tap or type anything. A later native executor receives only what confirmProposal() releases.
 // Roadmap 7R: reading is allowed; forms, sign-in, sending, money and anything risky ASK first.
+
+import { elementsAtPoint } from './structure-reader.mjs';
 
 export const DEFAULT_POLICY = Object.freeze({
   autonomy: 'navigate',     // 'read-only' | 'navigate' | 'ask-everything'
@@ -12,7 +14,9 @@ export const DEFAULT_POLICY = Object.freeze({
   askPackages: [],          // money, wallet and password apps: always ask before opening or acting (see axon-apps/app-catalog.mjs)
 });
 
-const KINDS = new Set(['tap', 'long-press', 'type', 'toggle', 'scroll', 'back', 'home', 'open-app']);
+const KINDS = new Set(['tap', 'long-press', 'type', 'toggle', 'scroll', 'back', 'home', 'open-app', 'tap-point', 'long-press-point', 'swipe']);
+const POINT_KINDS = new Set(['tap-point', 'long-press-point', 'swipe']);
+const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 const NEEDS = { tap: 'tap', 'long-press': 'long-press', type: 'type', toggle: 'toggle', scroll: 'scroll' };
 const GLOBAL = new Set(['back', 'home']);
 
@@ -53,6 +57,32 @@ export function proposeAction(structure, request, options = {}) {
 
   const signIn = (structure.elements ?? []).some((e) => e.label === '[password field]');
   const base = { kind, packageName: structure.packageName, capturedAt: structure.capturedAt ?? null };
+
+  if (POINT_KINDS.has(kind)) {
+    const x = Number(request.x); const y = Number(request.y);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return refuse('bad-point', 'The tap position is not a number.');
+    const scr = structure.screen;
+    const inside = (px, py) => !scr || (px >= 0 && py >= 0 && px <= scr.width && py <= scr.height);
+    if (!inside(x, y)) return refuse('off-screen', 'The position is outside the screen.');
+    let x2; let y2;
+    if (kind === 'swipe') {
+      x2 = Number(request.x2); y2 = Number(request.y2);
+      if (!Number.isFinite(x2) || !Number.isFinite(y2)) return refuse('bad-point', 'The swipe end is not a number.');
+      if (!inside(x2, y2)) return refuse('off-screen', 'The swipe ends outside the screen.');
+    }
+    // A coordinate tap is judged by what is really under the finger, not by what the routine says it is.
+    const under = elementsAtPoint(structure, x, y);
+    const label = under.find((e) => e.label)?.label || 'an empty area';
+    const durationMs = kind === 'tap-point' ? clamp(Number(request.durationMs) || 50, 20, 200) : kind === 'long-press-point' ? clamp(Number(request.durationMs) || 700, 400, 2000) : clamp(Number(request.durationMs) || 400, 100, 3000);
+    const summary = (kind === 'swipe' ? `Swipe from (${Math.round(x)}, ${Math.round(y)}) to (${Math.round(x2)}, ${Math.round(y2)}) starting on "${label}"` : `${kind === 'tap-point' ? 'Tap' : 'Press and hold'} the screen at (${Math.round(x)}, ${Math.round(y)}) on "${label}"`) + ` in ${structure.packageName}`;
+    const action = { ...base, x, y, ...(kind === 'swipe' ? { x2, y2 } : {}), durationMs, underLabel: label };
+    let pointAsk = null;
+    if (policy.autonomy === 'ask-everything') pointAsk = ['ask-everything', 'You asked to approve every action.'];
+    else if (under.some((e) => e.risk === 'ask')) pointAsk = ['risky-control', 'Something under that point looks like it pays, sends, deletes or signs in.'];
+    else if (policy.askPackages.includes(structure.packageName)) pointAsk = ['sensitive-app', 'This looks like a money, wallet or password app.'];
+    else if (signIn) pointAsk = ['sign-in-screen', 'This looks like a sign-in screen.'];
+    return { decision: pointAsk ? 'ask' : 'allow', code: pointAsk ? pointAsk[0] : 'ok', reason: pointAsk ? pointAsk[1] : 'A screen tap on an ordinary area is allowed.', summary, action, proposedAt: now };
+  }
 
   if (GLOBAL.has(kind)) {
     const decision = policy.autonomy === 'ask-everything' ? 'ask' : 'allow';

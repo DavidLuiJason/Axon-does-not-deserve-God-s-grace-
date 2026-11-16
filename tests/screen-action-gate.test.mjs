@@ -104,3 +104,26 @@ test('money and password apps (askPackages) ask before opening and before taps, 
   assert.equal(go(s, { kind: 'scroll', ref: ref(s, 'items') }, { policy }).decision, 'allow');
   assert.equal(go(s, { kind: 'back' }, { policy }).decision, 'allow');
 });
+
+test('coordinate taps and swipes are judged by what is really under the point', () => {
+  const s = screen();
+  assert.equal(go(s, { kind: 'tap-point', x: 100, y: 250 }).code, 'risky-control');
+  const ok = go(s, { kind: 'tap-point', x: 100, y: 50 });
+  assert.deepEqual([ok.decision, ok.action.underLabel], ['allow', 'Back to list']);
+  assert.match(go(s, { kind: 'tap-point', x: 900, y: 1950 }).summary, /an empty area/);
+  assert.equal(go(s, { kind: 'tap-point', x: 5000, y: 10 }).code, 'off-screen');
+  assert.equal(go(s, { kind: 'tap-point', x: 'a', y: 10 }).code, 'bad-point');
+  assert.equal(go(s, { kind: 'swipe', x: 100, y: 250, x2: 100, y2: 900 }).code, 'risky-control');
+  assert.equal(go(s, { kind: 'swipe', x: 900, y: 1500, x2: 900, y2: 500 }).decision, 'allow');
+  assert.equal(go(s, { kind: 'swipe', x: 900, y: 1500, x2: 'z', y2: 500 }).code, 'bad-point');
+  assert.equal(go(s, { kind: 'swipe', x: 900, y: 1500, x2: 900, y2: 9999 }).code, 'off-screen');
+  assert.equal(go(s, { kind: 'tap-point', x: 900, y: 1500, durationMs: 99999 }).action.durationMs, 200);
+  assert.equal(go(s, { kind: 'long-press-point', x: 900, y: 1500, durationMs: 1 }).action.durationMs, 400);
+  assert.equal(go(s, { kind: 'tap-point', x: 900, y: 1500 }, { policy: { askPackages: ['com.example.shop'] } }).code, 'sensitive-app');
+  assert.equal(go(s, { kind: 'tap-point', x: 900, y: 1500 }, { policy: { autonomy: 'ask-everything' } }).decision, 'ask');
+  assert.equal(go(s, { kind: 'tap-point', x: 900, y: 1500 }, { policy: { autonomy: 'read-only' } }).code, 'read-only');
+  const signin = screen([{ className: 'android.widget.EditText', password: true, editable: true, bounds: { l: 0, t: 1200, r: 800, b: 1300 } }]);
+  assert.equal(go(signin, { kind: 'tap-point', x: 900, y: 1500 }).code, 'sign-in-screen');
+  const released = confirmProposal(ok, {}, { now: NOW });
+  assert.deepEqual([released.execute, released.payload.kind, released.payload.x], [true, 'tap-point', 100]);
+});

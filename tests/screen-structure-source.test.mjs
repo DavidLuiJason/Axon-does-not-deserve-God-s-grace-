@@ -35,7 +35,7 @@ test('options pass through: blocked apps return nothing, maxNodes reaches the pl
 test('Java executor is narrow: no gestures, only Back/Home globally, password never typed or sent', () => {
   const svc = read('android-overlay/app/src/main/java/com/axon/app/screenstructure/AxonAccessibilityService.java');
   const plug = read('android-overlay/app/src/main/java/com/axon/app/screenstructure/ScreenStructurePlugin.java');
-  assert.ok(!svc.includes('dispatchGesture')); assert.ok(!plug.includes('performAction(AccessibilityNodeInfo'));
+  assert.ok(svc.indexOf('"screen-changed"', svc.indexOf('performGesture(JSONObject')) < svc.indexOf('dispatchGesture('), 'gestures only after the app-in-front check'); assert.ok(!plug.includes('dispatchGesture') && !plug.includes('performAction(AccessibilityNodeInfo'));
   assert.deepEqual([...new Set(svc.match(/GLOBAL_ACTION_[A-Z_]+/g))].sort(), ['GLOBAL_ACTION_BACK', 'GLOBAL_ACTION_HOME']);
   assert.match(svc, /if \(!password && text != null\)/);
   assert.ok(svc.indexOf('node.isPassword()') < svc.indexOf('ACTION_SET_TEXT, args'));

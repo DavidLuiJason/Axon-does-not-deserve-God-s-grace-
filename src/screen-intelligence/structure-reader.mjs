@@ -150,3 +150,11 @@ export function planCrops(structure, { frameWidth, frameHeight, minSize = 48, ma
   crops.sort((a, b) => b.width * b.height - a.width * a.height);
   return { crops: crops.slice(0, maxCrops), reason: null };
 }
+
+const boxArea = (e) => Math.max(0, e.bounds.r - e.bounds.l) * Math.max(0, e.bounds.b - e.bounds.t);
+/** Every element whose box contains the point, smallest first. Used to judge what a coordinate tap would really touch. */
+export function elementsAtPoint(structure, x, y) {
+  return (structure?.elements ?? [])
+    .filter((e) => e.bounds && x >= e.bounds.l && x <= e.bounds.r && y >= e.bounds.t && y <= e.bounds.b)
+    .sort((a, b) => boxArea(a) - boxArea(b));
+}

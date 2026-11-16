@@ -22,7 +22,8 @@ export function createScreenActor({ source, apps = null, policy = {}, now = () =
         if (opened?.ok) history.push(now());
         return { ok: Boolean(opened?.ok), executed: Boolean(opened?.ok), code: opened?.code ?? 'no-result' };
       }
-      const result = await source.performAction(released.payload);
+      const isPoint = ['tap-point', 'long-press-point', 'swipe'].includes(released.payload.kind);
+      const result = isPoint ? await source.performGesture(released.payload) : await source.performAction(released.payload);
       if (result?.ok) history.push(now());
       return { ok: Boolean(result?.ok), executed: Boolean(result?.ok), code: result?.code ?? 'no-result' };
     },

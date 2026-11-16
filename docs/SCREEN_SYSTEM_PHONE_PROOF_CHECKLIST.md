@@ -1,0 +1,8 @@
+# SCREEN SYSTEM: WHAT MUST BE PROVEN ON THE OWNER'S PHONE (D47)
+Use when screens are allowed. Each line is PASS / FAIL on a real phone. Until then every Java and phone behaviour below is NOT RUN.
+BUILD: cloud build is green with ML Kit and the new Java. After installing, switch "AXON screen reader" off and on once.
+READING: (1) status shows the reader ON. (2) Reading AXON's own screen lists its buttons and fields. (3) Reading another app (Settings) lists its items. (4) A password box shows as hidden. (5) A picture with words returns the words (Android 11+). (6) A banking app returns "screen-protected" for pictures, or is skipped.
+APPS: (7) The app list shows the installed launchable apps with names. (8) Opening Settings works with AXON in front. (9) Opening an app works with AXON in the background (the unproven point). (10) A bank or wallet app asks before opening. (11) An app icon returns.
+ACTIONS: (12) Tap, scroll, Back, Home work in Settings. (13) Typing asks first, then types into a search box. (14) Typing into a password box is refused. (15) A "Delete" style button asks first.
+AUTO-CLICKER: (16) The red STOP button shows over another app while a routine runs; pressing it stops the routine within one action and the phone then refuses actions. (17) A routine of 5 taps in a simple app runs 5 rounds with the set interval. (18) A coordinate tap and a swipe land where expected (a game or a scrolling list). (19) Recording a few taps in Settings gives a draft routine with the right labels; typed text is absent. (20) An unapproved or edited routine will not run. (21) A scheduled routine starts when due (needs the background runtime).
+Report back as: number, PASS/FAIL, one line of what happened.
