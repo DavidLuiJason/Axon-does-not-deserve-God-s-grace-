@@ -11,7 +11,7 @@ import { verifyOutcome } from '../verify/verify.ts';
 import type { VerifyReport } from '../verify/verify.ts';
 import { reflect } from '../reflect/reflect.ts';
 import type { Reflection, StepRecord } from '../reflect/reflect.ts';
-import { verifyToolReply } from './toolVerifiers.ts';
+import { verifyToolReply } from '../../../safety/toolVerifiers.ts';
 
 export type OrchestratorMode = 'off' | 'shadow' | 'on';
 export type ReplyLike = { readonly content: string; readonly source: string; readonly taskId?: string };
@@ -66,7 +66,7 @@ export function createOrchestrator<T extends ReplyLike>(brain: BrainLike<T>, opt
         const v = verifyToolReply({ toolId, message: effectiveText, replyContent: reply.content });
         const input = {
           clauses: [{ id: 'c1', required: true }],
-          steps: [{ clauseId: 'c1', toolId, assumption: ASSUMPTION, reported: /COMPLETED/.test(reply.content) ? ('success' as const) : ('failure' as const), output: v.output, check: v.check }],
+          steps: [{ clauseId: 'c1', toolId, assumption: ASSUMPTION, reported: reply.content.includes('COMPLETED') ? ('success' as const) : ('failure' as const), output: v.output, check: v.check }],
           priorFailedAssumptions: [] as string[],
         };
         const r = verifyOutcome(input);
@@ -74,7 +74,7 @@ export function createOrchestrator<T extends ReplyLike>(brain: BrainLike<T>, opt
       } catch { problems.push('verification failed'); }
     }
     if (mode === 'on') {
-      if (verification && verification.report.overall === 'FAILED' && /COMPLETED/.test(reply.content)) {
+      if (verification && verification.report.overall === 'FAILED' && reply.content.includes('COMPLETED')) {
         reply = { content: 'I ran ' + toolId + ', but my own re-check did not match its answer, so I am not giving you that result. Nothing was changed.', source: 'orchestrator:verify', ...(reply.taskId ? { taskId: reply.taskId } : {}) };
         replyChanged = true;
       } else if (repaired && repair) {
@@ -86,9 +86,9 @@ export function createOrchestrator<T extends ReplyLike>(brain: BrainLike<T>, opt
     let reflection: Reflection | null = null;
     try {
       const verified = verification !== null && verification.report.mayClaimSuccess;
-      const steps: StepRecord[] = isTool ? [{ toolId, ok: /COMPLETED/.test(out.reply.content), verified, assumption: ASSUMPTION }] : [];
+      const steps: StepRecord[] = isTool ? [{ toolId, ok: out.reply.content.includes('COMPLETED'), verified, assumption: ASSUMPTION }] : [];
       const failedCheck = verification !== null && verification.report.overall === 'FAILED';
-      const status = out.reply.source === 'foundation' ? 'ABANDONED' : isTool && !/COMPLETED/.test(out.reply.content) ? 'FAILED' : 'SUCCESS';
+      const status = out.reply.source === 'foundation' ? 'ABANDONED' : isTool && !out.reply.content.includes('COMPLETED') ? 'FAILED' : 'SUCCESS';
       const r = reflect({ taskId: out.reply.taskId ?? 'turn-' + turn, goal: effectiveText.slice(0, 200) || 'empty request', status, steps, wrongAssumptions: failedCheck ? [ASSUMPTION] : [], ownerCorrections: [], memoryAllowed });
       if (r.ok) reflection = r.value; else problems.push('reflection refused: ' + r.error);
     } catch { problems.push('reflection failed'); }

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { deepStrictEqual } from 'node:assert';
-import { verifyToolReply, quotedText, recount, base64NoPad } from '../src/brain/mind/orchestrator/toolVerifiers.ts';
+import { verifyToolReply, quotedText, recount, base64NoPad } from '../src/safety/toolVerifiers.ts';
 
 let n = 0;
 let f = 0;
