@@ -499,7 +499,7 @@
   "description": "Find text and replace it, with a preview first.",
   "group": "text-writing",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Find literal or regular-expression matches and replace selected or all occurrences, within the engine limits."

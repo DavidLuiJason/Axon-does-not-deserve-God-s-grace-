@@ -16,7 +16,11 @@
  *  4. Required text slots, in order, take text sources: quoted material first, then detail spans; the characters of values and choice words
  *     already used are cut out; surrounding quote marks are stripped. More sources than slots: the first ones are used and it is noted.
  *     No source for a required text slot: it is missing (asking is better than guessing; OPEN_ITEMS 55 and B04C_PLAN risk 3).
+ *  4a. ROLES (`bindRoles.ts`): for a tool listed there, each quoted text is given to the slot named by the single word right before it
+ *     (Find and Replace: replace/find, with/by/to, in/within/on). All-or-nothing: every quoted text has exactly one marker, no slot twice,
+ *     every required text slot covered; else the order rule above decides. Role slots are filled even when optional.
  *  5. A required slot still empty takes its declared default from `bindDefaults.ts`, with a note; otherwise it is missing.
+ *     (SLOT2: an OPTIONAL slot is filled the same way only when its default says `fillOptional`.)
  *     A required file slot is always missing (the chat cannot carry files yet).
  *  6. DECISION: any missing slot -> 'ask'. Else 'confirm-first' when the tool has an effect other than showing a result, or its undo is not
  *     'not-needed', or Resolution's evidence was 'value' only (the "Is 5 minutes a long time" trap), or a used value was weak (confidence under 0.5).
@@ -26,6 +30,7 @@
 import type { SlotSpec } from '../schema/schemaTypes';
 import { getSchema } from '../schema/actionSchemas';
 import { SLOT_DEFAULTS } from './bindDefaults';
+import { TEXT_ROLE_MARKERS, wordBefore } from './bindRoles';
 
 export interface BindValue {
   readonly kind: string; readonly start: number; readonly end: number; readonly confidence: number;
@@ -158,16 +163,34 @@ export function bindArguments(input: BindInput): BindResult {
     const mats = list(input.materials).filter((s) => validSpan(s, message.length)).slice().sort(byStart).map((s) => strip(message.slice(s.start, s.end)));
     const refs = list(input.references).filter((s) => validSpan(s, message.length));
     const dets = list(input.details).filter((s) => validSpan(s, message.length) && !refs.some((r) => r.start <= s.start && s.end <= r.end)).slice().sort(byStart).map(cut);
+    const markers = Object.prototype.hasOwnProperty.call(TEXT_ROLE_MARKERS, tool) ? TEXT_ROLE_MARKERS[tool] : undefined;
+    let byRole: Record<string, string> | null = null;
+    if (markers !== undefined) {
+      const spans = list(input.materials).filter((s) => validSpan(s, message.length)).slice().sort(byStart);
+      const found: Record<string, string> = {}; let ok = spans.length > 0;
+      for (const s of spans) {
+        const w = wordBefore(message, s.start);
+        const hit = Object.keys(markers).filter((slot) => markers[slot][w] === true);
+        const text = strip(message.slice(s.start, s.end));
+        if (hit.length !== 1 || Object.prototype.hasOwnProperty.call(found, hit[0]) || text === '') { ok = false; break; }
+        found[hit[0]] = text;
+      }
+      if (ok && textSlots.every((slot) => Object.prototype.hasOwnProperty.call(found, slot.name))) byRole = found;
+    }
+    if (byRole !== null) { for (const name of Object.keys(byRole)) { args[name] = byRole[name]; kinds[name] = 'text'; } }
+    else {
     const sources = (mats.length >= textSlots.length ? mats : mats.concat(dets)).filter((t) => t !== '');
     textSlots.forEach((slot, i) => { if (i < sources.length) { args[slot.name] = sources[i]; kinds[slot.name] = 'text'; } });
     if (sources.length > textSlots.length) assumptions.push('I used the first piece of text and left the rest.');
+    }
   }
 
   // defaults and missing (rule 5)
   for (const slot of schema.slots as readonly SlotSpec[]) {
-    if (!slot.required || slot.kind === 'time' || Object.prototype.hasOwnProperty.call(args, slot.name)) continue;
+    if (slot.kind === 'time' || Object.prototype.hasOwnProperty.call(args, slot.name)) continue;
     if (missing.some((m) => m.slot === slot.name)) continue;
     const d = Object.prototype.hasOwnProperty.call(SLOT_DEFAULTS, tool) ? SLOT_DEFAULTS[tool][slot.name] : undefined;
+    if (!slot.required && d?.fillOptional !== true) continue;
     if (d !== undefined && slot.kind !== 'file') { args[slot.name] = d.value; kinds[slot.name] = slot.kind; assumptions.push(d.note[0].toUpperCase() + d.note.slice(1) + '.'); continue; }
     const opts = slot.kind === 'choice' ? list(input.choices?.[slot.name]) : [];
     missing.push({ slot: slot.name, kind: slot.kind, ...(opts.length > 0 ? { choices: opts } : {}), reason: slot.kind === 'file' ? 'This needs a file.' : 'This was not said.' });

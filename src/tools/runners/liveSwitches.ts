@@ -14,6 +14,7 @@ import { NUMBER_WORDS_ACTION } from '../numberWordsAction';
 import { ENCODE_ACTION } from '../encodeAction';
 import { HASH_ACTION } from '../hashAction';
 import { QR_ACTION } from '../qrAction';
+import { TEXT_REPLACE_ACTION } from '../textReplaceAction';
 import { QR_LEVEL_CHOICES, foldQrLevel } from './qrWords';
 import { HASH_ALGORITHM_WORDS, foldHashAlgorithm } from './hashWords';
 import { ENCODER_MODE_CHOICES, ENCODER_FORMAT_CHOICES, foldEncoderMode, foldEncoderFormat } from './encoderWords';
@@ -23,7 +24,7 @@ import { GENERATED_LIVE_SWITCHES, GENERATED_LIVE_CHOICES, GENERATED_LIVE_TASKS }
 /** LIVE9-3 go-live (2026-11-03): Sort Lines is the third tool ON. SWITCH BACK = delete the 'sort-lines' entry below and its LIVE_TASKS entry, delete its `act.sort-lines` chat action in registerAxonTools.ts (chat must not claim it, FL10), remove `TEXT_SORT_ACTION` from axonEngine.ts and set PINNED_ON in tests/liveSwitches.test.ts to ['case-converter','text-counter'].
  * LIVE8-3 go-live (2026-10-31): Case Converter is the second tool ON. SWITCH BACK = delete the 'case-converter' entry below, delete its `act.case-converter` chat action in registerAxonTools.ts (chat must not claim it, FL10) and set PINNED_ON in tests/liveSwitches.test.ts to ['text-counter'].
  * LIVE2 go-live (2026-10-31, after LIVE2a): Text Counter is the first tool ON. SWITCH BACK = delete the 'text-counter' entry below and set PINNED_ON to [] in tests/liveSwitches.test.ts. */
-const HAND_ON = Object.freeze({ 'text-counter': 'runner' as const, 'case-converter': 'runner' as const, 'sort-lines': 'runner' as const, 'number-to-words': 'runner' as const, 'encoder-decoder': 'runner' as const, 'hash-tool': 'runner' as const, 'qr-maker': 'runner' as const });
+const HAND_ON = Object.freeze({ 'text-counter': 'runner' as const, 'case-converter': 'runner' as const, 'sort-lines': 'runner' as const, 'number-to-words': 'runner' as const, 'encoder-decoder': 'runner' as const, 'hash-tool': 'runner' as const, 'qr-maker': 'runner' as const, 'find-replace': 'runner' as const });
 export const LIVE_SWITCHES: RunnerSwitches = Object.freeze({ ...DEFAULT_SWITCHES, ...addOnlyRecord<RunnerSwitches[string]>(HAND_ON, GENERATED_LIVE_SWITCHES, 'live switch') });
 
 /** The choice words each live tool's binder may fill, per slot (one source: the runner's own closed set). */
@@ -41,9 +42,10 @@ const HAND_TASKS: Readonly<Record<string, { readonly actionId: string; readonly 
   'number-to-words': Object.freeze({ actionId: NUMBER_WORDS_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ number: args.number, ...(args.ordinal !== undefined ? { ordinal: args.ordinal } : {}) }) }),
   'encoder-decoder': Object.freeze({ actionId: ENCODE_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ mode: foldEncoderMode(args.mode), format: foldEncoderFormat(args.format), input: args.input }) }),
   'qr-maker': Object.freeze({ actionId: QR_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ text: args.text, level: foldQrLevel(args.level) }) }),
+  'find-replace': Object.freeze({ actionId: TEXT_REPLACE_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ text: args.text, pattern: args.pattern, replacement: args.replacement, replaceAll: args.replaceAll, caseSensitive: args.caseSensitive }) }),
   'hash-tool': Object.freeze({ actionId: HASH_ACTION.id, input: (args: Readonly<Record<string, unknown>>) => ({ input: args.input, algorithm: foldHashAlgorithm(args.algorithm) }) }),
 });
 export const LIVE_TASKS: Readonly<Record<string, { readonly actionId: string; readonly input: (args: Readonly<Record<string, unknown>>) => Record<string, unknown> }>> = Object.freeze(addOnlyRecord(HAND_TASKS, GENERATED_LIVE_TASKS, 'live task'));
 
 /** Tools whose lane answer may use a declared default and SAY it aloud: only tools with no old chat handler, so no old answer can differ. Sort Lines uses its declared ascending default. */
-export const LIVE_SAY_DEFAULTS: readonly string[] = Object.freeze(['sort-lines', 'qr-maker']);
+export const LIVE_SAY_DEFAULTS: readonly string[] = Object.freeze(['sort-lines', 'qr-maker', 'find-replace']);

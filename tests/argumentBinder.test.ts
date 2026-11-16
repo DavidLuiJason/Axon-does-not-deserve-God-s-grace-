@@ -123,11 +123,11 @@ const all = Object.values(D).filter((v) => v !== null && typeof v === 'object' &
 all.push(QR_DESCRIPTOR as never);
 for (const [tool, slots] of Object.entries(SLOT_DEFAULTS)) for (const [slot, def] of Object.entries(slots)) {
   const spec = getSchema(tool)?.slots.find((s) => s.name === slot);
-  check(spec !== undefined && spec.required, `default ${tool}.${slot} is a required slot`);
+  check(spec !== undefined && (spec.required || def.fillOptional === true), `default ${tool}.${slot} is a required slot (or says fillOptional)`);
   if (spec!.kind === 'choice') {
     const choices = all.find((x) => x.toolId === tool)?.inputs.find((i) => i.name === slot)?.choices ?? [];
     check(choices.includes(def.value as string), `default ${tool}.${slot} is one of the descriptor's choices`);
-  } else check(spec!.kind === 'number' && typeof def.value === 'number', `default ${tool}.${slot} fits its kind`);
+  } else check((spec!.kind === 'number' && typeof def.value === 'number') || (spec!.kind === 'yes-no' && typeof def.value === 'boolean'), `default ${tool}.${slot} fits its kind`);
   check(def.note !== '' && def.note === def.note.toLowerCase(), `default ${tool}.${slot} has a plain note`);
 }
 console.log(`argumentBinder.test.ts: ${n} checks passed.`);

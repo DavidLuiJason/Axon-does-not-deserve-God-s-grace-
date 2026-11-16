@@ -4,8 +4,10 @@ let n=0,f=0;const check=(v:boolean,s:string)=>{n++;if(!v){f++;console.log('FAIL 
 const wrong:[string,Record<string,unknown>][]=[
 ['how does find and replace work?',{text:'work'}],['replace a file on my phone',{text:'file'}],['find "cat" and translate it',{text:'cat'}],['find "cat" and summarize it',{text:'cat'}],['find "cat" in my database',{text:'cat'}],['replace every file in folder',{text:'folder'}],['undo the last replacement',{text:'replacement'}],['what is regex?',{text:'regex'}]
 ]; // HYPOTHESIS cases, not measured against real brain.
+// SLOT2 (D471): the guard now needs the whole request (pattern, replacement, quoted); the old incomplete "right" cases ('find "cat" and replace') can never reach the lane and are replaced by complete ones.
+const full=(text:string,pattern:string,replacement:string):Record<string,unknown>=>({text,pattern,replacement,replaceAll:true,caseSensitive:true});
 const right:[string,Record<string,unknown>][]=[
-['find "cat" and replace',{text:'cat'}],['replace in "cat sat"',{text:'cat sat'}],['find "red cat" and replace',{text:'red cat'}],['find "abc abc" and replace',{text:'abc abc'}],['find "hello" and replace',{text:'hello'}],['find "one two" and replace',{text:'one two'}]
+['replace "cat" with "dog" in "cat sat"',full('cat sat','cat','dog')],['find "red" and replace it with "blue" in "red cat"',full('red cat','red','blue')],['replace "abc" with "x" in "abc abc"',full('abc abc','abc','x')],['substitute "hello" with "hi" in "hello"',full('hello','hello','hi')],['replace "one" with "1" in "one two"',full('one two','one','1')],
 ];
 for(const [m,a] of wrong)check(findReplaceGuard(a,m)!==null,'HYPOTHESIS wrong yields: '+m);
 for(const [m,a] of right)check(findReplaceGuard(a,m)===null,'right passes: '+m);

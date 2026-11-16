@@ -6,13 +6,14 @@ import { GENERATED_SLOT_DEFAULTS } from '../../../generated/wiredBindDefaults';
  * One named file (FL13). A default is never silent: the binder lists it in `assumptions` and in `understood`, so the person can correct it.
  * Only choices that start something harmless or that the engine itself defaults to are listed.
  */
-export interface SlotDefault { readonly value: string | number; readonly note: string }
+export interface SlotDefault { readonly value: string | number | boolean; readonly note: string; /** SLOT2: also fill this slot when it is OPTIONAL (a spoken default of an option the runner would otherwise leave to the engine) */ readonly fillOptional?: true }
 const HAND_SLOT_DEFAULTS: Readonly<Record<string, Readonly<Record<string, SlotDefault>>>> = Object.freeze({
   timer: Object.freeze({ operation: { value: 'start', note: 'starting a new timer' } }),
   stopwatch: Object.freeze({ operation: { value: 'start', note: 'starting a new stopwatch' } }),
   'qr-maker': Object.freeze({ level: { value: 'M', note: 'using medium error correction' } }),
   'random-picker': Object.freeze({ count: { value: 1, note: 'picking one' } }),
   calculator: Object.freeze({ angle: { value: 'rad', note: 'using radians for angles' } }),
+  'find-replace': Object.freeze({ replaceAll: { value: true, note: 'replacing every match', fillOptional: true as const }, caseSensitive: { value: true, note: 'matching upper and lower case exactly', fillOptional: true as const } }),
   'sort-lines': Object.freeze({ mode: { value: 'ascending', note: 'sorting in ascending order, from a to z' } }),
 });
 

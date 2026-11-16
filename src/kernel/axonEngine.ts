@@ -15,6 +15,7 @@ import { NUMBER_WORDS_ACTION } from '../tools/numberWordsAction';
 import { ENCODE_ACTION } from '../tools/encodeAction';
 import { HASH_ACTION } from '../tools/hashAction';
 import { QR_ACTION } from '../tools/qrAction';
+import { TEXT_REPLACE_ACTION } from '../tools/textReplaceAction';
 
 export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   const engine = createTaskEngine({ readProfile: () => readDeviceProfile(), ...options });
@@ -25,6 +26,7 @@ export function createAxonEngine(options: TaskEngineOptions = {}): TaskEngine {
   engine.registerAction(ENCODE_ACTION);
   engine.registerAction(HASH_ACTION);
   engine.registerAction(QR_ACTION);
+  engine.registerAction(TEXT_REPLACE_ACTION);
   return engine;
 }
 
