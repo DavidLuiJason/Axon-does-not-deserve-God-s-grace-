@@ -1,0 +1,16 @@
+# D84 brain parts P08 and P10 board lines (owner appends; this package does not touch NOW.txt, MERGE_TAG.txt, JOB_BOARD.md or DIRECTOR_NAP.txt)
+
+WHAT IT IS: two brain parts built directly by Director D84: P10 PER-TOOL VERIFIERS and P08 ORCHESTRATOR. New files only; no existing file changed. Nothing calls the orchestrator yet (no screen uses the brain), so behaviour in the app does not change.
+
+FILES: src/brain/mind/orchestrator/toolVerifiers.ts, src/brain/mind/orchestrator/orchestrator.ts, tests/toolVerifiers.test.ts, tests/orchestrator.test.ts, tests/fixtures/toolVerifierCases.json (34 cases), tests/fixtures/quotedTextCases.json (9), docs/BRAIN_BUILD_STATE_D84.md (replaces the earlier copy), docs/D84_P08_P10_BOARD_LINES.md.
+
+P10: for the text counter, sort lines (ascending and descending) and base64 encode/decode it re-extracts the one quoted text from the owner's message and recomputes the answer by a different path (a single walk over the text; its own base64) and compares with what the tool's reply claims. Anything it cannot recheck (no quote, two quotes, other tools, other formats) stays UNVERIFIED and is never blocked.
+P08: `createOrchestrator(brain, { mode })`. off = pass-through. shadow (default) = reply exactly as the brain gives it, with a record of what repair (P01), the tool recheck (P10 through P02) and reflection (P06) would have done. on = repair applied and said out loud, a risky repair asks first without running anything, and a tool answer that fails its own recheck is held back. A brain error is never hidden.
+
+VERIFICATION (MEASURED): tool verifiers 8043 checks, 0 failed (34 hand-derived cases, plus 4000 random texts compared with the counting formulas as the project's own counter writes them and with Node's own base64); orchestrator 180 checks, 0 failed (21 fake-brain behaviour cases; the real brain on all 79 golden messages: shadow equals the plain brain once the process-wide task counter, run times and taught-word state are ignored, and no false alarm on the 7 tool runs; 70 generated tool messages all PASSED with the reply unchanged in "on" mode). Separately 400 generated messages through the real brain: 400 of 400 PASSED, 0 false alarms. Deliberate breaks: 10 on the verifiers and 10 on the orchestrator, all caught. Strict type check clean, erasable syntax only. In "on" mode a doubled message "count words in X. count words in X." is now answered correctly (3 words, not 9) and "how much words are in ..." now runs.
+LIMIT: written and tested by the same director (D84); another director should spot-check. The orchestrator test takes about 26 seconds because it replays the golden messages twice.
+
+NOT RUN: Android build, cloud build, the full repository suite (new files only; one docs file replaced by a newer version of itself).
+
+NOW.txt line: 2026-11-14 | roadmap v21.3 | brain parts P08 orchestrator and P10 per-tool verifiers merged (D84; shadow by default; nothing calls them yet) | next: dialogue questions (P05), pipeline hook (P11), end-to-end tests (P09)
+MERGE_TAG.txt line (newest first): 2026-11-14 | BRAIN P08+P10 [D84, built directly; files above] | MEASURED: 8223 checks 0 failed; 400/400 real-brain tool answers rechecked without a false alarm | NOT RUN: Android build, cloud build

@@ -1,0 +1,516 @@
+[
+  {
+    "id": "T01_simple",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"red blue green\"",
+      "replyContent": "That text has x.\n\nWords: 3\nCharacters: 14 (12 without spaces)\nLetters: 12\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=3;C=14;NS=12;L=12;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=3;C=14;NS=12;L=12;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T02_tampered_words",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"red blue green\"",
+      "replyContent": "That text has x.\n\nWords: 4\nCharacters: 14 (12 without spaces)\nLetters: 12\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=4;C=14;NS=12;L=12;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=3;C=14;NS=12;L=12;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T03_unicode",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count characters in \"héllo wörld\"",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 11 (10 without spaces)\nLetters: 10\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=2;C=11;NS=10;L=10;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=2;C=11;NS=10;L=10;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T04_two_lines",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a b\nc\"",
+      "replyContent": "That text has x.\n\nWords: 3\nCharacters: 5 (3 without spaces)\nLetters: 3\nLines: 2\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=3;C=5;NS=3;L=3;LN=2",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=3;C=5;NS=3;L=3;LN=2"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T05_empty_quoted",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"\"",
+      "replyContent": "That text has x.\n\nWords: 0\nCharacters: 0 (0 without spaces)\nLetters: 0\nLines: 0\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=0;C=0;NS=0;L=0;LN=0",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=0;C=0;NS=0;L=0;LN=0"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T06_trailing_newline",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a\n\"",
+      "replyContent": "That text has x.\n\nWords: 1\nCharacters: 2 (1 without spaces)\nLetters: 1\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=1;C=2;NS=1;L=1;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=1;C=2;NS=1;L=1;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T07_crlf",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a\r\nb\"",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 4 (2 without spaces)\nLetters: 2\nLines: 2\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=2;C=4;NS=2;L=2;LN=2",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=2;C=4;NS=2;L=2;LN=2"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T08_digits_not_letters",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count letters in \"ab 12\"",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 5 (4 without spaces)\nLetters: 2\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=2;C=5;NS=4;L=2;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=2;C=5;NS=4;L=2;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T09_emoji_one_char",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count characters in \"a😀\"",
+      "replyContent": "That text has x.\n\nWords: 1\nCharacters: 2 (2 without spaces)\nLetters: 1\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=1;C=2;NS=2;L=1;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=1;C=2;NS=2;L=1;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T10_curly_quotes",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in “one two”",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 7 (6 without spaces)\nLetters: 6\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=2;C=7;NS=6;L=6;LN=1",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=2;C=7;NS=6;L=6;LN=1"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T11_blank_lines",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a\n\nb\"",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 4 (2 without spaces)\nLetters: 2\nLines: 3\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "W=2;C=4;NS=2;L=2;LN=3",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "W=2;C=4;NS=2;L=2;LN=3"
+      },
+      "note": "recounted from the quoted text"
+    }
+  },
+  {
+    "id": "T12_reply_missing_counts",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a b\"",
+      "replyContent": "That text has 2 words.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "the reply does not show all four counts"
+    }
+  },
+  {
+    "id": "T13_no_quote",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in hello world",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 11 (10 without spaces)\nLetters: 10\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "no quoted text in the message to recheck against"
+    }
+  },
+  {
+    "id": "T14_two_quotes",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a b\" and \"c\"",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 3 (2 without spaces)\nLetters: 2\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "more than one quoted text, so it is unclear which one the tool used"
+    }
+  },
+  {
+    "id": "T15_open_quote",
+    "input": {
+      "toolId": "text-counter",
+      "message": "count words in \"a b",
+      "replyContent": "That text has x.\n\nWords: 2\nCharacters: 3 (2 without spaces)\nLetters: 2\nLines: 1\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "a quote is left open"
+    }
+  },
+  {
+    "id": "T16_other_tool",
+    "input": {
+      "toolId": "case-converter",
+      "message": "convert \"Hello\" to uppercase",
+      "replyContent": "HELLO\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "there is no independent check for this tool yet"
+    }
+  },
+  {
+    "id": "S01_ascending",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"pear\napple\nfig\"",
+      "replyContent": "I read this as Sort Lines (text: “pear\napple\nfig”, mode: ascending). Sorting in ascending order.\n\napple\nfig\npear\nLine count: 3.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "apple\nfig\npear\u00003",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "apple\nfig\npear\u00003"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S02_descending",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"a\nc\nb\"",
+      "replyContent": "I read this as Sort Lines (text: “a\nc\nb”, mode: descending). Sorting in descending order.\n\nc\nb\na\nLine count: 3.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "c\nb\na\u00003",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "c\nb\na\u00003"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S03_tampered_order",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"a\nc\nb\"",
+      "replyContent": "I read this as Sort Lines (text: “a\nc\nb”, mode: ascending). Sorting in ascending order.\n\na\nc\nb\nLine count: 3.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "a\nc\nb\u00003",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "a\nb\nc\u00003"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S04_duplicates",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"b\nb\na\"",
+      "replyContent": "I read this as Sort Lines (text: “b\nb\na”, mode: ascending). Sorting in ascending order.\n\na\nb\nb\nLine count: 3.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "a\nb\nb\u00003",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "a\nb\nb\u00003"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S05_capitals_code_order",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"b\nA\na\"",
+      "replyContent": "I read this as Sort Lines (text: “b\nA\na”, mode: ascending). Sorting in ascending order.\n\nA\na\nb\nLine count: 3.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "A\na\nb\u00003",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "A\na\nb\u00003"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S06_tampered_count",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"b\na\"",
+      "replyContent": "I read this as Sort Lines (text: “b\na”, mode: ascending). Sorting in ascending order.\n\na\nb\nLine count: 5.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "a\nb\u00005",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "a\nb\u00002"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "S07_by_length_unchecked",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"bb\na\"",
+      "replyContent": "I read this as Sort Lines (text: “bb\na”, mode: by-length). Sorting by length.\n\na\nbb\nLine count: 2.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "the reply is not in the ascending or descending sort format"
+    }
+  },
+  {
+    "id": "S08_single_line",
+    "input": {
+      "toolId": "sort-lines",
+      "message": "sort these lines: \"only\"",
+      "replyContent": "I read this as Sort Lines (text: “only”, mode: ascending). Sorting in ascending order.\n\nonly\nLine count: 1.\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "only\u00001",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "only\u00001"
+      },
+      "note": "sorted again from the quoted text"
+    }
+  },
+  {
+    "id": "D01_decode",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"aGVsbG8=\"",
+      "replyContent": "hello\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "hello",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "hello"
+      },
+      "note": "round trip through base64 matches"
+    }
+  },
+  {
+    "id": "D02_decode_tampered",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"aGVsbG8=\"",
+      "replyContent": "hellp\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "hellp",
+      "check": null,
+      "note": "the base64 round trip did not match, so it is left unverified (another encoding may have been used)"
+    }
+  },
+  {
+    "id": "D03_decode_unicode",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"w6k=\"",
+      "replyContent": "é\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "é",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "é"
+      },
+      "note": "round trip through base64 matches"
+    }
+  },
+  {
+    "id": "D04_encode",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "encode \"hello\" as base64",
+      "replyContent": "aGVsbG8=\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "aGVsbG8=",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "aGVsbG8="
+      },
+      "note": "round trip through base64 matches"
+    }
+  },
+  {
+    "id": "D05_encode_no_padding_ok",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "encode \"hello\" as base64",
+      "replyContent": "aGVsbG8\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "aGVsbG8",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "aGVsbG8"
+      },
+      "note": "round trip through base64 matches"
+    }
+  },
+  {
+    "id": "D06_encode_tampered",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "encode \"hello\" as base64",
+      "replyContent": "aGVsbG9=\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "aGVsbG9=",
+      "check": null,
+      "note": "the base64 round trip did not match, so it is left unverified (another encoding may have been used)"
+    }
+  },
+  {
+    "id": "D07_hex_unverified",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode hex \"68656c6c6f\"",
+      "replyContent": "hello\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "hello",
+      "check": null,
+      "note": "the base64 round trip did not match, so it is left unverified (another encoding may have been used)"
+    }
+  },
+  {
+    "id": "D08_not_task_format",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"aGVsbG8=\"",
+      "replyContent": "hello"
+    },
+    "expected": {
+      "output": "",
+      "check": null,
+      "note": "the reply is not in the expected format"
+    }
+  },
+  {
+    "id": "D09_decode_emoji",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"8J+YgA==\"",
+      "replyContent": "😀\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "😀",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": "😀"
+      },
+      "note": "round trip through base64 matches"
+    }
+  },
+  {
+    "id": "D10_decode_empty",
+    "input": {
+      "toolId": "encoder-decoder",
+      "message": "decode base64 \"\"",
+      "replyContent": "\n\nRan as task task-1: COMPLETED in 0 ms, from your exact input."
+    },
+    "expected": {
+      "output": "",
+      "check": {
+        "kind": "RECOMPUTE",
+        "value": ""
+      },
+      "note": "round trip through base64 matches"
+    }
+  }
+]

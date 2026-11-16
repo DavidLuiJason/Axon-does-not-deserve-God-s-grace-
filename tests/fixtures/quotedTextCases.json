@@ -1,0 +1,70 @@
+[
+  {
+    "id": "Q01_none",
+    "message": "count words",
+    "expected": {
+      "kind": "none"
+    }
+  },
+  {
+    "id": "Q02_one",
+    "message": "a \"b c\" d",
+    "expected": {
+      "kind": "one",
+      "text": "b c"
+    }
+  },
+  {
+    "id": "Q03_many",
+    "message": "\"a\" and \"b\"",
+    "expected": {
+      "kind": "many"
+    }
+  },
+  {
+    "id": "Q04_open",
+    "message": "say \"a",
+    "expected": {
+      "kind": "open"
+    }
+  },
+  {
+    "id": "Q05_curly",
+    "message": "“x y”",
+    "expected": {
+      "kind": "one",
+      "text": "x y"
+    }
+  },
+  {
+    "id": "Q06_empty",
+    "message": "\"\"",
+    "expected": {
+      "kind": "one",
+      "text": ""
+    }
+  },
+  {
+    "id": "Q07_multiline",
+    "message": "\"a\nb\"",
+    "expected": {
+      "kind": "one",
+      "text": "a\nb"
+    }
+  },
+  {
+    "id": "Q08_mixed_curly_inside_straight",
+    "message": "\"a “b” c\"",
+    "expected": {
+      "kind": "one",
+      "text": "a “b” c"
+    }
+  },
+  {
+    "id": "Q09_stray_closing_curly",
+    "message": "x ” y",
+    "expected": {
+      "kind": "none"
+    }
+  }
+]
