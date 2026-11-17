@@ -109,7 +109,8 @@ test('Q2 project services now route real project tests through the confined runn
   const { runProjectTests } = await import('../src/services/projectServices.mjs');
   const root = await fixture("import test from 'node:test'; import assert from 'node:assert/strict'; test('wired',()=>assert.equal(true,true));\n");
   try {
-    const result = await runProjectTests(root);
+    // signalRisk accept: this test checks the routing and the permission confinement, and must also pass where the system forbids a PID namespace.
+    const result = await runProjectTests(root, { signalRisk: 'accept' });
     assert.equal(result.status, 'TESTED', result.output || result.reason);
     assert.equal(result.isolation, 'PROCESS_PERMISSION_CONFINEMENT');
   } finally { await cleanup(root); }

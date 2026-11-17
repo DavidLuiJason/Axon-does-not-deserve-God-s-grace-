@@ -79,3 +79,16 @@ test('NEGATIVE (real mutant): with isolation removed and the risk accepted, the 
     });
   } finally { await mutant.cleanup(); }
 });
+
+test('project services pass the risk decision through: refused or isolated by default, runs only when the risk is accepted', async () => {
+  const { runProjectTests } = await import('../src/services/projectServices.mjs');
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'axon-q2-services-'));
+  await fs.writeFile(path.join(dir, 'package.json'), '{"type":"module"}');
+  await fs.writeFile(path.join(dir, 'a.test.mjs'), "import test from 'node:test';\ntest('ok', () => {});\n");
+  const accepted = await runProjectTests(dir, { signalRisk: 'accept' });
+  assert.equal(accepted.status, 'TESTED', accepted.output || accepted.reason);
+  const byDefault = await runProjectTests(dir);
+  if (byDefault.status === 'BLOCKED') { assert.match(byDefault.reason, /NO_SIGNAL_ISOLATION/); return; }
+  assert.equal(byDefault.status, 'TESTED');
+  assert.equal(byDefault.signalIsolation, true);
+});
