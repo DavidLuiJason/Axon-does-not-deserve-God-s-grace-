@@ -40,3 +40,18 @@ export function createScheduler({ store, runner, now = () => Date.now(), ownPack
     },
   };
 }
+
+/**
+ * Calls scheduler.tick() every minute while the app's JavaScript is alive. Honest limit: the Android background runtime
+ * keeps the PROCESS alive but its work is native, so whether this JavaScript keeps ticking with the screen off is a PHONE TEST
+ * (checklist item 21). Returns stop().
+ */
+export function startSchedulerLoop(scheduler, { intervalMs = 60000, setTimer = setInterval, clearTimer = clearInterval, onError = () => {} } = {}) {
+  let busy = false;
+  const handle = setTimer(async () => {
+    if (busy) return;
+    busy = true;
+    try { await scheduler.tick(); } catch (error) { onError(error); } finally { busy = false; }
+  }, Math.max(15000, intervalMs));
+  return () => clearTimer(handle);
+}

@@ -8,9 +8,12 @@ import { createAppProfiles } from '../axon-apps/app-profiles.mjs';
 import { createAppsController } from '../axon-apps/apps-controller.mjs';
 import { createRoutineRunner } from '../axon-autoclicker/routine-runner.mjs';
 import { createRecorder } from '../axon-autoclicker/recorder.mjs';
+import { createRoutineStore } from '../axon-autoclicker/routine-store.mjs';
+import { createScheduler } from '../axon-autoclicker/routine-scheduler.mjs';
+import { createLocalBackend } from '../axon-autoclicker/routine-backend.mjs';
 
 /** @param {any} [options] */
-export function createScreenSystem({ screenPlugin, appsPlugin, policy = {}, ownPackage = 'com.axon.app', profiles: profilesData, now, wait, onEvent } = {}) {
+export function createScreenSystem({ screenPlugin, appsPlugin, policy = {}, ownPackage = 'com.axon.app', profiles: profilesData, routineBackend, now, wait, onEvent } = {}) {
   const clock = { ...(now ? { now } : {}), ...(wait ? { wait } : {}) };
   const screen = createStructureSource(screenPlugin);
   const apps = createAppsSource(appsPlugin);
@@ -18,8 +21,10 @@ export function createScreenSystem({ screenPlugin, appsPlugin, policy = {}, ownP
   const controller = createAppsController({ screen, apps, profiles, policy, ...clock });
   const runner = createRoutineRunner({ controller, screen, ownPackage, onEvent, ...clock });
   const recorder = createRecorder({ source: screen });
+  const store = createRoutineStore({ backend: routineBackend ?? createLocalBackend(), ownPackage, ...(now ? { now } : {}) });
+  const scheduler = createScheduler({ store, runner, ownPackage, ...(now ? { now } : {}), onEvent });
   return {
-    screen, apps, profiles, controller, runner, recorder,
+    screen, apps, profiles, controller, runner, recorder, store, scheduler,
     /** Plain-words state of the whole system: is the reader on, how many apps, is the kill switch armed. */
     async status() {
       const reader = await screen.getStatus();
