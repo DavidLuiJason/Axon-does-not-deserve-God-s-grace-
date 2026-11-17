@@ -48,6 +48,8 @@ cp -f "$OVERLAY/app/src/main/java/com/axon/app/MainActivity.java" \
 mkdir -p "$ANDROID/app/src/main/assets"
 cp -f "$OVERLAY/app/src/main/assets/axon_page_agent.js" \
       "$ANDROID/app/src/main/assets/"
+cp -f "$OVERLAY/app/src/main/assets/axon_page_tools.js" \
+      "$ANDROID/app/src/main/assets/"
 
 # Ensure AndroidX WebKit Multi-Profile API dependency is present exactly once.
 GRADLE="$ANDROID/app/build.gradle"

@@ -1,0 +1,46 @@
+AXON WEB: STATUS OF EVERY CATALOGUED COMMAND (written by Director 204, lane AXON Web, generated from src/web/browserParityMatrix.ts)
+Total commands: 130. Built: 93. Partial: 3. Not applicable on Android WebView (with reason): 24. Open: 2. AXON own-tab only (agent): 11.
+Built means: code and tests exist. NOT proven on a phone yet.
+
+PARTIAL (does less than its name says):
+  site.changePermission - The decision is saved per site, but Android WebView still denies camera, microphone and location because the app declares no such permissions (an owner decision).
+  site.manageNotifications - The decision is saved per site; Android WebView has no web notifications.
+  settings.newTabPage - The choice is saved and used by the Home command; new tabs still open the default page.
+
+NOT APPLICABLE (decided, with the reason):
+  downloads.pause - Android DownloadManager has no pause or resume. Use retry or cancel.
+  downloads.resume - Android DownloadManager has no pause or resume. Use retry or cancel.
+  files.upload - The page opens the Android file picker itself; there is no separate command.
+  files.open - Refused by design: the browser does not load local files.
+  page.spellcheck - Android WebView text fields use the keyboard spell checker; the browser has no switch for it.
+  site.requestCamera - Blocked by design until the app declares the Android camera permission (an owner decision). WebView denies the request.
+  site.requestMicrophone - Blocked by design until the app declares the Android microphone permission (an owner decision). WebView denies the request.
+  site.requestLocation - Blocked by design until the app declares the Android location permission (an owner decision). WebView denies the request.
+  site.requestNotifications - Android WebView has no web notifications.
+  site.requestBluetooth - Android WebView does not support Web Bluetooth.
+  site.requestUsb - Android WebView does not support WebUSB.
+  site.requestMidi - Android WebView does not offer MIDI access to pages.
+  site.requestSerial - Android WebView does not support Web Serial.
+  site.requestWebRtc - Camera and microphone for calls stay blocked by design (see the camera and microphone rows).
+  security.trackingProtectionSettings - Android WebView has no tracking-protection switch. The third-party cookie setting is the available control.
+  accounts.startSignIn - AXON Web has no browser account. Signing in to a site is always done by the owner on that site.
+  accounts.signOut - AXON Web has no browser account. Use site data clearing to sign out of a site.
+  credentials.fillPassword - Passwords are filled by the Android autofill service the owner chose; AXON Web never handles them.
+  credentials.usePasskey - Passkeys are handled by the Android credential manager; AXON Web never handles them.
+  autofill.address - Addresses are filled by the Android autofill service the owner chose.
+  autofill.payment - Payment details are filled by the Android autofill service the owner chose; AXON Web never handles them.
+  settings.language - Android WebView follows the phone language.
+  settings.sync - AXON Web has no browser account to sync with. Use export and import.
+  extensions.manage - Android WebView does not support browser extensions.
+
+OPEN (not built yet): navigation.generateQr, page.installWebApp  (QR code needs a QR library; install as app needs the launcher shortcut flow)
+
+BUILT, by group:
+  Navigation (16): address.navigate, address.search, navigation.back, navigation.forward, navigation.reload, navigation.stop, navigation.home, navigation.copyUrl, navigation.shareUrl, navigation.openExternal, navigation.requestDesktopSite, navigation.findInPage, navigation.zoom, navigation.fullscreen, navigation.securityDetails, address.suggestions
+  Tabs (17): tabs.create, tabs.close, tabs.restoreClosed, tabs.switch, tabs.duplicate, tabs.createGroup, tabs.renameGroup, tabs.moveToGroup, tabs.deleteGroup, tabs.removeFromGroup, tabs.listGroups, tabs.closeOthers, tabs.suspend, tabs.restoreSession, tabs.listRecent, tabs.pin, tabs.closeGroup
+  Saved browsing (15): bookmarks.add, bookmarks.edit, bookmarks.remove, bookmarks.list, bookmarks.createFolder, bookmarks.move, history.search, history.clear, history.openEntry, history.clearBySite, readingList.add, readingList.remove, readingList.open, readingList.markRead, readingList.list
+  Files (9): downloads.list, downloads.cancel, downloads.open, downloads.share, downloads.delete, downloads.retry, downloads.openFolder, files.print, files.savePdf
+  Page tools (14): page.read, page.extract, page.followLink, page.capture, page.translate, page.readerMode, page.listen, page.selectText, page.copyText, page.shareContent, page.accessibility, page.mediaPlayPause, page.mediaSeek, page.mediaVolume
+  Site security (7): site.viewInfo, site.viewPermissions, site.clearData, site.manageCookies, security.safeBrowsingSettings, security.certificateDetails, security.reportUnsafeSite
+  Accounts (2): credentials.openManager, credentials.generatePassword
+  Settings (13): settings.view, settings.change, settings.defaultMode, settings.searchEngine, settings.accessibility, settings.clearBrowsingData, settings.exportData, settings.importData, settings.resetBrowser, settings.defaultBrowser, settings.homePage, settings.clearCache, diagnostics.view

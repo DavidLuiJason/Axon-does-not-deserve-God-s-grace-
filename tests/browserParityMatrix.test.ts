@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BROWSER_FUNCTIONS } from '../src/web/browserCommandGateway.ts';
+import { TAIL_FUNCTION_IDS, TAIL_PARTIAL_FUNCTION_IDS } from '../src/web/browserLongTail.ts';
 import { BROWSER_PARITY_MATRIX, BROWSER_PARITY_GROUPS, getBrowserParity, getBrowserParitySummary } from '../src/web/browserParityMatrix.ts';
 
 test('parity matrix covers every catalogue ID exactly once', () => {
@@ -27,6 +28,7 @@ test('only the currently implemented command executors are marked as such', () =
     'navigation.copyUrl', 'navigation.shareUrl', 'navigation.securityDetails', 'downloads.list', 'downloads.open',
     'downloads.share', 'downloads.cancel', 'downloads.delete', 'files.print', 'files.savePdf', 'site.viewPermissions',
   ]);
+  for (const id of TAIL_FUNCTION_IDS) if (!TAIL_PARTIAL_FUNCTION_IDS.has(id)) expected.add(id);
   assert.deepEqual(new Set(BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'IMPLEMENTED').map((row) => row.functionId)), expected);
 });
 
@@ -43,15 +45,28 @@ test('owner host partials are not silently counted as complete', () => {
   }
 });
 
-test('sensitive authentication and payment commands remain non-implemented and handoff-classified', () => {
+test('sensitive authentication and payment commands stay owner-handoff and are never built as AXON Web commands', () => {
   for (const id of ['accounts.startSignIn', 'credentials.fillPassword', 'credentials.usePasskey', 'autofill.payment'] as const) {
     const row = getBrowserParity(id);
-    assert.equal(row?.ownerHost, 'NOT_IMPLEMENTED');
-    assert.equal(row?.ownerCommand, 'NOT_IMPLEMENTED');
+    assert.equal(row?.ownerHost, 'NOT_APPLICABLE');
+    assert.equal(row?.ownerCommand, 'NOT_APPLICABLE');
     assert.equal(row?.effect, 'OWNER_HANDOFF');
+    assert.match(row?.evidence ?? '', /^Not applicable on Android WebView: /);
   }
 });
 
 test('every matrix row contains evidence and an explicit group', () => {
   assert.ok(BROWSER_PARITY_MATRIX.every((row) => row.group.length > 0 && row.evidence.length > 10));
+});
+
+test('every catalogue command is accounted for: built, partial, not applicable with a reason, AXON own-session, or listed as open', () => {
+  const open = BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'NOT_IMPLEMENTED' && row.axonAccess === 'BLOCKED_NO_ISOLATED_SESSION').map((row) => row.functionId).sort();
+  assert.deepEqual(open, ['navigation.generateQr', 'page.installWebApp']);
+  for (const row of BROWSER_PARITY_MATRIX) {
+    if (row.ownerCommand === 'NOT_APPLICABLE') assert.match(row.evidence, /^Not applicable on Android WebView: .{20,}/);
+    if (row.ownerCommand === 'PARTIAL') assert.match(row.evidence, /^Partial: .{20,}/);
+  }
+  const summary = getBrowserParitySummary();
+  assert.equal(summary.ownerCommandImplemented + summary.ownerCommandPartial + summary.ownerCommandNotApplicable + summary.ownerCommandOpen
+    + BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'NOT_IMPLEMENTED' && row.axonAccess === 'OWN_SESSION_ONLY').length, summary.catalogueTotal);
 });

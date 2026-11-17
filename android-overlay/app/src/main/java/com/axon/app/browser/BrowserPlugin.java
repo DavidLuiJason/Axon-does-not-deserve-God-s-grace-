@@ -123,6 +123,13 @@ public final class BrowserPlugin extends Plugin {
         withActivity(call, act -> call.resolve(js(act.axonRelease())));
     }
 
+    @PluginMethod public void runTail(PluginCall call) {
+        String functionId = call.getString("functionId");
+        if (functionId == null || functionId.isEmpty()) { call.reject("functionId is required"); return; }
+        JSObject given = call.getObject("args");
+        JSObject args = given == null ? new JSObject() : given;
+        withActivity(call, act -> act.runTail(functionId, args, value -> call.resolve(js(value))));
+    }
     private void withActivity(PluginCall call, Action action) {
         BrowserActivity activity=BrowserActivity.getInstance();
         if(activity==null){call.reject("AXON Web is not open");return;}

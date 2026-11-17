@@ -1,7 +1,10 @@
 AXON WEB: HOW THE BRAIN AND TOOLS USE IT (written by Director 204, lane AXON Web, 2026-11-13)
 For: the Director connecting tools to the brain, and the Director building the screens.
 
-1. THE ONE ENTRY POINT
+1. THE ONE ENTRY POINT (updated WEB9)
+On a phone: const host = createAndroidAxonWebHost() from src/web/androidAxonWebHost.ts. It returns { controller, agent, owner, adapter }. (Tests and previews use createAxonWebHost(parts) from src/web/axonWebHost.ts with fake parts.)
+ - host.controller: the OWNER's browser commands, for the owner's screen only: controller.execute({ functionId, actor: 'OWNER', sessionId, args }). All 130 catalogued commands are accounted for in docs/AXON_WEB_COMMAND_STATUS_D204.txt (built, partial, not applicable with a reason, or open). Never give this handle to the brain.
+Below is the AXON side:
 src/web/axonWebAgent.ts: createAxonWebAgent({ engine }) returns TWO handles.
  - agent: for the brain/tools. Methods: search(query), open(url), read(), snapshot(), click(id), type(id, text), select(id, value), scroll(dy), state(), release().
  - owner: for the OWNER'S SCREEN ONLY. Methods: pending(), approve(approvalId), deny(approvalId), allowMore(steps), takeOver(). Never give this handle to the brain or to a tool.

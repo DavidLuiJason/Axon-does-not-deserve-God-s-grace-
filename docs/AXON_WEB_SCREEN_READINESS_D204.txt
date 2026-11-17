@@ -1,5 +1,5 @@
 AXON WEB (= AXON BROWSER) - SCREEN READINESS
-From: Director 204 (D204), lane AXON Web. Date: 2026-11-13 (updated after WEB6, WEB7 and WEB8).
+From: Director 204 (D204), lane AXON Web. Date: 2026-11-16 (updated after WEB6 to WEB9).
 For: whoever directs the screens (AI Studio screens prompt). D204 knows screens are being built and wrote this so screens are built only on parts that exist.
 Base: repo of 2026-11-11 plus D204 rounds up to WEB8. D204 has no newer copy.
 
@@ -19,14 +19,14 @@ REAL, compiled by the cloud (WEB6, WEB7) or written and tested only in simulatio
  - A native Android browser screen (BrowserActivity) started by the Open browser button on the Web tab (src/components/browser/BrowserHomeScreen.tsx).
  - Tab groups: create, rename, move in, move out, delete (tabs stay), close, list.
  - Incognito tabs (nothing kept), a stealth flag (a separate identity per tab: saved on normal tabs, wiped on incognito tabs), and the default-mode setting normal or stealth (getSettings / setDefaultMode). Needs the Android multi-profile WebView feature; refused honestly if missing. Stealth is isolation only: no IP, user-agent or fingerprint changes.
- - 34+ plugin methods for browsing, bookmarks, history, reading list, downloads, security details (src/web/browserPluginTypes.ts).
+ - The owner's commands: see docs/AXON_WEB_COMMAND_STATUS_D204.txt for every one of the 130 (built, partial, not applicable with the reason, open). A screen calls them through host.controller.execute from createAndroidAxonWebHost() (src/web/androidAxonWebHost.ts); the permission gateway decides first.
  - AXON's own browsing tab (WEB8): src/web/axonWebAgent.ts with an owner panel (approvals, extra steps, take-over). See docs/AXON_WEB_BRAIN_HOOKUP_D204.txt. The native tab shows "AXON is browsing" and tabs carry axon: true.
 REAL LOGIC, tested with simulated engines: the permission gateway (130 commands), page-to-text, link analysis, saved sources, step guard, the AXON agent (about 300 tests in all).
 NOT BUILT / NOT PROVEN:
  - Every screen (the owner screens for approvals, the indicator, tab groups, stealth settings, the floating button behaviour, the 3-dot menu, Web settings).
  - The brain/tool hookup (the tools Director registers the web.* tools; the agent is ready).
  - Any test on a phone or on live sites. Tab groups and incognito are not saved across restarts for incognito by design.
- - Most of the 130 catalogued commands still have no native method.
+ - Open commands: QR code for the page, and install as an app. Partial: per-site permission decisions (saved, but WebView still denies camera, microphone and location until the app declares those permissions), the new-tab page choice.
 
 4. WHAT A SCREEN MAY SAFELY CALL NOW
 Anything in the real list above, through the gateway so the permission result is shown. For AXON's tab use only the owner panel handle (owner.pending, approve, deny, allowMore, takeOver) and agent.state() for the indicator. Show a disabled or "coming soon" state for everything in the NOT BUILT list; do not pretend it works.

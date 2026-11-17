@@ -1,6 +1,7 @@
+import { NOT_APPLICABLE_FUNCTIONS, TAIL_COMPOSED_FUNCTION_IDS, TAIL_FUNCTION_IDS, TAIL_NATIVE_FUNCTION_IDS, TAIL_PARTIAL_FUNCTION_IDS, TAIL_PARTIAL_REASONS } from './browserLongTail.ts';
 import { BROWSER_FUNCTIONS, type BrowserFunctionDefinition, type BrowserFunctionId } from './browserCommandGateway.ts';
 
-export type ParityStatus = 'IMPLEMENTED' | 'PARTIAL' | 'NOT_IMPLEMENTED';
+export type ParityStatus = 'IMPLEMENTED' | 'PARTIAL' | 'NOT_IMPLEMENTED' | 'NOT_APPLICABLE';
 export type AxonAccessStatus = 'BLOCKED_NO_ISOLATED_SESSION' | 'OWN_SESSION_ONLY';
 export type BrowserParityRow = Readonly<{
   functionId: BrowserFunctionId;
@@ -50,6 +51,12 @@ export const AXON_OWN_SESSION_FUNCTIONS: ReadonlySet<BrowserFunctionId> = new Se
 ]);
 
 const evidenceFor = (id: BrowserFunctionId, ownerHost: ParityStatus, ownerCommand: ParityStatus): string => {
+  const notApplicable = NOT_APPLICABLE_FUNCTIONS[id];
+  if (notApplicable) return 'Not applicable on Android WebView: ' + notApplicable;
+  const partialReason = TAIL_PARTIAL_REASONS[id];
+  if (partialReason) return 'Partial: ' + partialReason;
+  if (TAIL_NATIVE_FUNCTION_IDS.has(id)) return 'BrowserController -> BrowserLongTail -> native runTail dispatcher.';
+  if (TAIL_COMPOSED_FUNCTION_IDS.has(id)) return 'BrowserController -> BrowserLongTail, composed from basic native browser methods.';
   if (ownerCommand !== 'IMPLEMENTED' && AXON_OWN_SESSION_FUNCTIONS.has(id)) return 'AXON agent -> typed plugin -> native AXON session tab; the owner UI has no command for it.';
   if (ownerCommand === 'IMPLEMENTED') return 'BrowserController executor -> typed Capacitor plugin -> native host method.';
   if (id === 'files.upload') return 'Native WebView file chooser -> Android ACTION_OPEN_DOCUMENT; no BrowserController executor.';
@@ -62,10 +69,13 @@ const evidenceFor = (id: BrowserFunctionId, ownerHost: ParityStatus, ownerComman
 };
 
 export const BROWSER_PARITY_MATRIX: readonly BrowserParityRow[] = Object.freeze(BROWSER_FUNCTIONS.map((definition) => {
-  const ownerCommand: ParityStatus = ownerCommandImplemented.has(definition.id) ? 'IMPLEMENTED' : 'NOT_IMPLEMENTED';
-  const ownerHost: ParityStatus = ownerHostPartial.has(definition.id)
-    ? 'PARTIAL'
-    : ownerHostImplemented.has(definition.id) ? 'IMPLEMENTED' : 'NOT_IMPLEMENTED';
+  const notApplicable = NOT_APPLICABLE_FUNCTIONS[definition.id] !== undefined;
+  const ownerCommand: ParityStatus = notApplicable ? 'NOT_APPLICABLE'
+    : TAIL_PARTIAL_FUNCTION_IDS.has(definition.id) ? 'PARTIAL'
+    : (ownerCommandImplemented.has(definition.id) || TAIL_FUNCTION_IDS.has(definition.id)) ? 'IMPLEMENTED' : 'NOT_IMPLEMENTED';
+  const ownerHost: ParityStatus = notApplicable ? 'NOT_APPLICABLE'
+    : TAIL_PARTIAL_FUNCTION_IDS.has(definition.id) || ownerHostPartial.has(definition.id) ? 'PARTIAL'
+    : (ownerHostImplemented.has(definition.id) || TAIL_FUNCTION_IDS.has(definition.id)) ? 'IMPLEMENTED' : 'NOT_IMPLEMENTED';
   return Object.freeze({
     functionId: definition.id,
     group: definition.group,
@@ -101,6 +111,9 @@ export function getBrowserParitySummary() {
     ownerHostImplemented: BROWSER_PARITY_MATRIX.filter((row) => row.ownerHost === 'IMPLEMENTED').length,
     ownerHostPartial: BROWSER_PARITY_MATRIX.filter((row) => row.ownerHost === 'PARTIAL').length,
     ownerCommandImplemented: BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'IMPLEMENTED').length,
+    ownerCommandPartial: BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'PARTIAL').length,
+    ownerCommandNotApplicable: BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'NOT_APPLICABLE').length,
+    ownerCommandOpen: BROWSER_PARITY_MATRIX.filter((row) => row.ownerCommand === 'NOT_IMPLEMENTED' && row.axonAccess === 'BLOCKED_NO_ISOLATED_SESSION').length,
     axonEnabled: BROWSER_PARITY_MATRIX.filter((row) => row.axonAccess !== 'BLOCKED_NO_ISOLATED_SESSION').length,
     groups: BROWSER_PARITY_GROUPS.length,
   });

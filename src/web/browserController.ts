@@ -1,3 +1,4 @@
+import { TAIL_FUNCTION_IDS, type BrowserLongTail } from './browserLongTail.ts';
 import {
   decideBrowserCommand,
   getBrowserFunction,
@@ -15,6 +16,7 @@ export type BrowserControllerResult<T = unknown> =
   | Readonly<{ ok: false; code: 'NOT_READY' | 'DENIED' | 'UNAVAILABLE' | 'FAILED'; message: string; gateway?: BrowserGatewayResult }>;
 
 const implemented = new Set<BrowserFunctionId>([
+  ...TAIL_FUNCTION_IDS,
   'address.navigate', 'navigation.back', 'navigation.forward', 'navigation.reload', 'navigation.stop',
   'navigation.findInPage', 'navigation.zoom', 'navigation.requestDesktopSite', 'tabs.create', 'tabs.close', 'tabs.createGroup', 'tabs.renameGroup', 'tabs.moveToGroup', 'tabs.deleteGroup', 'tabs.removeFromGroup', 'tabs.listGroups', 'tabs.closeGroup',
   'tabs.switch', 'settings.view', 'settings.defaultMode', 'bookmarks.add', 'bookmarks.edit', 'bookmarks.remove', 'bookmarks.createFolder', 'bookmarks.move',
@@ -31,7 +33,8 @@ const implemented = new Set<BrowserFunctionId>([
  */
 export class BrowserController {
   private readonly adapter: BrowserEngineAdapter;
-  constructor(adapter: BrowserEngineAdapter) { this.adapter = adapter; }
+  private readonly tail: BrowserLongTail | undefined;
+  constructor(adapter: BrowserEngineAdapter, tail?: BrowserLongTail) { this.adapter = adapter; this.tail = tail && typeof (tail as { run?: unknown }).run === 'function' ? tail : undefined; }
 
   async execute<T = unknown>(input: {
     functionId: BrowserFunctionId;
@@ -123,7 +126,11 @@ export class BrowserController {
         case 'files.print': await this.adapter.printPage(); value = null; break;
         case 'files.savePdf': await this.adapter.savePagePdf(); value = null; break;
         case 'page.read': value = await this.adapter.getPageText(); break;
-        default: return { ok: false, code: 'NOT_READY', message: 'No executor is registered for this browser function.' };
+        default: {
+          if (!TAIL_FUNCTION_IDS.has(input.functionId)) return { ok: false, code: 'NOT_READY', message: 'No executor is registered for this browser function.' };
+          if (!this.tail) return { ok: false, code: 'NOT_READY', message: 'This browser function needs the long-tail host, which is not connected.' };
+          value = await this.tail.run(input.functionId, a);
+        }
       }
       return { ok: true, value: value as T };
     } catch (error) {
