@@ -73,6 +73,120 @@ const ask = async (mode: 'off' | 'shadow' | 'on' | undefined, reply: ReplyLike |
   check(s.r.orchestration.verification?.report.overall === 'PASSED', 'A21_missing_task_id_ok');
 }
 
+// ---- Part A2: dialogue questions, judgment, trace notes and candidates, with a fake brain that also gives a trace.
+{
+  const ASKED = 'legacy executor preserves current provider order and fallback; direct lane yielded: the binder says ask';
+  const mkTrace = (execution: string, resolution: string) => ({ utterance: {}, entries: [
+    { stage: 'resolution', state: 'ran', note: resolution }, { stage: 'dialogue', state: 'ran', note: 'shadow: no pending question' },
+    { stage: 'execution', state: 'ran', note: execution }, { stage: 'verification', state: 'not-built', note: 'not built: verification arrives in B6' }] });
+  const NONE = '1 pieces; 0 matches, 0 questions, 0 unavailable, 1 none; ROUTER shadow: 0 fast, 0 ask, 1 deep';
+  const MATCH = '1 pieces; 1 matches, 0 questions, 0 unavailable, 0 none; ROUTER shadow: 0 fast, 1 ask, 0 deep';
+  const FOUNDATION = { content: 'I do not have a way to do that.', source: 'foundation' };
+  const UPPER = { content: ran('HELLO'), source: 'runner:case-converter', taskId: 'task-9' };
+  // A script: text -> what the fake brain answers (reply, trace). The calls are recorded.
+  function scripted(rules: Record<string, { reply: ReplyLike; execution: string; resolution: string }>) {
+    const calls: string[] = [];
+    const brain = { async askWithTrace(request: { text: string; place: string }) {
+      calls.push(request.text);
+      const r = rules[request.text] ?? { reply: FOUNDATION, execution: 'direct lane yielded: no single sure tool was found', resolution: NONE };
+      return { reply: r.reply, trace: mkTrace(r.execution, r.resolution) };
+    } };
+    return { brain, calls };
+  }
+  const ask2 = (o: ReturnType<typeof createOrchestrator>, text: string) => o.ask({ text, place: 'chat' });
+  const base = { 'convert to uppercase': { reply: FOUNDATION, execution: ASKED, resolution: MATCH }, 'convert to uppercase "hello"': { reply: UPPER, execution: 'direct lane answered with case-converter', resolution: MATCH } };
+
+  { // D01-D03: ask, answer, count of brain calls
+    const { brain, calls } = scripted(base);
+    const o = createOrchestrator(brain, { mode: 'on' });
+    const a = await ask2(o, 'convert to uppercase');
+    check(a.reply.source === 'orchestrator:dialogue' && a.reply.content.startsWith('Which text should I use?') && a.orchestration.dialogue.action === 'asked' && calls.length === 1, 'D01_asks_for_missing_text');
+    const b = await ask2(o, 'hello');
+    check(b.reply.source === 'runner:case-converter' && b.orchestration.dialogue.action === 'filled' && calls.join('|') === 'convert to uppercase|hello|convert to uppercase "hello"', 'D02_answer_placed_into_the_request');
+    check(b.orchestration.verification !== null && b.orchestration.effectiveText === 'convert to uppercase "hello"', 'D03_filled_answer_is_rechecked_on_the_filled_text');
+    const c = await ask2(o, 'hello');
+    check(c.reply.source === 'foundation' && c.orchestration.dialogue.action === 'none', 'D04_question_is_closed_after_the_answer');
+  }
+  { // D05: cancel
+    const { brain, calls } = scripted(base);
+    const o = createOrchestrator(brain, { mode: 'on' });
+    await ask2(o, 'convert to uppercase');
+    const b = await ask2(o, 'cancel');
+    check(b.reply.source === 'orchestrator:dialogue' && b.reply.content.startsWith('Okay, I dropped') && b.orchestration.dialogue.action === 'cancelled' && calls.length === 2, 'D05_cancel_drops_the_request');
+    const c = await ask2(o, 'hello');
+    check(c.reply.source === 'foundation' && c.orchestration.dialogue.action === 'none', 'D06_nothing_pending_after_cancel');
+  }
+  { // D07: new request while asked -> parked, then answer still works
+    const sort = { reply: { content: ran('a\nb'), source: 'runner:sort-lines', taskId: 'task-2' }, execution: 'direct lane answered with sort-lines', resolution: MATCH };
+    const { brain, calls } = scripted({ ...base, 'sort lines "b\na"': sort });
+    const o = createOrchestrator(brain, { mode: 'on' });
+    await ask2(o, 'convert to uppercase');
+    const b = await ask2(o, 'sort lines "b\na"');
+    check(b.reply.source === 'runner:sort-lines' && b.orchestration.dialogue.action === 'parked' && calls.length === 2, 'D07_new_request_is_answered_and_the_question_is_parked');
+    const c = await ask2(o, 'hello');
+    check(c.reply.source === 'runner:case-converter' && c.orchestration.dialogue.action === 'filled', 'D08_parked_question_still_takes_the_answer');
+  }
+  { // D09: shadow only records
+    const { brain, calls } = scripted(base);
+    const o = createOrchestrator(brain, { mode: 'shadow' });
+    const a = await ask2(o, 'convert to uppercase');
+    check(a.reply === FOUNDATION && a.orchestration.dialogue.action === 'would-ask' && a.orchestration.replyChanged === false, 'D09_shadow_records_would_ask_and_changes_nothing');
+    const b = await ask2(o, 'hello');
+    check(b.reply.source === 'foundation' && b.orchestration.dialogue.action === 'none' && calls.length === 2, 'D10_shadow_keeps_no_open_question');
+  }
+  { // D11: answer with quotes
+    const { brain } = scripted(base);
+    const o = createOrchestrator(brain, { mode: 'on' });
+    await ask2(o, 'convert to uppercase');
+    const b = await ask2(o, 'say \u201chi\u201d please');
+    check(b.reply.source === 'orchestrator:dialogue' && b.reply.content.startsWith('I could not use that text') && b.orchestration.dialogue.action === 'could-not-use', 'D11_unsafe_quotes_ask_again');
+  }
+  { // D12: the question expires after three more turns
+    const sort = { reply: { content: ran('a'), source: 'runner:sort-lines', taskId: 'task-2' }, execution: 'direct lane answered with sort-lines', resolution: MATCH };
+    const { brain, calls } = scripted({ ...base, 's1': sort, 's2': sort, 's3': sort });
+    const o = createOrchestrator(brain, { mode: 'on' });
+    await ask2(o, 'convert to uppercase');
+    await ask2(o, 's1'); await ask2(o, 's2'); await ask2(o, 's3');
+    const e = await ask2(o, 'hello');
+    check(e.reply.source === 'foundation' && e.orchestration.dialogue.action === 'none' && calls[calls.length - 1] === 'hello', 'D12_old_question_expires');
+  }
+  { // D13: a newer question replaces an older one
+    const { brain, calls } = scripted({ ...base, 'sort lines': { reply: FOUNDATION, execution: ASKED, resolution: MATCH }, 'sort lines "x"': { reply: { content: ran('x'), source: 'runner:sort-lines', taskId: 'task-3' }, execution: 'direct lane answered with sort-lines', resolution: MATCH } });
+    const o = createOrchestrator(brain, { mode: 'on' });
+    await ask2(o, 'convert to uppercase');
+    const b = await ask2(o, 'sort lines');
+    check(b.reply.source === 'orchestrator:dialogue' && b.orchestration.dialogue.action === 'asked', 'D13_second_question_asked');
+    const c = await ask2(o, 'x');
+    check(c.reply.source === 'runner:sort-lines' && calls[calls.length - 1] === 'sort lines "x"', 'D14_answer_goes_to_the_newer_question');
+  }
+  { // D15: someone else already asked (legacy handler): the orchestrator stays out
+    const { brain } = scripted({ 'count words': { reply: { content: 'Which text should I count?', source: 'local-rules' }, execution: ASKED, resolution: MATCH } });
+    const a = await ask2(createOrchestrator(brain, { mode: 'on' }), 'count words');
+    check(a.reply.source === 'local-rules' && a.orchestration.dialogue.action === 'none', 'D15_legacy_question_is_left_alone');
+  }
+  { // D16 to D19: trace notes, judgment, candidates
+    const tamperedReply = { content: counter(9, 14, 12, 12, 1), source: 'runner:text-counter', taskId: 'task-1' };
+    const goodReply = { content: counter(3, 14, 12, 12, 1), source: 'runner:text-counter', taskId: 'task-1' };
+    const rule = (reply: ReplyLike) => ({ [MSG]: { reply, execution: 'direct lane answered with text-counter', resolution: MATCH } });
+    const o1 = createOrchestrator(scripted(rule(goodReply)).brain, { mode: 'shadow' });
+    const a = await ask2(o1, MSG);
+    const vNote = (a.trace as { entries: { stage: string; state: string; note: string }[] }).entries.find((e) => e.stage === 'verification');
+    check(vNote?.state === 'ran' && vNote.note.startsWith('orchestrator recheck of text-counter: PASSED'), 'D16_trace_verification_note_is_real');
+    check(a.orchestration.judgment?.verdict === 'PROCEED' && a.orchestration.judgment.flags.length === 0, 'D17_judgment_proceed_for_a_verified_read');
+    const o2 = createOrchestrator(scripted(rule(tamperedReply)).brain, { mode: 'shadow' });
+    const b = await ask2(o2, MSG);
+    check(b.orchestration.judgment?.verdict === 'ASK' && b.orchestration.judgment.flags[0].seat === 'CRITIC', 'D18_judgment_asks_when_the_recheck_disputes');
+    check(o2.candidates().some((c) => c.kind === 'MISTAKE' && c.needsRegressionTest) && o1.candidates().length === 0, 'D19_candidates_recorded_only_when_something_went_wrong');
+    const o3 = createOrchestrator(scripted({}).brain, { mode: 'shadow' });
+    check(o3.importCandidates(o2.exportCandidates()) === true && JSON.stringify(o3.candidates()) === JSON.stringify(o2.candidates()), 'D20_candidates_can_be_saved_and_restored');
+    const c = await createOrchestrator(scripted({ 'convert to uppercase': { reply: FOUNDATION, execution: ASKED, resolution: MATCH } }).brain, { mode: 'on' }).ask({ text: 'convert to uppercase', place: 'chat' });
+    const dNote = (c.trace as { entries: { stage: string; note: string }[] }).entries.find((e) => e.stage === 'dialogue');
+    check(dNote?.note === 'orchestrator dialogue: asked', 'D21_trace_dialogue_note');
+    const off = await createOrchestrator(scripted(base).brain, { mode: 'off' }).ask({ text: 'convert to uppercase', place: 'chat' });
+    check(off.reply.source === 'foundation' && off.orchestration.dialogue.action === 'none', 'D22_off_mode_never_asks');
+  }
+}
+
 // Set AXON_ORCH_FAST=1 to run only the fake-brain part (a quick check while editing). The normal run does everything.
 if (process.env.AXON_ORCH_FAST === '1') { console.log(`orchestrator (fast, fake brain only): ${n} checks; ${f} failed`); process.exit(f === 0 ? 0 : 1); }
 
