@@ -64,7 +64,7 @@ jobs:
           mkdir -p ../ci-results
           : > ../ci-results/browser-table.md
           failed=0
-          for script in tests/round4-browser.integration.py tests/prer5-browser.integration.py tests/round6-browser.integration.py tests/round7-browser-actions.integration.py tests/round10-browser-projects.integration.py tests/round12-browser-runtime.integration.py tests/round12-workbench-ui.integration.py tests/r14-wp02-wp12-browser.integration.py tests/test-r14-pty-websocket.py tools/test-round12-pty.py; do
+          for script in tests/round4-browser.integration.py tests/prer5-browser.integration.py tests/round6-browser.integration.py tests/round7-browser-actions.integration.py tests/round10-browser-projects.integration.py tests/round12-browser-runtime.integration.py tests/round12-workbench-ui.integration.py tests/r14-wp02-wp12-browser.integration.py tests/r14-r1-browser-run.integration.py tests/r14-r4-performance.integration.py tests/r14-r6-acceptance.integration.py tests/test-r14-pty-websocket.py tools/test-round12-pty.py; do
             [ -f "$script" ] || { echo "| $script | MISSING |" >> ../ci-results/browser-table.md; continue; }
             name=$(basename "$script")
             timeout 600 python "$script" > "../ci-results/$name.log" 2>&1
@@ -91,6 +91,18 @@ jobs:
             echo '```'
             grep "^not ok" ../ci-results/node-tests.txt 2>/dev/null | head -15 || true
             echo '```'
+            for log in ../ci-results/*.log; do
+              [ -f "$log" ] || continue
+              if grep -qiE "Traceback|Error|FAIL|timeout" "$log"; then
+                echo ""
+                echo "<details><summary>$(basename "$log"): last 40 lines</summary>"
+                echo ""
+                echo '```'
+                tail -n 40 "$log"
+                echo '```'
+                echo "</details>"
+              fi
+            done
           } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
