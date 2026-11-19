@@ -1,4 +1,6 @@
 import {planFileOperation} from '../dist/workbench/fileOperations.js';
+import {BrowserOpaqueWorkerProvider} from '../dist/runtime/browserOpaqueWorkerProvider.js';
+import {BrowserJobService} from './browserJobs.js';
 const DB_NAME = 'axon-code-direct-workbench';
 const DB_VERSION = 1;
 const MAX_TEXT_FILE_BYTES = 2 * 1024 * 1024;
@@ -14,6 +16,9 @@ let toastTimer;
 const legacyEditor = $('editor');
 let codeEditor;
 let terminalEngine;
+let browserWorkerProvider;
+let activeRun = null;
+let browserJobs;
 function setEditorValue(value) {
   legacyEditor.value = String(value ?? '');
   codeEditor?.setValue(legacyEditor.value);
@@ -70,6 +75,16 @@ function openDatabase() {
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error ?? new Error('IndexedDB could not be opened.'));
+  });
+}
+function openJobDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('axon-code-browser-jobs', 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains('jobs')) request.result.createObjectStore('jobs', { keyPath: 'id' });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error ?? new Error('Browser jobs database could not be opened.'));
   });
 }
 function requestResult(request) {
@@ -227,7 +242,7 @@ function closeTab(path) {
 function updateButtons() {
   const hasProject = Boolean(activeProject); const hasFile = Boolean(activePath);
   $('newFileButton').disabled = !hasProject; $('saveButton').disabled = !hasFile; $('saveAllButton').disabled = !hasProject;
-  $('deleteButton').disabled = !hasFile; $('renameButton').disabled = !hasFile; $('moveButton').disabled = !hasFile; $('undoDeleteButton').disabled = !deletedFile; $('previewButton').disabled = !hasProject; $('exportButton').disabled = !hasProject;
+  $('deleteButton').disabled = !hasFile; $('runButton').disabled = !hasFile || Boolean(activeRun); $('renameButton').disabled = !hasFile; $('moveButton').disabled = !hasFile; $('undoDeleteButton').disabled = !deletedFile; $('previewButton').disabled = !hasProject; $('exportButton').disabled = !hasProject;
   for (const id of ['clearEditorButton','selectAllButton','copyButton','cutButton','pasteButton','downloadButton','shareButton']) $(id).disabled = !hasFile;
 }
 function updateLanguage(path) {
@@ -418,7 +433,7 @@ async function previewProject() {
   $('previewFrame').srcdoc = html; switchPanel('preview'); updateOutput(`Preview loaded from ${htmlPath}. Only local linked CSS/JS were inlined. Network access is blocked by the preview CSP.`);
 }
 function switchPanel(name) {
-  for (const panel of ['output','problems','preview','resources','terminal','capabilities']) {
+  for (const panel of ['output','problems','preview','resources','terminal','capabilities','jobs']) {
     $(`${panel}Panel`).classList.toggle('hidden', panel !== name);
     document.querySelector(`[data-panel="${panel}"]`).classList.toggle('active', panel === name);
   }
@@ -453,9 +468,9 @@ async function loadCapabilities() {
 function allCommands() {
   return [
     ['New project', () => $('newProjectButton').click()], ['Open / import files', () => $('openProjectButton').click()], ['Create file', () => $('newFileButton').click()],
-    ['Save current file', () => saveActive()], ['Save all open files', () => saveAll()], ['Rename active file', () => relocateActive('rename')], ['Move active file', () => relocateActive('move')], ['Clear editor', () => codeEditor.clear()], ['Select all source text', () => codeEditor.selectAll()], ['Copy source text', () => copySelection()], ['Cut source text', () => cutSelection()], ['Paste clipboard', () => pasteClipboard()], ['Download active file', () => downloadActive()], ['Share project', () => shareProject()], ['Preview web project', () => previewProject()], ['Export project', () => $('exportButton').click()],
+    ['Save current file', () => saveActive()], ['Save all open files', () => saveAll()], ['Rename active file', () => relocateActive('rename')], ['Move active file', () => relocateActive('move')], ['Clear editor', () => codeEditor.clear()], ['Select all source text', () => codeEditor.selectAll()], ['Copy source text', () => copySelection()], ['Cut source text', () => cutSelection()], ['Paste clipboard', () => pasteClipboard()], ['Download active file', () => downloadActive()], ['Share project', () => shareProject()], ['Run JavaScript', () => runBrowserJavaScript()], ['Stop JavaScript run', () => stopBrowserRun()], ['Preview web project', () => previewProject()], ['Export project', () => $('exportButton').click()],
     ['Show output panel', () => switchPanel('output')], ['Show problems panel', () => switchPanel('problems')], ['Show preview panel', () => switchPanel('preview')],
-    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }]
+    ['Show resources panel', () => switchPanel('resources')], ['Show terminal status', () => switchPanel('terminal')], ['Show capability registry', () => { switchPanel('capabilities'); return loadCapabilities(); }], ['Show browser jobs', () => { switchPanel('jobs'); return renderJobs(); }]
   ];
 }
 function showPalette() {
@@ -463,6 +478,96 @@ function showPalette() {
   const draw = () => { list.replaceChildren(); for (const [name, action] of allCommands().filter(([name]) => name.toLowerCase().includes(input.value.toLowerCase()))) { const button=document.createElement('button'); button.className='palette-command'; button.textContent=name; button.addEventListener('click',()=>{dialog.close();Promise.resolve(action()).catch((error)=>toast(error.message));}); list.append(button); } };
   input.value=''; input.oninput=draw; draw(); dialog.showModal(); input.focus();
 }
+
+async function stopBrowserRun(reason = 'Stopped by user.') {
+  if (!activeRun) return;
+  const run = activeRun;
+  activeRun = null;
+  clearTimeout(run.timer);
+  try { run.worker.terminate(); } catch {}
+  if (browserJobs && run.jobId) { try { await browserJobs.cancel(run.jobId); await renderJobs(); } catch {} }
+  $('stopButton').disabled = true;
+  $('runButton').disabled = !activePath;
+  $('runStatus').textContent = reason;
+  updateOutput(`\n${reason}`, true);
+}
+async function runBrowserJavaScript() {
+  if (!activeProject || !activePath) throw new Error('Open a JavaScript file first.');
+  const extension = activePath.slice(activePath.lastIndexOf('.')).toLowerCase();
+  if (!['.js', '.mjs', '.cjs'].includes(extension)) throw new Error('The browser Run button currently supports JavaScript (.js, .mjs, .cjs) only.');
+  const source = buffers.get(activePath)?.content;
+  if (typeof source !== 'string') throw new Error('The active source buffer is unavailable.');
+  if (new TextEncoder().encode(source).byteLength > 1024 * 1024) throw new Error('Source exceeds the 1 MiB browser execution limit.');
+  if (!browserWorkerProvider) {
+    browserWorkerProvider = new BrowserOpaqueWorkerProvider(document);
+    await browserWorkerProvider.initialize();
+  }
+  if (activeRun) await stopBrowserRun('Previous run terminated before starting a new run.');
+  const job = browserJobs ? await browserJobs.create({ owner: activeProject.id, origin: 'user', kind: 'javascript' }) : null;
+  let worker;
+  try { worker = browserWorkerProvider.createWorker(); }
+  catch (error) { if (job) await browserJobs.transition(job.id, 'failed', String(error)); throw error; }
+  const started = performance.now();
+  const run = { worker, jobId: job?.id ?? null, timer: 0, outputBytes: 0, settled: false };
+  activeRun = run;
+  $('runButton').disabled = true;
+  $('stopButton').disabled = false;
+  $('runStatus').textContent = 'Running in an opaque-origin worker…';
+  void renderJobs();
+  updateOutput(`Running ${activePath}…`);
+  const finish = (message) => {
+    if (run.settled) return;
+    run.settled = true;
+    clearTimeout(run.timer);
+    if (activeRun === run) activeRun = null;
+    worker.terminate();
+    if (browserJobs && run.jobId) { const state = message.startsWith('Completed') ? 'completed' : 'failed'; void browserJobs.transition(run.jobId, state, message).then(renderJobs).catch(() => {}); }
+    $('stopButton').disabled = true;
+    $('runButton').disabled = !activePath;
+    $('runStatus').textContent = message;
+    updateOutput(`${message}\nElapsed: ${(performance.now() - started).toFixed(1)} ms`, true);
+  };
+  worker.addEventListener('message', (event) => {
+    const message = event.data;
+    if (!message || typeof message.type !== 'string') return;
+    if (message.type === 'stdout' || message.type === 'stderr') {
+      const text = String(message.text ?? '');
+      const bytes = new TextEncoder().encode(text).byteLength;
+      run.outputBytes += bytes;
+      if (run.outputBytes > 256 * 1024) { finish('Output limit exceeded; worker terminated.'); return; }
+      updateOutput(`${message.type === 'stderr' ? 'stderr: ' : ''}${text}`, true);
+    } else if (message.type === 'completed') finish(`Completed (exit ${message.exitCode ?? 0}).`);
+    else if (message.type === 'failed') finish(`Failed${message.line ? ` at line ${message.line}` : ''}: ${message.text ?? 'Worker error'}`);
+    else if (message.type === 'blocked') finish(`Blocked: ${message.text ?? 'Worker policy limit reached.'}`);
+  });
+  worker.addEventListener('error', (event) => finish(`Worker error: ${event.message ?? 'Unknown error'}`));
+  run.timer = setTimeout(() => finish('Time limit exceeded (5 seconds); worker terminated.'), 5000);
+  worker.postMessage({ type: 'axon-execute', source, sourceUrl: `axon-user://${encodeURIComponent(activePath)}`, outputLimitBytes: 256 * 1024, stdin: $('stdinInput').value.split('\n').slice(0, 128) });
+}
+
+async function renderJobs() {
+  if (!browserJobs) return;
+  const target = $('jobsList');
+  target.replaceChildren();
+  for (const job of await browserJobs.list()) {
+    const row = document.createElement('div');
+    row.className = 'resource-row';
+    const details = document.createElement('span');
+    const elapsed = job.elapsedMs + (job.state === 'running' && job.startedAt ? Date.now() - job.startedAt : 0);
+    details.textContent = `${job.kind} · ${job.state} · origin: ${job.origin} · ${(elapsed / 1000).toFixed(1)}s${job.reason ? ` · ${job.reason}` : ''}`;
+    const pause = document.createElement('button'); pause.textContent = 'Pause'; pause.disabled = true; pause.title = browserJobs.pause().reason;
+    const resume = document.createElement('button'); resume.textContent = 'Resume'; resume.disabled = true; resume.title = browserJobs.resume().reason;
+    const cancel = document.createElement('button'); cancel.textContent = 'Cancel'; cancel.disabled = !['queued', 'running'].includes(job.state);
+    cancel.addEventListener('click', async () => {
+      if (activeRun?.jobId === job.id) await stopBrowserRun('Cancelled by user.');
+      else { await browserJobs.cancel(job.id); await renderJobs(); }
+    });
+    row.append(details, pause, resume, cancel);
+    target.append(row);
+  }
+  if (!target.childElementCount) target.textContent = 'No jobs yet.';
+}
+
 async function refreshResources() {
   const rows = [];
   const memory = performance.memory?.usedJSHeapSize;
@@ -517,17 +622,19 @@ $('shareButton').addEventListener('click',()=>void shareProject().catch(error=>t
 $('deleteButton').addEventListener('click',()=>void deleteActive().catch((error)=>toast(error.message)));
 $('undoDeleteButton').addEventListener('click',()=>void undoDelete().catch((error)=>toast(error.message)));
 $('refreshButton').addEventListener('click',()=>void renderExplorer());
+$('runButton').addEventListener('click',()=>void runBrowserJavaScript().catch((error)=>{ $('runStatus').textContent = error.message; updateOutput(error.message); }));
+$('stopButton').addEventListener('click',()=>void stopBrowserRun());
 $('previewButton').addEventListener('click',()=>void previewProject().catch((error)=>{switchPanel('problems');$('problemsText').textContent=error.message;}));
 $('exportButton').addEventListener('click',()=>$('exportDialog').showModal());
 $('exportConfirm').addEventListener('click',(event)=>{event.preventDefault();$('exportDialog').close();void exportProject($('exportFormat').value).catch((error)=>toast(error.message));});
 $('paletteButton').addEventListener('click',showPalette);
 $('settingsButton').addEventListener('click',()=>$('infoDialog').showModal());
-document.querySelectorAll('[data-panel]').forEach((button)=>button.addEventListener('click',()=>{switchPanel(button.dataset.panel);if(button.dataset.panel==='resources')void refreshResources();if(button.dataset.panel==='capabilities')void loadCapabilities();}));
-window.addEventListener('beforeunload',(event)=>{if ([...buffers.values()].some((buffer)=>buffer.dirty)) {event.preventDefault();event.returnValue='';}});
+document.querySelectorAll('[data-panel]').forEach((button)=>button.addEventListener('click',()=>{switchPanel(button.dataset.panel);if(button.dataset.panel==='resources')void refreshResources();if(button.dataset.panel==='capabilities')void loadCapabilities();if(button.dataset.panel==='jobs')void renderJobs();}));
+window.addEventListener('beforeunload',(event)=>{ if (activeRun) { try { activeRun.worker.terminate(); } catch {} }if ([...buffers.values()].some((buffer)=>buffer.dirty)) {event.preventDefault();event.returnValue='';}});
 window.addEventListener('keydown',(event)=>{if ((event.ctrlKey||event.metaKey)&&event.shiftKey&&event.key.toLowerCase()==='p'){event.preventDefault();showPalette();}});
 
 try {
-  db = await openDatabase(); installPreviewErrorBridge(); await refreshResources(); await loadCapabilities();
+  db = await openDatabase(); browserJobs = new BrowserJobService(await openJobDatabase()); await browserJobs.interruptRunning(); installPreviewErrorBridge(); await refreshResources(); await loadCapabilities();
   const projects = await listProjects();
   if (projects.length) await openProject(projects[0].id);
   updateOutput(`AXON Code direct-user Workbench loaded.\n${projects.length} local project(s) found.\nThe browser workbench does not depend on AXON Brain. Native execution and terminal remain host-provider capabilities.`);

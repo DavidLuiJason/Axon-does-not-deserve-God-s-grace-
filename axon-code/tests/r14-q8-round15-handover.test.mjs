@@ -17,7 +17,7 @@ test('Q8 handover verifier reports exact capability registry counts', async () =
   assert.equal(result.valid, true);
   assert.equal(result.capabilityCount, result.counts.TESTED + result.counts.BUILT + result.counts.BLOCKED + result.counts['NOT IMPLEMENTED'] + result.counts['NOT RUN']);
   const input = await documents();
-  assert.throws(() => verifyRound15Handover({ ...input, handover: input.handover.replace('**77 capabilities**', '**76 capabilities**') }), /HANDOVER_REGISTRY_COUNT_MISMATCH/);
+  assert.throws(() => verifyRound15Handover({ ...input, handover: input.handover.replace('**86 capabilities**', '**85 capabilities**') }), /HANDOVER_REGISTRY_COUNT_MISMATCH/);
 });
 
 test('Q8 checklist must contain PASS and FAIL recording fields and all competitor names', async () => {

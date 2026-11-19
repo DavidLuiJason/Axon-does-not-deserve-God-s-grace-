@@ -1725,6 +1725,168 @@
           "reason": "This capability is not implemented."
         }
       }
+    },
+    {
+      "id": "runButton",
+      "command": "run.javascript",
+      "capabilityId": "javascript-browser-worker-workbench-run",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "stopButton",
+      "command": "stop.javascript",
+      "capabilityId": "javascript-browser-worker-workbench-run",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "stdinInput",
+      "command": "run.stdin",
+      "capabilityId": "javascript-browser-worker-workbench-run",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "runStatus",
+      "command": "run.status",
+      "capabilityId": "javascript-browser-worker-workbench-run",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "jobsPanel",
+      "command": "view.jobs",
+      "capabilityId": "browser-persistent-job-service",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
+    },
+    {
+      "id": "jobsList",
+      "command": "jobs.list",
+      "capabilityId": "browser-persistent-job-service",
+      "states": {
+        "TESTED": {
+          "state": "enabled",
+          "reason": null
+        },
+        "BUILT": {
+          "state": "disabled",
+          "reason": "Source is present, but this capability does not yet have a real-provider test result."
+        },
+        "BLOCKED": {
+          "state": "disabled",
+          "reason": "The provider or required host capability is blocked; see the capability registry."
+        },
+        "NOT RUN": {
+          "state": "disabled",
+          "reason": "Host/device/browser validation has not been run; see the capability registry."
+        },
+        "NOT IMPLEMENTED": {
+          "state": "hidden",
+          "reason": "This capability is not implemented."
+        }
+      }
     }
   ],
   "commands": [
@@ -1815,6 +1977,38 @@
     {
       "id": "view.capabilities",
       "elementId": "capabilitiesPanel"
+    },
+    {
+      "id": "run.javascript",
+      "elementId": "runButton"
+    },
+    {
+      "id": "stop.javascript",
+      "elementId": "stopButton"
+    },
+    {
+      "id": "run.stdin",
+      "elementId": "stdinInput"
+    },
+    {
+      "id": "view.jobs",
+      "elementId": "jobsPanel"
+    },
+    {
+      "id": "jobs.list",
+      "elementId": "jobsList"
+    },
+    {
+      "id": "jobs.cancel",
+      "elementId": "jobsList"
+    },
+    {
+      "id": "jobs.pause",
+      "elementId": "jobsList"
+    },
+    {
+      "id": "jobs.resume",
+      "elementId": "jobsList"
     }
   ]
 }

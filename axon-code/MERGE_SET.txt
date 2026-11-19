@@ -1,4 +1,5 @@
 AXON_CODE_PROGRESS.json
+MERGE_SET.txt
 README.md
 android/app/build.gradle
 android/app/src/main/AndroidManifest.xml
@@ -8,12 +9,14 @@ android/build.gradle
 android/settings.gradle
 android/src/main/java/com/axoncode/host/AxonCodeHostPlugin.kt
 docs/AXON_CODE_APP_INTEGRATION.md
+docs/AXON_CODE_PHONE_CAPABILITY_MATRIX.md
 docs/AXON_CODE_SCREEN_CONTRACT.json
 docs/BRAIN_GATEWAY_CONTRACT.md
 docs/C3_C4_HOST_PROVIDER_STATUS.md
 docs/C5_ENGINE_ADOPTION.md
 docs/CAPABILITY_REGISTRY.json
 docs/DEVICE_PROOF_CHECKLIST.md
+docs/DEVICE_PROOF_DEVICES.md
 docs/Q6_PERFORMANCE_MEASUREMENTS.json
 docs/R14_CONTINUATION4_REPORT.md
 docs/R14_CONTINUATION5_REPORT.md
@@ -58,6 +61,7 @@ results/r14-continuation5-q6.json
 results/r14-continuation5-q7.json
 results/r14-continuation5-q8.json
 results/r14-continuation5-start-gate.json
+results/r14-continuation6.json
 results/r14-full-regression-per-file.json
 results/r14-full-regression-summary.json
 results/r14-full-suite-exact-command.json
@@ -227,6 +231,13 @@ tests/r14-q5-integration-screen-contract.test.mjs
 tests/r14-q6-performance-budgets.test.mjs
 tests/r14-q7-android-background-source.test.mjs
 tests/r14-q8-round15-handover.test.mjs
+tests/r14-r1-browser-run.integration.py
+tests/r14-r1-browser-run.test.mjs
+tests/r14-r3-browser-jobs.test.mjs
+tests/r14-r4-bundle-size.test.mjs
+tests/r14-r4-performance.integration.py
+tests/r14-r5-screen-contract.test.mjs
+tests/r14-r6-acceptance.integration.py
 tests/r14-wp00-baseline.test.mjs
 tests/r14-wp01-gateway-registry.test.mjs
 tests/r14-wp02-workspace.test.mjs
@@ -306,6 +317,7 @@ tools/verify-director.mjs
 tools/verify-round5-host-diagnostics.mjs
 tsconfig.build.json
 tsconfig.json
+ui/browserJobs.js
 ui/engineBootstrap.js
 ui/engines.js
 ui/index.html

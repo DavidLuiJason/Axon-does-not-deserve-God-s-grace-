@@ -2,6 +2,9 @@
 
 For the screen Director (AI Studio). Written from AXON Code's own capability registry (`axon-code/docs/CAPABILITY_REGISTRY.json`, 42 capabilities) and its current `ui/index.html`. The Director that wrote this has NOT clicked any of it in a browser; nobody has. A screen may show a feature as working only when the registry says TESTED, and even then only the logic has been tested in Node.
 
+## 0. READ THIS FIRST (added 2026-11-14)
+Status 2026-11-15: the workbench in `ui/` now HAS a JavaScript Run path (Run, Stop, output and status, stdin box) and a jobs panel, built from source but NOT yet proven in a real browser or on a phone. Python in the browser is NOT BUILT yet. Pause and Resume are shown disabled with a reason. The new element ids are in `axon-code/docs/AXON_CODE_SCREEN_CONTRACT.json`; build screens from that file, and show Python as "Not available yet" until the contract lists it as enabled. What runs where: `axon-code/docs/AXON_CODE_PHONE_CAPABILITY_MATRIX.md`.
+
 ## 1. What exists today
 AXON Code already has a working workbench in plain HTML and JavaScript (`axon-code/ui/`): 25 buttons and 11 panels or dialogs. A new AI Studio screen REPLACES the look, not the logic. The logic tests find these element ids, so every id below must stay on the same kind of element, or tests fail.
 BUTTONS: `openProjectButton` (Open / Import), `newProjectButton` (New Project), `settingsButton` (⋯), `newFileButton` (＋), `refreshButton` (↻), `importFilesButton` (Add files), `saveButton` (Save), `saveAllButton` (Save all), `renameButton` (Rename), `moveButton` (Move), `deleteButton` (Delete), `undoDeleteButton` (Undo delete), `clearEditorButton` (Clear), `selectAllButton` (Select all), `copyButton` (Copy), `cutButton` (Cut), `pasteButton` (Paste), `downloadButton` (Download), `shareButton` (Share), `previewButton` (Preview web), `exportButton` (Export), `paletteButton` (Command palette), `createProjectConfirm` (Create project), `createFileConfirm` (Create file), `exportConfirm` (Export).
@@ -16,7 +19,9 @@ PANELS AND DIALOGS: `outputPanel`, `problemsPanel`, `previewPanel`, `resourcesPa
 | Capability status (honesty screen) | READY: reads the real registry | table of TESTED / NOT RUN / BLOCKED with grade |
 | Trust and approval sheet | READY: trust, redaction and the Brain gateway contract TESTED | the sheet AXON Brain requests appear on |
 | Crash recovery dialog | PARTIAL: persistent jobs and kill-during-save recovery TESTED in Node | "restore unsaved work?" |
-| Run and output (Python) | PARTIAL: Pyodide ran real Python in a Node worker (timeouts, output cap, isolation); a browser Worker NOT RUN | show "Python in the browser: not verified" |
+| Run and output (JavaScript) | PARTIAL: Run, Stop, output, stdin built; isolated worker design with a network block by the browser itself; Node contract tests pass; real browser NOT RUN | real output; errors with line; "stopped" and "time limit" states |
+| Run and output (Python) | NOT BUILT in the browser (a Node-worker version is tested on a desktop only) | show "Not available yet" |
+| Jobs panel | PARTIAL: jobs store and panel built; Cancel works for JavaScript jobs; Pause and Resume disabled with a reason; real browser NOT RUN | rows with state, origin, elapsed; "interrupted" after a reload |
 | Problems (TypeScript diagnostics) | PARTIAL: diagnostics engine TESTED against 30 golden projects on TypeScript 5.8.3 | list of errors with file and line |
 | Debug | PARTIAL: Node inspector adapter TESTED on a desktop host only | NOT AVAILABLE on a phone |
 | Git | PARTIAL: real git, local only, hooks off, hostile repository configuration blocked; desktop host only | show BLOCKED with the reason when a repository is not trusted |

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedFrom": "results/*.json",
-  "resultSetSha256": "a34c1aea0ac3e5cca6ac5c98a2e487248f1a4ee5eee2e455515350e324ffb793",
-  "capabilityCount": 77,
+  "resultSetSha256": "dbaed522369512a70ae87c49913797de3a98540c437abdc3968706c2022daa9b",
+  "capabilityCount": 86,
   "capabilities": [
     {
       "id": "android-and-editor-host-contracts",
@@ -422,6 +422,28 @@
       ]
     },
     {
+      "id": "axon-code-r14-build",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-BUILD"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
+      "id": "axon-code-r14-full-regression",
+      "status": "TESTED",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-FULL-SUITE"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
       "id": "axon-code-round15-handover-verifier",
       "status": "TESTED",
       "grade": "NODE_DOCUMENT_VERIFICATION",
@@ -466,6 +488,17 @@
       ]
     },
     {
+      "id": "browser-acceptance-suite",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R6-NOT-RUN"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
       "id": "browser-indexeddb-persistence",
       "status": "NOT RUN",
       "grade": "T2",
@@ -485,6 +518,51 @@
       ],
       "resultFiles": [
         "results/r14-p6-storage-recovery.json"
+      ]
+    },
+    {
+      "id": "browser-low-memory-assets",
+      "status": "BUILT",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R4-ASSETS"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
+      "id": "browser-low-memory-performance",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R4-PERF-NOT-RUN"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
+      "id": "browser-persistent-job-service",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R3-NODE",
+        "R14-C6-R3-BROWSER-NOT-RUN"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
+      "id": "browser-screen-contract",
+      "status": "BUILT",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R5-CONTRACT"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
       ]
     },
     {
@@ -725,6 +803,18 @@
       ]
     },
     {
+      "id": "javascript-browser-worker-workbench-run",
+      "status": "NOT RUN",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R1-NODE",
+        "R14-C6-R1-BROWSER-NOT-RUN"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
+      ]
+    },
+    {
       "id": "legacy-workbench-ui-regression",
       "status": "TESTED",
       "grade": "T1",
@@ -828,9 +918,11 @@
       "status": "NOT RUN",
       "grade": "T1",
       "evidenceIds": [
+        "R14-C6-R2-NOT-RUN",
         "R14-P2-WP7-BROWSER-NOT-RUN"
       ],
       "resultFiles": [
+        "results/r14-continuation6.json",
         "results/r14-wp07-node-runtime.json"
       ]
     },
@@ -921,6 +1013,17 @@
       ],
       "resultFiles": [
         "results/r14-wp00-regression.json"
+      ]
+    },
+    {
+      "id": "round15-capability-handover-refresh",
+      "status": "BUILT",
+      "grade": "T1",
+      "evidenceIds": [
+        "R14-C6-R7-DOCS"
+      ],
+      "resultFiles": [
+        "results/r14-continuation6.json"
       ]
     },
     {

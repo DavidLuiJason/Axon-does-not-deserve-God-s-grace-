@@ -29,19 +29,34 @@
 
 ## Capability registry counts
 
-The authoritative registry was derived from **247 machine-result records** in `results/` and contains **77 capabilities**:
+The authoritative registry was derived from **259 machine-result records** in `results/` and contains **86 capabilities**:
 
 | Status | Count |
 |---|---:|
-| TESTED | 44 |
-| BUILT | 2 |
+| TESTED | 46 |
+| BUILT | 5 |
 | BLOCKED | 12 |
-| NOT RUN | 19 |
+| NOT RUN | 23 |
 | NOT IMPLEMENTED | 0 |
-| **Total** | **77** |
+| **Total** | **86** |
 
 These are whole-project registry totals, including historical Round 14 evidence and Continuation 5 results. No capability is upgraded to Android/device TESTED from source-only or FAKE_HOST evidence.
 
 ## Next device verification
 
 Use `docs/DEVICE_PROOF_CHECKLIST.md` only after the owner supplies a signed, installable Android build and the screen/host integration is wired. Record PASS, FAIL or NOT AVAILABLE for each step; preserve logs and device details. Phone performance, Android background survival and competitor comparison remain unmeasured until that evidence exists.
+
+## Round 14 Continuation 6 checkpoint — 2026-11-17
+
+- Start gate PASSED after applying `AXON-CODE-R14-PATCH1-merge.zip`: `npm run build` passed; background full suite reported 1,390 tests, 1,390 passed, 0 failed, 0 skipped. Ratchet unchanged. After implementation, the full suite reported 1,407 tests, 1,407 passed, 0 failed, 0 skipped.
+- R0 skipped: no `axon-code-ci-results.zip` was attached.
+- R1 BUILT: workbench Run/Stop, output/status, bounded stdin, fresh opaque-origin worker per run, 5-second timeout and 256 KiB output cap. Node contract tests pass. Real Chromium integration is NOT RUN: Playwright Chromium executable is missing.
+- R2 NOT BUILT: no browser Pyodide worker. The existing worker policy disables `importScripts` and network fetch; this work did not weaken isolation or fake Python. First-run Python load time NOT RUN.
+- R3 PARTIAL BUILT: IndexedDB job service and jobs panel; queued/running/completed/failed/cancelled/interrupted states, concurrency ceiling of two, per-owner quota, user/AXON cancellation rule, and reload interruption are covered by fake-indexeddb tests. Pause/Resume are disabled with explicit unsupported reasons. Multi-provider browser dispatch and real-browser persistence proof NOT RUN.
+- R4 measured package bytes: initial JavaScript 834,327; lazy xterm chunks 432,996; Pyodide pack 13,532,188; total build assets 14,817,006. Chromium 4x CPU timings, heap after ten runs, and phone measurements NOT RUN.
+- R5: screen contract updated for the new IDs/commands and built-UI presence test passes. `docs/AXON_CODE_SCREEN_READINESS.md` is absent from the supplied base; no replacement file was invented.
+- R6: acceptance script created for the ten device-proof tasks. NOT RUN because Chromium is unavailable; Python run and reload-interruption tasks remain blocked by R2 / real browser proof.
+- R7: matrix and handover refreshed only with measured or explicitly NOT RUN facts. No browser or phone capability is marked TESTED.
+- `docs/CAPABILITY_REGISTRY.json` was regenerated from result files and now contains 86 capability rows; browser-dependent capabilities remain NOT RUN.
+
+- Final Director verifier: **BLOCKED** only at clean-install proof (`npm ci` cache miss `ENOTCACHED`; online registry probe failed DNS). All other verifier checks passed: 1,407/1,407 tests, ratchet 1,231 unchanged, 327 hashes valid, 326 merge files / 2,289,834 bytes, no missing manifest entries, no forbidden files, capability registry valid. This is an environment/install-evidence blocker, not a failing test.

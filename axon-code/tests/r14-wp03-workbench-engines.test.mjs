@@ -23,7 +23,9 @@ test('editor and terminal mounts use the real engines with no presented textarea
   assert.match(engine,/from '@codemirror\/state'/);
   assert.match(engine,/from '@codemirror\/view'/);
   assert.match(engine,/new EditorView/);
-  assert.match(engine,/from '@xterm\/xterm'/);
+  assert.match(engine,/import\('@xterm\/xterm'\)/);
+  assert.match(engine,/import\('@xterm\/addon-fit'\)/);
+  assert.doesNotMatch(engine,/^import .*@xterm\//m);
   assert.match(engine,/new Terminal/);
   assert.match(html,/id="editorHost"/);
   assert.match(html,/id="terminalHost"/);
