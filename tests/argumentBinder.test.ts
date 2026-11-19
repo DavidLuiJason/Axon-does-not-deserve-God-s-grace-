@@ -84,7 +84,8 @@ check(r.decision === 'ask' && r.missing[0].slot === 'algorithm', 'multi-part cho
 
 // numbers, defaults and radians
 r = bindArguments(base('random-picker', 'pick', { words: [word('pick', 'pick')], materials: [], details: [], choices: { operation: ['pick', 'shuffle'] } }));
-check(r.args.count === 1 && r.assumptions[0] === 'Picking one.' && r.decision === 'ask' && r.missing.length === 1 && r.missing[0].slot === 'items', 'count default is said, missing items asks');
+// ROUND-ALL (D471): the Random Picker defaults (a count of one, an empty list) are said; the empty list is refused later by the lane guard, which yields to the old path.
+check(r.args.count === 1 && r.args.items === '' && r.assumptions.includes('A count of one.') && r.assumptions.includes('No list given.') && r.decision === 'run', 'count and list defaults are said');
 r = bindArguments(base('random-picker', 'pick 3 from "a, b, c"', { words: [word('pick 3 from "a, b, c"', 'pick')], values: [{ kind: 'number', start: 5, end: 6, confidence: 0.9, value: 3 }], materials: [span('pick 3 from "a, b, c"', '"a, b, c"')], choices: { operation: ['pick'] } }));
 check(r.args.count === 3 && r.args.items === 'a, b, c' && r.args.operation === 'pick' && r.decision === 'run' && r.assumptions.length === 0, 'number fills count, quotes fill items');
 for (const kind of ['roman', 'percent']) check(bindArguments(base('random-picker', 'x', { words: [word('x pick', 'pick')], values: [{ kind, start: 0, end: 1, confidence: 0.9, value: 7 }], choices: { operation: ['pick'] } })).args.count === 7, kind + ' fills a number slot');
@@ -127,7 +128,7 @@ for (const [tool, slots] of Object.entries(SLOT_DEFAULTS)) for (const [slot, def
   if (spec!.kind === 'choice') {
     const choices = all.find((x) => x.toolId === tool)?.inputs.find((i) => i.name === slot)?.choices ?? [];
     check(choices.includes(def.value as string), `default ${tool}.${slot} is one of the descriptor's choices`);
-  } else check((spec!.kind === 'number' && typeof def.value === 'number') || (spec!.kind === 'yes-no' && typeof def.value === 'boolean'), `default ${tool}.${slot} fits its kind`);
+  } else check((spec!.kind === 'number' && typeof def.value === 'number') || (spec!.kind === 'yes-no' && typeof def.value === 'boolean') || (spec!.kind === 'text' && typeof def.value === 'string'), `default ${tool}.${slot} fits its kind`);
   check(def.note !== '' && def.note === def.note.toLowerCase(), `default ${tool}.${slot} has a plain note`);
 }
 console.log(`argumentBinder.test.ts: ${n} checks passed.`);

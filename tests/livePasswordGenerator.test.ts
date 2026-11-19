@@ -2,10 +2,10 @@ import { PASSWORD_ACTION } from '../src/tools/passwordAction';
 import { passwordGeneratorGuard } from '../src/tools/runners/guards/passwordGeneratorGuard';
 let n=0,f=0;const check=(v:boolean,s:string)=>{n++;if(!v){f++;console.log('FAIL '+s)}else console.log('PASS '+s)};
 const wrong:[string,Record<string,unknown>][]=[
-['how are passwords stored?',{options:{lower:true}}],['recover my old password',{options:{lower:true}}],['crack a password',{options:{lower:true}}],['decrypt this password',{options:{lower:true}}],['reveal my account password',{options:{lower:true}}],['retrieve saved password',{options:{lower:true}}],['generate password for wifi recovery',{options:{lower:true}}],['find my existing password',{options:{lower:true}}]
+['how are passwords stored?',{length:16,options:{lower:true}}],['recover my old password',{length:16,options:{lower:true}}],['crack a password',{length:16,options:{lower:true}}],['decrypt this password',{length:16,options:{lower:true}}],['reveal my account password',{length:16,options:{lower:true}}],['retrieve saved password',{length:16,options:{lower:true}}],['generate password for wifi recovery',{length:16,options:{lower:true}}],['find my existing password',{length:16,options:{lower:true}}]
 ]; // HYPOTHESIS cases, unmeasured.
 const right:[string,Record<string,unknown>][]=[
-['generate password',{options:{lower:true}}],['create a password',{options:{upper:true}}],['generate a strong password',{options:{digits:true}}],['make a new password',{options:{symbols:true}}],['generate password now',{options:{lower:true,upper:true}}],['create password',{options:{lower:true,digits:true}}]
+['generate password',{length:16,options:{lower:true}}],['create a password',{length:16,options:{upper:true}}],['generate a strong password',{length:16,options:{digits:true}}],['make a new password',{length:16,options:{symbols:true}}],['generate password now',{length:16,options:{lower:true,upper:true}}],['create password',{length:16,options:{lower:true,digits:true}}]
 ];
 for(const [m,a] of wrong)check(passwordGeneratorGuard(a,m)!==null,'HYPOTHESIS wrong yields: '+m);
 for(const [m,a] of right)check(passwordGeneratorGuard(a,m)===null,'right passes: '+m);

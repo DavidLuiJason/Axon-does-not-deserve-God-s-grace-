@@ -14,6 +14,10 @@ import { encoderDecoderGuard } from '../../tools/runners/guards/encoderDecoderGu
 import { hashToolGuard } from '../../tools/runners/guards/hashToolGuard';
 import { qrMakerGuard } from '../../tools/runners/guards/qrMakerGuard';
 import { findReplaceGuard } from '../../tools/runners/guards/findReplaceGuard';
+import { percentageHelperGuard } from '../../tools/runners/guards/percentageHelperGuard';
+import { calculatorGuard } from '../../tools/runners/guards/calculatorGuard';
+import { randomPickerGuard } from '../../tools/runners/guards/randomPickerGuard';
+import { passwordGeneratorGuard } from '../../tools/runners/guards/passwordGeneratorGuard';
 
 /** Text Counter: the old handler adds a note when the text holds code (or may); the runner does not, so the lane yields. */
 const textCounterGuard: LaneGuard = (args, message) => {
@@ -67,4 +71,4 @@ const sortLinesGuard: LaneGuard = (args, message) => {
   return null;
 };
 
-export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard, 'encoder-decoder': encoderDecoderGuard, 'hash-tool': hashToolGuard, 'qr-maker': qrMakerGuard, 'find-replace': findReplaceGuard });
+export const LANE_GUARDS: Readonly<Record<string, LaneGuard>> = Object.freeze({ 'text-counter': textCounterGuard, 'case-converter': caseConverterGuard, 'sort-lines': sortLinesGuard, 'number-to-words': numberToWordsGuard, 'encoder-decoder': encoderDecoderGuard, 'hash-tool': hashToolGuard, 'qr-maker': qrMakerGuard, 'find-replace': findReplaceGuard , 'password-generator': passwordGeneratorGuard , 'random-picker': randomPickerGuard , 'calculator': calculatorGuard , 'percentage-helper': percentageHelperGuard });

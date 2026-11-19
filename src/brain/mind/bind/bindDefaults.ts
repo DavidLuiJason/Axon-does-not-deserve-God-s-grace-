@@ -11,9 +11,10 @@ const HAND_SLOT_DEFAULTS: Readonly<Record<string, Readonly<Record<string, SlotDe
   timer: Object.freeze({ operation: { value: 'start', note: 'starting a new timer' } }),
   stopwatch: Object.freeze({ operation: { value: 'start', note: 'starting a new stopwatch' } }),
   'qr-maker': Object.freeze({ level: { value: 'M', note: 'using medium error correction' } }),
-  'random-picker': Object.freeze({ count: { value: 1, note: 'picking one' } }),
+  'random-picker': Object.freeze({ count: { value: 1, note: 'a count of one' }, items: { value: '', note: 'no list given' } }),
   calculator: Object.freeze({ angle: { value: 'rad', note: 'using radians for angles' } }),
   'find-replace': Object.freeze({ replaceAll: { value: true, note: 'replacing every match', fillOptional: true as const }, caseSensitive: { value: true, note: 'matching upper and lower case exactly', fillOptional: true as const } }),
+  'password-generator': Object.freeze({ length: { value: 16, note: 'a 16 character password' }, options: { value: '{"lower":true,"upper":true,"digits":true,"symbols":true}', note: 'upper and lower case letters, digits and symbols' } }),
   'sort-lines': Object.freeze({ mode: { value: 'ascending', note: 'sorting in ascending order, from a to z' } }),
 });
 

@@ -11,7 +11,7 @@ const slot = createDictionarySlot(async () => dictionary);
 const off = createAxonBrain({ lane: false, slot });
 // the measurement switches Text Counter ON for this test only; the shipped switches are pinned OFF (liveSwitches.test.ts)
 const on = createAxonBrain({ lane: true, slot, switches: { 'text-counter': 'runner' } });
-check(buildLaneConfig().isOn('text-counter') === true && buildLaneConfig().isOn('timer') === false && buildLaneConfig().isOn('calculator') === false, 'the shipped lane wiring has Text Counter ON and the others OFF');
+check(buildLaneConfig().isOn('text-counter') === true && buildLaneConfig().isOn('timer') === false && buildLaneConfig().isOn('date-calculator') === false, 'the shipped lane wiring has Text Counter ON and the others OFF');
 const shipped = createAxonBrain({ lane: true, slot });
 const REQUESTS: string[] = [
   'count words in "hello brave new world"', 'count the words in "one"', 'count characters in "good morning"', 'count the characters of "a b c"',

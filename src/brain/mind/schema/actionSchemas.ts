@@ -40,16 +40,16 @@ sort-lines | c a | sort remove alphabetize arrange reverse shuffle | line:n orde
 text-compare | c a | compare detect | text:n passage:n difference:n |  | original:text:r revised:text:r mode:choice:r | shows-result |  | quick low | not-needed
 rephraser | c a | rephrase change | sentence:n wording:n version:n |  |  | shows-result |  | quick low | not-needed
 grammar-helper | c a | explain detect | grammar:n sentence:n mistake:n |  |  | shows-result |  | quick low | not-needed
-calculator | c a | calculate evaluate | expression:n number:n |  | expression:text:r angle:choice:r | shows-result |  | quick low | not-needed
+calculator | c a | calculate evaluate compute | expression:n number:n math:n |  | expression:text:r angle:choice:r | shows-result |  | quick low | not-needed
 number-to-words | c a | convert spell | number:n word:n |  | number:number:r ordinal:yes-no:o | shows-result |  | quick low | not-needed
-percentage-helper | c a | calculate compare | percentage:n change:n |  | mode:choice:r values:text:r | shows-result |  | quick low | not-needed | percent
+percentage-helper | c a | calculate compare increase decrease raise reduce | percentage:n change:n percent:n |  | mode:choice:r values:text:r | shows-result |  | quick low | not-needed | percent
 timer | c a | count measure | timer:n duration:n |  | durationMs:duration:r operation:choice:r now:time:o | shows-result |  | quick low | not-needed | duration
 stopwatch | c a | measure record | stopwatch:n lap:n |  | operation:choice:r now:time:o | shows-result |  | quick low | not-needed
 date-calculator | c a | calculate count | date:n interval:n |  | operation:choice:r date:date:r otherDate:date:o amount:number:o unit:choice:o | shows-result |  | quick low | not-needed | date
 tally-counter | c a | count change | counter:n tally:n |  | operation:choice:r name:text:r value:number:r step:number:o min:number:o max:number:o | shows-result |  | quick low | not-needed
 qr-maker | c a | encode make | code:n image:n text:n link:n | qr | text:text:r level:choice:r | shows-result |  | quick low | not-needed
 password-generator | c a | generate create | password:n length:n strong:a |  | length:number:r options:text:r random:text:o | shows-result |  | quick low | not-needed
-random-picker | c a | choose pick shuffle | random:a item:n |  | operation:choice:r items:text:r count:number:r random:text:o | shows-result |  | quick low | not-needed
+random-picker | c a | choose pick shuffle flip toss roll | random:a list:n coin:n item:n name:n option:n |  | operation:choice:r items:text:r count:number:r random:text:o | shows-result |  | quick low | not-needed
 encoder-decoder | c a | encode decode | encoding:n text:n hexadecimal:a | base64 url | mode:choice:r format:choice:r input:text:r | shows-result |  | quick low | not-needed
 hash-tool | c a | calculate check | hash:n checksum:n text:n file:n |  | input:text:r algorithm:choice:r | shows-result |  | quick low | not-needed
 dictionary | c a | define explain | dictionary:n word:n |  |  | shows-result |  | quick low | not-needed

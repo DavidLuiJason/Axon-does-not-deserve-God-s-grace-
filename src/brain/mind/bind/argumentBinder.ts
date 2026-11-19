@@ -19,6 +19,8 @@
  *  4a. ROLES (`bindRoles.ts`): for a tool listed there, each quoted text is given to the slot named by the single word right before it
  *     (Find and Replace: replace/find, with/by/to, in/within/on). All-or-nothing: every quoted text has exactly one marker, no slot twice,
  *     every required text slot covered; else the order rule above decides. Role slots are filled even when optional.
+ *  4b. SHAPERS (`shapers.ts`): a tool listed there builds its arguments from the typed values and words by structure (Percentage Helper);
+ *     shaped slots are skipped by every rule here; no shape means the rules apply as before.
  *  5. A required slot still empty takes its declared default from `bindDefaults.ts`, with a note; otherwise it is missing.
  *     (SLOT2: an OPTIONAL slot is filled the same way only when its default says `fillOptional`.)
  *     A required file slot is always missing (the chat cannot carry files yet).
@@ -31,6 +33,7 @@ import type { SlotSpec } from '../schema/schemaTypes';
 import { getSchema } from '../schema/actionSchemas';
 import { SLOT_DEFAULTS } from './bindDefaults';
 import { TEXT_ROLE_MARKERS, wordBefore } from './bindRoles';
+import { SHAPERS } from './shapers';
 
 export interface BindValue {
   readonly kind: string; readonly start: number; readonly end: number; readonly confidence: number;
@@ -87,6 +90,7 @@ function formatDuration(ms: number): string {
 function describe(kind: string, v: unknown): string {
   if (kind === 'duration' && isNum(v)) return formatDuration(v);
   if (kind === 'quantity' && v !== null && typeof v === 'object') { const q = v as { value: number; unit: string }; return `${q.value} ${q.unit}`; }
+  if (v !== null && typeof v === 'object') return JSON.stringify(v);
   if (kind === 'text' && typeof v === 'string') return `\u201C${v.length > 40 ? v.slice(0, 40) + '\u2026' : v}\u201D`;
   return String(v);
 }
@@ -103,6 +107,9 @@ export function bindArguments(input: BindInput): BindResult {
   const missing: MissingSlot[] = []; const assumptions: string[] = []; const why: string[] = [];
   const usedValue: Record<number, true> = {}; const consumed: BindSpan[] = [];
   let weak = false;
+  const shaper = Object.prototype.hasOwnProperty.call(SHAPERS, tool) ? SHAPERS[tool] : undefined;
+  const shaped = shaper ? shaper(input) : null;
+  if (shaped) for (const slot of schema.slots) if (Object.prototype.hasOwnProperty.call(shaped.args, slot.name)) { args[slot.name] = shaped.args[slot.name]; kinds[slot.name] = slot.kind; }
 
   const takeValue = (accept: (v: BindValue) => boolean): { v: BindValue; i: number } | null => {
     for (let i = 0; i < values.length; i++) {
@@ -119,6 +126,7 @@ export function bindArguments(input: BindInput): BindResult {
   };
 
   for (const slot of schema.slots) {
+    if (Object.prototype.hasOwnProperty.call(args, slot.name)) continue;
     if (slot.kind === 'number') {
       const f = takeValue((v) => NUMBER_KINDS[v.kind] === true && isNum(v.value) && v.error === undefined);
       if (f) { use(f); args[slot.name] = f.v.value; kinds[slot.name] = 'number'; }
@@ -148,7 +156,7 @@ export function bindArguments(input: BindInput): BindResult {
   }
 
   // text slots (rule 4)
-  const textSlots = schema.slots.filter((s) => s.kind === 'text' && s.required);
+  const textSlots = schema.slots.filter((s) => s.kind === 'text' && s.required && !Object.prototype.hasOwnProperty.call(args, s.name));
   if (textSlots.length > 0) {
     const cut = (s: BindSpan): string => {
       let out = ''; let at = s.start;
@@ -201,7 +209,7 @@ export function bindArguments(input: BindInput): BindResult {
   else {
     if (schema.effects.some((e) => e !== 'shows-result')) why.push('This tool does more than show a result.');
     if (schema.undo !== 'not-needed') why.push('This cannot simply be taken back.');
-    if (input.evidence === 'value') why.push('The message only carried a value; it did not ask for this tool.');
+    if (input.evidence === 'value' && !shaped?.strong) why.push('The message only carried a value; it did not ask for this tool.');
     if (weak) why.push('A value in the message was uncertain.');
     if (why.length > 0) decision = 'confirm-first';
   }

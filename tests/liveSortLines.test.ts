@@ -14,7 +14,7 @@ const slot = createDictionarySlot(async () => dictionary);
 // the baseline is the brain as merged before LIVE9-3: the two earlier live tools ON, Sort Lines OFF
 const off = createAxonBrain({ lane: true, slot, switches: { 'text-counter': 'runner', 'case-converter': 'runner' } });
 const on = createAxonBrain({ lane: true, slot });
-check(buildLaneConfig().isOn('sort-lines') === true && buildLaneConfig().isOn('timer') === false && buildLaneConfig().isOn('calculator') === false, 'the shipped lane wiring has Sort Lines ON and the not-yet-live tools OFF');
+check(buildLaneConfig().isOn('sort-lines') === true && buildLaneConfig().isOn('timer') === false && buildLaneConfig().isOn('date-calculator') === false, 'the shipped lane wiring has Sort Lines ON and the not-yet-live tools OFF');
 // message, exact sorted text the reply must carry (hand-written)
 const ANSWERS: ReadonlyArray<readonly [string, string, number]> = [
   ['sort the lines "pear\napple\nfig"', 'apple\nfig\npear', 3], ['sort "b\na\nc" descending', 'c\nb\na', 3], ['sort "ccc\na\nbb" by length', 'a\nbb\nccc', 3],

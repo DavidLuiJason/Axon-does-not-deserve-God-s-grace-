@@ -737,7 +737,7 @@
   "description": "Work out sums, with the steps shown.",
   "group": "numbers-converters",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Evaluate a bounded mathematical expression with explicit degree or radian angle mode."
@@ -795,7 +795,7 @@
   "description": "Work out percentages, changes and shares.",
   "group": "numbers-converters",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Calculate percent-of, what-percent, percent change, adjustment and percent-of-what operations."
@@ -1043,7 +1043,7 @@
   "description": "Make strong passwords of the length you choose.",
   "group": "create-encode",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Generate a password from explicit options using an injected random source or the available cryptographic source."
@@ -1075,7 +1075,7 @@
   "description": "Pick random numbers, names or items from a list.",
   "group": "create-encode",
   "screen": true,
-  "chat": "not-built",
+  "chat": "available",
   "leftOut": false,
   "purposes": [
    "Pick, shuffle, roll dice, flip a coin, choose random integers or split items into teams with an injectable random source."

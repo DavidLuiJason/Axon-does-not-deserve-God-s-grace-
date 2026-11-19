@@ -87,9 +87,10 @@ ok(Object.keys(map).length === facts.length, `one entry per fact (${Object.keys(
 for (const f of facts) ok(map[f.id] === deriveStatus(f), `status of ${f.id} equals deriveStatus`);
 const count = (s: string): number => Object.values(map).filter((v) => v === s).length;
 // SLOT2 (D471, 2026-11-16): Find and Replace went live, built -> ready: now 10 / 30 / 18 / 5.
+// ROUND-ALL (D471, 2026-11-19): Password, Random Picker, Calculator and Percentage Helper went live, built -> ready: now 14 / 26 / 18 / 5.
 // D321-FIX1 (2026-11-11): QR Maker went live (CONNECT2-W3), built -> ready: now 9 / 31 / 18 / 5.
 // TEST-FIX2 (Director, 2026-11-11): was 5 / 35 / 18 / 5. number-to-words, encoder-decoder and hash-tool went live through the brain (CONNECT1-A, switched ON in liveSwitches.ts) and moved built -> ready: 8 / 32 / 18 / 5.
-ok(count('ready') === 10 && count('built') === 30 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 10 / 30 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
+ok(count('ready') === 14 && count('built') === 26 && count('unbuilt') === 18 && count('left-out') === 5, `status counts 14 / 26 / 18 / 5, got ${count('ready')} / ${count('built')} / ${count('unbuilt')} / ${count('left-out')}`);
 ok(map['text-counter'] === 'ready', 'text-counter is ready');
 ok(api.statusMapFrom(facts) !== map, 'each call returns a NEW object');
 const mk = (p: Record<string, unknown>): ToolFact => ({ kind: 'tool', id: 'x', name: 'X', description: 'd', group: 'g', screen: true, chat: 'not-built', leftOut: false, ...p }) as ToolFact;

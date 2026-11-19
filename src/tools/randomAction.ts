@@ -10,11 +10,13 @@ export const RANDOM_ACTION: ActionDef = {
     { name: 'operation', type: 'string', required: true, prompt: 'Pick, shuffle, flip a coin, roll dice, choose an integer or split teams?' },
     { name: 'items', type: 'string', required: false, prompt: 'Provide the list, dice notation or min,max bounds.' },
     { name: 'count', type: 'number', required: false, prompt: 'How many items or teams?' },
-    { name: 'random', type: 'string', required: false, prompt: 'The runner receives an injected random provider; this text slot is not executable.' }
+    { name: 'random', type: 'string', required: false, prompt: 'The runner receives an injected random provider; this text slot is not executable.' },
+    { name: 'fixed', type: 'string', required: false, prompt: 'The lane passes the result it already showed, so the task records exactly that result.' }
   ],
   outputFields: [{ name: 'result', type: 'string' }], resources: {}, cancel: 'none',
   evidence: 'The random picker engine returned a selection using the cryptographic random source.',
   run: async input => {
+    if (typeof input.fixed === 'string') { try { const shown = JSON.parse(input.fixed) as { ok?: unknown }; if (shown.ok === true) return { result: input.fixed }; } catch { /* not a replay: use the engine as before */ } }
     // The runner injects deps.randomBelow, but TaskContext has no random source. The engine default is used here; the Director must resolve this injection gap before registration.
     const op = String(input.operation); const items = String(input.items ?? ''); const count = input.count === undefined ? 1 : Number(input.count);
     let r: any;

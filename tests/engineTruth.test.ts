@@ -52,6 +52,10 @@ function main(): void {
     'act.hash-tool': 'tests/liveBrainHashTool.test.ts',
     'act.qr-maker': 'tests/liveBrainQrMaker.test.ts',
     'act.find-replace': 'tests/liveBrainFindReplace.test.ts',
+    'act.password-generator': 'tests/liveBrainPassword.test.ts',
+    'act.random-picker': 'tests/liveBrainRandomPicker.test.ts',
+    'act.calculator': 'tests/liveBrainCalculator.test.ts',
+    'act.percentage-helper': 'tests/liveBrainPercentage.test.ts',
   };
   for (const { action } of actions) {
     if (action.status !== 'available') continue;

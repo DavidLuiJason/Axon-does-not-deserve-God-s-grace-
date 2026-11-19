@@ -19,7 +19,7 @@ export type LaneRun = (toolId: string, args: RunnerArgs, deps: RunnerDeps) => Pr
 /** A tool's own safe-guard: returns a plain reason to YIELD, or null when the lane may answer. */
 export type LaneGuard = (args: Readonly<Record<string, unknown>>, message: string) => string | null;
 /** LIVE2a: the old path runs every command as a TASK on the task engine and adds its evidence line and id to the reply. The lane must do the same: `record` returns that line and id, or null (then the lane yields). */
-export type LaneRecord = (toolId: string, args: Readonly<Record<string, unknown>>) => Promise<{ readonly taskId: string; readonly line: string } | null>;
+export type LaneRecord = (toolId: string, args: Readonly<Record<string, unknown>>, result?: unknown) => Promise<{ readonly taskId: string; readonly line: string } | null>;
 export interface LaneConfig {
   readonly isOn: (toolId: string) => boolean;
   readonly needsState: (toolId: string) => boolean;
@@ -83,7 +83,7 @@ export async function runDirectLane(input: LaneInput, config: LaneConfig): Promi
     const executed = await config.run(tool, finalArgs, config.deps());
     if (executed.route !== 'runner' || !executed.outcome) return yields(`the runner for ${tool} did not answer`);
     if (!executed.outcome.ok) return yields(`the runner for ${tool} refused: ${executed.outcome.message}`);
-    const recorded = await config.record(tool, finalArgs);
+    const recorded = await config.record(tool, finalArgs, executed.outcome.result);
     if (recorded === null) return yields(`no task could be recorded for ${tool}`);
     const said = bound.assumptions.length > 0;
     const body = `${executed.outcome.reply}\n\n${recorded.line}`;

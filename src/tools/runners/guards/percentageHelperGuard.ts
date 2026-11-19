@@ -10,6 +10,7 @@ const INTENT: Readonly<Record<string, true>> = Object.freeze({
 });
 
 /** Words that ask for a different operation than a percentage (Director tweak, CONNECT1-B: "calculate 20 percent and compare 30 percent" must not be answered as one percentage). */
+const NOT_PURE: Readonly<Record<string, true>> = Object.freeze({ tax: true, vat: true, tip: true, interest: true, apr: true, discount: true, sale: true, margin: true, markup: true, profit: true, commission: true, battery: true, loan: true, mortgage: true, grade: true, score: true, how: true, why: true, should: true, python: true, code: true, not: true, never: true, dont: true, euros: true, dollars: true, currency: true, convert: true, times: true, twice: true });
 const OTHER_OPERATION: Readonly<Record<string, true>> = Object.freeze({ compare: true, compared: true, comparing: true, versus: true, average: true });
 
 function wordsOf(value: string): string[] {
@@ -34,7 +35,9 @@ export const percentageHelperGuard: LaneGuard = (args, message) => {
     return 'the percentage operation is not a supported choice';
   }
   const words = wordsOf(message);
-  if (!hasAny(words, INTENT)) return 'the request does not clearly ask for a percentage calculation';
+  if (message.length > 300) return 'the message is too long for the lane, so the existing path should decide';
+  if (hasAny(words, NOT_PURE)) return 'the request carries an extra meaning (tax, tip, discount, a question or a program), so the existing path should decide';
+  if (!hasAny(words, INTENT) && !message.includes('%')) return 'the request does not clearly ask for a percentage calculation';
   if (hasAny(words, OTHER_OPERATION)) return 'the request also asks for another operation, so it asks instead of answering part of it';
   if (words.includes('salary') || words.includes('earnings') || words.includes('pay')) {
     return 'the request refers to an unspecified personal amount';
