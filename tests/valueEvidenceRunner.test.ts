@@ -19,7 +19,7 @@ const KINDS = VALUE_KIND_LABELS.split(' ');
 
 // ---- PART 1: the schema field `values`
 const declared: Record<string, string[]> = { 'percentage-helper': ['percent'], converter: ['quantity'], timer: ['duration'], 'date-calculator': ['date'] };
-check(ACTION_SCHEMAS.length === 63, 'there are 63 schemas');
+check(ACTION_SCHEMAS.length === 64, 'there are 64 schemas (63 plus AXON Games, 2026-11-13)');
 for (const schema of ACTION_SCHEMAS) {
   const want = declared[schema.tool];
   const values = schema.values;

@@ -22,7 +22,8 @@ export type ToolGroupId =
   | 'web-data'
   | 'code'
   | 'finance'
-  | 'device-system';
+  | 'device-system'
+  | 'games';
 
 export interface ToolGroup {
   id: ToolGroupId;
@@ -70,6 +71,7 @@ export const TOOL_GROUPS: readonly ToolGroup[] = [
   { id: 'code', name: 'AXON Code' },
   { id: 'finance', name: 'Finance' },
   { id: 'device-system', name: 'Device and System' },
+  { id: 'games', name: 'Games' },
 ];
 
 const HAND_CATALOG_TOOLS: readonly CatalogTool[] = [
@@ -525,6 +527,13 @@ const HAND_CATALOG_TOOLS: readonly CatalogTool[] = [
     name: 'Backup and Restore',
     description: 'Save your AXON data, or bring it back.',
     groupId: 'device-system',
+    status: 'coming-soon',
+  },
+  {
+    id: 'axon-games',
+    name: 'AXON Games',
+    description: 'Brain-training games for memory, logic, maths, language and strategy, with 15 tiers each.',
+    groupId: 'games',
     status: 'coming-soon',
   },
 ];

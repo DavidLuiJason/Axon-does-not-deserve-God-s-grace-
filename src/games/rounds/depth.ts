@@ -1,6 +1,7 @@
 // DT3 GAMES depth pass: puzzle generators checked by brute force, plus curated fact banks, so no game is one fixed question.
 import { random } from "../random";
 import type { GameEntry, Round } from "../types";
+import { tierWindow } from "./tier-window";
 
 type Stmt = { t: string; a: number; b?: number };
 type Bank = { p: number; items: string[][] };
@@ -89,8 +90,20 @@ const BANKS: Record<string, Bank>={
  'what-would-you-do':{p:.6,items:[['A friend asks you to do something that would harm someone else. What is the best response?','Explain you cannot help harm others and suggest a safer alternative','Do it silently','Pretend you did not hear'],['You notice a coworker’s error after the deadline. What is the best first step?','Tell them privately and offer to help fix it','Post it publicly','Ignore it'],['You are double-booked for two important events. What is the best move?','Tell both hosts early, then decide based on commitments and consequences','Skip both quietly','Attend neither and say nothing'],['A deadline is impossible with current resources. What should you do?','Report the risk early with options such as scope, time, or help','Promise it anyway','Say nothing until it is late']]},
  'find-a-way-to-escape':{p:.6,items:[['In a fictional dark maze you carry chalk. What is the most useful use of it?','Mark the paths you have already explored','Draw on the walls for decoration','Eat it'],['A fictional vault door needs a three-digit code written as three clues, and you found two. What next?','Look for the missing clue before trying guesses','Try random codes forever','Break the door'],['In a fictional room a rope hangs from a ceiling hatch too high to reach. The best idea is to:','Stack sturdy furniture safely to reach it','Jump from unstable shelves','Cut the rope'],['A fictional ship is sinking slowly with two lifeboats, one of which has a hole. What is the best choice?','Check and use the intact lifeboat','Use the leaking one to save time','Stay on the ship']]},
 };
-function bankRound(g:GameEntry,t:number,l:number,bank:Bank):Round{const it=pick(bank.items),[q,a,...w]=it;return ch(g,t,l,q,a,shuffle([a,...w]),'Apply the rule, definition, or principle the question names; eliminate options that contradict it.',['Read the question and name the principle involved.','Rule out options that contradict it.','Choose the option that is correct in every case, not just plausible.'],{bankSize:bank.items.length,mechanic:'curated fact bank'});}
-export function createDepthRound(game:GameEntry,tier:number,level:number,levels:number=3):Round|null{LC=Math.max(1,Number(levels)||3);const t=clamp(Number(tier)||1,1,15),l=clamp(Number(level)||1,1,3);const b=BUILDERS[game.id];if(b)return b(game,t,l);const bank=BANKS[game.id];if(!bank)return null;if(bank.p<1&&random()>=bank.p)return null;return bankRound(game,t,l,bank);}
+
+// Difficulty rank of each bank item (1 easiest, 3 hardest), in the same order as the items. A tier draws from a window of the bank that slides
+// from the easiest items (tier 1) to the hardest (tier 15). The numbers are the Director's judgement, checked for length by tests/gamesOracle.test.ts.
+export const RANKS: Record<string, number[]> = {
+  'checkmate-in-one': [1,1,3,2,2,3], 'checkmate-in-two': [2,2,1,2,3,3], 'chess-position-memory': [2,3,3,1,2,1], 'blindfold-chess': [2,1,2,1,1,2],
+  'chess-endgame-challenge': [3,3,2,3,1,2], chess: [1,2,2,3,1,3], 'chess-tactics': [1,1,2,2,3,1], draughts: [1,1,2,1,2,1], go: [2,2,3,1,1,3], reversi: [2,1,1,2,2,3],
+  hex: [2,1,1,3,2], 'word-relationships': [1,1,2,1,1,2], 'alternative-uses': [1,1,2,2,2,1], 'prisoners-puzzle': [3,2,3,2,3,2], 'river-crossing': [2,1,2,3,2,1],
+  'the-missing-clue': [1,1,3,2,1,1], 'mathematical-proof-puzzle': [2,1,1,1,2,3,1,3], 'the-interrogator': [2,2,2,1,2,1], 'the-negotiator': [2,1,2,2,2,1],
+  'the-strategist': [3,2,2,3,2,1], 'the-paradox': [2,3,2,3,1,2], 'the-survival-planner': [3,1,1,2,2,1], 'the-experimenter': [2,1,1,3,3,1], 'the-deceiver': [2,2,1,2,1,1],
+  'the-systems-breaker': [3,2,1,2,2,2], 'the-detective': [3,2,2,2,1,2], 'the-investigator': [3,1,2,2,2,2], 'what-would-you-do': [1,2,2,2], 'find-a-way-to-escape': [1,2,1,1],
+};
+
+function bankRound(g:GameEntry,t:number,l:number,bank:Bank):Round{const ranks=RANKS[g.id],ordered=ranks?bank.items.map((item,i)=>({item,r:ranks[i] as number,i})).sort((x,y)=>x.r-y.r||x.i-y.i).map((x)=>x.item):bank.items,it=pick(tierWindow(ordered,t)),[q,a,...w]=it as [string,string,...string[]];return ch(g,t,l,q,a,shuffle([a,...w]),'Apply the rule, definition, or principle the question names; eliminate options that contradict it.',['Read the question and name the principle involved.','Rule out options that contradict it.','Choose the option that is correct in every case, not just plausible.'],{bankSize:bank.items.length,mechanic:'curated fact bank'});}
+export function createDepthRound(game:GameEntry,tier:number,level:number,levels:number=3):Round|null{LC=Math.max(1,Number(levels)||3);const t=clamp(Number(tier)||1,1,15),l=clamp(Number(level)||1,1,3);const b=BUILDERS[game.id];if(b)return b(game,t,l);const bank=BANKS[game.id];if(!bank)return null;const pBank=Math.min(1,bank.p+(1-bank.p)*(t-1)/14);if(pBank<1&&random()>=pBank)return null;return bankRound(game,t,l,bank);}
 export const DEPTH_IDS=[...Object.keys(BUILDERS),...Object.keys(BANKS)];
 
 export { ODD, BANKS };

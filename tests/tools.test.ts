@@ -39,12 +39,12 @@ function names(views: ReturnType<typeof buildGroupViews>): string[] {
 
 async function main() {
   console.log('-- groups');
-  assert(TOOL_GROUPS.length === 11, 'there are exactly eleven groups (Files and Converters joined on 2026-10-15)');
-  assert(new Set(TOOL_GROUPS.map((g) => g.id)).size === 11, 'group ids are unique');
+  assert(TOOL_GROUPS.length === 12, 'there are exactly twelve groups (Files and Converters joined on 2026-10-15; Games joined on 2026-11-13 by owner decision)');
+  assert(new Set(TOOL_GROUPS.map((g) => g.id)).size === 12, 'group ids are unique');
   assert(
     names(buildGroupViews('')).join('|') ===
-      'Media|Files and Converters|Text and Writing|Numbers|Time|Create and Encode|Language|Web and Data|AXON Code|Finance|Device and System',
-    'the eleven groups appear in the decided order, with AXON Code and Finance separate'
+      'Media|Files and Converters|Text and Writing|Numbers|Time|Create and Encode|Language|Web and Data|AXON Code|Finance|Device and System|Games',
+    'the twelve groups appear in the decided order, with AXON Code and Finance separate and Games last'
   );
   assert(!names(buildGroupViews('')).includes('Code and Markets'), 'the old "Code and Markets" group is gone');
 
@@ -60,7 +60,7 @@ async function main() {
   assert(toolsInSubgroup('video').map((t) => t.id).join(',') === 'video-frames,video-converter,video-maker,video-downloader', 'Video holds Video Frames, Video Converter, Video Maker, Video Downloader (Video Frames opened with A14)');
   assert(toolsInSubgroup('audio').map((t) => t.id).join(',') === 'audio-converter,text-to-speech,voice-library,voice-cloner,speech-to-text', 'Audio holds the five sound tools');
   assert(MEDIA_SUBGROUPS.reduce((n, m) => n + toolsInSubgroup(m.id).length, 0) === mediaTools.length, 'the three choices together hold every Media tool exactly once');
-  assert(CATALOG_TOOLS.length === 60, 'the menu holds 60 entries (62 before A10 retired data-converter, text-format-converter and image-converter; 59 before A14 added Video Frames; update on purpose when a tool is added or removed)');
+  assert(CATALOG_TOOLS.length === 61, 'the menu holds 61 entries (the 61st is AXON Games, coming soon, added 2026-11-13; 62 before A10 retired data-converter, text-format-converter and image-converter; 59 before A14 added Video Frames; update on purpose when a tool is added or removed)');
 
   assert(CATALOG_TOOLS.filter(t=>t.id==='converter').length===1,'exactly one Converter');
   assert(CATALOG_TOOLS.find(t=>t.id==='converter')?.status==='available' && CATALOG_TOOLS.find(t=>t.id==='converter')?.opens==='converter','Converter is open and leads to its screen');
@@ -87,7 +87,7 @@ async function main() {
   assert(group('link-analyzer') === 'web-data', 'Link Analyzer is in Web and Data');
   assert(group('background-proof') === 'device-system', 'Background Proof is in Device and System');
   assert(group('ai-assistant') === 'device-system', 'AI Assistant is in Device and System');
-  assert(CATALOG_TOOLS.length === 60, 'still 60 entries after converter consolidation (59 plus Video Frames)');
+  assert(CATALOG_TOOLS.length === 61, 'still 61 entries (60 after converter consolidation, plus AXON Games)');
   assert(CATALOG_TOOLS.filter((t) => t.status === 'coming-soon').length === CATALOG_TOOLS.filter((t) => t.status !== 'available').length && CATALOG_TOOLS.every((t) => t.status === 'available' || t.status === 'coming-soon'), 'every tool that is not available is honestly marked coming soon (count derived, not remembered)');
   assert(
     CATALOG_TOOLS.every((t) => t.name.trim() !== '' && t.description.trim() !== '' && t.description.length <= 100),
@@ -121,7 +121,7 @@ async function main() {
   assert(names(buildGroupViews('count')).includes('Time') && names(buildGroupViews('count')).includes('Text and Writing'), 'filter "count" finds Text and Writing and Time (through Tally Counter)');
   assert(names(buildGroupViews('  CAPTURE ')).join('|') === 'Web and Data', 'filter ignores case and surrounding spaces');
   assert(buildGroupViews('zzzz-no-such-tool').length === 0, 'a filter with no match gives no groups');
-  assert(buildGroupViews('   ').length === 11, 'a blank filter shows all eleven groups');
+  assert(buildGroupViews('   ').length === 12, 'a blank filter shows all twelve groups');
   const finance = buildGroupViews('finance');
   assert(finance.length === 1 && finance[0].group.name === 'Finance' && finance[0].hasAvailable === true && finance[0].tools.length === 4, 'a group name finds its group with all four tools');
   assert(buildGroupViews('web and data')[0].tools.length === 5, 'a group name match shows all of that group\'s tools');

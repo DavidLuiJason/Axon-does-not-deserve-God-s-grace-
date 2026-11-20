@@ -1,6 +1,6 @@
 # AXON Games: screen readiness (DT3, GAMES3, 2026-11-13)
 
-For the Director who writes the AI Studio prompts (not DT3). This says what the screen can use today, what it cannot, and what it must do itself. Everything is measured on `src/games/` (strict TypeScript, tests green); nothing here is a plan to be built.
+For the Director who writes the AI Studio prompts (not DT3). This says what the screen can use today, what it cannot, and what it must do itself. Everything is measured on `src/games/` (strict TypeScript, tests green); nothing here is a plan to be built. Updated 2026-11-13 (GAMES5): progress is now READY, and the Games group is already in the Tools menu as coming soon (the entry flips to available when your screen lands).
 
 ## Where it lives
 Tools menu, new group "Games", one tool "AXON Games" (`opens: 'tool-screen'`, tool id `axon-games`). The screen file is `src/components/toolScreens/GamesScreen.tsx` and exports `toolScreen = { toolId: 'axon-games' }`. The screen imports ONLY from `src/games` (the index).
@@ -35,14 +35,14 @@ Rules for every layout: the screen owns the timers and must clear them the momen
 - Typed answers: capital letters, extra spaces, "9.70" for 9.7 and digits without spaces are accepted; the screen should not pre-judge input.
 
 ## READY (usable now)
-Listing and sections, descriptions, honest notes, 15 tiers and their level counts, round generation (seeded when testing), all answer checking, grid checking, code scoring, the explanation text.
+Listing and sections, descriptions, honest notes, 15 tiers and their level counts, round generation (seeded when testing), all answer checking, grid checking, code scoring, the explanation text, and PROGRESS: `readProgress(storage)`, `recordResult(progress, { gameId, tier, level, correct })`, `recommendedTier(progress, gameId)`, `summarize(progress)`, `writeProgress(storage, progress, savedAt)`, `resetProgress(storage)`, `browserProgressStorage()`. Rules: every tier is always playable; a tier counts as mastered after 3 plays with at least 70% correct; the recommended tier is one above the highest mastered tier (tier 1 when none). The screen shows the recommended tier as a hint, never as a lock. A saved file that cannot be read comes back as `unusable` (never as empty): show a quiet message and offer the player's own reset.
 
 ## NOT AVAILABLE (do not design it, there is nothing behind it)
-- **Progress, history, scores, streaks, tier unlocks:** no storage and no rules exist. The player picks any tier freely. These need the owner's rules first (GAMES4).
+- **Scores, streaks, per-round history, tier locks, leaderboards:** none exist. Only counts of plays and correct answers per game and tier are saved.
 - **Sound, haptics, animation timing** beyond the display times above.
 - **A playable chess, draughts, Go, Reversi or Hex board.** Those eleven are rules questions; show `gameNote` honestly.
 - **Per-round timers or time limits:** a round has no time limit; only the memorise phase is timed.
 - **Multiplayer, leaderboards, accounts.**
 
 ## Honest limits to keep out of marketing copy
-Eleven board games are rules questions. Five grid games share one mechanic. 52 games draw the same questions at every tier, so higher tiers do not get harder in those. See `docs/GAMES_INVENTORY.md`.
+Eleven board games are rules questions. Five grid games share one mechanic. Only Find the Loophole draws the same questions at every tier (the player picks a topic). Games built from curated question banks get harder only in the sense that higher tiers draw the harder half of a small bank (6 to 8 questions). See `docs/GAMES_INVENTORY.md`.

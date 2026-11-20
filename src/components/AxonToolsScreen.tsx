@@ -27,6 +27,7 @@ import {
   Video,
   Music,
   Ruler,
+  Gamepad2,
 } from 'lucide-react';
 import AxonLogo from './AxonLogo.jsx';
 import { TextCounterScreen } from './TextCounterScreen';
@@ -88,6 +89,7 @@ const GROUP_ICONS: Record<string, React.ReactNode> = {
   finance: <TrendingUp size={24} strokeWidth={1.8} />,
   'device-system': <Smartphone size={24} strokeWidth={1.8} />,
   'files-convert': <ArrowLeftRight size={24} strokeWidth={1.8} />,
+  games: <Gamepad2 size={24} strokeWidth={1.8} />,
 };
 
 const MEDIA_ICONS: Record<MediaSubgroupId, React.ReactNode> = {

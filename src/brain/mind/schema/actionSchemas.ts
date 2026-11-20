@@ -68,6 +68,7 @@ split-bill | c a | divide calculate | bill:n share:n |  | bill:number:r tipPerce
 market-scope | c a | analyze study | market:n trend:n |  |  | shows-result |  | quick low | not-needed
 device-profile | c a | report inspect | device:n memory:n |  | environment:text:o | shows-result |  | quick low | not-needed
 backup-restore | c a | save restore | backup:n data:n |  |  | writes-file | owner-approval | slow high | by-removal
+axon-games | c a | play practise | game:n puzzle:n |  |  | shows-result |  | quick low | not-needed
 settings | c a | open change | setting:n preference:n |  |  | changes-setting |  | quick low | by-tool
 taught-meanings | c a | teach forget | meaning:n lesson:n |  |  | stores-note deletes | owner-approval | quick low | by-tool
 axon-source | c a | export create | source:n project:n |  |  | writes-file |  | slow high | by-removal

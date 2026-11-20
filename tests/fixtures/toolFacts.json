@@ -1590,6 +1590,16 @@
   "leftOut": false
  },
  {
+  "kind": "tool",
+  "id": "axon-games",
+  "name": "AXON Games",
+  "description": "Brain-training games for memory, logic, maths, language and strategy, with 15 tiers each.",
+  "group": "games",
+  "screen": false,
+  "chat": "not-built",
+  "leftOut": false
+ },
+ {
   "kind": "ability",
   "id": "settings",
   "name": "Settings",

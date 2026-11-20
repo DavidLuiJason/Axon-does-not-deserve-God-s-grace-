@@ -1,6 +1,7 @@
 import { random } from './random';
 import { createExpandedRound } from './rounds/expanded-games';
 import { createDepthRound } from './rounds/depth';
+import { createTieredRound } from './rounds/tiered';
 import { createNumberMemoryRound } from './rounds/number-memory';
 import { getTierProfile } from './progression/difficulty';
 import { GAME_TIER_PROFILES } from './progression/game-tiers';
@@ -20,12 +21,20 @@ const pick=<T,>(a:readonly T[]):T=>a[Math.floor(random()*a.length)] as T, int=(a
 const shuffle=<T,>(a:readonly T[]):T[]=>{const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;};
 const words=['planet','garden','window','silver','puzzle','bridge','forest','candle','rocket','harbor','orange','velvet','signal','marble','castle','little','bright','stream','pencil','camera'];
 const primes=[2,3,5,7,11,13,17,19,23,29,31,37];
+// Games whose options have no natural order: the right answer must not sit in the same place every time (found by the position audit in tests/gamesOracle.test.ts).
+const SHUFFLED_CHOICE_GAMES: ReadonlySet<string> = new Set(['mastermind','color-sequence','synonym-challenge','antonym-challenge','letter-sequence-memory','vocabulary-ladder','mathematical-sequence','equation-balancer','resource-allocation','the-architect']);
 export function createRound(game:GameEntry,difficulty:number|string='Normal',settings:GameSettings={}):Round{
+ const round=buildRound(game,difficulty,settings);
+ if(SHUFFLED_CHOICE_GAMES.has(game.id)&&round.kind==='choice'&&Array.isArray(round.choices))round.choices=shuffle(round.choices);
+ return round;
+}
+function buildRound(game:GameEntry,difficulty:number|string,settings:GameSettings):Round{
  const tier=Number.isInteger(Number(difficulty))?Math.max(1,Math.min(15,Number(difficulty))):(({Easy:2,Normal:5,Hard:9,Expert:13} as Record<string,number>)[String(difficulty)]??5);
  const level=tier-1, n=4+Math.floor(level*10/14), id=game.id, name=game.name, engine=game.engine;
  const profiles={...GAME_TIER_PROFILES,...BATCH_TWO_TIER_PROFILES,...BATCH_THREE_TIER_PROFILES,...BATCH_FOUR_TIER_PROFILES,...BATCH_FIVE_TIER_PROFILES,...BATCH_SIX_TIER_PROFILES};
  const tierProfile=profiles[id]?getTierProfile(id,tier,profiles):null;
  const levelCount=tierProfile?.levels||3, selectedLevel=Math.max(1,Math.min(levelCount,Number(settings.level)||1));
+ const tiered=createTieredRound(game,tier,selectedLevel,levelCount); if(tiered) return tiered;
  const depth=createDepthRound(game,tier,selectedLevel,levelCount); if(depth) return depth;
  const expanded=createExpandedRound(game,tier,selectedLevel); if(expanded) return expanded;
  const bespoke=createNumberMemoryRound(game,tier,selectedLevel,levelCount); if(bespoke) return bespoke;

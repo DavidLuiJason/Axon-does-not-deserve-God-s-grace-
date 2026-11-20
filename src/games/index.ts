@@ -19,6 +19,7 @@ export type { GameEntry, Round } from './types';
 export { screenModel, checkTappedCells, scoreGuess, submitCodeGuess, MASTERMIND_DIGITS, MASTERMIND_MAX_GUESSES, SET_MEMORY_SHOW_MS } from './interactions';
 export type { ScreenModel, GuessScore, CodeGuessResult } from './interactions';
 export { gameNote } from './notes';
+export * from './progress';
 
 export const GAME_TIER_COUNT = 15;
 

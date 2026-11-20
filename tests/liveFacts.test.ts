@@ -49,14 +49,14 @@ async function run(stages: MindStage[], text: string): Promise<MindContext> {
 async function main(): Promise<void> {
   const fixture = JSON.parse(await readFile('./tests/fixtures/toolFacts.json', 'utf8')) as ToolFact[];
   const live = buildLiveFacts(liveInput());
-  assert(fixture.length === 63, 'fixture holds 63 facts');
+  assert(fixture.length === 64, 'fixture holds 64 facts (63 plus AXON Games, 2026-11-13)');
   assert(live.length === fixture.length, `live count ${live.length} equals fixture count ${fixture.length}`);
   fixture.forEach((expected, index) => {
     const actual = live[index] as unknown as Record<string, unknown>;
     const want = expected as unknown as Record<string, unknown>;
     for (const field of FIELDS) assert(actual[field] === want[field], `fact ${index} (${String(want.id)}) field ${field}: live ${String(actual[field])} vs fixture ${String(want[field])}`);
   });
-  assert(new Set(live.map((fact) => fact.id)).size === 63, 'ids are unique');
+  assert(new Set(live.map((fact) => fact.id)).size === 64, 'ids are unique');
   assert(live.filter((fact) => fact.leftOut).map((fact) => fact.id).join(',') === [...LEFT_OUT_TOOL_IDS].join(','), 'exactly the five left-out ids, in order');
   assert(!LEFT_OUT_TOOL_IDS.includes('video-downloader') && !LEFT_OUT_TOOL_IDS.includes('text-to-speech'), 'Video Downloader and Text to Speech are not left out (owner, 2026-10-27)');
 
@@ -67,7 +67,7 @@ async function main(): Promise<void> {
 
   // Status map: derived from the facts, one entry per id.
   const status = statusMapFrom(live);
-  assert(Object.keys(status).length === 63, 'status map has 63 entries');
+  assert(Object.keys(status).length === 64, 'status map has 64 entries');
   fixture.forEach((fact) => assert(status[fact.id] === deriveStatus(fact), `status of ${fact.id}`));
   assert(status['collage-maker'] === 'left-out' && status['market-scope'] === 'left-out', 'left-out tools are left-out');
   assert(status['text-counter'] === 'ready', 'Text Counter is ready');

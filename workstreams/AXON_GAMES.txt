@@ -1,10 +1,10 @@
 WORKSTREAM: AXON GAMES (Director DT3)
 UPDATED: 2026-11-13
-STATE NOW: axon-games/ (audited JavaScript lab) and src/games/ (strict TypeScript layer) are merged and proven identical (tests/gamesParity.test.ts). GAMES3 added the typed screen contract: src/games/interactions.ts (screenModel for 9 layouts, grid and code-breaker rules), notes.ts, hubSections().
-OWNER DECISION (2026-11-13): games open from the Tools menu in their OWN group "Games" (Option A).
-OWNS: axon-games/, src/games/, tests/games*.test.ts, docs/GAMES_*.md, docs/GAMES2_*.md, docs/GAMES3_*.md, workstreams/AXON_GAMES.txt
-MUST NOT TOUCH outside the registration merge: src/tools/toolCatalog.ts, src/components/AxonToolsScreen.tsx, tests/tools.test.ts, capability registry, root package.json, tsconfig, brain, AXON Web, AXON Code, AXON Apps.
-NOT MINE: the prompts for AI Studio screens (another Director, not yet named). docs/GAMES_SCREEN_READINESS.md is the hand-over for them.
-NEXT: ONE registration merge written in docs/GAMES_REGISTRATION_EDITS.md; DT3 needs the CURRENT main zip first (stale files must not be overwritten); entry stays coming-soon until the AI Studio screen exists.
-THEN (not part of GAMES3): GAMES4 progress rules and AXON storage (owner decides tier-unlock rules); depth waves for the 52 tier-flat games; second reader for the 51 reviewed-only games; real boards for the eleven rules-only games if the owner wants them.
-KEEP: gamesParity must stay green; a change to a game is made in BOTH axon-games/ and src/games/ or the parity test fails.
+STATE NOW: the Games group and one AXON Games entry (coming soon) are in the Tools menu; src/games/ is the full logic layer (171 games, 15 tiers each, typed screen model, progress keeper axon.games.progress.v1, tier scaling for 62 games, position-bias fix); axon-games/ is the frozen audited JavaScript lab used only by tests/gamesParity.test.ts.
+OWNER DECISIONS: games open from the Tools menu in their OWN group "Games" (Option A, 2026-11-13); the Director decides game rules (progress rules in docs/AUTO_APPROVED.md).
+OWNS: axon-games/, src/games/, tests/games*.test.ts, docs/GAMES_*.md, docs/GAMES*_BOARD_LINES_DT3.md, workstreams/AXON_GAMES.txt
+MUST NOT TOUCH without its own Director merge: toolCatalog.ts, AxonToolsScreen.tsx, actionSchemas.ts, tests/tools.test.ts, liveFacts and fixtures, capability registry, root package.json, tsconfig, brain, AXON Web, AXON Code, AXON Apps.
+NOT MINE: the Games SCREEN (the screen Director builds it from docs/GAMES_SCREEN_READINESS.md) and any AI Studio prompt.
+NEXT: (1) when the screen exists: flip the entry to available, add the capability record, run the whole suite (docs/GAMES_REGISTRATION_EDITS.md); (2) a second reader checks docs/GAMES_SECOND_READER_PACK.md (51 games checked only by reading) and DT3 fixes what they find; (3) if the owner wants it: real boards for the eleven rules-only games (a new round layout the screen Director must also design).
+KEEP: tests/gamesOracle.test.ts must stay green: every new generator needs an independent solver there; tests/gamesParity.test.ts lists the games that were deliberately changed; a choice game whose right answer sits in one position fails the position audit.
+LIMITS: eleven board games are rules questions; five grid games share one mechanic; curated banks are small (6 to 8 questions); Find the Loophole is not tiered.
